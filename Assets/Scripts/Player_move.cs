@@ -14,7 +14,7 @@ public class Player_move : MonoBehaviour
         ani = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
-
+//test git
     public void Update(){
         print(Input.GetAxis("Horizontal"));
         transform.Translate(Vector2.right * Input.GetAxis("Horizontal") *moveSpeed* Time.deltaTime);
