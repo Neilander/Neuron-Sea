@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Player_move : MonoBehaviour
 {
+    // public Color lightColor = new Color(1, 1, 0.5f, 0.3f);
     public int moveSpeed=10;
     private Animator ani;
     private Rigidbody2D rb;
@@ -16,6 +17,7 @@ public class Player_move : MonoBehaviour
     }
 //test git
     public void Update(){
+        // GetComponent<SpriteRenderer>().color = lightColor;
         print(Input.GetAxis("Horizontal"));
         transform.Translate(Vector2.right * Input.GetAxis("Horizontal") *moveSpeed* Time.deltaTime);
         PlayerRotate();
