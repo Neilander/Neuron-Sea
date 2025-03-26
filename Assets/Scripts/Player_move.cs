@@ -42,4 +42,5 @@ public class Player_move : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
     }
+    
 }
