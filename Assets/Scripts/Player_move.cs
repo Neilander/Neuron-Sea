@@ -16,7 +16,6 @@ public class Player_move : MonoBehaviour
     }
 
     public void Update(){
-        
         print(Input.GetAxis("Horizontal"));
         transform.Translate(Vector2.right * Input.GetAxis("Horizontal") *moveSpeed* Time.deltaTime);
         PlayerRotate();
