@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class State : StateMachineBehaviour
+public class StateTrans : StateMachineBehaviour
 {
    public string musicName;
    public string animationName;

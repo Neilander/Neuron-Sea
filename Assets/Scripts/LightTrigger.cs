@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class lightTrigger : MonoBehaviour
+public class LightTrigger : MonoBehaviour
 {
     [Header("Light Settings")]
     [SerializeField] private GameObject lightParent; // 光源父物体

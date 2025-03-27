@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_move : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
-    public int moveSpeed=10;
+    [SerializeField] private int moveSpeed=10;
     private Animator ani;
     private Rigidbody2D rb;
     public float jumpForce=5f;
