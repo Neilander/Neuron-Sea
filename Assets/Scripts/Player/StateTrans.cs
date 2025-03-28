@@ -8,13 +8,12 @@ public class StateTrans : StateMachineBehaviour
 
     public string animationName;
 
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
-        //如果当前状态是animationName则执行什么样的逻辑
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
         if (stateInfo.IsName(animationName))
-            Debug.Log("进入Blend Tree状态了");
-        // animator.gameObject.transform.localScale = Vector3.one;//改变动作对象的所有信息
-        if (stateInfo.IsName(animationName))
-            Debug.Log("进入 " + animationName + " 状态");
+        {
+            Debug.Log($"进入 {animationName} 状态");
+        }
 
         if (stateInfo.IsName("Idle")) // 角色在地面
         {
@@ -24,39 +23,45 @@ public class StateTrans : StateMachineBehaviour
         else if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall")) // 进入跳跃或下落状态
         {
             animator.SetBool("isGrounded", false);
-            // Debug.Log("进入 Jump/Fall 状态，设置 isGrounded = false");
+            Debug.Log($"进入 {stateInfo.shortNameHash} 状态，设置 isGrounded = false");
         }
     }
 
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
-        if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall")) {
-            // Debug.Log("退出 Jump/Fall 状态");
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall"))
+        {
+            Debug.Log($"退出 {stateInfo.shortNameHash} 状态");
         }
     }
 
-    public override void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
+    public override void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
         base.OnStateIK(animator, stateInfo, layerIndex);
     }
 
-    public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
+    public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
         // Debug.Log("正在移动");
     }
 
-    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
-        if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall")) {
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall"))
+        {
             animator.SetBool("isGrounded", false);
-            // Debug.Log("处于 Jump/Fall 状态，isGrounded = false");
         }
     }
 
-//子状态进入时
-    public override void OnStateMachineEnter(Animator animator, int stateMachinePathHash){
-        base.OnStateMachineEnter(animator, stateMachinePathHash);
-        
+    //子状态进入时
+    public override void OnStateMachineEnter(Animator animator, int stateMachinePathHash)
+    {
+        Debug.Log("进入状态机");
     }
 
     //子状态退出时
-    public override void OnStateMachineExit(Animator animator, int stateMachinePathHash){
-        base.OnStateMachineEnter(animator, stateMachinePathHash);
+    public override void OnStateMachineExit(Animator animator, int stateMachinePathHash)
+    {
+        Debug.Log("退出状态机");
     }
 }
