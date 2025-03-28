@@ -13,23 +13,24 @@ public class StateTrans : StateMachineBehaviour
         if (stateInfo.IsName(animationName))
             Debug.Log("进入Blend Tree状态了");
         // animator.gameObject.transform.localScale = Vector3.one;//改变动作对象的所有信息
-        Debug.Log("进入动画状态: " + stateInfo.fullPathHash);
+        if (stateInfo.IsName(animationName))
+            Debug.Log("进入 " + animationName + " 状态");
 
-        if (stateInfo.IsTag("Idle")) // 适配 Blend Tree 里的 Idle
+        if (stateInfo.IsName("Idle")) // 角色在地面
         {
             animator.SetBool("isGrounded", true);
             Debug.Log("进入 Idle 状态，设置 isGrounded = true");
         }
-        else if (stateInfo.IsTag("Jump") || stateInfo.IsTag("Fall")) // 检测 Blend Tree 内跳跃/下落动画
+        else if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall")) // 进入跳跃或下落状态
         {
             animator.SetBool("isGrounded", false);
-            Debug.Log("进入 Jump/Fall 状态，设置 isGrounded = false");
+            // Debug.Log("进入 Jump/Fall 状态，设置 isGrounded = false");
         }
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
-        if (stateInfo.IsTag("Jump") || stateInfo.IsTag("Fall")) {
-            Debug.Log("退出 Jump/Fall 状态");
+        if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall")) {
+            // Debug.Log("退出 Jump/Fall 状态");
         }
     }
 
@@ -38,16 +39,13 @@ public class StateTrans : StateMachineBehaviour
     }
 
     public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
-        Debug.Log("正在移动");
+        // Debug.Log("正在移动");
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex){
-        if (stateInfo.IsName("Blend Tree"))
-            Debug.Log("处于Blend Tree状态了");
-
-        if (stateInfo.IsTag("Jump") || stateInfo.IsTag("Fall")) {
+        if (stateInfo.IsName("Jump") || stateInfo.IsName("Fall")) {
             animator.SetBool("isGrounded", false);
-            Debug.Log("正在跳跃/下落");
+            // Debug.Log("处于 Jump/Fall 状态，isGrounded = false");
         }
     }
 
