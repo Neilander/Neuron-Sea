@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 //--------------------------------------------------------------------
 //ControlledCollider is the base class of ControlledCapsuleCollider
 //In theory, it can be overriden by different shape colliders, but only capsule has been implemented
@@ -7,47 +8,44 @@ using System.Collections;
 //--------------------------------------------------------------------
 public abstract class ControlledCollider : MonoBehaviour
 {
-    [Tooltip("Layermask used for all collisions in collider")]
-    [SerializeField] protected LayerMask m_LayerMask;
+    [Tooltip("Layermask used for all collisions in collider")] [SerializeField]
+    protected LayerMask m_LayerMask;
+
     protected Vector2 m_Velocity;
+
     protected Vector2 m_PrevVelocity;
+
     protected bool m_CollisionsActive = true;
-    public Vector2 GetPreviousVelocity()
-    {
+
+    public Vector2 GetPreviousVelocity(){
         return m_PrevVelocity;
     }
 
-    public Vector2 GetVelocity()
-    {
+    public Vector2 GetVelocity(){
         return m_Velocity;
     }
 
-    public void SetVelocity(Vector2 a_Velocity)
-    {
+    public void SetVelocity(Vector2 a_Velocity){
         m_Velocity = a_Velocity;
     }
 
-    public virtual void SetPosition(Vector3 a_Position)
-    {
+    public virtual void SetPosition(Vector3 a_Position){
         transform.position = a_Position;
     }
-    public virtual void SetRotation(Quaternion a_Rotation)
-    {
+
+    public virtual void SetRotation(Quaternion a_Rotation){
         transform.rotation = a_Rotation;
     }
 
-    public LayerMask GetLayerMask()
-    {
+    public LayerMask GetLayerMask(){
         return m_LayerMask;
     }
 
-    public void ToggleCollisionsActive()
-    {
+    public void ToggleCollisionsActive(){
         m_CollisionsActive = !m_CollisionsActive;
     }
 
-    public bool AreCollisionsActive()
-    {
+    public bool AreCollisionsActive(){
         return m_CollisionsActive;
     }
 
@@ -74,11 +72,10 @@ public abstract class ControlledCollider : MonoBehaviour
     public abstract void ClearColPoints();
 
 
-    public virtual bool CanAlignWithNormal(Vector3 a_Normal, RotateMethod a_Method = RotateMethod.FromBottom)
-    {
+    public virtual bool CanAlignWithNormal(Vector3 a_Normal, RotateMethod a_Method = RotateMethod.FromBottom){
         return false;
     }
-    public virtual void RotateToAlignWithNormal(Vector3 a_Normal, RotateMethod a_Method = RotateMethod.FromBottom)
-    {
+
+    public virtual void RotateToAlignWithNormal(Vector3 a_Normal, RotateMethod a_Method = RotateMethod.FromBottom){
     }
 }

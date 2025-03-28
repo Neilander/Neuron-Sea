@@ -5,15 +5,13 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     public Transform target;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start(){
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        transform.position = new Vector3(target.position.x, target.position.y+1.5f, transform.position.z);
+    void Update(){
+        transform.position = new Vector3(target.position.x, target.position.y + 1.5f, transform.position.z);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 //--------------------------------------------------------------------
 //DropDown is a movement module related to the OneWayPlatform objects.
 //This ability allows players to pass through OneWayPlatform objects they are standing on by pressing crouch/holding down, and pressing jump
@@ -11,16 +12,14 @@ public class DropDownModule : GroundedControllerAbilityModule
 
     //Called whenever this module is started (was inactive, now is active)
     protected override void StartModuleImpl(){
-        if (m_ControlledCollider != null)
-        {
+        if (m_ControlledCollider != null) {
             m_ControlledCollider.GetGroundedInfo().GetGroundTransform().GetComponentInChildren<OneWayPlatform>().DisableForObject(m_CharacterController.GetComponent<Collider>());
         }
     }
 
     //Execute jump (lasts one update)
     //Called for every fixedupdate that this module is active
-    public override void FixedUpdateModule()
-    {
+    public override void FixedUpdateModule(){
         Vector2 jumpVelocity = Vector3.down * m_JumpDownVelocity;
         m_CharacterController.Jump(jumpVelocity, false, false);
 
@@ -32,10 +31,8 @@ public class DropDownModule : GroundedControllerAbilityModule
     public override bool IsApplicable(){
         if (m_ControlledCollider.IsGrounded() &&
             m_CharacterController.GetJumpIsCached() &&
-            ((DoesInputExist("Crouch") && GetButtonInput("Crouch").m_IsPressed) || GetDirInput("Move").m_Direction == DirectionInput.Direction.Down))
-        {
-            if (m_ControlledCollider.GetGroundedInfo().GetGroundTransform().GetComponentInChildren<OneWayPlatform>())
-            {
+            ((DoesInputExist("Crouch") && GetButtonInput("Crouch").m_IsPressed) || GetDirInput("Move").m_Direction == DirectionInput.Direction.Down)) {
+            if (m_ControlledCollider.GetGroundedInfo().GetGroundTransform().GetComponentInChildren<OneWayPlatform>()) {
                 return true;
             }
         }

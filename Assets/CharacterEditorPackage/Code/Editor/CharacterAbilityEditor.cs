@@ -2,23 +2,19 @@
 using UnityEditor;
 using System.Collections;
 
-public class CharacterAbilityEditor {
-
-	public static void ShowTab(CharacterControllerBase a_CharacterController)
-    {
-        if (Application.isPlaying)
-        {
+public class CharacterAbilityEditor
+{
+    public static void ShowTab(CharacterControllerBase a_CharacterController){
+        if (Application.isPlaying) {
             GUILayout.Label("Abilities cannot be edited during play!", EditorStyles.boldLabel);
             return;
         }
-        if (a_CharacterController == null)
-        {
+        if (a_CharacterController == null) {
             GUILayout.Label("CharacterController script not found on object", EditorStyles.boldLabel);
             return;
         }
         AbilityModuleManager abilityModuleManager = a_CharacterController.GetAbilityModuleManager();
-        if (abilityModuleManager)
-        {
+        if (abilityModuleManager) {
             SerializedObject abilityManagerObject = new SerializedObject(abilityModuleManager);
             EditorGUI.BeginChangeCheck();
 
@@ -29,21 +25,18 @@ public class CharacterAbilityEditor {
             GUILayout.Space(4.0f);
 
             SerializedProperty array = abilityManagerObject.FindProperty("m_AbilitySlots");
-            if (array != null)
-            {
+            if (array != null) {
                 EditorHelp.SerializeArray(array);
             }
 
             EditorGUIUtility.labelWidth = prevLabelWidth;
-            
-            if (EditorGUI.EndChangeCheck())
-            {
+
+            if (EditorGUI.EndChangeCheck()) {
                 abilityManagerObject.ApplyModifiedProperties();
             }
         }
-        else
-        {
+        else {
             GUILayout.Label("AbilityModuleManager script not found on object", EditorStyles.boldLabel);
-        }     
+        }
     }
 }
