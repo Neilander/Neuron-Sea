@@ -8,6 +8,8 @@ public class SwitchableObj : MonoBehaviour
 
     [SerializeField] private float flashRedDuration = 0.5f;
 
+    [SerializeField] private GameObject anchorSprite;
+
 
     private Vector3 selfGridPos;
 
@@ -18,22 +20,38 @@ public class SwitchableObj : MonoBehaviour
 
     private WorldMover mover;
 
-    private SpriteRenderer renderer;
+    [SerializeField]private SpriteRenderer renderer;
 
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
     }
 
+    private Vector3 recordTempPos;
+
     private void Start(){
         mover = GetComponent<WorldMover>();
         Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
-        renderer = GetComponentInChildren<SpriteRenderer>();
+        //renderer = GetComponentInChildren<SpriteRenderer>();
         selfGridPos = _pos;
+        recordTempPos = renderer.transform.localPosition;
+        anchorSprite.transform.localPosition = anchor.transform.localPosition;
+        anchorSprite.transform.SetParent(renderer.transform);
     }
 
     public void MoveToGridPos(Vector3 gridPos){
         mover.MoveTo(gridPos - anchor.transform.localPosition);
+        selfGridPos = gridPos;
+    }
+
+    
+    public void SetTempToGridPos(Vector3 gridPos)
+    {
+        renderer.transform.position = gridPos - anchor.transform.localPosition + renderer.transform.localPosition;
+    }
+
+    public void SetToGridPos(Vector3 gridPos){
+        transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
     }
 
@@ -118,7 +136,30 @@ public class SwitchableObj : MonoBehaviour
     public void OutSwitchState(Vector3 gridPos){
         Debug.Log("OutSwitchState");
         inSwitchState = false;
-        MoveToGridPos(gridPos);
+        SetAlpha(1f);
+        SetToGridPos(gridPos);
+    }
+
+
+    private Vector3 tempRecordGridPos;
+    public void IntoTempMoveState(Vector3 gridPos)
+    {
+        SetAlpha(0.5f);
+        tempRecordGridPos = gridPos;
+        SetTempToGridPos(gridPos);
+    }
+
+    public void OutTempMoveState()
+    {
+        SetAlpha(1f);
+        renderer.transform.localPosition = recordTempPos;
+    }
+
+    public void ChangeFromTempMoveToNormal()
+    {
+        SetAlpha(1f);
+        SetToGridPos(tempRecordGridPos);
+        renderer.transform.localPosition = recordTempPos;
     }
 
     private void Update(){
@@ -142,36 +183,52 @@ public class SwitchableObj : MonoBehaviour
         GridManager.Instance.CountDown();
     }
 
-    public void FlashRed(){
-        StartCoroutine(FlashRedCoroutine(flashRedDuration));
+    private Coroutine flashCor;
+    public void ControlFlash(bool ifStart){
+        if (ifStart)
+        {
+            if (flashCor == null)
+                flashCor = StartCoroutine(FlashRedCoroutine(flashRedDuration));
+        }
+        else
+        {
+            if(flashCor!=null)StopCoroutine(flashCor);
+            flashCor = null;
+            renderer.color = originalColor;
+        }
     }
 
+    private Color originalColor;
     private IEnumerator FlashRedCoroutine(float duration = 0.4f){
-        Color originalColor = renderer.color;
+        originalColor = renderer.color;
         Color targetColor = Color.red;
-
         float halfDuration = duration / 2f;
-        float timer = 0f;
 
-        // 渐变到红色
-        while (timer < halfDuration) {
-            timer += Time.deltaTime;
-            float t = timer / halfDuration;
-            renderer.color = Color.Lerp(originalColor, targetColor, t);
-            yield return null;
+        while (true)
+        {
+            float timer = 0f;
+
+            // 渐变到红色
+            while (timer < halfDuration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / halfDuration;
+                renderer.color = Color.Lerp(originalColor, targetColor, t);
+                yield return null;
+            }
+
+            timer = 0f;
+
+            // 渐变回原色
+            while (timer < halfDuration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / halfDuration;
+                renderer.color = Color.Lerp(targetColor, originalColor, t);
+                yield return null;
+            }
+
+            renderer.color = originalColor;
         }
-
-        timer = 0f;
-
-        // 渐变回原色
-        while (timer < halfDuration) {
-            timer += Time.deltaTime;
-            float t = timer / halfDuration;
-            renderer.color = Color.Lerp(targetColor, originalColor, t);
-            yield return null;
-        }
-
-        renderer.color = originalColor; // 确保最终还原
-        GridManager.Instance.CountDown();
     }
 }
