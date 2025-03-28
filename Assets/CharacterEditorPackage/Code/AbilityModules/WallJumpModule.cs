@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
 //--------------------------------------------------------------------
 //WallJump module is a movement ability
 //When a wall is detected, and the appropriate input is given, jump away from the wall
@@ -9,10 +10,15 @@ using System.Collections.Generic;
 public class WallJumpModule : GroundedControllerAbilityModule
 {
     [SerializeField] float m_JumpVelocity = 0.0f;
+
     [SerializeField] float m_JumpAlignedToWallFactor = 0.0f;
+
     [SerializeField] bool m_UseWallUpDirection = false;
+
     [SerializeField] bool m_ResetVerticalSpeedIfFalling = false;
+
     [SerializeField] float m_VerticalVelocityInheritanceFactor = 0.0f;
+
     [SerializeField] float m_HorizontalVelocityInheritanceFactor = 0.0f;
 
     Vector2 m_SideNormal;
@@ -30,8 +36,7 @@ public class WallJumpModule : GroundedControllerAbilityModule
         //Make sure that current velocity is aligned to the side wall
         currentVel = CState.GetDirectionAlongNormal(currentVel, m_SideNormal) * currentVel.magnitude;
         //If sliding down the wall when jumping, reset that velocity
-        if (m_ResetVerticalSpeedIfFalling)
-        {
+        if (m_ResetVerticalSpeedIfFalling) {
             currentVel.y = Mathf.Clamp(currentVel.y, 0.0f, float.MaxValue);
         }
         //Possibly inherit some velocity from before jumping, leading to increased velocity on jump
@@ -49,21 +54,16 @@ public class WallJumpModule : GroundedControllerAbilityModule
     //Query whether this module can be active, given the current state of the character controller (velocity, isGrounded etc.)
     //Called every frame when inactive (to see if it could be) and when active (to see if it should not be)
     public override bool IsApplicable(){
-        if (m_ControlledCollider.IsGrounded())
-        {
+        if (m_ControlledCollider.IsGrounded()) {
             return false;
         }
 
-        if (m_ControlledCollider.GetSideCastInfo().m_HasHitSide)
-        {
-            if (!m_ControlledCollider.IsPartiallyTouchingWall())
-            {
+        if (m_ControlledCollider.GetSideCastInfo().m_HasHitSide) {
+            if (!m_ControlledCollider.IsPartiallyTouchingWall()) {
                 return false;
             }
-            if (m_CharacterController.GetJumpIsCached())
-            {
-                if ((Time.time - m_CharacterController.GetLastTouchingSurfaceTime() <= m_CharacterController.GetGroundedToleranceTime()) && !m_CharacterController.DidJustJump())
-                {
+            if (m_CharacterController.GetJumpIsCached()) {
+                if ((Time.time - m_CharacterController.GetLastTouchingSurfaceTime() <= m_CharacterController.GetGroundedToleranceTime()) && !m_CharacterController.DidJustJump()) {
                     m_SideNormal = m_ControlledCollider.GetSideCastInfo().GetSideNormal();
                     return true;
                 }

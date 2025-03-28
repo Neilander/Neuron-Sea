@@ -2,18 +2,15 @@
 using UnityEditor;
 using System.Collections;
 
-public class CharacterInputEditor {
-
-	public static void ShowTab(CharacterControllerBase a_CharacterController)
-    {
-        if (a_CharacterController == null)
-        {
+public class CharacterInputEditor
+{
+    public static void ShowTab(CharacterControllerBase a_CharacterController){
+        if (a_CharacterController == null) {
             GUILayout.Label("CharacterController script not found on object", EditorStyles.boldLabel);
             return;
         }
         PlayerInput playerInput = a_CharacterController.GetComponent<PlayerInput>();
-        if (playerInput)
-        {
+        if (playerInput) {
             SerializedObject inputObject = new SerializedObject(playerInput);
             EditorGUI.BeginChangeCheck();
 
@@ -24,21 +21,18 @@ public class CharacterInputEditor {
             GUILayout.Space(4.0f);
 
             SerializedProperty array = inputObject.FindProperty("m_Inputs");
-            if (array != null)
-            {
+            if (array != null) {
                 EditorHelp.SerializeArray(array);
             }
 
             EditorGUIUtility.labelWidth = prevLabelWidth;
-            
-            if (EditorGUI.EndChangeCheck())
-            {
+
+            if (EditorGUI.EndChangeCheck()) {
                 inputObject.ApplyModifiedProperties();
             }
         }
-        else
-        {
+        else {
             GUILayout.Label("PlayerInput script not found on object", EditorStyles.boldLabel);
-        }     
+        }
     }
 }
