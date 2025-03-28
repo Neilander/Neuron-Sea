@@ -53,17 +53,15 @@ public class PlayerMove : MonoBehaviour
     private void Update()
     {
         Debug.Log("isGrounded: " + isGrounded);
-        Debug.Log("isTouchingWall: " + isTouchingWall);
-        Debug.Log("isTouchingWallLeft: " + isTouchingWallLeft);
-        Debug.Log("isTouchingWallRight: " + isTouchingWallRight);
+       // Debug.Log("isTouchingWall: " + isTouchingWall);
         isTouchingWallLeft = Physics2D.OverlapCircle(wallCheckLeft.position, wallCheckRadius, wallLayer);
         isTouchingWallRight = Physics2D.OverlapCircle(wallCheckRight.position, wallCheckRadius, wallLayer);
         // 检测角色是否接触左侧或右侧的地面
-        isGrounded = Physics2D.OverlapCircle(groundCheckLeft.position, groundCheckRadius, groundLayer) || 
+        isGrounded = Physics2D.OverlapCircle(groundCheckLeft.position, groundCheckRadius, groundLayer) ||
                      Physics2D.OverlapCircle(groundCheckRight.position, groundCheckRadius, groundLayer);
-
+        
         // 检测脚前方是否接触墙壁
-        isTouchingWall = Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallLayer);
+       // isTouchingWall = Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallLayer);
 
         animator.SetBool("isGrounded", isGrounded);
 
@@ -77,19 +75,19 @@ public class PlayerMove : MonoBehaviour
     {
         float moveInput = Input.GetAxis("Horizontal");
 
-        if (isGrounded || isTouchingWall)
+        if (isGrounded) //|| isTouchingWall
         {
             // 如果角色在地面上或者接触墙壁，正常移动
             rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
         }
-        else
-        {
-            // 如果角色在空中并接触到墙壁，仍然允许水平移动
-            if (isTouchingWall)
-            {
-                rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-            }
-        }
+        // else
+        // {
+        //     // 如果角色在空中并接触到墙壁，仍然允许水平移动
+        //     if (isTouchingWall)
+        //     {
+        //         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        //     }
+        // }
 
         animator.SetFloat("Speed", Mathf.Abs(moveInput));
     }
@@ -109,23 +107,26 @@ public class PlayerMove : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             animator.SetBool("isGrounded", false);
+            
         }
     }
 
     private void HandleWallCollision(){
         // 获取角色的宽度
         float halfWidth = rb.GetComponent<Collider2D>().bounds.size.x / 2;
-
-        // 如果左射线检测到物体，右射线没有检测到物体
-        if (isTouchingWallLeft && !isTouchingWallRight) {
-            // 向右偏移
-            rb.position = new Vector2(rb.position.x+ 0.002f, rb.position.y); //+ halfWidth 
-        }
-        // 如果右射线检测到物体，左射线没有检测到物体
-        else if (isTouchingWallRight && !isTouchingWallLeft) {
-            // 向左偏移
-            rb.position = new Vector2(rb.position.x  - 0.002f, rb.position.y);//- halfWidth
-        }
+        
+                    // 如果左射线检测到物体，右射线没有检测到物体
+                    if (isTouchingWallLeft && !isTouchingWallRight) {
+                        // 向右偏移
+                        rb.position = new Vector2(rb.position.x+ 0.002f, rb.position.y); //+ halfWidth 
+                    }
+                    // 如果右射线检测到物体，左射线没有检测到物体
+                    else if (isTouchingWallRight && !isTouchingWallLeft) {
+                        // 向左偏移
+                        rb.position = new Vector2(rb.position.x  - 0.002f, rb.position.y);//- halfWidth
+                    }
+        
+        
     }
     private void OnDrawGizmos()
     {
@@ -142,10 +143,10 @@ public class PlayerMove : MonoBehaviour
         }
 
         // 可视化脚前方的墙壁检测
-        if (wallCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(wallCheck.position, wallCheckRadius);
-        }
+        // if (wallCheck != null)
+        // {
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawWireSphere(wallCheck.position, wallCheckRadius);
+        // }
     }
 }
