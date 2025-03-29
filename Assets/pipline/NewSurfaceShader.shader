@@ -59,11 +59,8 @@ Shader "Custom/LayerBlend"
                 fixed4 blendColor = tex2D(_BlendTex, i.uv);
                 fixed4 gradientColor = tex2D(_GradientTex, i.uv);
                 
-                // 正片叠底混合
-                fixed4 multiplyResult = mainColor * blendColor;
-                
                 // 应用渐变
-                fixed4 finalColor = lerp(multiplyResult, gradientColor, _GradientStrength);
+                fixed4 finalColor = lerp(blendColor, gradientColor, _GradientStrength);
                 
                 // 应用不透明度
                 finalColor = lerp(mainColor, finalColor, _Opacity);

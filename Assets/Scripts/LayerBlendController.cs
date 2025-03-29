@@ -14,18 +14,22 @@ public class LayerBlendController : MonoBehaviour
     [SerializeField] private float gradientStrength = 0.5f; // 渐变强度
 
     private Material blendMaterial;
+    private Sprite lastMainSprite;
+    private Sprite lastBlendSprite;
+    private Sprite lastGradientSprite;
 
     private void Start()
     {
         // 创建材质实例
         blendMaterial = new Material(Shader.Find("Custom/LayerBlend"));
 
+        // 保存初始Sprite引用
+        lastMainSprite = mainLayer.sprite;
+        lastBlendSprite = blendLayer.sprite;
+        lastGradientSprite = gradientLayer.sprite;
+
         // 设置材质属性
-        blendMaterial.SetTexture("_MainTex", mainLayer.sprite.texture);
-        blendMaterial.SetTexture("_BlendTex", blendLayer.sprite.texture);
-        blendMaterial.SetTexture("_GradientTex", gradientLayer.sprite.texture);
-        blendMaterial.SetFloat("_Opacity", opacity);
-        blendMaterial.SetFloat("_GradientStrength", gradientStrength);
+        UpdateTextures();
 
         // 应用材质
         mainLayer.material = blendMaterial;
@@ -33,9 +37,32 @@ public class LayerBlendController : MonoBehaviour
 
     private void Update()
     {
+        // 检查Sprite是否发生变化
+        if (mainLayer.sprite != lastMainSprite ||
+            blendLayer.sprite != lastBlendSprite ||
+            gradientLayer.sprite != lastGradientSprite)
+        {
+            UpdateTextures();
+        }
+
         // 实时更新混合设置
         blendMaterial.SetFloat("_Opacity", opacity);
         blendMaterial.SetFloat("_GradientStrength", gradientStrength);
+    }
+
+    private void UpdateTextures()
+    {
+        if (mainLayer.sprite != null)
+            blendMaterial.SetTexture("_MainTex", mainLayer.sprite.texture);
+        if (blendLayer.sprite != null)
+            blendMaterial.SetTexture("_BlendTex", blendLayer.sprite.texture);
+        if (gradientLayer.sprite != null)
+            blendMaterial.SetTexture("_GradientTex", gradientLayer.sprite.texture);
+
+        // 更新Sprite引用
+        lastMainSprite = mainLayer.sprite;
+        lastBlendSprite = blendLayer.sprite;
+        lastGradientSprite = gradientLayer.sprite;
     }
 
     private void OnDestroy()
