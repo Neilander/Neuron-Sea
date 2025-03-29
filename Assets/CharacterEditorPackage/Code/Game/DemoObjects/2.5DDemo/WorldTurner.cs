@@ -1,21 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorldTurner : MonoBehaviour {
+public class WorldTurner : MonoBehaviour
+{
     CharacterControllerBase m_Character;
+
     Transform m_CharacterAnchor;
+
     Transform m_AxisTransform;
+
     Transform m_TriggerTransform;
+
     bool m_IsRotating;
 
     float m_RotationDuration;
+
     float m_StartRotationY;
+
     float m_EndRotationY;
 
     float m_StartTime;
 
-    void Start () 
-	{
+    void Start(){
         m_Character = FindObjectOfType<CharacterControllerBase>();
 
         m_CharacterAnchor = new GameObject().transform;
@@ -27,12 +33,9 @@ public class WorldTurner : MonoBehaviour {
         m_AxisTransform.SetParent(transform);
     }
 
-    void Update()
-    {
-        if (m_IsRotating)
-        {
-            if (Time.time - m_StartTime < m_RotationDuration)
-            {
+    void Update(){
+        if (m_IsRotating) {
+            if (Time.time - m_StartTime < m_RotationDuration) {
                 float factor = (Time.time - m_StartTime) / m_RotationDuration;
                 float currentAngle = Mathf.Lerp(m_StartRotationY, m_EndRotationY, factor);
 
@@ -40,27 +43,22 @@ public class WorldTurner : MonoBehaviour {
                 // Set the default character new position
                 m_Character.transform.position = m_CharacterAnchor.position;
             }
-            else
-            {
+            else {
                 EndTurning();
             }
         }
     }
 
     //For scripts to see if the right object is triggering a transition
-    public GameObject GetCharacterObject()
-    {
-        if (m_Character == null)
-        {
+    public GameObject GetCharacterObject(){
+        if (m_Character == null) {
             return null;
         }
         return m_Character.gameObject;
     }
 
-    public void StartTurning(Vector3 a_AxisPoint, Transform a_TriggerTransform, float a_Angle, float a_Time)
-    {
-        if (m_Character == null)
-        {
+    public void StartTurning(Vector3 a_AxisPoint, Transform a_TriggerTransform, float a_Angle, float a_Time){
+        if (m_Character == null) {
             Debug.LogError("No reference to character in WorldTurner script. Cannot turn without character");
             return;
         }
@@ -72,8 +70,7 @@ public class WorldTurner : MonoBehaviour {
         transform.SetParent(m_AxisTransform);
 
         //Save the object that has triggered the transition, to make sure character ends up in the right place
-        if (a_TriggerTransform == null)
-        {
+        if (a_TriggerTransform == null) {
             Debug.Log("No trigger transform given, cannot rotate");
             return;
         }
@@ -92,8 +89,7 @@ public class WorldTurner : MonoBehaviour {
         m_Character.LockMovement(true);
     }
 
-    public void EndTurning()
-    {
+    public void EndTurning(){
         m_IsRotating = false;
         //Prevent minor errors as result of deltaTime differences, snap to end state
         m_AxisTransform.rotation = Quaternion.AngleAxis(m_EndRotationY, Vector3.up);
