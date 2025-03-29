@@ -53,16 +53,11 @@ Shader "Custom/SceneMultiplyBlend"
             
             fixed4 frag (v2f i) : SV_Target
             {
-                // 计算缩放和偏移后的UV坐标
                 float2 multiplyUV = (i.uv - 0.5) * _MultiplyScale + 0.5 + _MultiplyOffset.xy;
-                
-                // 确保UV坐标在[0,1]范围内
                 multiplyUV = saturate(multiplyUV);
                 
-                // 采样正片叠底纹理
                 fixed4 multiplyColor = tex2D(_MultiplyTex, multiplyUV);
                 
-                // 应用正片叠底效果
                 fixed4 finalColor = fixed4(1, 1, 1, 1);
                 finalColor.rgb = lerp(finalColor.rgb, multiplyColor.rgb * _MultiplyStrength, multiplyColor.a * _MultiplyOpacity);
                 
@@ -71,4 +66,4 @@ Shader "Custom/SceneMultiplyBlend"
             ENDCG
         }
     }
-} 
+}
