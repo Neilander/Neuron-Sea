@@ -1,16 +1,16 @@
-Shader "Custom/ScreenBlend"
+Shader "Custom/OverlayBlend"
 {
     Properties
     {
         _MainTex ("主图层", 2D) = "white" {}
         _MiddleTex ("中间层", 2D) = "white" {}
-        _ScreenTex ("滤色图层", 2D) = "white" {}
+        _OverlayTex ("叠加图层", 2D) = "white" {}
         _UseMiddleLayer ("使用中间层", Float) = 0
         _ShowMiddleLayer ("显示中间层", Float) = 0
-        _ShowScreenLayer ("显示滤色层", Float) = 1
+        _ShowOverlayLayer ("显示叠加层", Float) = 1
         _MiddleBlend ("中间层混合度", Range(0,1)) = 0.5
-        _ScreenOpacity ("滤色不透明度", Range(0,1)) = 1.0
-        _ScreenStrength ("滤色强度", Range(0,2)) = 1.0
+        _OverlayOpacity ("叠加不透明度", Range(0,1)) = 1.0
+        _OverlayStrength ("叠加强度", Range(0,2)) = 1.0
     }
     
     SubShader
@@ -41,16 +41,16 @@ Shader "Custom/ScreenBlend"
             
             sampler2D _MainTex;
             sampler2D _MiddleTex;
-            sampler2D _ScreenTex;
+            sampler2D _OverlayTex;
             float4 _MainTex_ST;
             float4 _MiddleTex_ST;
-            float4 _ScreenTex_ST;
+            float4 _OverlayTex_ST;
             float _UseMiddleLayer;
             float _ShowMiddleLayer;
-            float _ShowScreenLayer;
+            float _ShowOverlayLayer;
             float _MiddleBlend;
-            float _ScreenOpacity;
-            float _ScreenStrength;
+            float _OverlayOpacity;
+            float _OverlayStrength;
             
             v2f vert (appdata v)
             {
@@ -65,20 +65,38 @@ Shader "Custom/ScreenBlend"
             {
                 fixed4 mainColor = tex2D(_MainTex, i.uv);
                 fixed4 middleColor = tex2D(_MiddleTex, i.uv);
-                fixed4 screenColor = tex2D(_ScreenTex, i.uv);
+                fixed4 overlayColor = tex2D(_OverlayTex, i.uv);
                 
-                // 增强滤色效果
-                fixed4 enhancedScreenColor = lerp(screenColor, fixed4(1,1,1,1), _ScreenStrength - 1);
-                fixed4 screenResult = 1 - (1 - mainColor) * (1 - enhancedScreenColor);
+                // 增强叠加效果
+                fixed4 enhancedOverlayColor = lerp(overlayColor, fixed4(1,1,1,1), _OverlayStrength - 1);
+                
+                // 叠加混合
+                fixed4 overlayResult;
+                if (mainColor.r < 0.5)
+                    overlayResult.r = 2 * mainColor.r * enhancedOverlayColor.r;
+                else
+                    overlayResult.r = 1 - 2 * (1 - mainColor.r) * (1 - enhancedOverlayColor.r);
+                    
+                if (mainColor.g < 0.5)
+                    overlayResult.g = 2 * mainColor.g * enhancedOverlayColor.g;
+                else
+                    overlayResult.g = 1 - 2 * (1 - mainColor.g) * (1 - enhancedOverlayColor.g);
+                    
+                if (mainColor.b < 0.5)
+                    overlayResult.b = 2 * mainColor.b * enhancedOverlayColor.b;
+                else
+                    overlayResult.b = 1 - 2 * (1 - mainColor.b) * (1 - enhancedOverlayColor.b);
+                    
+                overlayResult.a = mainColor.a;
                 
                 // 中间层混合
                 fixed4 middleResult = lerp(mainColor, middleColor, _MiddleBlend);
                 
                 // 根据是否使用中间层选择最终颜色
-                fixed4 finalColor = lerp(screenResult, middleResult, _UseMiddleLayer);
+                fixed4 finalColor = lerp(overlayResult, middleResult, _UseMiddleLayer);
                 
                 // 应用不透明度
-                finalColor = lerp(mainColor, finalColor, screenColor.a * _ScreenOpacity * _ShowScreenLayer);
+                finalColor = lerp(mainColor, finalColor, overlayColor.a * _OverlayOpacity * _ShowOverlayLayer);
                 
                 // 显示中间层
                 if (_ShowMiddleLayer > 0.5)
