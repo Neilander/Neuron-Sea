@@ -3,9 +3,9 @@ Shader "Custom/SceneSoftLightBlend"
     Properties
     {
         _MainTex ("主纹理", 2D) = "white" {}
-        _BlendTex ("混合纹理", 2D) = "white" {}
+        _BlendTex ("柔光纹理", 2D) = "white" {}
+        _BlendAmount ("柔光强度", Range(0,1)) = 1
         _Opacity ("不透明度", Range(0,1)) = 1
-        _BlendAmount ("混合强度", Range(0,1)) = 1
     }
 
     SubShader
@@ -42,15 +42,14 @@ Shader "Custom/SceneSoftLightBlend"
                 float4 vertex   : SV_POSITION;
                 fixed4 color    : COLOR;
                 float2 texcoord : TEXCOORD0;
-                float4 worldPosition : TEXCOORD1;
             };
 
             sampler2D _MainTex;
             sampler2D _BlendTex;
             float4 _MainTex_ST;
             float4 _BlendTex_ST;
-            fixed _Opacity;
             fixed _BlendAmount;
+            fixed _Opacity;
 
             // 柔光混合函数
             fixed3 SoftLight(fixed3 base, fixed3 blend)
@@ -77,7 +76,6 @@ Shader "Custom/SceneSoftLightBlend"
             v2f vert(appdata_t IN)
             {
                 v2f OUT;
-                OUT.worldPosition = IN.vertex;
                 OUT.vertex = UnityObjectToClipPos(IN.vertex);
                 OUT.texcoord = TRANSFORM_TEX(IN.texcoord, _MainTex);
                 OUT.color = IN.color;
@@ -86,18 +84,18 @@ Shader "Custom/SceneSoftLightBlend"
 
             fixed4 frag(v2f IN) : SV_Target
             {
-                // 采样两个纹理
-                fixed4 baseColor = tex2D(_MainTex, IN.texcoord) * IN.color;
+                // 采样纹理
+                fixed4 mainColor = tex2D(_MainTex, IN.texcoord) * IN.color;
                 fixed4 blendColor = tex2D(_BlendTex, IN.texcoord);
                 
                 // 应用柔光混合
-                fixed3 softLightColor = SoftLight(baseColor.rgb, blendColor.rgb);
+                fixed3 softLightColor = SoftLight(mainColor.rgb, blendColor.rgb);
                 
                 // 在原始颜色和柔光结果之间插值
-                fixed3 finalColor = lerp(baseColor.rgb, softLightColor, _BlendAmount);
+                fixed3 finalColor = lerp(mainColor.rgb, softLightColor, _BlendAmount * blendColor.a);
                 
                 // 处理透明度
-                fixed alpha = baseColor.a * _Opacity;
+                fixed alpha = mainColor.a * _Opacity;
                 
                 // 预乘alpha
                 finalColor *= alpha;
