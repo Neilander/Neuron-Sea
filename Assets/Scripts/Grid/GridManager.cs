@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
 
-    [Header("格子数据调整")] [SerializeField] private int gridWidth = 1;
+    [Header("格子数据调整")] public int gridWidth = 1;
 
     [SerializeField] [Range(0, 1)] private float offsetX = 0;
 

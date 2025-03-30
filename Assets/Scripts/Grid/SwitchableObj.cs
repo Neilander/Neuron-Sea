@@ -22,6 +22,8 @@ public class SwitchableObj : MonoBehaviour
 
     [SerializeField]private SpriteRenderer renderer;
 
+    [SerializeField] private Vector2 ExpectedSize;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -230,5 +232,58 @@ public class SwitchableObj : MonoBehaviour
 
             renderer.color = originalColor;
         }
+    }
+
+    public void SizeToExpectedSize()
+    {
+        if (GridManager.Instance == null)
+        {
+            Debug.LogError("GridManager.Instance is null.");
+            return;
+        }
+
+        if (renderer == null || renderer.sprite == null)
+        {
+            Debug.LogError("SpriteRenderer or Sprite is missing.");
+            return;
+        }
+
+        if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
+        {
+            Debug.LogError("Size不能是0");
+            return;
+        }
+           
+        float gridSize = GridManager.Instance.gridWidth;
+
+        Vector2 targetWorldSize = ExpectedSize * gridSize;
+
+        // 获取原始 sprite 世界单位大小
+        Vector2 spriteSize = renderer.sprite.bounds.size;
+
+        // 计算缩放比
+        Vector3 scale = new Vector3(
+            targetWorldSize.x / spriteSize.x,
+            targetWorldSize.y / spriteSize.y,
+            1f
+        );
+
+        // 应用缩放
+        renderer.transform.localScale = scale;
+
+        // Collider 处理
+        Collider2D col = GetComponent<Collider2D>();
+        if (col is BoxCollider2D box)
+        {
+            box.size = targetWorldSize;
+            box.offset = Vector2.zero;
+        }
+        else
+        {
+            Debug.LogError("Only BoxCollider2D is supported.");
+        }
+
+        anchorSprite.transform.position = anchor.transform.position;
+        //anchorSprite.transform.SetParent(renderer.transform);
     }
 }
