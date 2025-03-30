@@ -15,6 +15,12 @@ public class ExplosiveBox : MonoBehaviour
     [SerializeField] private float explosionRadius = 1.5f;
     [SerializeField] private SpriteRenderer radiusVisualRenderer;
 
+    private void Start()
+    {
+        PauseEvent.OnPauseTriggered += Pause;
+        PauseEvent.OnPauseResumed += Resume;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>())
@@ -24,6 +30,16 @@ public class ExplosiveBox : MonoBehaviour
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }
+
+    private bool isPaused = false;
+    private IEnumerator WaitUnpaused()
+    {
+        while (isPaused)
+            yield return null;
+    }
+
+    public void Pause() => isPaused = true;
+    public void Resume() => isPaused = false;
 
     IEnumerator ExplodeCountDown(float time)
     {
@@ -45,6 +61,8 @@ public class ExplosiveBox : MonoBehaviour
             float t = 0f;
             while (t < half)
             {
+                yield return WaitUnpaused();
+
                 t += Time.deltaTime;
                 float a = Mathf.Lerp(0f, 1f, t / half);
                 SetAlpha(a);
@@ -55,6 +73,8 @@ public class ExplosiveBox : MonoBehaviour
             t = 0f;
             while (t < half)
             {
+                yield return WaitUnpaused();
+
                 t += Time.deltaTime;
                 float a = Mathf.Lerp(1f, 0f, t / half);
                 SetAlpha(a);
@@ -72,6 +92,8 @@ public class ExplosiveBox : MonoBehaviour
 
         while (expandTimer < expandDuration)
         {
+            yield return WaitUnpaused();
+
             expandTimer += Time.deltaTime;
             float t = Mathf.Clamp01(expandTimer / expandDuration);
             float scale = Mathf.Lerp(0f, explosionRadius * 2f, t); // 因为 scale 是直径
@@ -86,7 +108,9 @@ public class ExplosiveBox : MonoBehaviour
         float fadeTimer = 0f;
         while (fadeTimer < expandDuration)
         {
-            fadeTimer+= Time.deltaTime;
+            yield return WaitUnpaused();
+
+            fadeTimer += Time.deltaTime;
             float a = Mathf.Lerp(1f, 0f, fadeTimer / expandDuration);
             Color c = radiusVisualRenderer.color;
             c.a = a;
@@ -102,7 +126,10 @@ public class ExplosiveBox : MonoBehaviour
             if (hit.GetComponent<PlayerController>())
             {
                 PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
-                break;
+            }
+            else if (hit.GetComponent<SwitchableObj>()&& hit.gameObject!=gameObject)
+            {
+                Destroy(hit.gameObject);
             }
         }
         Destroy(gameObject);

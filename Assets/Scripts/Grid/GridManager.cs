@@ -272,9 +272,11 @@ public class GridManager : MonoBehaviour
     public void StartState(SwitchState state){
         switch (state) {
             case SwitchState.None:
+                PauseEvent.Resume();
                 Debug.Log("进入none state");
                 break;
             case SwitchState.Switch:
+                PauseEvent.Pause();
                 break;
             case SwitchState.Move:
 
