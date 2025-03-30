@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
         movementController = GetComponent<MovementController>();
         jumpController = GetComponent<JumpController>();
         groundCheckController = GetComponent<GroundCheckController>();
-        wallCollisionController = GetComponent<WallCollisionController>();
+        // wallCollisionController = GetComponent<WallCollisionController>();
         speedChangeDetector = GetComponent<SpeedChangeDetector>();
     }
 
@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
         movementController.Move(moveInput);
         movementController.Rotate(moveInput);
         jumpController.HandleJump();
-        wallCollisionController.HandleWallCollision();
+        // wallCollisionController.HandleWallCollision();
         speedChangeDetector.CheckSpeedChange();
     }
 }
