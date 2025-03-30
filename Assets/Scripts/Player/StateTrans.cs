@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// 这个可以用于控制角色动画结束或开始时执行一些操作
+/// 比如播放音乐，播放特效，播放动画等
+/// 或者动画存续期间检测状态
+/// </summary>
 public class StateTrans : StateMachineBehaviour
 {
     public string musicName;
