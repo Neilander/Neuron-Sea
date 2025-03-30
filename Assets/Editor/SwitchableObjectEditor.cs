@@ -8,10 +8,10 @@ public class SwitchableObjectEditor : Editor
 {
     public override void OnInspectorGUI(){
         base.OnInspectorGUI();
-
-        if (GUILayout.Button("Set to Expected Size"))
+        SwitchableObj switchableObject = (SwitchableObj)target;
+        if (GUILayout.Button("设置到预期大小"))
         {
-            SwitchableObj switchableObject = (SwitchableObj)target;
+            
 
             // 获取 GridManager 实例
             if (GridManager.Instance != null)
@@ -24,9 +24,9 @@ public class SwitchableObjectEditor : Editor
             }
         }
 
-        if (GUILayout.Button("Set Anchor to Expected Pos"))
+        if (GUILayout.Button("设置锚点到预期位置"))
         {
-            SwitchableObj switchableObject = (SwitchableObj)target;
+            
 
             // 获取 GridManager 实例
             if (GridManager.Instance != null)
@@ -40,10 +40,9 @@ public class SwitchableObjectEditor : Editor
         }
 
         // 添加一个按钮
-        if (GUILayout.Button("Set to Closest Grid Point")) {
+        if (GUILayout.Button("设置到最近坐标点")) {
             // 获取当前选中的对象
-            SwitchableObj switchableObject = (SwitchableObj)target;
-
+            
             // 获取 GridManager 实例
             if (GridManager.Instance != null) {
                 switchableObject.SetToClosestGridPoint();
@@ -53,10 +52,9 @@ public class SwitchableObjectEditor : Editor
             }
         }
 
-        if (GUILayout.Button("Switch if Switchable"))
+        
+        if (GUILayout.Button(switchableObject.IfCanSwitch()?"关闭交换": "开启交换"))
         {
-            SwitchableObj switchableObject = (SwitchableObj)target;
-
             switchableObject.SwitchEnableSwitchState();
         }
 
