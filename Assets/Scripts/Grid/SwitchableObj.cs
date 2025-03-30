@@ -282,7 +282,7 @@ public class SwitchableObj : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col is BoxCollider2D box)
         {
-            box.size = targetWorldSize;
+            box.size = targetWorldSize*0.9f;
             box.offset = Vector2.zero;
         }
         else
@@ -317,4 +317,21 @@ public class SwitchableObj : MonoBehaviour
         // 如果 anchorSprite 要跟随 anchor
         anchorSprite.transform.position = anchor.transform.position;
     }
+
+    private bool ifEnableSwitch = true;
+    public void SwitchEnableSwitchState()
+    {
+        if (ifEnableSwitch)
+        {
+            ifEnableSwitch = false;
+            anchorSprite.SetActive(false);
+        }
+        else
+        {
+            ifEnableSwitch = true;
+            anchorSprite.SetActive(true);
+        }
+    }
+
+    public bool IfCanSwitch() { return ifEnableSwitch; }
 }

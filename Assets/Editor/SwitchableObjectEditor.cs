@@ -53,6 +53,13 @@ public class SwitchableObjectEditor : Editor
             }
         }
 
-        
+        if (GUILayout.Button("Switch if Switchable"))
+        {
+            SwitchableObj switchableObject = (SwitchableObj)target;
+
+            switchableObject.SwitchEnableSwitchState();
+        }
+
+
     }
 }

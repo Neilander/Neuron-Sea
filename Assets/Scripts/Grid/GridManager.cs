@@ -121,7 +121,7 @@ public class GridManager : MonoBehaviour
                     Debug.Log("有这么多：" + hits.Length);
                     foreach (var hit in hits) {
                         SwitchableObj switchable = hit.collider.GetComponent<SwitchableObj>();
-                        if (switchable != null && !switchable.inSwitchState) {
+                        if (switchable != null && !switchable.inSwitchState&& switchable.IfCanSwitch()) {
                             Debug.Log("进入switch state");
                             switchable.IntoSwitchState();
                             ReportSwitchableObj(switchable, true);
@@ -143,7 +143,7 @@ public class GridManager : MonoBehaviour
                     SwitchableObj switchable = null;
                     foreach (var hit in hits) {
                         switchable = hit.collider.GetComponent<SwitchableObj>();
-                        if (switchable != null && !switchable.inSwitchState)
+                        if (switchable != null && !switchable.inSwitchState&& switchable.IfCanSwitch())
                         {
                             getSwitchable = true;
                             break;
