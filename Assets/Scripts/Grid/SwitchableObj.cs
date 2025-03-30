@@ -123,6 +123,7 @@ public class SwitchableObj : MonoBehaviour
     public void IntoSwitchState(){
         Debug.Log("IntoSwitchState");
         inSwitchState = true;
+        GetComponent<Collider2D>().isTrigger = true;
         dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         dragOffset.z = 0;
         SetAlpha(0.5f);
@@ -132,6 +133,7 @@ public class SwitchableObj : MonoBehaviour
         Debug.Log("OutSwitchState");
         inSwitchState = false;
         SetAlpha(1f);
+        GetComponent<Collider2D>().isTrigger = false;
         transform.position = selfGridPos - anchor.transform.localPosition;
     }
 
@@ -139,6 +141,7 @@ public class SwitchableObj : MonoBehaviour
         Debug.Log("OutSwitchState");
         inSwitchState = false;
         SetAlpha(1f);
+        GetComponent<Collider2D>().isTrigger = false;
         SetToGridPos(gridPos);
     }
 
@@ -148,12 +151,14 @@ public class SwitchableObj : MonoBehaviour
     {
         SetAlpha(0.5f);
         tempRecordGridPos = gridPos;
+        GetComponent<Collider2D>().isTrigger = true;
         SetTempToGridPos(gridPos);
     }
 
     public void OutTempMoveState()
     {
         SetAlpha(1f);
+        GetComponent<Collider2D>().isTrigger =false;
         renderer.transform.localPosition = recordTempPos;
     }
 
@@ -161,6 +166,7 @@ public class SwitchableObj : MonoBehaviour
     {
         SetAlpha(1f);
         SetToGridPos(tempRecordGridPos);
+        GetComponent<Collider2D>().isTrigger = false;
         renderer.transform.localPosition = recordTempPos;
     }
 
@@ -282,7 +288,14 @@ public class SwitchableObj : MonoBehaviour
         {
             Debug.LogError("Only BoxCollider2D is supported.");
         }
+        if (anchor != null)
+        {
+            Bounds spriteBounds = renderer.sprite.bounds;
+            Vector3 offset = new Vector3(spriteBounds.extents.x, -spriteBounds.extents.y, 0f);
+            Vector3 worldOffset = Vector3.Scale(offset, renderer.transform.lossyScale);
 
+            anchor.transform.position = renderer.transform.position + worldOffset;
+        }
         anchorSprite.transform.position = anchor.transform.position;
         //anchorSprite.transform.SetParent(renderer.transform);
     }
