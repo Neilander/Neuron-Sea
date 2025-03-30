@@ -24,6 +24,21 @@ public class SwitchableObjectEditor : Editor
             }
         }
 
+        if (GUILayout.Button("Set Anchor to Expected Pos"))
+        {
+            SwitchableObj switchableObject = (SwitchableObj)target;
+
+            // 获取 GridManager 实例
+            if (GridManager.Instance != null)
+            {
+                switchableObject.SetAnchorToAnchorPos();
+            }
+            else
+            {
+                Debug.LogWarning("GridManager not found in scene!");
+            }
+        }
+
         // 添加一个按钮
         if (GUILayout.Button("Set to Closest Grid Point")) {
             // 获取当前选中的对象

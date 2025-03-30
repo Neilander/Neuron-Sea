@@ -23,6 +23,7 @@ public class SwitchableObj : MonoBehaviour
     [SerializeField]private SpriteRenderer renderer;
 
     [SerializeField] private Vector2 ExpectedSize;
+    [SerializeField] private Vector2 ExpectedAnchorPos;
 
     public Vector3 SelfGridPos
     {
@@ -288,15 +289,32 @@ public class SwitchableObj : MonoBehaviour
         {
             Debug.LogError("Only BoxCollider2D is supported.");
         }
+        SetAnchorToAnchorPos();
+        //anchorSprite.transform.SetParent(renderer.transform);
+    }
+
+    public void SetAnchorToAnchorPos()
+    {
         if (anchor != null)
         {
+            // 1. 获取 Sprite 的局部边界
             Bounds spriteBounds = renderer.sprite.bounds;
-            Vector3 offset = new Vector3(spriteBounds.extents.x, -spriteBounds.extents.y, 0f);
-            Vector3 worldOffset = Vector3.Scale(offset, renderer.transform.lossyScale);
 
-            anchor.transform.position = renderer.transform.position + worldOffset;
+            // 2. 得到左下角（相对于 pivot 在中心的 sprite）
+            Vector3 localOrigin = new Vector3(spriteBounds.min.x, spriteBounds.min.y, 0f);
+
+            // 3. 把 localOrigin 转换到世界坐标
+            Vector3 worldOrigin = renderer.transform.TransformPoint(localOrigin);
+
+            // 4. 计算偏移量（以格子为单位）
+            float gridSize = GridManager.Instance.gridWidth;
+            Vector3 worldOffset = new Vector3(ExpectedAnchorPos.x * gridSize, ExpectedAnchorPos.y * gridSize, 0f);
+
+            // 5. 设置 anchor 的世界坐标
+            anchor.transform.position = worldOrigin + worldOffset;
         }
+
+        // 如果 anchorSprite 要跟随 anchor
         anchorSprite.transform.position = anchor.transform.position;
-        //anchorSprite.transform.SetParent(renderer.transform);
     }
 }
