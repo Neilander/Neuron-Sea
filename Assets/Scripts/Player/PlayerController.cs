@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-//1
+    //1
 
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
@@ -16,13 +16,13 @@ public class PlayerController : MonoBehaviour
     [Header("Ground Check Settings")]
     [SerializeField]
     private Transform groundCheckLeft; // 左侧地面检测点
-    
+
     [SerializeField]
     private Transform groundCheckRight; // 右侧地面检测点
-    
+
     [SerializeField]
     private float groundCheckRadius = 0.2f; // 地面检测半径
-    
+
     [SerializeField]
     private LayerMask groundLayer; // 只检测地面层
     #endregion
@@ -73,6 +73,7 @@ public class PlayerController : MonoBehaviour
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         GetSpeedChange();
+        
         Move();
         Rotate();
         Jump();
@@ -99,7 +100,9 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         float moveInput = Input.GetAxis("Horizontal");
-
+        // var v=rb.velocity;
+        // v.x=0;
+        // rb.velocity=v;
         if (isGrounded) //|| isTouchingWall
         {
             // 如果角色在地面上或者接触墙壁，正常移动
@@ -130,16 +133,20 @@ public class PlayerController : MonoBehaviour
     #region 角色跳跃,处理跳跃之后是落地还是降落
     private void Jump()
     {
+        float moveInput = Input.GetAxis("Horizontal");
+
+        // 在空中也可以左右移动
+        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-
             // 触发跳跃动画
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             animator.SetBool("isGrounded", false);
-
         }
-        else if (Input.GetButtonUp("Jump") && rb.velocity.y > 0) {
+        else if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
     }
@@ -149,26 +156,26 @@ public class PlayerController : MonoBehaviour
     #region 角色偏移
 
 
-    private void HandleWallCollision()
-    {
-        // 获取角色的宽度
-        float halfWidth = rb.GetComponent<Collider2D>().bounds.size.x / 2;
+    // private void HandleWallCollision()
+    // {
+    //     // 获取角色的宽度
+    //     float halfWidth = rb.GetComponent<Collider2D>().bounds.size.x / 2;
 
-        // 如果左射线检测到物体，右射线没有检测到物体
-        if (isTouchingWallLeft && !isTouchingWallRight)
-        {
-            // 向右偏移
-            rb.position = new Vector2(rb.position.x + 0.002f, rb.position.y); //+ halfWidth 
-        }
-        // 如果右射线检测到物体，左射线没有检测到物体
-        else if (isTouchingWallRight && !isTouchingWallLeft)
-        {
-            // 向左偏移
-            rb.position = new Vector2(rb.position.x - 0.002f, rb.position.y);//- halfWidth
-        }
+    //     // 如果左射线检测到物体，右射线没有检测到物体
+    //     if (isTouchingWallLeft && !isTouchingWallRight)
+    //     {
+    //         // 向右偏移
+    //         rb.position = new Vector2(rb.position.x + 0.002f, rb.position.y); //+ halfWidth 
+    //     }
+    //     // 如果右射线检测到物体，左射线没有检测到物体
+    //     else if (isTouchingWallRight && !isTouchingWallLeft)
+    //     {
+    //         // 向左偏移
+    //         rb.position = new Vector2(rb.position.x - 0.002f, rb.position.y);//- halfWidth
+    //     }
 
 
-    }
+    // }
     #endregion
     #region 绘制测试射线
     private void OnDrawGizmos()
