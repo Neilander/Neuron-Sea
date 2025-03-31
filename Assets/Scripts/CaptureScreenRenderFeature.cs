@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.Universal.Internal;
 
 public class CaptureScreenRenderFeature : ScriptableRendererFeature
 {
@@ -43,15 +44,27 @@ public class CaptureScreenRenderFeature : ScriptableRendererFeature
                 wrapMode: TextureWrapMode.Clamp, dimension: TextureDimension.Tex2D,
                 name: "_TemporaryRT"
             );
+            blitMaterial.SetFloat("_FlipY", Application.isPlaying ? 1f : 0f);
 
             // 正常处理 GameView 渲染
             cmd.Blit(source, temporaryRT, blitMaterial);
             cmd.Blit(temporaryRT, source);
+            //Blitter.BlitCameraTexture(cmd, source, temporaryRT, blitMaterial, 0);
+            //Blitter.BlitCameraTexture(cmd, temporaryRT, source);
 
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
 
-            RTHandles.Release(temporaryRT);
+           
+        }
+
+        public override void OnCameraCleanup(CommandBuffer cmd)
+        {
+            if (temporaryRT != null)
+            {
+                RTHandles.Release(temporaryRT);
+                temporaryRT = null;
+            }
         }
     }
 
