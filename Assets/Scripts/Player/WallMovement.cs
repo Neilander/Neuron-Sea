@@ -39,7 +39,6 @@ public class WallMovement : MonoBehaviour
         rb.gravityScale = 5f;
         
     }
-
     void WallCheck(){
         // 检测右侧墙壁
         //isRightWall = Physics2D.OverlapCircle(wallCheckRight.position, wallCheckRadius, wallLayer);

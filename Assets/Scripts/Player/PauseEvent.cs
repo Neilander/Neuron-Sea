@@ -7,14 +7,31 @@ public static class PauseEvent
 {
     public static event Action OnPauseTriggered;
     public static event Action OnPauseResumed;
+    
+    private static bool isPaused = false;
 
     public static void Pause()
     {
-        OnPauseTriggered?.Invoke();
+        if (!isPaused)
+        {
+            Time.timeScale = 0f; // 暂停游戏时间
+            isPaused = true;
+            OnPauseTriggered?.Invoke();
+        }
     }
 
-    public static void Resume()
+    public static void Resume() 
     {
-        OnPauseResumed?.Invoke();
+        if (isPaused)
+        {
+            Time.timeScale = 1f; // 恢复游戏时间
+            isPaused = false;
+            OnPauseResumed?.Invoke();
+        }
+    }
+
+    public static bool IsPaused()
+    {
+        return isPaused;
     }
 }
