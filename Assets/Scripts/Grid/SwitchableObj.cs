@@ -8,6 +8,8 @@ public class SwitchableObj : MonoBehaviour
 
     [SerializeField] private float flashRedDuration = 0.5f;
 
+    [SerializeField] private GameObject anchorSprite;
+
 
     private Vector3 selfGridPos;
 
@@ -18,22 +20,41 @@ public class SwitchableObj : MonoBehaviour
 
     private WorldMover mover;
 
-    private SpriteRenderer renderer;
+    [SerializeField]private SpriteRenderer renderer;
+
+    [SerializeField] private Vector2 ExpectedSize;
+    [SerializeField] private Vector2 ExpectedAnchorPos;
 
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
     }
 
+    private Vector3 recordTempPos;
+
     private void Start(){
         mover = GetComponent<WorldMover>();
         Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
-        renderer = GetComponentInChildren<SpriteRenderer>();
+        //renderer = GetComponentInChildren<SpriteRenderer>();
         selfGridPos = _pos;
+        recordTempPos = renderer.transform.localPosition;
+        anchorSprite.transform.localPosition = anchor.transform.localPosition;
+        anchorSprite.transform.SetParent(renderer.transform);
     }
 
     public void MoveToGridPos(Vector3 gridPos){
         mover.MoveTo(gridPos - anchor.transform.localPosition);
+        selfGridPos = gridPos;
+    }
+
+    
+    public void SetTempToGridPos(Vector3 gridPos)
+    {
+        renderer.transform.position = gridPos - anchor.transform.localPosition + renderer.transform.localPosition;
+    }
+
+    public void SetToGridPos(Vector3 gridPos){
+        transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
     }
 
@@ -103,6 +124,7 @@ public class SwitchableObj : MonoBehaviour
     public void IntoSwitchState(){
         Debug.Log("IntoSwitchState");
         inSwitchState = true;
+        GetComponent<Collider2D>().isTrigger = true;
         dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         dragOffset.z = 0;
         SetAlpha(0.5f);
@@ -112,13 +134,41 @@ public class SwitchableObj : MonoBehaviour
         Debug.Log("OutSwitchState");
         inSwitchState = false;
         SetAlpha(1f);
+        GetComponent<Collider2D>().isTrigger = false;
         transform.position = selfGridPos - anchor.transform.localPosition;
     }
 
     public void OutSwitchState(Vector3 gridPos){
         Debug.Log("OutSwitchState");
         inSwitchState = false;
-        MoveToGridPos(gridPos);
+        SetAlpha(1f);
+        GetComponent<Collider2D>().isTrigger = false;
+        SetToGridPos(gridPos);
+    }
+
+
+    private Vector3 tempRecordGridPos;
+    public void IntoTempMoveState(Vector3 gridPos)
+    {
+        SetAlpha(0.5f);
+        tempRecordGridPos = gridPos;
+        GetComponent<Collider2D>().isTrigger = true;
+        SetTempToGridPos(gridPos);
+    }
+
+    public void OutTempMoveState()
+    {
+        SetAlpha(1f);
+        GetComponent<Collider2D>().isTrigger =false;
+        renderer.transform.localPosition = recordTempPos;
+    }
+
+    public void ChangeFromTempMoveToNormal()
+    {
+        SetAlpha(1f);
+        SetToGridPos(tempRecordGridPos);
+        GetComponent<Collider2D>().isTrigger = false;
+        renderer.transform.localPosition = recordTempPos;
     }
 
     private void Update(){
@@ -142,36 +192,146 @@ public class SwitchableObj : MonoBehaviour
         GridManager.Instance.CountDown();
     }
 
-    public void FlashRed(){
-        StartCoroutine(FlashRedCoroutine(flashRedDuration));
+    private Coroutine flashCor;
+    public void ControlFlash(bool ifStart){
+        if (ifStart)
+        {
+            if (flashCor == null)
+                flashCor = StartCoroutine(FlashRedCoroutine(flashRedDuration));
+        }
+        else
+        {
+            if(flashCor!=null)StopCoroutine(flashCor);
+            flashCor = null;
+            renderer.color = originalColor;
+        }
     }
 
+    private Color originalColor;
     private IEnumerator FlashRedCoroutine(float duration = 0.4f){
-        Color originalColor = renderer.color;
+        originalColor = renderer.color;
         Color targetColor = Color.red;
-
         float halfDuration = duration / 2f;
-        float timer = 0f;
 
-        // 渐变到红色
-        while (timer < halfDuration) {
-            timer += Time.deltaTime;
-            float t = timer / halfDuration;
-            renderer.color = Color.Lerp(originalColor, targetColor, t);
-            yield return null;
+        while (true)
+        {
+            float timer = 0f;
+
+            // 渐变到红色
+            while (timer < halfDuration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / halfDuration;
+                renderer.color = Color.Lerp(originalColor, targetColor, t);
+                yield return null;
+            }
+
+            timer = 0f;
+
+            // 渐变回原色
+            while (timer < halfDuration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / halfDuration;
+                renderer.color = Color.Lerp(targetColor, originalColor, t);
+                yield return null;
+            }
+
+            renderer.color = originalColor;
         }
-
-        timer = 0f;
-
-        // 渐变回原色
-        while (timer < halfDuration) {
-            timer += Time.deltaTime;
-            float t = timer / halfDuration;
-            renderer.color = Color.Lerp(targetColor, originalColor, t);
-            yield return null;
-        }
-
-        renderer.color = originalColor; // 确保最终还原
-        GridManager.Instance.CountDown();
     }
+
+    public void SizeToExpectedSize()
+    {
+        if (GridManager.Instance == null)
+        {
+            Debug.LogError("GridManager.Instance is null.");
+            return;
+        }
+
+        if (renderer == null || renderer.sprite == null)
+        {
+            Debug.LogError("SpriteRenderer or Sprite is missing.");
+            return;
+        }
+
+        if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
+        {
+            Debug.LogError("Size不能是0");
+            return;
+        }
+           
+        float gridSize = GridManager.Instance.gridWidth;
+
+        Vector2 targetWorldSize = ExpectedSize * gridSize;
+
+        // 获取原始 sprite 世界单位大小
+        Vector2 spriteSize = renderer.sprite.bounds.size;
+
+        // 计算缩放比
+        Vector3 scale = new Vector3(
+            targetWorldSize.x / spriteSize.x,
+            targetWorldSize.y / spriteSize.y,
+            1f
+        );
+
+        // 应用缩放
+        renderer.transform.localScale = scale;
+
+        // Collider 处理
+        Collider2D col = GetComponent<Collider2D>();
+        if (col is BoxCollider2D box)
+        {
+            box.size = targetWorldSize*0.9f;
+            box.offset = Vector2.zero;
+        }
+        else
+        {
+            Debug.LogError("Only BoxCollider2D is supported.");
+        }
+        SetAnchorToAnchorPos();
+        //anchorSprite.transform.SetParent(renderer.transform);
+    }
+
+    public void SetAnchorToAnchorPos()
+    {
+        if (anchor != null)
+        {
+            // 1. 获取 Sprite 的局部边界
+            Bounds spriteBounds = renderer.sprite.bounds;
+
+            // 2. 得到左下角（相对于 pivot 在中心的 sprite）
+            Vector3 localOrigin = new Vector3(spriteBounds.min.x, spriteBounds.min.y, 0f);
+
+            // 3. 把 localOrigin 转换到世界坐标
+            Vector3 worldOrigin = renderer.transform.TransformPoint(localOrigin);
+
+            // 4. 计算偏移量（以格子为单位）
+            float gridSize = GridManager.Instance.gridWidth;
+            Vector3 worldOffset = new Vector3(ExpectedAnchorPos.x * gridSize, ExpectedAnchorPos.y * gridSize, 0f);
+
+            // 5. 设置 anchor 的世界坐标
+            anchor.transform.position = worldOrigin + worldOffset;
+        }
+
+        // 如果 anchorSprite 要跟随 anchor
+        anchorSprite.transform.position = anchor.transform.position;
+    }
+
+    private bool ifEnableSwitch = true;
+    public void SwitchEnableSwitchState()
+    {
+        if (ifEnableSwitch)
+        {
+            ifEnableSwitch = false;
+            anchorSprite.SetActive(false);
+        }
+        else
+        {
+            ifEnableSwitch = true;
+            anchorSprite.SetActive(true);
+        }
+    }
+
+    public bool IfCanSwitch() { return ifEnableSwitch; }
 }

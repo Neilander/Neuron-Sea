@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
 
-    [Header("格子数据调整")] [SerializeField] private int gridWidth = 1;
+    [Header("格子数据调整")] public int gridWidth = 1;
 
     [SerializeField] [Range(0, 1)] private float offsetX = 0;
 
@@ -30,6 +30,15 @@ public class GridManager : MonoBehaviour
 
     private Counter counter = new Counter();
 
+    private SwitchableObj switchableObjFrom;
+
+    //private SwitchableObj switchableObjTo;
+
+    private SwitchState curState = SwitchState.None;
+
+    private bool getBothTarget = false;
+    private SwitchableObj tempSwitchableObj;
+    private bool ifLegalMove = true;
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos(){
         if (!displayInGizmos) return;
@@ -91,7 +100,6 @@ public class GridManager : MonoBehaviour
     [Header("测试用")] [SerializeField] private Vector3 testPosition;
 
     [SerializeField] private bool doTestGetPos = false;
-
     private void Update(){
         //编辑器中也会触发
         if (doTestGetPos) {
@@ -113,7 +121,7 @@ public class GridManager : MonoBehaviour
                     Debug.Log("有这么多：" + hits.Length);
                     foreach (var hit in hits) {
                         SwitchableObj switchable = hit.collider.GetComponent<SwitchableObj>();
-                        if (switchable != null && !switchable.inSwitchState) {
+                        if (switchable != null && !switchable.inSwitchState&& switchable.IfCanSwitch()) {
                             Debug.Log("进入switch state");
                             switchable.IntoSwitchState();
                             ReportSwitchableObj(switchable, true);
@@ -124,6 +132,86 @@ public class GridManager : MonoBehaviour
                 }
                 break;
             case SwitchState.Switch:
+                if (Input.GetMouseButton(0))
+                {
+                    Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Vector2 rayOrigin = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
+
+                    RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, Vector2.zero);
+
+                    bool getSwitchable = false;
+                    SwitchableObj switchable = null;
+                    foreach (var hit in hits) {
+                        switchable = hit.collider.GetComponent<SwitchableObj>();
+                        if (switchable != null && !switchable.inSwitchState&& switchable.IfCanSwitch())
+                        {
+                            getSwitchable = true;
+                            break;
+                        }
+                    }
+                    if (getSwitchable)
+                    {
+                        if (switchable != tempSwitchableObj)
+                        {
+                            tempSwitchableObj = switchable;
+                            //检查是否合法
+                            ifLegalMove = switchableObjFrom.CheckIfCanMoveTo(switchable.SelfGridPos, switchable.gameObject)
+                            && switchable.CheckIfCanMoveTo(switchableObjFrom.SelfGridPos, switchableObjFrom.gameObject);
+                            if (ifLegalMove)
+                            {
+                                tempSwitchableObj.IntoTempMoveState(switchableObjFrom.SelfGridPos);
+                            }
+                            else
+                            {
+                                
+                                tempSwitchableObj.ControlFlash(true);
+                                switchableObjFrom.ControlFlash(true);
+                            }
+                        }
+                    } else
+                    {
+                        if (tempSwitchableObj != null)
+                        {
+                            if (ifLegalMove)
+                            {
+                                tempSwitchableObj.OutTempMoveState();
+                            }
+                            else
+                            {
+                                tempSwitchableObj.ControlFlash(false);
+                                switchableObjFrom.ControlFlash(false);
+                            }
+                            
+                            tempSwitchableObj = null;
+                        }
+                    }
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    if (tempSwitchableObj != null)
+                    {
+                        if (ifLegalMove)
+                        {
+                            DoSwitch();
+                        }
+                        else
+                        {
+                            tempSwitchableObj.ControlFlash(false);
+                            switchableObjFrom.ControlFlash(false);
+                            switchableObjFrom.OutSwitchState();
+                        }
+                        
+                        StartState(SwitchState.None);
+                    }
+                    else
+                    {
+                        switchableObjFrom.OutSwitchState();
+                        StartState(SwitchState.None);
+                    }
+                }
+
+                /*
                 if (Input.GetMouseButtonUp(0)) {
                     // 从鼠标位置转为世界坐标
                     Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -167,7 +255,7 @@ public class GridManager : MonoBehaviour
                         ClearSwitchableObj();
                         StartState(SwitchState.None);
                     }
-                }
+                }*/
                 break;
             case SwitchState.Move:
                 if (counter.IsZero()) {
@@ -184,9 +272,11 @@ public class GridManager : MonoBehaviour
     public void StartState(SwitchState state){
         switch (state) {
             case SwitchState.None:
+                PauseEvent.Resume();
                 Debug.Log("进入none state");
                 break;
             case SwitchState.Switch:
+                PauseEvent.Pause();
                 break;
             case SwitchState.Move:
 
@@ -207,13 +297,7 @@ public class GridManager : MonoBehaviour
 
     #region 交换物体
 
-    private SwitchableObj switchableObjFrom;
-
-    private SwitchableObj switchableObjTo;
-
-    private SwitchState curState = SwitchState.None;
-
-    private bool getBothTarget = false;
+    
 
     private bool CanEnterSwitchState(){
         return true;
@@ -224,22 +308,22 @@ public class GridManager : MonoBehaviour
             switchableObjFrom = obj;
         }
         else {
-            switchableObjTo = obj;
+            
             getBothTarget = true;
         }
     }
 
     private void DoSwitch(){
         Vector3 tempPos = switchableObjFrom.SelfGridPos;
-        switchableObjFrom.OutSwitchState(switchableObjTo.SelfGridPos);
-        switchableObjTo.SetAlpha(0.5f);
-        switchableObjTo.MoveToGridPos(tempPos);
+        switchableObjFrom.OutSwitchState(tempSwitchableObj.SelfGridPos);
+        tempSwitchableObj.ChangeFromTempMoveToNormal();
         ClearSwitchableObj();
     }
 
     private void ClearSwitchableObj(){
         switchableObjFrom = null;
-        switchableObjTo = null;
+       
+        tempSwitchableObj = null;
         getBothTarget = false;
     }
 
