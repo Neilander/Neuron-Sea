@@ -2,32 +2,214 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private MovementController movementController;
-    private JumpController jumpController;
-    private GroundCheckController groundCheckController;
-    private WallCollisionController wallCollisionController;
-    private SpeedChangeDetector speedChangeDetector;
+    //1
 
-    private void Awake()
+    #region 移动速度,跳跃速度
+    [Header("Movement Settings")]
+    [SerializeField]
+    private float moveSpeed = 10f;
+
+    [SerializeField]
+    private float jumpForce = 5f;
+    #endregion
+    #region 地面检测点
+    [Header("Ground Check Settings")]
+    [SerializeField]
+    private new BoxCollider2D collider; // 角色碰撞体
+
+    [SerializeField]
+    private float deviation = 0.02f; // 检测误差
+
+    [SerializeField]
+    private LayerMask groundLayer; // 只检测地面层
+    #endregion
+    #region 墙壁检测点
+    // [Header("Wall Check Settings")]
+    // [SerializeField] private Transform wallCheckLeft; // 左侧墙壁检测点
+    //
+    // [SerializeField] private Transform wallCheckRight; // 右侧墙壁检测点
+    // [SerializeField]
+    // private Transform wallCheck; // 角色脚前方的检测点
+    //
+    //
+    //
+    // [SerializeField]
+    // private float wallCheckRadius = 0.2f; // 圆形检测的半径
+    //
+    // [SerializeField]
+    // private LayerMask wallLayer; // 只检测墙壁层
+    #endregion
+    #region 角色身上脚本
+    private Animator animator;
+    private Rigidbody2D rb;
+    #endregion
+    #region 布尔值
+
+    private bool isGrounded;
+    private bool isTouchingWall;
+
+    private bool isTouchingWallLeft;
+
+    private bool isTouchingWallRight;
+    #endregion
+    #region 判断加速度正负
+    private float previousSpeed; // 用于保存上一帧的速度值
+    private float currentSpeed;
+
+    [SerializeField] private float speedChangeThreshold = 0.01f; // 速度变化阈值，避免微小波
+    #endregion
+    private void Start()
     {
-        movementController = GetComponent<MovementController>();
-        jumpController = GetComponent<JumpController>();
-        groundCheckController = GetComponent<GroundCheckController>();
-        wallCollisionController = GetComponent<WallCollisionController>();
-        speedChangeDetector = GetComponent<SpeedChangeDetector>();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
+    private void FixedUpdate()
+    {
+
+        GroundCheck();
+        animator.SetBool("isGrounded", isGrounded);
+        GetSpeedChange();
+        
+        Move();
+        Rotate();
+        // HandleWallCollision();
+
+
+    }
     private void Update()
     {
-        groundCheckController.CheckGround();
-        jumpController.SetGrounded(groundCheckController.IsGrounded);
+        Jump();
+    }
 
+    #region 判断地面
+    private void GroundCheck()
+    {
+
+        bool wasGrounded = isGrounded;
+        // 检测角色是否接触地面
+        isGrounded = Physics2D.BoxCast(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x, deviation), 0f, Vector2.down, deviation / 2, groundLayer);
+        if(!wasGrounded && isGrounded)
+        {
+            Debug.Log("Land");
+        }
+        // 检测脚前方是否接触墙壁
+        // Debug.Log("isTouchingWall: " + isTouchingWall);
+        // isTouchingWallLeft = Physics2D.OverlapCircle(wallCheckLeft.position, wallCheckRadius, wallLayer);
+        // isTouchingWallRight = Physics2D.OverlapCircle(wallCheckRight.position, wallCheckRadius, wallLayer);
+        // isTouchingWall = Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallLayer);
+    }
+    #endregion
+    #region 角色水平移动
+    private void Move()
+    {
         float moveInput = Input.GetAxis("Horizontal");
 
-        movementController.Move(moveInput);
-        movementController.Rotate(moveInput);
-        jumpController.HandleJump();
-        wallCollisionController.HandleWallCollision();
-        speedChangeDetector.CheckSpeedChange();
+        /*防穿墙
+        if (Physics2D.BoxCast(collider.bounds.center + deviation * Vector3.left, new Vector2(collider.bounds.size.x, collider.bounds.size.y - deviation), 0f, Vector2.zero, 0, groundLayer))
+        {
+            transform.position += Vector3.right * deviation;
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+        else if (Physics2D.BoxCast(collider.bounds.center + deviation * Vector3.right, new Vector2(collider.bounds.size.x, collider.bounds.size.y - deviation), 0f, Vector2.zero, 0, groundLayer))
+        {
+            transform.position += Vector3.left * deviation;
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        }
+        */
+        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        animator.SetFloat("Speed", Mathf.Abs(moveInput));
     }
+    #endregion
+    #region 角色身体转向
+    private void Rotate()
+    {
+        float moveInput = Input.GetAxis("Horizontal");
+        if (moveInput < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else if (moveInput > 0)
+            transform.localScale = new Vector3(1, 1, 1);
+    }
+    #endregion
+    #region 角色跳跃,处理跳跃之后是落地还是降落
+    private void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            // 触发跳跃动画
+            animator.SetTrigger("Jump");
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
+        else if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+        }
+    }
+    #endregion
+
+
+    #region 角色偏移
+
+
+    // private void HandleWallCollision()
+    // {
+    //     // 获取角色的宽度
+    //     float halfWidth = rb.GetComponent<Collider2D>().bounds.size.x / 2;
+
+    //     // 如果左射线检测到物体，右射线没有检测到物体
+    //     if (isTouchingWallLeft && !isTouchingWallRight)
+    //     {
+    //         // 向右偏移
+    //         rb.position = new Vector2(rb.position.x + 0.002f, rb.position.y); //+ halfWidth 
+    //     }
+    //     // 如果右射线检测到物体，左射线没有检测到物体
+    //     else if (isTouchingWallRight && !isTouchingWallLeft)
+    //     {
+    //         // 向左偏移
+    //         rb.position = new Vector2(rb.position.x - 0.002f, rb.position.y);//- halfWidth
+    //     }
+
+
+    // }
+    #endregion
+    #region 绘制测试射线
+    private void OnDrawGizmos()
+    {
+        //可视化碰撞体
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube((Vector2)transform.position + collider.offset, collider.size);
+
+        // 可视化脚前方的墙壁检测
+        // if (wallCheck != null)
+        // {
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawWireSphere(wallCheck.position, wallCheckRadius);
+        // }
+    }
+    #endregion
+    #region 判断加速度正负
+    private void GetSpeedChange()
+    {
+        Vector2 horizontalVelocity = new Vector2(rb.velocity.x, 0f);
+        currentSpeed = Mathf.Round(horizontalVelocity.magnitude);
+
+        if (currentSpeed > previousSpeed + speedChangeThreshold)
+        {
+            animator.SetBool("IsIncreasing", true);
+        }
+        else if (currentSpeed < previousSpeed - speedChangeThreshold)
+        {
+            animator.SetBool("IsIncreasing", false);
+        }
+
+        // // 更新 Animator 参数（直接传递原始值，无需四舍五入）
+        // animator.SetFloat("Speed", horizontalVelocity.magnitude);
+
+        previousSpeed = currentSpeed;
+    }
+    #endregion
 }

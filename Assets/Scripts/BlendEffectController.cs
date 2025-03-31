@@ -8,7 +8,9 @@ public class BlendEffectController : MonoBehaviour
         Multiply,
         Screen,
         Overlay,
-        SoftLight
+        SoftLight,
+        ColorDodge,
+        PinLight
     }
 
     [Header("混合模式设置")]
@@ -19,6 +21,8 @@ public class BlendEffectController : MonoBehaviour
     public Shader screenShader;
     public Shader overlayShader;
     public Shader softLightShader;
+    public Shader colorDodgeShader;
+    public Shader pinLightShader;
 
     [Header("纹理设置")]
     public Texture2D mainTexture;
@@ -68,6 +72,8 @@ public class BlendEffectController : MonoBehaviour
             BlendMode.Screen => screenShader,
             BlendMode.Overlay => overlayShader,
             BlendMode.SoftLight => softLightShader,
+            BlendMode.ColorDodge => colorDodgeShader,
+            BlendMode.PinLight => pinLightShader,
             _ => softLightShader
         };
 
@@ -96,10 +102,21 @@ public class BlendEffectController : MonoBehaviour
         if (currentMaterial == null) return;
 
         // 更新纹理
-        if (mainTexture != null)
-            currentMaterial.SetTexture(MainTex, mainTexture);
+        if (mainTexture != null &&
+            currentBlendMode != BlendMode.ColorDodge &&
+            currentBlendMode != BlendMode.PinLight)
+        {
+            if (currentMaterial.HasProperty(MainTex))
+            {
+                currentMaterial.SetTexture(MainTex, mainTexture);
+            }
+        }
+
+        // 设置混合纹理
         if (blendTexture != null)
+        {
             currentMaterial.SetTexture(BlendTex, blendTexture);
+        }
 
         // 更新混合参数
         currentMaterial.SetFloat(BlendAmount, blendAmount);
@@ -134,9 +151,14 @@ public class BlendEffectController : MonoBehaviour
     public void SetMainTexture(Texture2D texture)
     {
         mainTexture = texture;
-        if (currentMaterial != null && texture != null)
+        if (currentMaterial != null &&
+            currentBlendMode != BlendMode.ColorDodge &&
+            currentBlendMode != BlendMode.PinLight)
         {
-            currentMaterial.SetTexture(MainTex, texture);
+            if (currentMaterial.HasProperty(MainTex))
+            {
+                currentMaterial.SetTexture(MainTex, texture);
+            }
         }
     }
 
