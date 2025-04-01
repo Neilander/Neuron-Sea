@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     private new BoxCollider2D collider; // 角色碰撞体
 
     [SerializeField]
-    private float deviation = 0.02f; // 检测误差
+    private float deviation = 0.02f; // 检测误差，为unity物理误差的2倍
 
     [SerializeField]
     private LayerMask groundLayer; // 只检测地面层
@@ -52,6 +52,10 @@ public class PlayerController : MonoBehaviour
 
     private bool isTouchingWallRight;
     #endregion
+    #region Timer
+    float minJumpTime = 0.08f;
+    float minJumpTimer;
+    #endregion
     #region 判断加速度正负
     private float previousSpeed; // 用于保存上一帧的速度值
     private float currentSpeed;
@@ -73,26 +77,28 @@ public class PlayerController : MonoBehaviour
         
         Move();
         Rotate();
+        CheckJump();
         // HandleWallCollision();
-
-
-    }
-    private void Update()
-    {
-        Jump();
     }
 
     #region 判断地面
     private void GroundCheck()
     {
-
-        bool wasGrounded = isGrounded;
+        //bool wasGrounded = isGrounded;
         // 检测角色是否接触地面
-        isGrounded = Physics2D.BoxCast(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x, deviation), 0f, Vector2.down, deviation / 2, groundLayer);
-        if(!wasGrounded && isGrounded)
+        isGrounded = false;
+        foreach (RaycastHit2D hit in Physics2D.BoxCastAll(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x + deviation * 0.8f, deviation), 0f, Vector2.down, deviation / 2, groundLayer))
         {
-            Debug.Log("Land");
+            if (hit.normal.y > 0.9f)
+            {
+                isGrounded = true;
+                break;
+            }
         }
+        //if(!wasGrounded && isGrounded)
+        //{
+        //    Debug.Log("Land");
+        //}
         // 检测脚前方是否接触墙壁
         // Debug.Log("isTouchingWall: " + isTouchingWall);
         // isTouchingWallLeft = Physics2D.OverlapCircle(wallCheckLeft.position, wallCheckRadius, wallLayer);
@@ -135,22 +141,34 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
     }
     #endregion
-    #region 角色跳跃,处理跳跃之后是落地还是降落
-    private void Jump()
+    #region 角色跳跃
+    void Jump()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            // 触发跳跃动画
-            animator.SetTrigger("Jump");
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
-        else if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        // 触发跳跃动画
+        animator.SetTrigger("Jump");
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        GameInput.Jump.OnTrigger();
+    }
+    void CheckJump()
+    {
+        CheckJumpStart();
+        CheckJumpInterrupt();
+    }
+    void CheckJumpInterrupt()
+    {
+        if (!GameInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
     }
+    void CheckJumpStart()
+    {
+        if (GameInput.Jump.Pressed() && isGrounded)
+        {
+            Jump();
+        }
+    }
     #endregion
-
 
     #region 角色偏移
 
