@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    //1
-
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
     [SerializeField]
@@ -51,11 +49,12 @@ public class PlayerController : MonoBehaviour
     private bool isTouchingWallLeft;
 
     private bool isTouchingWallRight;
+
+    private bool wasGrounded;
     #endregion
     #region 判断加速度正负
     private float previousSpeed; // 用于保存上一帧的速度值
     private float currentSpeed;
-
     [SerializeField] private float speedChangeThreshold = 0.01f; // 速度变化阈值，避免微小波
     #endregion
     private void Start()
@@ -69,8 +68,10 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
-        GetSpeedChange();
         
+        animator.SetFloat("VerticalSpeed", rb.velocity.y);
+        GetSpeedChange();
+
         Move();
         Rotate();
         // HandleWallCollision();
@@ -86,10 +87,10 @@ public class PlayerController : MonoBehaviour
     private void GroundCheck()
     {
 
-        bool wasGrounded = isGrounded;
+        wasGrounded = isGrounded;
         // 检测角色是否接触地面
         isGrounded = Physics2D.BoxCast(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x, deviation), 0f, Vector2.down, deviation / 2, groundLayer);
-        if(!wasGrounded && isGrounded)
+        if (!wasGrounded && isGrounded)
         {
             Debug.Log("Land");
         }
@@ -180,7 +181,7 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmos()
     {
         //可视化碰撞体
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireCube((Vector2)transform.position + collider.offset, collider.size);
 
         // 可视化脚前方的墙壁检测
