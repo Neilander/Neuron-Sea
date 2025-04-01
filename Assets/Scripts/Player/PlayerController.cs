@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    //1
-
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
     [SerializeField]
@@ -61,6 +59,8 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed;
 
     [SerializeField] private float speedChangeThreshold = 0.01f; // 速度变化阈值，避免微小波
+
+    private float CurrentYSpeed;
     #endregion
     private void Start()
     {
@@ -73,6 +73,12 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
+        CurrentYSpeed = rb.velocity.y;
+        if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
+            CurrentYSpeed = 0;
+        }
+        print(CurrentYSpeed);
+        animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
         
         Move();
