@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviour
         // 触发跳跃动画
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        GameInput.Jump.OnTrigger();
+        JumpInput.Jump.OnTrigger();
     }
     void CheckJump()
     {
@@ -162,14 +162,14 @@ public class PlayerController : MonoBehaviour
     }
     void CheckJumpInterrupt()
     {
-        if (!GameInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
+        if (!JumpInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
     }
     void CheckJumpStart()
     {
-        if (GameInput.Jump.Pressed() && isGrounded)
+        if (JumpInput.Jump.Pressed() && isGrounded)
         {
             Jump();
         }

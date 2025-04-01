@@ -25,7 +25,7 @@ public class VisualButton
         this.buffer_timer = 0f;
         this.min_time = min_time;
         this.min_timer = 0f;
-        GameInput.Buttons.Add(this);
+        JumpInput.Buttons.Add(this);
     }
 
     public bool Pressed(bool fixed_check = true)
@@ -125,7 +125,7 @@ public abstract class BaseGameInput : MonoBehaviour
     }
 }
 
-public class GameInput : BaseGameInput
+public class JumpInput : BaseGameInput
 {
     public static VisualButton Jump = new VisualButton(KeyCode.Space, 0.08f, 0.08f);
 
