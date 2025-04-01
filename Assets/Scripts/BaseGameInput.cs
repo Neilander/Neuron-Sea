@@ -104,7 +104,7 @@ public class VisualButton
     }
 }
 
-public abstract class BaseGameInput : MonoBehaviour
+public class BaseGameInput : MonoBehaviour
 {
     public static List<VisualButton> Buttons = new List<VisualButton>();
 
