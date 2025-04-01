@@ -60,7 +60,7 @@ public class VisualButton
 
     public void Update(float deltaTime)
     {
-        if (UnityEngine.Input.GetKey(key))
+        if (Input.GetKey(key))
         {
             get_key_in_frame = true;
         }
@@ -104,10 +104,9 @@ public class VisualButton
     }
 }
 
-public class GameInput : MonoBehaviour
+public abstract class BaseGameInput : MonoBehaviour
 {
     public static List<VisualButton> Buttons = new List<VisualButton>();
-    public static VisualButton Jump = new VisualButton(KeyCode.Space, 0.08f, 0.08f);
 
     public void Update()
     {
@@ -117,11 +116,21 @@ public class GameInput : MonoBehaviour
         }
     }
 
-    public void FixedUpdate()
+    public void FixedUpdate() 
     {
         foreach (VisualButton button in Buttons)
         {
             button.FixedUpdate(Time.fixedDeltaTime);
         }
+    }
+}
+
+public class GameInput : BaseGameInput
+{
+    public static VisualButton Jump = new VisualButton(KeyCode.Space, 0.08f, 0.08f);
+
+    private void Awake()
+    {
+        Buttons.Add(Jump);
     }
 }
