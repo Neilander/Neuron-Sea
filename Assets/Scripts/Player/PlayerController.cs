@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
             CurrentYSpeed = 0;
         }
-        print(CurrentYSpeed);
+        // print(CurrentYSpeed);
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
         
