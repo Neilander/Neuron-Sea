@@ -1,4 +1,4 @@
-Shader "Custom/SceneSoftLightBlend"
+Shader "Custom/TransparentSoftLight"
 {
     Properties
     {
@@ -23,8 +23,8 @@ Shader "Custom/SceneSoftLightBlend"
         ZWrite Off // 关闭深度写入
         Blend SrcAlpha OneMinusSrcAlpha // 使用标准透明混合模式
 
-        // 使用标准的透明混合模式，不需要GrabPass
-        // 柔光效果将直接应用在当前图层上
+        // 获取背景
+        GrabPass { "_BackgroundTex" }
 
         Pass
         {
