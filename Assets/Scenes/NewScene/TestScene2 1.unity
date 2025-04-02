@@ -20996,6 +20996,7 @@ GameObject:
   - component: {fileID: 1643623409}
   - component: {fileID: 1643623408}
   - component: {fileID: 1643623407}
+  - component: {fileID: 1643623410}
   m_Layer: 0
   m_Name: "\u5E26\u7535\u523A\u7403\u62FC\u56FE (1)_0"
   m_TagString: Untagged
@@ -21044,7 +21045,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 100da8eb847342d408bb8b8726899ae8, type: 2}
+  - {fileID: 2100000, guid: eb66d7e626511f84dbd5436cc196d10d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21091,6 +21092,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1643623410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643623406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9498b492e706116438b7082f9ff2a120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1658539643
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENABLEFULLALPHADISSOLVE_ON
+  - _ENABLEFULLDISTORTION_ON
   - _SHADERSPACE_UV
   - _TIMESETTINGS_LINEAR_DEFAULT
   - _UBERFADING_NONE
@@ -200,8 +200,8 @@ Material:
     - _EnableExternalAlpha: 0
     - _EnableFlame: 0
     - _EnableFrozen: 0
-    - _EnableFullAlphaDissolve: 1
-    - _EnableFullDistortion: 0
+    - _EnableFullAlphaDissolve: 0
+    - _EnableFullDistortion: 1
     - _EnableFullGlowDissolve: 0
     - _EnableGlitch: 0
     - _EnableHalftone: 0
