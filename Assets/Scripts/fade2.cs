@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Fade : MonoBehaviour
+public class fade2 : MonoBehaviour
 {
     Material material;
 
@@ -12,7 +13,7 @@ public class Fade : MonoBehaviour
 
     void Start(){
         //Get material reference
-        material = GetComponent<SpriteRenderer>().material;
+        material = GetComponent<Image>().material;
 
         //Convert property name to id (improves performance).
         //You can see property names by hovering over them in the material inspector.
@@ -24,10 +25,10 @@ public class Fade : MonoBehaviour
 
     void Update(){
         //Update while fade value is less than 1.
-        if (fadeValue >0) {
+        if (fadeValue > 0) {
             //Increase fade value over time.
             fadeValue -= Time.deltaTime;
-            if (fadeValue <0) fadeValue = 1;
+            if (fadeValue < 0) fadeValue = 1;
 
             //Update value in material.
             material.SetFloat(fadePropertyID, fadeValue);
