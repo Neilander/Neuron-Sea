@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TestAround
+  m_Name: Pixelize
   m_Shader: {fileID: 4800000, guid: 0803c241834332942abfcbd27c498b46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENABLEFULLDISTORTION_ON
+  - _ENABLEPIXELATE_ON
   - _SHADERSPACE_UV
   - _TIMESETTINGS_LINEAR_DEFAULT
   - _UBERFADING_NONE
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: 39a01c4e3f8b73941b7d6948fd5d21fe, type: 2}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -127,7 +127,6 @@ Material:
     - _CamouflageSmoothnessB: 0.2
     - _CheckerboardDarken: 0.5
     - _CheckerboardTiling: 1
-    - _ColorMask: 15
     - _ColorReplaceBias: 1
     - _ColorReplaceBrightnessTolerance: 1
     - _ColorReplaceContrast: 1
@@ -172,7 +171,7 @@ Material:
     - _EnableFlame: 0
     - _EnableFrozen: 0
     - _EnableFullAlphaDissolve: 0
-    - _EnableFullDistortion: 1
+    - _EnableFullDistortion: 0
     - _EnableFullGlowDissolve: 0
     - _EnableGlitch: 0
     - _EnableHalftone: 0
@@ -182,7 +181,7 @@ Material:
     - _EnableInnerOutline: 0
     - _EnableMetal: 0
     - _EnableOuterOutline: 0
-    - _EnablePixelate: 0
+    - _EnablePixelate: 1
     - _EnablePoison: 0
     - _EnableRainbow: 0
     - _EnableRecolor: 0
@@ -218,7 +217,7 @@ Material:
     - _FrozenSnowDensity: 0.25
     - _FullAlphaDissolveFade: 0.5
     - _FullAlphaDissolveWidth: 0.5
-    - _FullDistortionFade: 0.026886933
+    - _FullDistortionFade: 1
     - _FullFade: 1
     - _FullGlowDissolveFade: 0.5
     - _FullGlowDissolveWidth: 0.5
@@ -249,7 +248,6 @@ Material:
     - _InnerOutlineDistortionToggle: 0
     - _InnerOutlineFade: 1
     - _InnerOutlineWidth: 0.02
-    - _IsText: 0
     - _MetalContrast: 2
     - _MetalFade: 1
     - _MetalHighlightContrast: 2
@@ -321,11 +319,6 @@ Material:
     - _SquishFlip: 0
     - _SquishSquish: 0.1
     - _SquishStretch: 0.1
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
     - _StrongTintContrast: 0
     - _StrongTintFade: 1
     - _TimeFPS: 5
@@ -339,7 +332,6 @@ Material:
     - _UberFading: 0
     - _UberNoiseFactor: 0.2
     - _UberWidth: 0.3
-    - _UseUIAlphaClip: 0
     - _VibrateFade: 1
     - _VibrateFrequency: 100
     - _VibrateOffset: 0.04
@@ -394,8 +386,8 @@ Material:
     - _FrozenSnowScale: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _FrozenTint: {r: 1.819608, g: 4.611765, b: 5.992157, a: 0}
     - _FullAlphaDissolveNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
-    - _FullDistortionDistortion: {r: 1, g: 1, b: 0, a: 0}
-    - _FullDistortionNoiseScale: {r: 0.5, g: 0.47, b: 0, a: 0}
+    - _FullDistortionDistortion: {r: 0.2, g: 0.2, b: 0, a: 0}
+    - _FullDistortionNoiseScale: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _FullGlowDissolveEdgeColor: {r: 11.98431, g: 0.627451, b: 0.627451, a: 0}
     - _FullGlowDissolveNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _GlitchDistortion: {r: 0.1, g: 0, b: 0, a: 0}
