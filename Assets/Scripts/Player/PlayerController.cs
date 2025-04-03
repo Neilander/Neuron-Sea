@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    //1
-
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
     [SerializeField]
@@ -57,6 +55,8 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed;
 
     [SerializeField] private float speedChangeThreshold = 0.01f; // 速度变化阈值，避免微小波
+
+    private float CurrentYSpeed;
     #endregion
     private void Start()
     {
@@ -69,6 +69,12 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
+        CurrentYSpeed = rb.velocity.y;
+        if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
+            CurrentYSpeed = 0;
+        }
+        // print(CurrentYSpeed);
+        animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
         
         Move();
@@ -143,7 +149,7 @@ public class PlayerController : MonoBehaviour
         // 触发跳跃动画
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        GameInput.Jump.OnTrigger();
+        JumpInput.Jump.OnTrigger();
     }
     void CheckJump()
     {
@@ -152,14 +158,14 @@ public class PlayerController : MonoBehaviour
     }
     void CheckJumpInterrupt()
     {
-        if (!GameInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
+        if (!JumpInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
     }
     void CheckJumpStart()
     {
-        if (GameInput.Jump.Pressed() && isGrounded)
+        if (JumpInput.Jump.Pressed() && isGrounded)
         {
             Jump();
         }
