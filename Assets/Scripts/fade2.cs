@@ -28,7 +28,7 @@ public class fade2 : MonoBehaviour
         if (fadeValue > 0) {
             //Increase fade value over time.
             fadeValue -= Time.deltaTime;
-            if (fadeValue < 0) fadeValue = 0;
+            if (fadeValue < 0) fadeValue = 1;
 
             //Update value in material.
             material.SetFloat(fadePropertyID, fadeValue);

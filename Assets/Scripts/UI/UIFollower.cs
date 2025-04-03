@@ -17,11 +17,11 @@ public class UIFollower : MonoBehaviour
         if (mainCamera == null) mainCamera = Camera.main;
     }
 
-    void LateUpdate(){
-        if (target == null || mainCamera == null) return;
+    void Update(){
+        // if (target == null || mainCamera == null) return;
 
         // 将物体的世界坐标转换为屏幕坐标
-        Vector3 screenPos = mainCamera.WorldToScreenPoint(target.position + offset);
+        Vector3 screenPos = target.position + offset;
 
         // 更新UI位置
         uiRect.position = screenPos;

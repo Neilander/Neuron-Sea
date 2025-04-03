@@ -6,6 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="4da63436-5ec8-4390-a07b-21bda1785e82" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Neuron Sea/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Neuron Sea/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/TestAround.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/Color/TestAround.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/New Render Texture.renderTexture" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/New Render Texture.renderTexture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/NewScene/TestScene2 1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/NewScene/TestScene2 1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/fade2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/fade2.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +25,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/95971c1103884a7eb2035c95161bde2b177000/c0/3b7eb53d/AnimationCurve.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/95971c1103884a7eb2035c95161bde2b177000/f7/591e9824/UnitySynchronizationContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://D:/WEBDOWNLOAD/支持cursor0.45-0.47/支持cursor0.45-0.47/Player/PlayerController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://D:/WEBDOWNLOAD/支持cursor0.45-0.47/支持cursor0.45-0.47/collition/PlayerController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://D:/WEBDOWNLOAD/支持cursor0.45-0.47/支持cursor0.45-0.47/collition/新建文件夹/PlayerController.cs" root0="SKIP_HIGHLIGHTING" />
@@ -29,6 +35,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Grid/SwitchableObj.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Grid/WorldMover.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Menu/BeginPanel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Editor/UI/GraphicEditor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -68,13 +75,15 @@
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <method v="2" />
     </configuration>
-    <configuration name="附加到 Unity 编辑器" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="附加到 Unity 编辑器" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="48048">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
+      <option name="pid" value="48048" />
       <option name="projectPathOnTarget" />
       <option name="runtimes">
-        <list />
+        <list>
+          <MonoRuntime />
+        </list>
       </option>
       <option name="selectedOptions">
         <list />
@@ -120,6 +129,7 @@
       <workItem from="1743594606778" duration="85000" />
       <workItem from="1743594951509" duration="1292000" />
       <workItem from="1743597077838" duration="4609000" />
+      <workItem from="1743682127163" duration="2947000" />
     </task>
     <servers />
   </component>
@@ -136,5 +146,24 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
   <component name="VcsManagerConfiguration">
     <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs</url>
+          <line>23</line>
+          <properties documentPath="E:\unity_game\Neuron Sea\Assets\Scripts\UI\UIFollower.cs" containingFunctionPresentation="方法 'Update'">
+            <startOffsets>
+              <option value="529" />
+            </startOffsets>
+            <endOffsets>
+              <option value="574" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
