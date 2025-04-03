@@ -1,8 +1,9 @@
+using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwitchableObj : MonoBehaviour
+public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 {
     [SerializeField] private GameObject anchor;
 
@@ -20,7 +21,7 @@ public class SwitchableObj : MonoBehaviour
 
     private WorldMover mover;
 
-    [SerializeField]private SpriteRenderer renderer;
+    [SerializeField]private new SpriteRenderer renderer;
 
     [SerializeField] private Vector2 ExpectedSize;
     [SerializeField] private Vector2 ExpectedAnchorPos;
@@ -31,6 +32,17 @@ public class SwitchableObj : MonoBehaviour
     }
 
     private Vector3 recordTempPos;
+
+    //自动导入关卡设定数据
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        ExpectedSize.x = fields.GetInt("SizeX");
+        ExpectedSize.y = fields.GetInt("SizeY");
+        SizeToExpectedSize();
+        ExpectedAnchorPos.x = fields.GetInt("PivotX");
+        ExpectedAnchorPos.x = fields.GetInt("PivotY");
+        SetAnchorToAnchorPos();
+    }
 
     private void Start(){
         mover = GetComponent<WorldMover>();

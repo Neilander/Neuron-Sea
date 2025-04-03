@@ -52,10 +52,6 @@ public class PlayerController : MonoBehaviour
 
     private bool isTouchingWallRight;
     #endregion
-    #region Timer
-    float minJumpTime = 0.08f;
-    float minJumpTimer;
-    #endregion
     #region 判断加速度正负
     private float previousSpeed; // 用于保存上一帧的速度值
     private float currentSpeed;
