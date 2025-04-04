@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -125,6 +126,8 @@ public class GridManager : MonoBehaviour
                             Debug.Log("进入switch state");
                             switchable.IntoSwitchState();
                             ReportSwitchableObj(switchable, true);
+
+                            InAndOutSwitchEvent.InSwitch();
                             StartState(SwitchState.Switch);
                             break; // 只处理第一个
                         }
@@ -201,14 +204,13 @@ public class GridManager : MonoBehaviour
                             switchableObjFrom.ControlFlash(false);
                             switchableObjFrom.OutSwitchState();
                         }
-                        
-                        StartState(SwitchState.None);
                     }
                     else
                     {
                         switchableObjFrom.OutSwitchState();
-                        StartState(SwitchState.None);
                     }
+                    InAndOutSwitchEvent.OutSwitch();
+                    StartState(SwitchState.None);
                 }
 
                 /*
@@ -348,5 +350,22 @@ class Counter
 
     public bool IsZero(){
         return count <= 0;
+    }
+}
+
+//用来管理一些零散的开启/关闭Switch函数
+public static class InAndOutSwitchEvent
+{
+    public static event Action OnInSwitchTriggered;
+    public static event Action OnOutSwitchTriggered;
+
+    public static void InSwitch()
+    {
+        OnInSwitchTriggered?.Invoke();
+    }
+
+    public static void OutSwitch()
+    {
+        OnOutSwitchTriggered?.Invoke();
     }
 }
