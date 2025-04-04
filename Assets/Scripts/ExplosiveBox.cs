@@ -6,7 +6,8 @@ public class ExplosiveBox : MonoBehaviour
 {
     [SerializeField]private float waitTime;
     [SerializeField] private float explodeDuration;
-    
+
+    public WaveMunController waveMunController;
 
     private bool isInCountDown = false;
     [SerializeField] private SpriteRenderer shineRenderer;
@@ -27,6 +28,7 @@ public class ExplosiveBox : MonoBehaviour
         {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
+            waveMunController.StartDisappearAnimation();
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }

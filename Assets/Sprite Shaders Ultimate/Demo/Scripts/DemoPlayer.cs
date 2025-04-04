@@ -126,7 +126,7 @@ namespace SpriteShadersUltimate
                 transform.eulerAngles = new Vector3(0, 180, 0);
             }
 
-            if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
             {
                 if(Time.time > lastJumpTime + 0.2f && Time.time > lastAirTime + 0.1f)
                 {

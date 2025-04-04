@@ -30,6 +30,12 @@ public class VisualButton
 
     public bool Pressed(bool fixed_check = true)
     {
+        // 如果游戏暂停（timeScale为0），不处理任何输入
+        if (Time.timeScale == 0f)
+        {
+            return false;
+        }
+
         if (fixed_check)
         {
             return fixed_get_key_down || this.buffer_timer > 0f;
@@ -42,6 +48,12 @@ public class VisualButton
 
     public bool Checked(bool fixed_check = true)
     {
+        // 如果游戏暂停（timeScale为0），不处理任何输入
+        if (Time.timeScale == 0f)
+        {
+            return false;
+        }
+
         if (fixed_check)
         {
             return fixed_get_key || this.min_timer > 0f;
@@ -116,7 +128,7 @@ public class BaseGameInput : MonoBehaviour
         }
     }
 
-    public void FixedUpdate() 
+    public void FixedUpdate()
     {
         foreach (VisualButton button in Buttons)
         {

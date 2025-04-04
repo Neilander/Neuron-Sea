@@ -3,7 +3,9 @@ using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.Universal.Internal;
-
+/// <summary>
+/// 屏幕截图渲染功能
+/// </summary>
 public class CaptureScreenRenderFeature : ScriptableRendererFeature
 {
     // 内部类：用于捕捉并处理屏幕图像
@@ -55,7 +57,7 @@ public class CaptureScreenRenderFeature : ScriptableRendererFeature
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
 
-           
+
         }
 
         public override void OnCameraCleanup(CommandBuffer cmd)

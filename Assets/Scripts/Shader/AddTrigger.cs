@@ -5,8 +5,8 @@ using UnityEngine;
 public class AddTrigger : MonoBehaviour
 {
     public WaveMunController waveMunController;
-    private void OnTriggerEnter2D(Collider2D other){
-        if (other.CompareTag("Player") && waveMunController != null) {
+    private void OnCollitionEnter2D(Collider2D other){
+        if (other.CompareTag("Player")) {
             print("触发");
             waveMunController.StartDisappearAnimation();
         }

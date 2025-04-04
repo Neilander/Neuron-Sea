@@ -70,13 +70,14 @@ public class PlayerController : MonoBehaviour
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         CurrentYSpeed = rb.velocity.y;
-        if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
+        {
             CurrentYSpeed = 0;
         }
         // print(CurrentYSpeed);
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
-        
+
         Move();
         Rotate();
         CheckJump();

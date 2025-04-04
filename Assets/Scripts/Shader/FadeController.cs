@@ -5,7 +5,7 @@ using System.Collections;
 public class FadeController : MonoBehaviour
 {
     [Header("淡入淡出控制")]
-    [SerializeField] private float fadeSpeed = 0.4f; // 淡入淡出速度
+    [SerializeField] private float fadeSpeed = 1f; // 淡入淡出速度
     [SerializeField] private string fadeAmountProperty = "_FadeAmount"; // 淡入淡出属性名
     [SerializeField] private string fadeBurnWidthProperty = "_FadeBurnWidth"; // 燃烧宽度属性名
 
@@ -16,6 +16,10 @@ public class FadeController : MonoBehaviour
     private float fadeAmount;
     private bool isAnimating = false;
     private SpriteRenderer spriteRenderer;
+    private Coroutine currentAnimationCoroutine;
+
+    private static readonly int FadeAmount = Shader.PropertyToID("_FadeAmount");
+    private static readonly int FadeDirection = Shader.PropertyToID("_FadeDirection");
 
     private void Start()
     {
@@ -33,54 +37,67 @@ public class FadeController : MonoBehaviour
         }
     }
 
-    public void StartAppearAnimation()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isAnimating)
+        if (collision.CompareTag("Player") && waveMunController != null)
         {
-            StartCoroutine(AppearAnimation());
+            StartDisappearAnimation();
         }
     }
 
     public void StartDisappearAnimation()
     {
-        if (!isAnimating)
+        // 如果当前没有动画在播放，或者当前动画是淡入动画，则开始淡出动画
+        if (currentAnimationCoroutine == null || fadeAmount < 1f)
         {
-            StartCoroutine(DisappearAnimation());
+            if (currentAnimationCoroutine != null)
+            {
+                StopCoroutine(currentAnimationCoroutine);
+            }
+            currentAnimationCoroutine = StartCoroutine(DisappearAnimation());
         }
     }
 
-    private IEnumerator AppearAnimation()
+    public void StartAppearAnimation()
     {
-        isAnimating = true;
-        fadeAmount = 1f; // 从1开始
-        material.SetFloat(fadeAmountProperty, fadeAmount);
-
-        while (fadeAmount > 0f)
+        if (currentAnimationCoroutine != null)
         {
-            fadeAmount -= Time.deltaTime * fadeSpeed;
-            fadeAmount = Mathf.Clamp01(fadeAmount);
-            material.SetFloat(fadeAmountProperty, fadeAmount);
-            yield return null;
+            StopCoroutine(currentAnimationCoroutine);
         }
-
-        isAnimating = false;
+        currentAnimationCoroutine = StartCoroutine(AppearAnimation());
     }
 
     private IEnumerator DisappearAnimation()
     {
-        isAnimating = true;
-        fadeAmount = 0f; // 从0开始
-        material.SetFloat(fadeAmountProperty, fadeAmount);
+        material.SetFloat(FadeDirection, 1f);
 
-        while (fadeAmount < 1f)
+        while (fadeAmount > 0f)
         {
-            fadeAmount += Time.deltaTime * fadeSpeed;
-            fadeAmount = Mathf.Clamp01(fadeAmount);
-            material.SetFloat(fadeAmountProperty, fadeAmount);
+            fadeAmount = Mathf.Max(0f, fadeAmount - fadeSpeed * Time.deltaTime);
+            UpdateMaterial();
             yield return null;
         }
 
-        isAnimating = false;
+        currentAnimationCoroutine = null;
+    }
+
+    private IEnumerator AppearAnimation()
+    {
+        material.SetFloat(FadeDirection, -1f);
+
+        while (fadeAmount < 1f)
+        {
+            fadeAmount = Mathf.Min(1f, fadeAmount + fadeSpeed * Time.deltaTime);
+            UpdateMaterial();
+            yield return null;
+        }
+
+        currentAnimationCoroutine = null;
+    }
+
+    private void UpdateMaterial()
+    {
+        material.SetFloat(FadeAmount, fadeAmount);
     }
 
     private void OnValidate()
@@ -90,6 +107,4 @@ public class FadeController : MonoBehaviour
             material = GetComponent<SpriteRenderer>().sharedMaterial;
         }
     }
-
-    
 }
