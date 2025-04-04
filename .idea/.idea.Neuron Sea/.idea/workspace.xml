@@ -6,18 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4da63436-5ec8-4390-a07b-21bda1785e82" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Neuron Sea/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Neuron Sea/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animation/颤氧/Player.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animation/颤氧/Player.controller" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/UV/FadeController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/UV/FadeController.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/WaterDisappearShader/WaterBlow.shadergraph" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/WaterDisappearShader/WaterBlow.shadergraph" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/pipline/RouGuang.shadergraph" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/pipline/RouGuang.shadergraph" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Levels/SeaLevel/SeaLevel_Config.ldtkc" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Levels/SeaLevel/SeaLevel_Config.ldtkc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MeiyouPrefab/Level.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MeiyouPrefab/Level.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/NeilPrefab/gridAndSwitchManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/NeilPrefab/gridAndSwitchManager.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PaofanPrefab/GridManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PaofanPrefab/GridManager.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/NewScene/TestScene2 1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/NewScene/TestScene2 1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/FadeController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/FadeController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Shader/WaveMunController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Shader/WaveMunController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,10 +29,13 @@
     <setting file="file://D:/WEBDOWNLOAD/支持cursor0.45-0.47/支持cursor0.45-0.47/collition/新建文件夹/PlayerController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CameraControl.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CameraRander/RenderTextureToSprite.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Fade.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Grid/GridManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Grid/SwitchableObj.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Grid/WorldMover.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Menu/BeginPanel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/fade3.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Editor/UI/GraphicEditor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
@@ -137,7 +131,14 @@
       <workItem from="1743682127163" duration="2947000" />
       <workItem from="1743748391238" duration="679000" />
       <workItem from="1743749790486" duration="572000" />
-      <workItem from="1743751043012" duration="6000" />
+      <workItem from="1743751043608" duration="792000" />
+      <workItem from="1743752132579" duration="21000" />
+      <workItem from="1743752364983" duration="25000" />
+      <workItem from="1743752871947" duration="3000" />
+      <workItem from="1743752939498" duration="417000" />
+      <workItem from="1743753745427" duration="1055000" />
+      <workItem from="1743756989312" duration="44000" />
+      <workItem from="1743757148420" duration="4000" />
     </task>
     <servers />
   </component>
@@ -147,7 +148,6 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityProjectDiscoverer">
-    <option name="hasUnityReference" value="true" />
     <option name="unityProject" value="true" />
     <option name="unityProjectFolder" value="true" />
   </component>
