@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float jumpForce = 5f;
+
+    [SerializeField]
+    private float maxFallSpeed = -10f;
     #endregion
     #region 地面检测点
     [Header("Ground Check Settings")]
@@ -73,6 +76,12 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
+        if (rb.velocity.y < maxFallSpeed)
+        {
+            Vector2 newVelocity = rb.velocity;
+            newVelocity.y = maxFallSpeed;
+            rb.velocity = newVelocity;
+        }
         CurrentYSpeed = rb.velocity.y;
         if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
             CurrentYSpeed = 0;
