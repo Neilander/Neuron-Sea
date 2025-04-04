@@ -6,11 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="4da63436-5ec8-4390-a07b-21bda1785e82" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Neuron Sea/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Neuron Sea/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/TestAround.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/Color/TestAround.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/New Render Texture.renderTexture" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/New Render Texture.renderTexture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Animation/颤氧/Player.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animation/颤氧/Player.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/Color/Fade.mat.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/UV/FadeController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/UV/FadeController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/WaterDisappearShader/WaterBlow.shadergraph" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/WaterDisappearShader/WaterBlow.shadergraph" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/GameEffect/pipline/RouGuang.shadergraph" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameEffect/pipline/RouGuang.shadergraph" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Levels/SeaLevel/SeaLevel_Config.ldtkc" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Levels/SeaLevel/SeaLevel_Config.ldtkc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MeiyouPrefab/Level.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MeiyouPrefab/Level.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/NeilPrefab/gridAndSwitchManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/NeilPrefab/gridAndSwitchManager.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/PaofanPrefab/GridManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PaofanPrefab/GridManager.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/NewScene/TestScene2 1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/NewScene/TestScene2 1.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/fade2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/fade2.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,15 +82,13 @@
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <method v="2" />
     </configuration>
-    <configuration name="附加到 Unity 编辑器" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="48048">
+    <configuration name="附加到 Unity 编辑器" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="48048" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="runtimes">
-        <list>
-          <MonoRuntime />
-        </list>
+        <list />
       </option>
       <option name="selectedOptions">
         <list />
@@ -130,6 +135,9 @@
       <workItem from="1743594951509" duration="1292000" />
       <workItem from="1743597077838" duration="4609000" />
       <workItem from="1743682127163" duration="2947000" />
+      <workItem from="1743748391238" duration="679000" />
+      <workItem from="1743749790486" duration="572000" />
+      <workItem from="1743751043012" duration="6000" />
     </task>
     <servers />
   </component>
@@ -151,17 +159,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/UI/UIFollower.cs</url>
-          <line>23</line>
-          <properties documentPath="E:\unity_game\Neuron Sea\Assets\Scripts\UI\UIFollower.cs" containingFunctionPresentation="方法 'Update'">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/fade3.cs</url>
+          <line>15</line>
+          <properties documentPath="E:\unity_game\Neuron Sea\Assets\Scripts\fade3.cs" containingFunctionPresentation="方法 'Start'">
             <startOffsets>
-              <option value="529" />
+              <option value="301" />
             </startOffsets>
             <endOffsets>
-              <option value="574" />
+              <option value="343" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

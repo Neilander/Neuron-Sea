@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fade
+  m_Name: Hidden_Fade
   m_Shader: {fileID: 4800000, guid: f7c3583569f5e3d47b86916add4fcaf1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _FadeTex:
-        m_Texture: {fileID: 2800000, guid: e824bcfea6b47a1448c6f85288d03f84, type: 3}
+        m_Texture: {fileID: 8400000, guid: 39a01c4e3f8b73941b7d6948fd5d21fe, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -33,8 +33,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FadeAmount: 0
-    - _FadeBurnWidth: 0.2
+    - _FadeAmount: 0.58
+    - _FadeBurnWidth: 0.48
     m_Colors:
-    - _FadeColor: {r: 1, g: 0, b: 0, a: 1}
+    - _FadeColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 1}
   m_BuildTextureStacks: []

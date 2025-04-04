@@ -11,7 +11,7 @@ public class FadeController : MonoBehaviour
     private void Start()
     {
         material = GetComponent<SpriteRenderer>().material;
-        cutAmount = material.GetFloat("_FadeAmount");
+        cutAmount = material.GetFloat("_FadeBurnWidth");
     }
 
     private void Update()
