@@ -100,7 +100,7 @@ public class CaptureScreenRenderFeature : ScriptableRendererFeature
         {
             renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing
         };
-        Debug.Log("当前使用的 flipYPropertyName: " + flipYPropertyName);
+        //Debug.Log("当前使用的 flipYPropertyName: " + flipYPropertyName);
         capturePass.Setup(renderingData.cameraData.cameraTargetDescriptor);
         renderer.EnqueuePass(capturePass);
     }
