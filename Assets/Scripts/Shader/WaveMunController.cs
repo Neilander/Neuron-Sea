@@ -7,7 +7,7 @@ public class WaveMunController : MonoBehaviour
     [SerializeField] private Material targetMaterial; // 目标材质
     [SerializeField] private float cycleSpeed = 22f; // 循环速度
     [SerializeField] private string propertyName = "_WaveMun"; // 属性名称
-
+ 
     [Header("动画设置")]
     [SerializeField] private float appearDuration = 1f; // 出现动画持续时间
     [SerializeField] private float disappearDuration = 1f; // 消失动画持续时间
