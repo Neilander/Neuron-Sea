@@ -40,6 +40,9 @@ public class GridManager : MonoBehaviour
     private bool getBothTarget = false;
     private SwitchableObj tempSwitchableObj;
     private bool ifLegalMove = true;
+
+    private int switchTime = 0;
+
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos(){
         if (!displayInGizmos) return;
@@ -99,6 +102,8 @@ public class GridManager : MonoBehaviour
 
 
     [Header("测试用")] [SerializeField] private Vector3 testPosition;
+
+    public void LogTimeAction() { Debug.Log("logSwitchTime"+switchTime); }
 
     [SerializeField] private bool doTestGetPos = false;
     private void Update(){
@@ -316,6 +321,7 @@ public class GridManager : MonoBehaviour
     }
 
     private void DoSwitch(){
+        switchTime += 1;
         Vector3 tempPos = switchableObjFrom.SelfGridPos;
         switchableObjFrom.OutSwitchState(tempSwitchableObj.SelfGridPos);
         tempSwitchableObj.ChangeFromTempMoveToNormal();

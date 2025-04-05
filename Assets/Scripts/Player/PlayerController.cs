@@ -85,7 +85,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.T))
+            GridManager.Instance.LogTimeAction();
     }
 
     private void FixedUpdate()
