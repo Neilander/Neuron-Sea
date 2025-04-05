@@ -4,7 +4,8 @@ public class PlayerController : MonoBehaviour
 {
     #region 移动速度,跳跃速度
 
-    [Header("Movement Settings")] [SerializeField]
+    [Header("Movement Settings")]
+    [SerializeField]
     private float moveSpeed = 10f;
 
     [SerializeField] private float jumpForce = 5f;
@@ -13,7 +14,8 @@ public class PlayerController : MonoBehaviour
 
     #region 地面检测点
 
-    [Header("Ground Check Settings")] [SerializeField]
+    [Header("Ground Check Settings")]
+    [SerializeField]
     private new BoxCollider2D collider; // 角色碰撞体
 
     [SerializeField] private float deviation = 0.02f; // 检测误差，为unity物理误差的2倍
@@ -73,16 +75,19 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    private void Start(){
+    private void Start()
+    {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate(){
+    private void FixedUpdate()
+    {
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         CurrentYSpeed = rb.velocity.y;
-        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1) {
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
+        {
             CurrentYSpeed = 0;
         }
         // print(CurrentYSpeed);
@@ -97,13 +102,16 @@ public class PlayerController : MonoBehaviour
 
     #region 判断地面
 
-    private void GroundCheck(){
+    private void GroundCheck()
+    {
         //bool wasGrounded = isGrounded;
         // 检测角色是否接触地面
         isGrounded = false;
         foreach (RaycastHit2D hit in Physics2D.BoxCastAll(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x + deviation * 0.8f, deviation), 0f,
-                     Vector2.down, deviation / 2, groundLayer)) {
-            if (hit.normal.y > 0.9f) {
+                     Vector2.down, deviation / 2, groundLayer))
+        {
+            if (hit.normal.y > 0.9f)
+            {
                 isGrounded = true;
                 break;
             }
@@ -123,7 +131,8 @@ public class PlayerController : MonoBehaviour
 
     #region 角色水平移动
 
-    private void Move(){
+    private void Move()
+    {
         float moveInput = Input.GetAxis("Horizontal");
 
         /*防穿墙
@@ -150,7 +159,8 @@ public class PlayerController : MonoBehaviour
 
     #region 角色身体转向
 
-    private void Rotate(){
+    private void Rotate()
+    {
         float moveInput = Input.GetAxis("Horizontal");
         if (moveInput < 0)
             transform.localScale = new Vector3(-1, 1, 1);
@@ -162,26 +172,32 @@ public class PlayerController : MonoBehaviour
 
     #region 角色跳跃
 
-    void Jump(){
+    void Jump()
+    {
         // 触发跳跃动画
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         JumpInput.Jump.OnTrigger();
     }
 
-    void CheckJump(){
+    void CheckJump()
+    {
         CheckJumpStart();
         CheckJumpInterrupt();
     }
 
-    void CheckJumpInterrupt(){
-        if (!JumpInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0) {
+    void CheckJumpInterrupt()
+    {
+        if (!JumpInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
+        {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
     }
 
-    void CheckJumpStart(){
-        if (JumpInput.Jump.Pressed() && isGrounded) {
+    void CheckJumpStart()
+    {
+        if (JumpInput.Jump.Pressed() && isGrounded)
+        {
             Jump();
         }
     }
@@ -215,7 +231,8 @@ public class PlayerController : MonoBehaviour
 
     #region 绘制测试射线
 
-    private void OnDrawGizmos(){
+    private void OnDrawGizmos()
+    {
         //可视化碰撞体
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube((Vector2)transform.position + collider.offset, collider.size);
@@ -232,14 +249,17 @@ public class PlayerController : MonoBehaviour
 
     #region 判断加速度正负
 
-    private void GetSpeedChange(){
+    private void GetSpeedChange()
+    {
         Vector2 horizontalVelocity = new Vector2(rb.velocity.x, 0f);
         currentSpeed = Mathf.Round(horizontalVelocity.magnitude);
 
-        if (currentSpeed > previousSpeed + speedChangeThreshold) {
+        if (currentSpeed > previousSpeed + speedChangeThreshold)
+        {
             animator.SetBool("IsIncreasing", true);
         }
-        else if (currentSpeed < previousSpeed - speedChangeThreshold) {
+        else if (currentSpeed < previousSpeed - speedChangeThreshold)
+        {
             animator.SetBool("IsIncreasing", false);
         }
 

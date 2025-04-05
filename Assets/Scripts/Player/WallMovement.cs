@@ -30,18 +30,22 @@ public class WallMovement : MonoBehaviour
     WallState ws;
 
     // Start is called before the first frame update
-    void Start(){
+    void Start()
+    {
         ws = WallState.none;
         rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame 
-    void Update(){
+    void Update()
+    {
         WallCheck();
-        if (isRightWall) {
+        if (isRightWall)
+        {
             isWallTouching = true;
         }
-        else {
+        else
+        {
             isWallTouching = false;
         }
 
@@ -49,12 +53,14 @@ public class WallMovement : MonoBehaviour
         rb.gravityScale = 5f;
     }
 
-    void WallCheck(){
+    void WallCheck()
+    {
         // 检测右侧墙壁
         //isRightWall = Physics2D.OverlapCircle(wallCheckRight.position, wallCheckRadius, wallLayer);
 
         // 调试输出
-        if (isRightWall) {
+        if (isRightWall)
+        {
             Debug.Log("检测到右侧墙壁");
         }
     }
@@ -66,7 +72,8 @@ public class WallMovement : MonoBehaviour
     //         Gizmos.DrawWireSphere(wallCheckRight.position, wallCheckRadius);
     //     }
     // }
-    void WallGrab(){
+    void WallGrab()
+    {
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(0, 0);
         ws = WallState.WallGrab;

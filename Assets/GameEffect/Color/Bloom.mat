@@ -12,7 +12,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENABLEALPHATINT_ON
   - _SHADERSPACE_UV
   - _TIMESETTINGS_LINEAR_DEFAULT
   - _UBERFADING_NONE
@@ -68,7 +67,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RecolorTintAreas:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 5bccf13ce09bd43e39c1c3416d5de92c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShiftHueShaderMask:
@@ -80,7 +79,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SineGlowShaderMask:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 6a466cda77018834eaf0a42c92611b04, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SmoothnessMap:
@@ -127,7 +126,7 @@ Material:
     - _AddHueSpeed: 1
     - _AlphaCutoff: 0.5
     - _AlphaTintFade: 1
-    - _AlphaTintMinAlpha: 0.05
+    - _AlphaTintMinAlpha: 0
     - _AlphaTintPower: 1
     - _BlackTintFade: 1
     - _BlackTintPower: 2
@@ -177,7 +176,7 @@ Material:
     - _DirectionalGlowFadeWidth: 0.1
     - _EnableAddColor: 0
     - _EnableAddHue: 0
-    - _EnableAlphaTint: 1
+    - _EnableAlphaTint: 0
     - _EnableBlackTint: 0
     - _EnableBrightness: 0
     - _EnableBurn: 0
@@ -261,14 +260,14 @@ Material:
     - _HologramLineGap: 3
     - _HologramLineSpeed: 0.01
     - _HologramMinAlpha: 0.2
-    - _Hue: 0
+    - _Hue: 0.02
     - _InkSpreadContrast: 2
     - _InkSpreadDistance: 3
     - _InkSpreadFade: 1
     - _InkSpreadNoiseFactor: 0.5
     - _InkSpreadWidth: 0.2
     - _InnerOutlineDistortionToggle: 0
-    - _InnerOutlineFade: 1
+    - _InnerOutlineFade: 0.53
     - _InnerOutlineWidth: 0.02
     - _IsText: 0
     - _MetalContrast: 2
@@ -377,7 +376,7 @@ Material:
     - _WindSquishWindFactor: 0
     - _WindXPosition: 0
     m_Colors:
-    - _AddColorColor: {r: 0, g: 2.7112381, b: 1.6588634, a: 0}
+    - _AddColorColor: {r: 2.796408, g: 0.31228924, b: 2.3279743, a: 0}
     - _AlphaTintColor: {r: 23.96863, g: 1.254902, b: 23.96863, a: 0}
     - _BlackTintColor: {r: 1, g: 0, b: 0, a: 0}
     - _BurnEdgeColor: {r: 11.98431, g: 1.129412, b: 0.1254902, a: 0}
@@ -456,10 +455,10 @@ Material:
     - _RainbowNoiseScale: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _RecolorBlueTint: {r: 1, g: 1, b: 1, a: 0.5019608}
     - _RecolorCyanTint: {r: 1, g: 1, b: 1, a: 0.5019608}
-    - _RecolorGreenTint: {r: 1, g: 1, b: 1, a: 0.5019608}
+    - _RecolorGreenTint: {r: 1, g: 0, b: 0, a: 0.5019608}
     - _RecolorPurpleTint: {r: 1, g: 1, b: 1, a: 0.5019608}
     - _RecolorRedTint: {r: 1, g: 1, b: 1, a: 0.5019608}
-    - _RecolorYellowTint: {r: 1, g: 1, b: 1, a: 0.5019608}
+    - _RecolorYellowTint: {r: 1, g: 0, b: 0, a: 0.5019608}
     - _ShineColor: {r: 11.98431, g: 11.98431, b: 11.98431, a: 0}
     - _SineGlowColor: {r: 0, g: 2.007843, b: 2.996078, a: 0}
     - _SineMoveFrequency: {r: 1, g: 1, b: 0, a: 0}
