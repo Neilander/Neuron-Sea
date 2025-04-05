@@ -173,6 +173,7 @@ public class PlayerController : MonoBehaviour
     #region 角色跳跃
     void Jump()
     {
+        ifJustGround.Take();
         // 触发跳跃动画
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -317,5 +318,11 @@ public class BoolRefresher
     public bool Get()
     {
         return value;
+    }
+
+    public void Take()
+    {
+        value = false;
+        timer = 0f;
     }
 }
