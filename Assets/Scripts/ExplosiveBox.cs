@@ -4,53 +4,41 @@ using UnityEngine;
 
 public class ExplosiveBox : MonoBehaviour
 {
-    [SerializeField]private float waitTime;
+    [SerializeField] private float waitTime;
+
     [SerializeField] private float explodeDuration;
-    
+
+    public WaveMunController waveMunController;
 
     private bool isInCountDown = false;
-    [SerializeField] private SpriteRenderer shineRenderer;
-    [SerializeField] private SpriteRenderer baseRenderer;
-    [SerializeField] private SpriteRenderer anchorRenderer;
-    [SerializeField] private float explosionRadius = 1.5f;
-    [SerializeField] private SpriteRenderer radiusVisualRenderer;
-    [SerializeField] private GameObject RangeDisplayer;
 
-    private void Start()
-    {
+    [SerializeField] private SpriteRenderer shineRenderer;
+
+    [SerializeField] private SpriteRenderer baseRenderer;
+
+    [SerializeField] private SpriteRenderer anchorRenderer;
+
+    [SerializeField] private float explosionRadius = 1.5f;
+
+    [SerializeField] private SpriteRenderer radiusVisualRenderer;
+
+    private void Start(){
         PauseEvent.OnPauseTriggered += Pause;
         PauseEvent.OnPauseResumed += Resume;
-        Vector3 desiredWorldScale = new Vector3(
-        explosionRadius*2 * GridManager.Instance.gridWidth / RangeDisplayer.GetComponent<SpriteRenderer>().sprite.bounds.size.x,
-        explosionRadius*2 * GridManager.Instance.gridWidth / RangeDisplayer.GetComponent<SpriteRenderer>().sprite.bounds.size.y,
-        1f
-        );
-        Vector3 parentWorldScale = RangeDisplayer.transform.parent != null ? RangeDisplayer.transform.parent.lossyScale : Vector3.one;
-        Vector3 newLocalScale = new Vector3(
-        desiredWorldScale.x / parentWorldScale.x,
-        desiredWorldScale.y / parentWorldScale.y,
-        desiredWorldScale.z / parentWorldScale.z
-        );
-        RangeDisplayer.transform.localScale = newLocalScale;
-
-        InAndOutSwitchEvent.OnInSwitchTriggered += ShowRange;
-        InAndOutSwitchEvent.OnOutSwitchTriggered += HideRange;
-
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>())
-        {
+    private void OnCollisionEnter2D(Collision2D collision){
+        if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>()) {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
+            waveMunController.StartDisappearAnimation();
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }
 
     private bool isPaused = false;
-    private IEnumerator WaitUnpaused()
-    {
+
+    private IEnumerator WaitUnpaused(){
         while (isPaused)
             yield return null;
     }
@@ -58,9 +46,7 @@ public class ExplosiveBox : MonoBehaviour
     public void Pause() => isPaused = true;
     public void Resume() => isPaused = false;
 
-    IEnumerator ExplodeCountDown(float time)
-    {
-        RangeDisplayer.SetActive(true);
+    IEnumerator ExplodeCountDown(float time){
         int totalFlashes = 5;
         float[] flashTimings = new float[5];
 
@@ -71,14 +57,12 @@ public class ExplosiveBox : MonoBehaviour
         flashTimings[3] = time * 0.1333f;
         flashTimings[4] = time * 0.1333f;
 
-        for (int i = 0; i < totalFlashes; i++)
-        {
+        for (int i = 0; i < totalFlashes; i++) {
             float half = flashTimings[i] / 2f;
 
             // Alpha 0 → 1
             float t = 0f;
-            while (t < half)
-            {
+            while (t < half) {
                 yield return WaitUnpaused();
 
                 t += Time.deltaTime;
@@ -89,8 +73,7 @@ public class ExplosiveBox : MonoBehaviour
 
             // Alpha 1 → 0
             t = 0f;
-            while (t < half)
-            {
+            while (t < half) {
                 yield return WaitUnpaused();
 
                 t += Time.deltaTime;
@@ -108,8 +91,7 @@ public class ExplosiveBox : MonoBehaviour
         float expandDuration = explodeDuration;
         float expandTimer = 0f;
 
-        while (expandTimer < expandDuration)
-        {
+        while (expandTimer < expandDuration) {
             yield return WaitUnpaused();
 
             expandTimer += Time.deltaTime;
@@ -124,8 +106,7 @@ public class ExplosiveBox : MonoBehaviour
         anchorRenderer.enabled = false;
 
         float fadeTimer = 0f;
-        while (fadeTimer < expandDuration)
-        {
+        while (fadeTimer < expandDuration) {
             yield return WaitUnpaused();
 
             fadeTimer += Time.deltaTime;
@@ -139,40 +120,20 @@ public class ExplosiveBox : MonoBehaviour
 
         // 最终检测玩家
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
-        foreach (var hit in hits)
-        {
-            if (hit.GetComponent<PlayerController>())
-            {
+        foreach (var hit in hits) {
+            if (hit.GetComponent<PlayerController>()) {
                 PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
             }
-            else if (hit.GetComponent<SwitchableObj>()&& hit.gameObject!=gameObject)
-            {
+            else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject) {
                 Destroy(hit.gameObject);
             }
         }
         Destroy(gameObject);
     }
 
-    private void SetAlpha(float a)
-    {
+    private void SetAlpha(float a){
         Color c = shineRenderer.color;
         c.a = a;
         shineRenderer.color = c;
-    }
-
-    public void ShowRange()
-    {
-        RangeDisplayer.SetActive(true);
-    }
-
-    public void HideRange()
-    {
-        if (!isInCountDown) RangeDisplayer.SetActive(false);
-    }
-
-    private void OnDestroy()
-    {
-        InAndOutSwitchEvent.OnInSwitchTriggered -= ShowRange;
-        InAndOutSwitchEvent.OnOutSwitchTriggered -= HideRange;
     }
 }
