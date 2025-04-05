@@ -2,7 +2,10 @@ Shader "Unlit/TryShader"
 {
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline" }
+        Tags
+        {
+            "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline"
+        }
         Pass
         {
             Name "InvertColor"

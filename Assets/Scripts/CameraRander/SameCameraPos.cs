@@ -10,7 +10,7 @@ public class SameCameraPos : MonoBehaviour
     public Camera renderCamera;
 
     void Update(){
-        renderCamera.transform.position= new Vector3(mainCamera.transform.position.x+2.6f,mainCamera.transform.position.y-1.03f,mainCamera.transform.position.z);
+        renderCamera.transform.position = new Vector3(mainCamera.transform.position.x + 2.6f, mainCamera.transform.position.y - 1.03f, mainCamera.transform.position.z);
         renderCamera.transform.rotation = mainCamera.transform.rotation;
     }
 }

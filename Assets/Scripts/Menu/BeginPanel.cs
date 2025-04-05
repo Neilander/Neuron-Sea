@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class BeginPanel : MonoBehaviour
 {
     public string LevelOneName;
+
     public string aboutUs;
 
     public GameObject volume;
@@ -14,16 +15,14 @@ public class BeginPanel : MonoBehaviour
     public bool isRed;
 
     private Image img;
+
     // Start is called before the first frame update
-    void Start()
-    {
-         img= volume.GetComponent<Image>();
+    void Start(){
+        img = volume.GetComponent<Image>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update(){
     }
 
     public void StartGame(){
@@ -31,7 +30,6 @@ public class BeginPanel : MonoBehaviour
     }
 
     public void AboutUs(){
-        
     }
 
     public void Quit(){
@@ -39,7 +37,7 @@ public class BeginPanel : MonoBehaviour
     }
 
     public void Volume(){
-        if(isRed){
+        if (isRed) {
             img.color = new Color(255, 255, 255);
         }
         else {

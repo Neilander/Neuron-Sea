@@ -4,28 +4,31 @@ using UnityEngine;
 
 public class ExplosiveBox : MonoBehaviour
 {
-    [SerializeField]private float waitTime;
+    [SerializeField] private float waitTime;
+
     [SerializeField] private float explodeDuration;
 
     public WaveMunController waveMunController;
 
     private bool isInCountDown = false;
+
     [SerializeField] private SpriteRenderer shineRenderer;
+
     [SerializeField] private SpriteRenderer baseRenderer;
+
     [SerializeField] private SpriteRenderer anchorRenderer;
+
     [SerializeField] private float explosionRadius = 1.5f;
+
     [SerializeField] private SpriteRenderer radiusVisualRenderer;
 
-    private void Start()
-    {
+    private void Start(){
         PauseEvent.OnPauseTriggered += Pause;
         PauseEvent.OnPauseResumed += Resume;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>())
-        {
+    private void OnCollisionEnter2D(Collision2D collision){
+        if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>()) {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
             waveMunController.StartDisappearAnimation();
@@ -34,8 +37,8 @@ public class ExplosiveBox : MonoBehaviour
     }
 
     private bool isPaused = false;
-    private IEnumerator WaitUnpaused()
-    {
+
+    private IEnumerator WaitUnpaused(){
         while (isPaused)
             yield return null;
     }
@@ -43,8 +46,7 @@ public class ExplosiveBox : MonoBehaviour
     public void Pause() => isPaused = true;
     public void Resume() => isPaused = false;
 
-    IEnumerator ExplodeCountDown(float time)
-    {
+    IEnumerator ExplodeCountDown(float time){
         int totalFlashes = 5;
         float[] flashTimings = new float[5];
 
@@ -55,14 +57,12 @@ public class ExplosiveBox : MonoBehaviour
         flashTimings[3] = time * 0.1333f;
         flashTimings[4] = time * 0.1333f;
 
-        for (int i = 0; i < totalFlashes; i++)
-        {
+        for (int i = 0; i < totalFlashes; i++) {
             float half = flashTimings[i] / 2f;
 
             // Alpha 0 → 1
             float t = 0f;
-            while (t < half)
-            {
+            while (t < half) {
                 yield return WaitUnpaused();
 
                 t += Time.deltaTime;
@@ -73,8 +73,7 @@ public class ExplosiveBox : MonoBehaviour
 
             // Alpha 1 → 0
             t = 0f;
-            while (t < half)
-            {
+            while (t < half) {
                 yield return WaitUnpaused();
 
                 t += Time.deltaTime;
@@ -92,8 +91,7 @@ public class ExplosiveBox : MonoBehaviour
         float expandDuration = explodeDuration;
         float expandTimer = 0f;
 
-        while (expandTimer < expandDuration)
-        {
+        while (expandTimer < expandDuration) {
             yield return WaitUnpaused();
 
             expandTimer += Time.deltaTime;
@@ -108,8 +106,7 @@ public class ExplosiveBox : MonoBehaviour
         anchorRenderer.enabled = false;
 
         float fadeTimer = 0f;
-        while (fadeTimer < expandDuration)
-        {
+        while (fadeTimer < expandDuration) {
             yield return WaitUnpaused();
 
             fadeTimer += Time.deltaTime;
@@ -123,22 +120,18 @@ public class ExplosiveBox : MonoBehaviour
 
         // 最终检测玩家
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
-        foreach (var hit in hits)
-        {
-            if (hit.GetComponent<PlayerController>())
-            {
+        foreach (var hit in hits) {
+            if (hit.GetComponent<PlayerController>()) {
                 PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
             }
-            else if (hit.GetComponent<SwitchableObj>()&& hit.gameObject!=gameObject)
-            {
+            else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject) {
                 Destroy(hit.gameObject);
             }
         }
         Destroy(gameObject);
     }
 
-    private void SetAlpha(float a)
-    {
+    private void SetAlpha(float a){
         Color c = shineRenderer.color;
         c.a = a;
         shineRenderer.color = c;

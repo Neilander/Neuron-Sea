@@ -2,171 +2,173 @@
 // Available at the Unity Asset Store - http://u3d.as/y3X 
 Shader "Sprite Shaders Ultimate/Standard/Color/Sine Glow"
 {
-	Properties
-	{
-		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
-		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
-		[PerRendererData] _AlphaTex ("External Alpha", 2D) = "white" {}
-		[KeywordEnum(Linear_Default,Linear_Scaled,Linear_FPS,Frequency,Frequency_FPS,Custom_Value)] _TimeSettings("Time Settings", Float) = 0
-		_TimeScale("Time Scale", Float) = 1
-		_TimeFrequency("Time Frequency", Float) = 2
-		_TimeRange("Time Range", Float) = 0.5
-		_TimeFPS("Time FPS", Float) = 5
-		_TimeValue("Time Value", Float) = 0
-		_SineGlowFade("Sine Glow: Fade", Range( 0 , 1)) = 1
-		_SineGlowShaderMask("Sine Glow: Shader Mask", 2D) = "white" {}
-		[HDR]_SineGlowColor("Sine Glow: Color", Color) = (0,2.007843,2.996078,0)
-		_SineGlowContrast("Sine Glow: Contrast", Float) = 1
-		_SineGlowFrequency("Sine Glow: Frequency", Float) = 4
-		_SineGlowMin("Sine Glow: Min", Float) = 0
-		[ASEEnd]_SineGlowMax("Sine Glow: Max", Float) = 1
-		[HideInInspector] _texcoord( "", 2D ) = "white" {}
+    Properties
+    {
+        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+        _Color ("Tint", Color) = (1,1,1,1)
+        [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
+        [PerRendererData] _AlphaTex ("External Alpha", 2D) = "white" {}
+        [KeywordEnum(Linear_Default,Linear_Scaled,Linear_FPS,Frequency,Frequency_FPS,Custom_Value)] _TimeSettings("Time Settings", Float) = 0
+        _TimeScale("Time Scale", Float) = 1
+        _TimeFrequency("Time Frequency", Float) = 2
+        _TimeRange("Time Range", Float) = 0.5
+        _TimeFPS("Time FPS", Float) = 5
+        _TimeValue("Time Value", Float) = 0
+        _SineGlowFade("Sine Glow: Fade", Range( 0 , 1)) = 1
+        _SineGlowShaderMask("Sine Glow: Shader Mask", 2D) = "white" {}
+        [HDR]_SineGlowColor("Sine Glow: Color", Color) = (0,2.007843,2.996078,0)
+        _SineGlowContrast("Sine Glow: Contrast", Float) = 1
+        _SineGlowFrequency("Sine Glow: Frequency", Float) = 4
+        _SineGlowMin("Sine Glow: Min", Float) = 0
+        [ASEEnd]_SineGlowMax("Sine Glow: Max", Float) = 1
+        [HideInInspector] _texcoord( "", 2D ) = "white" {}
 
-	}
+    }
 
-	SubShader
-	{
-		LOD 0
+    SubShader
+    {
+        LOD 0
 
-		Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
+        Tags
+        {
+            "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True"
+        }
 
-		Cull Off
-		Lighting Off
-		ZWrite Off
-		Blend One OneMinusSrcAlpha
-		
-		
-		Pass
-		{
-		CGPROGRAM
-			
-			#ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
+        Cull Off
+        Lighting Off
+        ZWrite Off
+        Blend One OneMinusSrcAlpha
+
+
+        Pass
+        {
+            CGPROGRAM
+            #ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
 			#define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
-			#endif
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 3.0
-			#pragma multi_compile _ PIXELSNAP_ON
-			#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
-			#include "UnityCG.cginc"
-			#include "UnityShaderVariables.cginc"
-			#define ASE_NEEDS_FRAG_COLOR
-			#pragma shader_feature _TIMESETTINGS_LINEAR_DEFAULT _TIMESETTINGS_LINEAR_SCALED _TIMESETTINGS_LINEAR_FPS _TIMESETTINGS_FREQUENCY _TIMESETTINGS_FREQUENCY_FPS _TIMESETTINGS_CUSTOM_VALUE
+            #endif
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 3.0
+            #pragma multi_compile _ PIXELSNAP_ON
+            #pragma multi_compile _ ETC1_EXTERNAL_ALPHA
+            #include "UnityCG.cginc"
+            #include "UnityShaderVariables.cginc"
+            #define ASE_NEEDS_FRAG_COLOR
+            #pragma shader_feature _TIMESETTINGS_LINEAR_DEFAULT _TIMESETTINGS_LINEAR_SCALED _TIMESETTINGS_LINEAR_FPS _TIMESETTINGS_FREQUENCY _TIMESETTINGS_FREQUENCY_FPS _TIMESETTINGS_CUSTOM_VALUE
 
 
-			struct appdata_t
-			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
-				float2 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				
-			};
+            struct appdata_t
+            {
+                float4 vertex : POSITION;
+                float4 color : COLOR;
+                float2 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
 
-			struct v2f
-			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				float2 texcoord  : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				
-			};
-			
-			uniform fixed4 _Color;
-			uniform float _EnableExternalAlpha;
-			uniform sampler2D _MainTex;
-			uniform sampler2D _AlphaTex;
-			uniform float4 _MainTex_ST;
-			uniform float _SineGlowContrast;
-			uniform float _SineGlowFade;
-			uniform sampler2D _SineGlowShaderMask;
-			uniform float4 _SineGlowShaderMask_ST;
-			uniform float4 _SineGlowColor;
-			uniform float _TimeScale;
-			uniform float _TimeFPS;
-			uniform float _TimeFrequency;
-			uniform float _TimeRange;
-			uniform float _TimeValue;
-			uniform float _SineGlowFrequency;
-			uniform float _SineGlowMax;
-			uniform float _SineGlowMin;
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                fixed4 color : COLOR;
+                float2 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
 
-			
-			v2f vert( appdata_t IN  )
-			{
-				v2f OUT;
-				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				UNITY_TRANSFER_INSTANCE_ID(IN, OUT);
-				
-				
-				IN.vertex.xyz +=  float3(0,0,0) ; 
-				OUT.vertex = UnityObjectToClipPos(IN.vertex);
-				OUT.texcoord = IN.texcoord;
-				OUT.color = IN.color * _Color;
-				#ifdef PIXELSNAP_ON
+            uniform fixed4 _Color;
+            uniform float _EnableExternalAlpha;
+            uniform sampler2D _MainTex;
+            uniform sampler2D _AlphaTex;
+            uniform float4 _MainTex_ST;
+            uniform float _SineGlowContrast;
+            uniform float _SineGlowFade;
+            uniform sampler2D _SineGlowShaderMask;
+            uniform float4 _SineGlowShaderMask_ST;
+            uniform float4 _SineGlowColor;
+            uniform float _TimeScale;
+            uniform float _TimeFPS;
+            uniform float _TimeFrequency;
+            uniform float _TimeRange;
+            uniform float _TimeValue;
+            uniform float _SineGlowFrequency;
+            uniform float _SineGlowMax;
+            uniform float _SineGlowMin;
+
+
+            v2f vert(appdata_t IN)
+            {
+                v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(IN);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+                UNITY_TRANSFER_INSTANCE_ID(IN, OUT);
+
+
+                IN.vertex.xyz += float3(0, 0, 0);
+                OUT.vertex = UnityObjectToClipPos(IN.vertex);
+                OUT.texcoord = IN.texcoord;
+                OUT.color = IN.color * _Color;
+                #ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap (OUT.vertex);
-				#endif
+                #endif
 
-				return OUT;
-			}
+                return OUT;
+            }
 
-			fixed4 SampleSpriteTexture (float2 uv)
-			{
-				fixed4 color = tex2D (_MainTex, uv);
+            fixed4 SampleSpriteTexture(float2 uv)
+            {
+                fixed4 color = tex2D(_MainTex, uv);
 
-#if ETC1_EXTERNAL_ALPHA
+                #if ETC1_EXTERNAL_ALPHA
 				// get the color from an external texture (usecase: Alpha support for ETC1 on android)
 				fixed4 alpha = tex2D (_AlphaTex, uv);
 				color.a = lerp (color.a, alpha.r, _EnableExternalAlpha);
-#endif //ETC1_EXTERNAL_ALPHA
+                #endif //ETC1_EXTERNAL_ALPHA
 
-				return color;
-			}
-			
-			fixed4 frag(v2f IN  ) : SV_Target
-			{
-				UNITY_SETUP_INSTANCE_ID( IN );
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
+                return color;
+            }
 
-				float2 uv_MainTex = IN.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
-				float4 temp_output_1_0_g400 = tex2D( _MainTex, uv_MainTex );
-				float4 break2_g401 = temp_output_1_0_g400;
-				float temp_output_9_0_g402 = max( _SineGlowContrast , 0.0 );
-				float saferPower7_g402 = max( ( ( ( break2_g401.x + break2_g401.y + break2_g401.z ) / 3.0 ) + ( 0.1 * max( ( 1.0 - temp_output_9_0_g402 ) , 0.0 ) ) ) , 0.0001 );
-				float2 uv_SineGlowShaderMask = IN.texcoord.xy * _SineGlowShaderMask_ST.xy + _SineGlowShaderMask_ST.zw;
-				float4 tex2DNode3_g403 = tex2D( _SineGlowShaderMask, uv_SineGlowShaderMask );
-				float mulTime5_g404 = _Time.y * _TimeScale;
-				float mulTime7_g404 = _Time.y * _TimeFrequency;
-				#if defined(_TIMESETTINGS_LINEAR_DEFAULT)
-				float staticSwitch1_g404 = _Time.y;
-				#elif defined(_TIMESETTINGS_LINEAR_SCALED)
+            fixed4 frag(v2f IN) : SV_Target
+            {
+                UNITY_SETUP_INSTANCE_ID(IN);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
+
+                float2 uv_MainTex = IN.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+                float4 temp_output_1_0_g400 = tex2D(_MainTex, uv_MainTex);
+                float4 break2_g401 = temp_output_1_0_g400;
+                float temp_output_9_0_g402 = max(_SineGlowContrast, 0.0);
+                float saferPower7_g402 = max((((break2_g401.x + break2_g401.y + break2_g401.z) / 3.0) + (0.1 * max((1.0 - temp_output_9_0_g402), 0.0))), 0.0001);
+                float2 uv_SineGlowShaderMask = IN.texcoord.xy * _SineGlowShaderMask_ST.xy + _SineGlowShaderMask_ST.zw;
+                float4 tex2DNode3_g403 = tex2D(_SineGlowShaderMask, uv_SineGlowShaderMask);
+                float mulTime5_g404 = _Time.y * _TimeScale;
+                float mulTime7_g404 = _Time.y * _TimeFrequency;
+                #if defined(_TIMESETTINGS_LINEAR_DEFAULT)
+                float staticSwitch1_g404 = _Time.y;
+                #elif defined(_TIMESETTINGS_LINEAR_SCALED)
 				float staticSwitch1_g404 = mulTime5_g404;
-				#elif defined(_TIMESETTINGS_LINEAR_FPS)
+                #elif defined(_TIMESETTINGS_LINEAR_FPS)
 				float staticSwitch1_g404 = ( _TimeScale * ( floor( ( _Time.y * _TimeFPS ) ) / _TimeFPS ) );
-				#elif defined(_TIMESETTINGS_FREQUENCY)
+                #elif defined(_TIMESETTINGS_FREQUENCY)
 				float staticSwitch1_g404 = ( ( sin( mulTime7_g404 ) * _TimeRange ) + 100.0 );
-				#elif defined(_TIMESETTINGS_FREQUENCY_FPS)
+                #elif defined(_TIMESETTINGS_FREQUENCY_FPS)
 				float staticSwitch1_g404 = ( ( _TimeRange * sin( ( _TimeFrequency * ( floor( ( _TimeFPS * _Time.y ) ) / _TimeFPS ) ) ) ) + 100.0 );
-				#elif defined(_TIMESETTINGS_CUSTOM_VALUE)
+                #elif defined(_TIMESETTINGS_CUSTOM_VALUE)
 				float staticSwitch1_g404 = _TimeValue;
-				#else
+                #else
 				float staticSwitch1_g404 = _Time.y;
-				#endif
-				float4 appendResult21_g400 = (float4(( (temp_output_1_0_g400).rgb + ( pow( saferPower7_g402 , temp_output_9_0_g402 ) * ( _SineGlowFade * ( tex2DNode3_g403.r * tex2DNode3_g403.a ) ) * (_SineGlowColor).rgb * ( ( ( sin( ( staticSwitch1_g404 * _SineGlowFrequency ) ) + 1.0 ) * ( _SineGlowMax - _SineGlowMin ) ) + _SineGlowMin ) ) ) , temp_output_1_0_g400.a));
-				
-				fixed4 c = ( appendResult21_g400 * IN.color );
-				c.rgb *= c.a;
-				return c;
-			}
-		ENDCG
-		}
-	}
-	CustomEditor "SpriteShadersUltimate.SingleShaderGUI"
-	
-	
+                #endif
+                float4 appendResult21_g400 = (float4(
+                    ((temp_output_1_0_g400).rgb + (pow(saferPower7_g402, temp_output_9_0_g402) * (_SineGlowFade * (tex2DNode3_g403.r * tex2DNode3_g403.a)) * (_SineGlowColor).rgb * (((
+                        sin((staticSwitch1_g404 * _SineGlowFrequency)) + 1.0) * (_SineGlowMax - _SineGlowMin)) + _SineGlowMin))), temp_output_1_0_g400.a));
+
+                fixed4 c = (appendResult21_g400 * IN.color);
+                c.rgb *= c.a;
+                return c;
+            }
+            ENDCG
+        }
+    }
+    CustomEditor "SpriteShadersUltimate.SingleShaderGUI"
+
+
 }
 /*ASEBEGIN
 Version=18900

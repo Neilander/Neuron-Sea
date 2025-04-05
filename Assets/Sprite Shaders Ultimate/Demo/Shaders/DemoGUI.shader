@@ -2,187 +2,187 @@
 // Available at the Unity Asset Store - http://u3d.as/y3X 
 Shader "GUI/DemoGUI"
 {
-	Properties
-	{
-		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
-		
-		_StencilComp ("Stencil Comparison", Float) = 8
-		_Stencil ("Stencil ID", Float) = 0
-		_StencilOp ("Stencil Operation", Float) = 0
-		_StencilWriteMask ("Stencil Write Mask", Float) = 255
-		_StencilReadMask ("Stencil Read Mask", Float) = 255
+    Properties
+    {
+        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+        _Color ("Tint", Color) = (1,1,1,1)
 
-		_ColorMask ("Color Mask", Float) = 15
+        _StencilComp ("Stencil Comparison", Float) = 8
+        _Stencil ("Stencil ID", Float) = 0
+        _StencilOp ("Stencil Operation", Float) = 0
+        _StencilWriteMask ("Stencil Write Mask", Float) = 255
+        _StencilReadMask ("Stencil Read Mask", Float) = 255
 
-		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
-		_NoiseSpeed("Noise Speed", Vector) = (0,0,0,0)
-		_NoiseScale("Noise Scale", Float) = 1
-		_NoiseFactor("Noise Factor", Float) = 0.5
-		_Width("Width", Float) = 0.2
-		_FadeSpeed("Fade Speed", Float) = 0
-		_Ratio("Ratio", Float) = 0
+        _ColorMask ("Color Mask", Float) = 15
 
-	}
+        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+        _NoiseSpeed("Noise Speed", Vector) = (0,0,0,0)
+        _NoiseScale("Noise Scale", Float) = 1
+        _NoiseFactor("Noise Factor", Float) = 0.5
+        _Width("Width", Float) = 0.2
+        _FadeSpeed("Fade Speed", Float) = 0
+        _Ratio("Ratio", Float) = 0
 
-	SubShader
-	{
-		LOD 0
+    }
 
-		Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
-		
-		Stencil
-		{
-			Ref [_Stencil]
-			ReadMask [_StencilReadMask]
-			WriteMask [_StencilWriteMask]
-			CompFront [_StencilComp]
-			PassFront [_StencilOp]
-			FailFront Keep
-			ZFailFront Keep
-			CompBack Always
-			PassBack Keep
-			FailBack Keep
-			ZFailBack Keep
-		}
+    SubShader
+    {
+        LOD 0
+
+        Tags
+        {
+            "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True"
+        }
+
+        Stencil
+        {
+            Ref [_Stencil]
+            ReadMask [_StencilReadMask]
+            WriteMask [_StencilWriteMask]
+            CompFront [_StencilComp]
+            PassFront [_StencilOp]
+            FailFront Keep
+            ZFailFront Keep
+            CompBack Always
+            PassBack Keep
+            FailBack Keep
+            ZFailBack Keep
+        }
 
 
-		Cull Off
-		Lighting Off
-		ZWrite Off
-		ZTest [unity_GUIZTestMode]
-		Blend SrcAlpha OneMinusSrcAlpha
-		ColorMask [_ColorMask]
+        Cull Off
+        Lighting Off
+        ZWrite Off
+        ZTest [unity_GUIZTestMode]
+        Blend SrcAlpha OneMinusSrcAlpha
+        ColorMask [_ColorMask]
 
-		
-		Pass
-		{
-			Name "Default"
-		CGPROGRAM
-			
-			#ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
+
+        Pass
+        {
+            Name "Default"
+            CGPROGRAM
+            #ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
 			#define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
-			#endif
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 3.0
+            #endif
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 3.0
 
-			#include "UnityCG.cginc"
-			#include "UnityUI.cginc"
+            #include "UnityCG.cginc"
+            #include "UnityUI.cginc"
 
-			#pragma multi_compile __ UNITY_UI_CLIP_RECT
-			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			
-			#include "UnityShaderVariables.cginc"
-			#define ASE_NEEDS_FRAG_COLOR
+            #pragma multi_compile __ UNITY_UI_CLIP_RECT
+            #pragma multi_compile __ UNITY_UI_ALPHACLIP
 
-			
-			struct appdata_t
-			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
-				float2 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				
-			};
+            #include "UnityShaderVariables.cginc"
+            #define ASE_NEEDS_FRAG_COLOR
 
-			struct v2f
-			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				half2 texcoord  : TEXCOORD0;
-				float4 worldPosition : TEXCOORD1;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				
-			};
-			
-			uniform fixed4 _Color;
-			uniform fixed4 _TextureSampleAdd;
-			uniform float4 _ClipRect;
-			uniform sampler2D _MainTex;
-			uniform float2 _NoiseSpeed;
-			uniform float _Ratio;
-			uniform float _NoiseScale;
-			uniform float _NoiseFactor;
-			uniform float _Width;
-			uniform float _FadeSpeed;
-			float3 mod2D289( float3 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
-			float2 mod2D289( float2 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
-			float3 permute( float3 x ) { return mod2D289( ( ( x * 34.0 ) + 1.0 ) * x ); }
-			float snoise( float2 v )
-			{
-				const float4 C = float4( 0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439 );
-				float2 i = floor( v + dot( v, C.yy ) );
-				float2 x0 = v - i + dot( i, C.xx );
-				float2 i1;
-				i1 = ( x0.x > x0.y ) ? float2( 1.0, 0.0 ) : float2( 0.0, 1.0 );
-				float4 x12 = x0.xyxy + C.xxzz;
-				x12.xy -= i1;
-				i = mod2D289( i );
-				float3 p = permute( permute( i.y + float3( 0.0, i1.y, 1.0 ) ) + i.x + float3( 0.0, i1.x, 1.0 ) );
-				float3 m = max( 0.5 - float3( dot( x0, x0 ), dot( x12.xy, x12.xy ), dot( x12.zw, x12.zw ) ), 0.0 );
-				m = m * m;
-				m = m * m;
-				float3 x = 2.0 * frac( p * C.www ) - 1.0;
-				float3 h = abs( x ) - 0.5;
-				float3 ox = floor( x + 0.5 );
-				float3 a0 = x - ox;
-				m *= 1.79284291400159 - 0.85373472095314 * ( a0 * a0 + h * h );
-				float3 g;
-				g.x = a0.x * x0.x + h.x * x0.y;
-				g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-				return 130.0 * dot( m, g );
-			}
-			
 
-			
-			v2f vert( appdata_t IN  )
-			{
-				v2f OUT;
-				UNITY_SETUP_INSTANCE_ID( IN );
+            struct appdata_t
+            {
+                float4 vertex : POSITION;
+                float4 color : COLOR;
+                float2 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                fixed4 color : COLOR;
+                half2 texcoord : TEXCOORD0;
+                float4 worldPosition : TEXCOORD1;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            uniform fixed4 _Color;
+            uniform fixed4 _TextureSampleAdd;
+            uniform float4 _ClipRect;
+            uniform sampler2D _MainTex;
+            uniform float2 _NoiseSpeed;
+            uniform float _Ratio;
+            uniform float _NoiseScale;
+            uniform float _NoiseFactor;
+            uniform float _Width;
+            uniform float _FadeSpeed;
+            float3 mod2D289(float3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            float2 mod2D289(float2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            float3 permute(float3 x) { return mod2D289(((x * 34.0) + 1.0) * x); }
+
+            float snoise(float2 v)
+            {
+                const float4 C = float4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+                float2 i = floor(v + dot(v, C.yy));
+                float2 x0 = v - i + dot(i, C.xx);
+                float2 i1;
+                i1 = (x0.x > x0.y) ? float2(1.0, 0.0) : float2(0.0, 1.0);
+                float4 x12 = x0.xyxy + C.xxzz;
+                x12.xy -= i1;
+                i = mod2D289(i);
+                float3 p = permute(permute(i.y + float3(0.0, i1.y, 1.0)) + i.x + float3(0.0, i1.x, 1.0));
+                float3 m = max(0.5 - float3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+                m = m * m;
+                m = m * m;
+                float3 x = 2.0 * frac(p * C.www) - 1.0;
+                float3 h = abs(x) - 0.5;
+                float3 ox = floor(x + 0.5);
+                float3 a0 = x - ox;
+                m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+                float3 g;
+                g.x = a0.x * x0.x + h.x * x0.y;
+                g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                return 130.0 * dot(m, g);
+            }
+
+
+            v2f vert(appdata_t IN)
+            {
+                v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(IN);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				UNITY_TRANSFER_INSTANCE_ID(IN, OUT);
-				OUT.worldPosition = IN.vertex;
-				
-				
-				OUT.worldPosition.xyz +=  float3( 0, 0, 0 ) ;
-				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+                UNITY_TRANSFER_INSTANCE_ID(IN, OUT);
+                OUT.worldPosition = IN.vertex;
 
-				OUT.texcoord = IN.texcoord;
-				
-				OUT.color = IN.color * _Color;
-				return OUT;
-			}
 
-			fixed4 frag(v2f IN  ) : SV_Target
-			{
-				UNITY_SETUP_INSTANCE_ID( IN );
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
+                OUT.worldPosition.xyz += float3(0, 0, 0);
+                OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
-				float2 appendResult6 = (float2(IN.texcoord.xy.x , ( IN.texcoord.xy.y * _Ratio )));
-				float simplePerlin2D11 = snoise( ( ( _Time.y * _NoiseSpeed ) + appendResult6 )*_NoiseScale );
-				float clampResult26 = clamp( ( ( ( ( simplePerlin2D11 - 0.5 ) * _NoiseFactor ) + ( _Width - appendResult6.x ) ) * _FadeSpeed ) , 0.0 , 1.0 );
-				float4 temp_cast_0 = (min( clampResult26 , 1.0 )).xxxx;
-				
-				half4 color = ( temp_cast_0 * IN.color );
-				
-				#ifdef UNITY_UI_CLIP_RECT
+                OUT.texcoord = IN.texcoord;
+
+                OUT.color = IN.color * _Color;
+                return OUT;
+            }
+
+            fixed4 frag(v2f IN) : SV_Target
+            {
+                UNITY_SETUP_INSTANCE_ID(IN);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
+
+                float2 appendResult6 = (float2(IN.texcoord.xy.x, (IN.texcoord.xy.y * _Ratio)));
+                float simplePerlin2D11 = snoise(((_Time.y * _NoiseSpeed) + appendResult6) * _NoiseScale);
+                float clampResult26 = clamp(((((simplePerlin2D11 - 0.5) * _NoiseFactor) + (_Width - appendResult6.x)) * _FadeSpeed), 0.0, 1.0);
+                float4 temp_cast_0 = (min(clampResult26, 1.0)).xxxx;
+
+                half4 color = (temp_cast_0 * IN.color);
+
+                #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
                 #endif
-				
-				#ifdef UNITY_UI_ALPHACLIP
-				clip (color.a - 0.001);
-				#endif
 
-				return color;
-			}
-		ENDCG
-		}
-	}
-	CustomEditor "ASEMaterialInspector"
-	
-	
+                #ifdef UNITY_UI_ALPHACLIP
+				clip (color.a - 0.001);
+                #endif
+
+                return color;
+            }
+            ENDCG
+        }
+    }
+    CustomEditor "ASEMaterialInspector"
+
+
 }
 /*ASEBEGIN
 Version=18800

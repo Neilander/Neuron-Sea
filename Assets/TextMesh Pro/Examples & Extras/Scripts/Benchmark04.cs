@@ -4,14 +4,14 @@ using System.Collections;
 
 namespace TMPro.Examples
 {
-    
     public class Benchmark04 : MonoBehaviour
     {
-
         public int SpawnType = 0;
 
         public int MinPointSize = 12;
+
         public int MaxPointSize = 64;
+
         public int Steps = 4;
 
         private Transform m_Transform;
@@ -19,18 +19,15 @@ namespace TMPro.Examples
         //public Material material;
 
 
-        void Start()
-        {
+        void Start(){
             m_Transform = transform;
 
             float lineHeight = 0;
             float orthoSize = Camera.main.orthographicSize = Screen.height / 2;
             float ratio = (float)Screen.width / Screen.height;
 
-            for (int i = MinPointSize; i <= MaxPointSize; i += Steps)
-            {
-                if (SpawnType == 0)
-                {
+            for (int i = MinPointSize; i <= MaxPointSize; i += Steps) {
+                if (SpawnType == 0) {
                     // TextMesh Pro Implementation
                     GameObject go = new GameObject("Text - " + i + " Pts");
 
@@ -55,8 +52,7 @@ namespace TMPro.Examples
 
                     lineHeight += i;
                 }
-                else
-                {
+                else {
                     // TextMesh Implementation
                     // Causes crashes since atlas needed exceeds 4096 X 4096
                     /*
@@ -65,7 +61,7 @@ namespace TMPro.Examples
                     //if (lineHeight > orthoSize * 2 * 0.9f) return;
 
                     go.transform.position = m_Transform.position + new Vector3(ratio * -orthoSize * 0.975f, orthoSize * 0.975f - lineHeight, 1);
-                                       
+
                     TextMesh textMesh = go.AddComponent<TextMesh>();
                     textMesh.font = Resources.Load("Fonts/ARIAL", typeof(Font)) as Font;
                     textMesh.renderer.sharedMaterial = textMesh.font.material;
@@ -80,6 +76,5 @@ namespace TMPro.Examples
                 }
             }
         }
-
     }
 }

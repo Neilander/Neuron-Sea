@@ -8,13 +8,11 @@ namespace SpriteShadersUltimate
     {
         float originalXPosition;
 
-        void Awake()
-        {
+        void Awake(){
             originalXPosition = transform.position.x;
         }
 
-        void Start()
-        {
+        void Start(){
             GetComponent<Renderer>().material.SetFloat("_WindXPosition", originalXPosition);
         }
     }

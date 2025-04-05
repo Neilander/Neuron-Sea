@@ -21,9 +21,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     private WorldMover mover;
 
-    [SerializeField]private new SpriteRenderer renderer;
+    [SerializeField] private new SpriteRenderer renderer;
 
     [SerializeField] private Vector2 ExpectedSize;
+
     [SerializeField] private Vector2 ExpectedAnchorPos;
 
     public Vector3 SelfGridPos
@@ -34,8 +35,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     private Vector3 recordTempPos;
 
     //自动导入关卡设定数据
-    public void OnLDtkImportFields(LDtkFields fields)
-    {
+    public void OnLDtkImportFields(LDtkFields fields){
         ExpectedSize.x = fields.GetInt("SizeX");
         ExpectedSize.y = fields.GetInt("SizeY");
         SizeToExpectedSize();
@@ -59,9 +59,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         selfGridPos = gridPos;
     }
 
-    
-    public void SetTempToGridPos(Vector3 gridPos)
-    {
+
+    public void SetTempToGridPos(Vector3 gridPos){
         renderer.transform.position = gridPos - anchor.transform.localPosition + renderer.transform.localPosition;
     }
 
@@ -160,23 +159,21 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
 
     private Vector3 tempRecordGridPos;
-    public void IntoTempMoveState(Vector3 gridPos)
-    {
+
+    public void IntoTempMoveState(Vector3 gridPos){
         SetAlpha(0.5f);
         tempRecordGridPos = gridPos;
         GetComponent<Collider2D>().isTrigger = true;
         SetTempToGridPos(gridPos);
     }
 
-    public void OutTempMoveState()
-    {
+    public void OutTempMoveState(){
         SetAlpha(1f);
-        GetComponent<Collider2D>().isTrigger =false;
+        GetComponent<Collider2D>().isTrigger = false;
         renderer.transform.localPosition = recordTempPos;
     }
 
-    public void ChangeFromTempMoveToNormal()
-    {
+    public void ChangeFromTempMoveToNormal(){
         SetAlpha(1f);
         SetToGridPos(tempRecordGridPos);
         GetComponent<Collider2D>().isTrigger = false;
@@ -205,33 +202,31 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     private Coroutine flashCor;
+
     public void ControlFlash(bool ifStart){
-        if (ifStart)
-        {
+        if (ifStart) {
             if (flashCor == null)
                 flashCor = StartCoroutine(FlashRedCoroutine(flashRedDuration));
         }
-        else
-        {
-            if(flashCor!=null)StopCoroutine(flashCor);
+        else {
+            if (flashCor != null) StopCoroutine(flashCor);
             flashCor = null;
             renderer.color = originalColor;
         }
     }
 
     private Color originalColor;
+
     private IEnumerator FlashRedCoroutine(float duration = 0.4f){
         originalColor = renderer.color;
         Color targetColor = Color.red;
         float halfDuration = duration / 2f;
 
-        while (true)
-        {
+        while (true) {
             float timer = 0f;
 
             // 渐变到红色
-            while (timer < halfDuration)
-            {
+            while (timer < halfDuration) {
                 timer += Time.deltaTime;
                 float t = timer / halfDuration;
                 renderer.color = Color.Lerp(originalColor, targetColor, t);
@@ -241,8 +236,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             timer = 0f;
 
             // 渐变回原色
-            while (timer < halfDuration)
-            {
+            while (timer < halfDuration) {
                 timer += Time.deltaTime;
                 float t = timer / halfDuration;
                 renderer.color = Color.Lerp(targetColor, originalColor, t);
@@ -253,26 +247,22 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
     }
 
-    public void SizeToExpectedSize()
-    {
-        if (GridManager.Instance == null)
-        {
+    public void SizeToExpectedSize(){
+        if (GridManager.Instance == null) {
             Debug.LogError("GridManager.Instance is null.");
             return;
         }
 
-        if (renderer == null || renderer.sprite == null)
-        {
+        if (renderer == null || renderer.sprite == null) {
             Debug.LogError("SpriteRenderer or Sprite is missing.");
             return;
         }
 
-        if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
-        {
+        if (ExpectedSize.x == 0 || ExpectedSize.y == 0) {
             Debug.LogError("Size不能是0");
             return;
         }
-           
+
         float gridSize = GridManager.Instance.gridWidth;
 
         Vector2 targetWorldSize = ExpectedSize * gridSize;
@@ -292,23 +282,19 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
         // Collider 处理
         Collider2D col = GetComponent<Collider2D>();
-        if (col is BoxCollider2D box)
-        {
-            box.size = targetWorldSize*0.9f;
+        if (col is BoxCollider2D box) {
+            box.size = targetWorldSize * 0.9f;
             box.offset = Vector2.zero;
         }
-        else
-        {
+        else {
             Debug.LogError("Only BoxCollider2D is supported.");
         }
         SetAnchorToAnchorPos();
         //anchorSprite.transform.SetParent(renderer.transform);
     }
 
-    public void SetAnchorToAnchorPos()
-    {
-        if (anchor != null)
-        {
+    public void SetAnchorToAnchorPos(){
+        if (anchor != null) {
             // 1. 获取 Sprite 的局部边界
             Bounds spriteBounds = renderer.sprite.bounds;
 
@@ -331,19 +317,19 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     private bool ifEnableSwitch = true;
-    public void SwitchEnableSwitchState()
-    {
-        if (ifEnableSwitch)
-        {
+
+    public void SwitchEnableSwitchState(){
+        if (ifEnableSwitch) {
             ifEnableSwitch = false;
             anchorSprite.SetActive(false);
         }
-        else
-        {
+        else {
             ifEnableSwitch = true;
             anchorSprite.SetActive(true);
         }
     }
 
-    public bool IfCanSwitch() { return ifEnableSwitch; }
+    public bool IfCanSwitch(){
+        return ifEnableSwitch;
+    }
 }

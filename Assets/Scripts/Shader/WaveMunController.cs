@@ -4,22 +4,29 @@ using System.Collections;
 public class WaveMunController : MonoBehaviour
 {
     [Header("WaveMun 控制")]
-    [SerializeField] private Material targetMaterial; // 目标材质
+    [SerializeField]
+    private Material targetMaterial; // 目标材质
+
     [SerializeField] private float cycleSpeed = 22f; // 循环速度
+
     [SerializeField] private string propertyName = "_WaveMun"; // 属性名称
- 
-    [Header("动画设置")]
-    [SerializeField] private float appearDuration = 1f; // 出现动画持续时间
+
+    [Header("动画设置")][SerializeField] private float appearDuration = 1f; // 出现动画持续时间
+
     [SerializeField] private float disappearDuration = 1f; // 消失动画持续时间
+
     [SerializeField] private float maxWaveValue = 20f; // 最大波浪值
 
-    [Header("效果联动")]
-    [SerializeField] private FadeController fadeController; // 淡入淡出控制器
+    [Header("效果联动")][SerializeField] private FadeController fadeController; // 淡入淡出控制器
 
     private bool isAnimating = false;
+
     private SpriteRenderer spriteRenderer;
+
     private UnityEngine.UI.Image imageComponent; // 添加Image组件引用
+
     public Canvas canvas;
+
     private Material originalMaterial; // 存储原始材质
 
     private void Start()
@@ -66,7 +73,7 @@ public class WaveMunController : MonoBehaviour
     {
         if (!isAnimating)
         {
-            StartCoroutine(DelayedLayerChange());
+            StartCoroutine(DelayedLayerChange()); //层级改变
             StartCoroutine(AppearAnimation());
         }
     }
@@ -114,6 +121,7 @@ public class WaveMunController : MonoBehaviour
         // 动画结束，波浪值为0时禁用Image组件
         if (imageComponent != null)
         {
+            // yield return new WaitForSeconds(1f);
             imageComponent.enabled = false;
         }
 
@@ -133,11 +141,13 @@ public class WaveMunController : MonoBehaviour
             imageComponent.enabled = true;
         }
 
+        // 同时开始淡出动画
         if (fadeController != null)
         {
             fadeController.StartDisappearAnimation();
         }
 
+        // 同时开始波浪动画
         while (elapsedTime < disappearDuration)
         {
             elapsedTime += Time.deltaTime;

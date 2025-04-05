@@ -11,29 +11,35 @@ namespace SpriteShadersUltimate
     {
         public static DemoAllShaders c;
 
-        [Header("Normal Mapping:")]
-        public List<DemoNormalMapping> normalMappings;
+        [Header("Normal Mapping:")] public List<DemoNormalMapping> normalMappings;
 
         Dictionary<Sprite, Texture> normalDictionary;
+
         List<SpriteRenderer> groundSprites;
+
         GameObject lightSource;
+
         Transform shadersParent;
 
         List<SpriteRenderer> sprites;
 
         Slider fadeSlider;
+
         Slider radiusSlider;
+
         Graphic[] typeButtons;
 
         Transform currentShaderParent;
 
         string lastPath;
+
         string currentCategory;
+
         string currentShader;
+
         string currentType;
 
-        void Awake()
-        {
+        void Awake(){
             c = this;
 
             lightSource = GameObject.Find("Environment/Light");
@@ -44,26 +50,22 @@ namespace SpriteShadersUltimate
 
             typeButtons = new Graphic[]
             {
-            transform.Find("Standard").GetComponent<Graphic>(),
-            transform.Find("Lit").GetComponent<Graphic>()
+                transform.Find("Standard").GetComponent<Graphic>(),
+                transform.Find("Lit").GetComponent<Graphic>()
             };
 
             normalDictionary = new Dictionary<Sprite, Texture>();
-            foreach (DemoNormalMapping dnm in normalMappings)
-            {
+            foreach (DemoNormalMapping dnm in normalMappings) {
                 normalDictionary.Add(dnm.sourceSprite, dnm.targetNormal);
             }
         }
 
-        void Start()
-        {
+        void Start(){
             groundSprites = new List<SpriteRenderer>();
             Transform groundParent = GameObject.Find("Environment/Ground").transform;
-            for (int n = 0; n < groundParent.childCount; n++)
-            {
+            for (int n = 0; n < groundParent.childCount; n++) {
                 SpriteRenderer sr = groundParent.GetChild(n).GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
+                if (sr != null) {
                     groundSprites.Add(sr);
                 }
             }
@@ -72,13 +74,11 @@ namespace SpriteShadersUltimate
 
             //Generate Categories:
             GameObject categoryBlank = transform.Find("Categories/Blank").gameObject;
-            for (int n = 0; n < shadersParent.childCount; n++)
-            {
+            for (int n = 0; n < shadersParent.childCount; n++) {
                 Transform categoryChild = shadersParent.GetChild(n);
                 int categoryShaderCount = categoryChild.childCount;
 
-                if(categoryChild.name != "Uber")
-                {
+                if (categoryChild.name != "Uber") {
                     shaderCount += categoryShaderCount;
                 }
 
@@ -101,41 +101,33 @@ namespace SpriteShadersUltimate
             SwitchShaders("Standard");
         }
 
-        void Update()
-        {
+        void Update(){
             UpdateTypeButtons();
         }
 
-        public void UpdateRadius()
-        {
+        public void UpdateRadius(){
             SetRadius(radiusSlider.value);
         }
-        public void SetRadius(float amount)
-        {
+
+        public void SetRadius(float amount){
             bool couldFade = false;
 
-            if (currentShader == "Burn")
-            {
+            if (currentShader == "Burn") {
                 amount = 2.5f + amount * 4.3f;
-            }else if(currentShader == "Ink Spread")
-            {
+            }
+            else if (currentShader == "Ink Spread") {
                 amount = 0.5f + amount * 5.5f;
             }
 
-            if (currentCategory != "Interactive" && currentCategory != "Generated" && currentCategory != "Uber")
-            {
-                foreach (SpriteRenderer sr in sprites)
-                {
+            if (currentCategory != "Interactive" && currentCategory != "Generated" && currentCategory != "Uber") {
+                foreach (SpriteRenderer sr in sprites) {
                     Shader targetShader = sr.material.shader;
 
-                    for (int n = 0; n < targetShader.GetPropertyCount(); n++)
-                    {
+                    for (int n = 0; n < targetShader.GetPropertyCount(); n++) {
                         ShaderPropertyType type = targetShader.GetPropertyType(n);
-                        if (type == ShaderPropertyType.Range || type == ShaderPropertyType.Float)
-                        {
+                        if (type == ShaderPropertyType.Range || type == ShaderPropertyType.Float) {
                             string propertyName = targetShader.GetPropertyName(n);
-                            if ((propertyName.EndsWith("Radius") || propertyName.EndsWith("Distance") || propertyName.EndsWith("Spread")) && propertyName.StartsWith("_Enable") == false)
-                            {
+                            if ((propertyName.EndsWith("Radius") || propertyName.EndsWith("Distance") || propertyName.EndsWith("Spread")) && propertyName.StartsWith("_Enable") == false) {
                                 sr.material.SetFloat(propertyName, amount);
                                 couldFade = true;
                             }
@@ -147,62 +139,52 @@ namespace SpriteShadersUltimate
             radiusSlider.transform.parent.Find("Hide").gameObject.SetActive(!couldFade);
         }
 
-        public void UpdateFade()
-        {
+        public void UpdateFade(){
             SetFade(fadeSlider.value);
         }
-        public void SetFade(float amount)
-        {
+
+        public void SetFade(float amount){
             bool couldFade = false;
 
-            if(currentCategory == "Fading")
-            {
-                if (currentShader.StartsWith("Source"))
-                {
+            if (currentCategory == "Fading") {
+                if (currentShader.StartsWith("Source")) {
                     amount *= 5f;
                 }
 
-                if(currentShader == "Halftone")
-                {
+                if (currentShader == "Halftone") {
                     amount = 5 + amount * 18f;
                 }
 
-                if (currentShader.StartsWith("Directional"))
-                {
+                if (currentShader.StartsWith("Directional")) {
                     amount = -2 + amount * 6f;
                 }
             }
 
-            if(currentCategory != "Interactive")
-            {
-                foreach (SpriteRenderer sr in sprites)
-                {
+            if (currentCategory != "Interactive") {
+                foreach (SpriteRenderer sr in sprites) {
                     Shader targetShader = sr.material.shader;
 
-                    for (int n = 0; n < targetShader.GetPropertyCount(); n++)
-                    {
+                    for (int n = 0; n < targetShader.GetPropertyCount(); n++) {
                         ShaderPropertyType type = targetShader.GetPropertyType(n);
-                        if (type == ShaderPropertyType.Range || type == ShaderPropertyType.Float)
-                        {
+                        if (type == ShaderPropertyType.Range || type == ShaderPropertyType.Float) {
                             string propertyName = targetShader.GetPropertyName(n);
-                            if (propertyName.EndsWith("Fade") && propertyName.StartsWith("_Enable") == false)
-                            {
+                            if (propertyName.EndsWith("Fade") && propertyName.StartsWith("_Enable") == false) {
                                 sr.material.SetFloat(propertyName, amount);
                                 couldFade = true;
-                            }else if(propertyName == "_Hue")
-                            {
+                            }
+                            else if (propertyName == "_Hue") {
                                 sr.material.SetFloat(propertyName, amount - 0.5f);
                                 couldFade = true;
-                            } else if (propertyName == "_Brightness")
-                            {
+                            }
+                            else if (propertyName == "_Brightness") {
                                 sr.material.SetFloat(propertyName, 1 + amount * 2f);
                                 couldFade = true;
-                            } else if (propertyName == "_Contrast")
-                            {
+                            }
+                            else if (propertyName == "_Contrast") {
                                 sr.material.SetFloat(propertyName, 1 + amount * 1.5f);
                                 couldFade = true;
-                            } else if (propertyName == "_Saturation")
-                            {
+                            }
+                            else if (propertyName == "_Saturation") {
                                 sr.material.SetFloat(propertyName, 1 - amount);
                                 couldFade = true;
                             }
@@ -214,51 +196,43 @@ namespace SpriteShadersUltimate
             fadeSlider.transform.parent.Find("Hide").gameObject.SetActive(!couldFade);
         }
 
-        void UpdateTypeButtons()
-        {
-            foreach (Graphic g in typeButtons)
-            {
-                if (currentType == g.name)
-                {
+        void UpdateTypeButtons(){
+            foreach (Graphic g in typeButtons) {
+                if (currentType == g.name) {
                     g.color = new Color(1, 1, 1, Mathf.Lerp(g.color.a, 1f, Time.deltaTime * 5f));
                     g.transform.localScale = Vector3.Lerp(g.transform.localScale, Vector3.one * 1.07f, Time.deltaTime * 5f);
                 }
-                else
-                {
+                else {
                     g.color = new Color(1, 1, 1, Mathf.Lerp(g.color.a, 0.3f, Time.deltaTime * 5f));
                     g.transform.localScale = Vector3.Lerp(g.transform.localScale, Vector3.one, Time.deltaTime * 5f);
                 }
             }
         }
 
-        public string GetCurrentType()
-        {
+        public string GetCurrentType(){
             return currentType;
         }
-        public string GetCurrentCategory()
-        {
+
+        public string GetCurrentCategory(){
             return currentCategory;
         }
-        public string GetCurrentShader()
-        {
+
+        public string GetCurrentShader(){
             return currentShader;
         }
-        public void SelectShader(string category, string shader)
-        {
+
+        public void SelectShader(string category, string shader){
             Transform shadersUI = transform.Find("Shaders");
 
             //Fade Current:
-            if (category != "" && currentCategory != category)
-            {
+            if (category != "" && currentCategory != category) {
                 //Clear Shaders:
                 float delay = 0f;
                 float delayIncrease = 0.012f;
 
-                for (int n = 0; n < shadersUI.childCount; n++)
-                {
+                for (int n = 0; n < shadersUI.childCount; n++) {
                     Transform child = shadersUI.GetChild(n);
-                    if (child.gameObject.activeSelf)
-                    {
+                    if (child.gameObject.activeSelf) {
                         child.GetComponent<DemoShaderButton>().Invoke("FadeAway", delay);
                         delay += delayIncrease;
                     }
@@ -270,8 +244,7 @@ namespace SpriteShadersUltimate
                 //Create Shaders:
                 Transform shaderCategory = shadersParent.Find(category);
                 GameObject shaderBlank = shadersUI.Find("Blank").gameObject;
-                for (int n = 0; n < shaderCategory.childCount; n++)
-                {
+                for (int n = 0; n < shaderCategory.childCount; n++) {
                     string shaderName = shaderCategory.GetChild(n).name;
 
                     GameObject newShader = Instantiate<GameObject>(shaderBlank);
@@ -291,64 +264,52 @@ namespace SpriteShadersUltimate
                 }
             }
 
-            if (shader != "")
-            {
+            if (shader != "") {
                 currentShader = shader;
                 lastPath = currentCategory + "/" + shader;
             }
 
-            if (shader != "")
-            {
-                for (int n = 0; n < shadersParent.childCount; n++)
-                {
+            if (shader != "") {
+                for (int n = 0; n < shadersParent.childCount; n++) {
                     Transform categoryChild = shadersParent.GetChild(n);
 
-                    if (categoryChild.name == currentCategory)
-                    {
+                    if (categoryChild.name == currentCategory) {
                         categoryChild.gameObject.SetActive(true);
 
-                        for (int m = 0; m < categoryChild.childCount; m++)
-                        {
+                        for (int m = 0; m < categoryChild.childCount; m++) {
                             Transform shaderChild = categoryChild.GetChild(m);
 
-                            if (shaderChild.name == shader)
-                            {
+                            if (shaderChild.name == shader) {
                                 shaderChild.gameObject.SetActive(true);
                                 currentShaderParent = shaderChild;
 
                                 string shaderName = shader;
-                                if (shaderName.StartsWith("Example"))
-                                {
+                                if (shaderName.StartsWith("Example")) {
                                     shaderName = "Uber";
                                 }
 
                                 sprites = new List<SpriteRenderer>();
-                                foreach(SpriteRenderer sr in shaderChild.GetComponentsInChildren<SpriteRenderer>())
-                                {
-                                    if (sr.material.shader.name.Contains(shaderName))
-                                    {
+                                foreach (SpriteRenderer sr in shaderChild.GetComponentsInChildren<SpriteRenderer>()) {
+                                    if (sr.material.shader.name.Contains(shaderName)) {
                                         sprites.Add(sr);
                                     }
                                 }
 
                                 SwitchShaders(currentType);
                             }
-                            else
-                            {
+                            else {
                                 shaderChild.gameObject.SetActive(false);
                             }
                         }
                     }
-                    else
-                    {
+                    else {
                         categoryChild.gameObject.SetActive(false);
                     }
                 }
 
                 float targetAlpha = 1f;
 
-                if (currentCategory == "Fading")
-                {
+                if (currentCategory == "Fading") {
                     targetAlpha = 0.5f;
                 }
 
@@ -357,58 +318,50 @@ namespace SpriteShadersUltimate
                 radiusSlider.value = 0.5f;
                 fadeSlider.value = targetAlpha;
 
-                #if UNITY_EDITOR
-                if (sprites != null && sprites.Count > 0)
-                {
+#if UNITY_EDITOR
+                if (sprites != null && sprites.Count > 0) {
                     Material[] materials = new Material[sprites.Count];
-                    for(int n = 0; n < sprites.Count; n++)
-                    {
+                    for (int n = 0; n < sprites.Count; n++) {
                         materials[n] = sprites[n].material;
                     }
                     Selection.objects = materials;
-                }else
-                {
+                }
+                else {
                     ParticleSystem[] particles = currentShaderParent.GetComponentsInChildren<ParticleSystem>();
 
-                    if(particles.Length > 0)
-                    {
+                    if (particles.Length > 0) {
                         Material[] mats = new Material[particles.Length];
 
-                        for(int n = 0; n < particles.Length; n++)
-                        {
+                        for (int n = 0; n < particles.Length; n++) {
                             mats[n] = particles[n].GetComponent<ParticleSystemRenderer>().material;
                         }
 
                         Selection.objects = mats;
                     }
                 }
-                #endif
+#endif
             }
         }
 
-        public void SwitchShaders(string newType)
-        {
+        public void SwitchShaders(string newType){
             currentType = newType;
 
-            foreach (SpriteRenderer sr in groundSprites)
-            {
+            foreach (SpriteRenderer sr in groundSprites) {
                 SwitchMaterial(sr, newType);
             }
 
-            foreach (SpriteRenderer sr in shadersParent.Find(lastPath).GetComponentsInChildren<SpriteRenderer>())
-            {
+            foreach (SpriteRenderer sr in shadersParent.Find(lastPath).GetComponentsInChildren<SpriteRenderer>()) {
                 SwitchMaterial(sr, newType);
             }
 
-            foreach (ParticleSystem ps in shadersParent.Find(lastPath).GetComponentsInChildren<ParticleSystem>())
-            {
+            foreach (ParticleSystem ps in shadersParent.Find(lastPath).GetComponentsInChildren<ParticleSystem>()) {
                 SwitchMaterial(ps.GetComponent<ParticleSystemRenderer>(), newType);
             }
 
             lightSource.SetActive(newType == "Lit");
         }
-        public void SwitchMaterial(Renderer sr, string newType)
-        {
+
+        public void SwitchMaterial(Renderer sr, string newType){
             if (sr == null) return;
 
             string shaderPath = sr.material.shader.name;
@@ -423,56 +376,44 @@ namespace SpriteShadersUltimate
 
             Shader newShader = null;
 
-            if (shaderName.StartsWith("Uber"))
-            {
-                if (newType == "Standard")
-                {
+            if (shaderName.StartsWith("Uber")) {
+                if (newType == "Standard") {
                     newShader = Shader.Find("Sprite Shaders Ultimate/Uber/Standard Uber");
                 }
-                else if (newType == "Lit")
-                {
+                else if (newType == "Lit") {
                     newShader = Shader.Find("Sprite Shaders Ultimate/Uber/URP Lit Uber");
                 }
             }
-            else
-            {
+            else {
                 shaderName = shaderName.Replace(" URP", "").Replace(" Lit", "");
 
-                if (newType == "Standard")
-                {
+                if (newType == "Standard") {
                     newShader = Shader.Find("Sprite Shaders Ultimate/Standard/" + shaderName);
                 }
-                else if (newType == "Lit")
-                {
+                else if (newType == "Lit") {
                     newShader = Shader.Find("Sprite Shaders Ultimate/Uber/URP Lit Uber");
 
                     sr.material.shader = newShader;
 
                     string shaderRealName = shaderName.Split('/')[1];
-                    if (shaderRealName != "Default" && shaderRealName != "Additive" && shaderRealName != "Multiplicative")
-                    {
+                    if (shaderRealName != "Default" && shaderRealName != "Additive" && shaderRealName != "Multiplicative") {
                         string variable = "_Enable" + shaderRealName.Replace(" ", "");
                         sr.material.SetFloat(variable, 1f);
                         sr.material.EnableKeyword(variable.ToUpper() + "_ON");
                     }
-
                 }
             }
 
-            if (newShader != null)
-            {
+            if (newShader != null) {
                 sr.material.shader = newShader;
 
-                if (newType == "Lit")
-                {
+                if (newType == "Lit") {
                     sr.material.SetFloat("_NormalIntensity", 0.5f);
 
                     SpriteRenderer sprite = sr.GetComponent<SpriteRenderer>();
 
-                    if(sprite != null)
-                    {
-                        if (normalDictionary.ContainsKey(sprite.sprite))
-                        {
+                    if (sprite != null) {
+                        if (normalDictionary.ContainsKey(sprite.sprite)) {
                             sr.material.SetTexture("_NormalMap", normalDictionary[sprite.sprite]);
                         }
                     }
@@ -484,6 +425,7 @@ namespace SpriteShadersUltimate
         public class DemoNormalMapping
         {
             public Sprite sourceSprite;
+
             public Texture targetNormal;
         }
     }

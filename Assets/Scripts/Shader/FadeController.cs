@@ -4,18 +4,25 @@ using System.Collections;
 
 public class FadeController : MonoBehaviour
 {
-    [Header("淡入淡出控制")]
-    [SerializeField] private float fadeSpeed = 1f; // 淡入淡出速度
+    [Header("淡入淡出控制")][SerializeField] private float fadeSpeed = 1f; // 淡入淡出速度
+
     [SerializeField] private string fadeAmountProperty = "_FadeAmount"; // 淡入淡出属性名
+
     [SerializeField] private string fadeBurnWidthProperty = "_FadeBurnWidth"; // 燃烧宽度属性名
 
-    [Header("效果联动")]
-    [SerializeField] private WaveMunController waveMunController; // 波纹控制器
+    [Header("效果联动")][SerializeField] private WaveMunController waveMunController; // 波纹控制器
+
+    [Header("Fade Settings")]
+    [SerializeField] private float disappearDuration = 1f; // 添加消失动画持续时间
 
     private Material material;
+
     private float fadeAmount;
+
     private bool isAnimating = false;
+
     private SpriteRenderer spriteRenderer;
+
     private Coroutine currentAnimationCoroutine;
 
     private static readonly int FadeAmount = Shader.PropertyToID("_FadeAmount");
@@ -67,31 +74,48 @@ public class FadeController : MonoBehaviour
         currentAnimationCoroutine = StartCoroutine(AppearAnimation());
     }
 
-    private IEnumerator DisappearAnimation()
+        private IEnumerator DisappearAnimation()
     {
         material.SetFloat(FadeDirection, 1f);
 
-        while (fadeAmount > 0f)
+        float elapsedTime = 0f;
+        float startValue = fadeAmount;
+
+        while (elapsedTime < disappearDuration)
         {
-            fadeAmount = Mathf.Max(0f, fadeAmount - fadeSpeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            float normalizedTime = elapsedTime / disappearDuration;
+            fadeAmount = Mathf.Lerp(startValue, 1f, normalizedTime);
             UpdateMaterial();
             yield return null;
         }
 
+        fadeAmount = 1f;
+        UpdateMaterial();
         currentAnimationCoroutine = null;
+        
+        // 动画结束后销毁游戏物体
+        Destroy(gameObject);
     }
 
     private IEnumerator AppearAnimation()
     {
         material.SetFloat(FadeDirection, -1f);
 
-        while (fadeAmount < 1f)
+        float elapsedTime = 0f;
+        float startValue = fadeAmount;
+
+        while (elapsedTime < disappearDuration)
         {
-            fadeAmount = Mathf.Min(1f, fadeAmount + fadeSpeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            float normalizedTime = elapsedTime / disappearDuration;
+            fadeAmount = Mathf.Lerp(startValue, 0f, normalizedTime);
             UpdateMaterial();
             yield return null;
         }
 
+        fadeAmount = 0f;
+        UpdateMaterial();
         currentAnimationCoroutine = null;
     }
 

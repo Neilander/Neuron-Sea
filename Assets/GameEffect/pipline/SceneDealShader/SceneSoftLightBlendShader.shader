@@ -10,8 +10,8 @@ Shader "Custom/SceneSoftLightBlend"
 
     SubShader
     {
-        Tags 
-        { 
+        Tags
+        {
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
             "PreviewType" = "Plane"
@@ -32,15 +32,15 @@ Shader "Custom/SceneSoftLightBlend"
 
             struct appdata_t
             {
-                float4 vertex   : POSITION;
-                float4 color    : COLOR;
+                float4 vertex : POSITION;
+                float4 color : COLOR;
                 float2 texcoord : TEXCOORD0;
             };
 
             struct v2f
             {
-                float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
+                float4 vertex : SV_POSITION;
+                fixed4 color : COLOR;
                 float2 texcoord : TEXCOORD0;
             };
 
@@ -56,17 +56,15 @@ Shader "Custom/SceneSoftLightBlend"
             {
                 fixed3 result;
                 UNITY_UNROLL
-                for(int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    if(blend[i] <= 0.5)
+                    if (blend[i] <= 0.5)
                     {
                         result[i] = base[i] - (1 - 2 * blend[i]) * base[i] * (1 - base[i]);
                     }
                     else
                     {
-                        fixed D = (base[i] <= 0.25) ? 
-                            ((16 * base[i] - 12) * base[i] + 4) * base[i] :
-                            sqrt(base[i]);
+                        fixed D = (base[i] <= 0.25) ? ((16 * base[i] - 12) * base[i] + 4) * base[i] : sqrt(base[i]);
                         result[i] = base[i] + (2 * blend[i] - 1) * (D - base[i]);
                     }
                 }
@@ -87,22 +85,22 @@ Shader "Custom/SceneSoftLightBlend"
                 // 采样纹理
                 fixed4 mainColor = tex2D(_MainTex, IN.texcoord) * IN.color;
                 fixed4 blendColor = tex2D(_BlendTex, IN.texcoord);
-                
+
                 // 应用柔光混合
                 fixed3 softLightColor = SoftLight(mainColor.rgb, blendColor.rgb);
-                
+
                 // 在原始颜色和柔光结果之间插值
                 fixed3 finalColor = lerp(mainColor.rgb, softLightColor, _BlendAmount * blendColor.a);
-                
+
                 // 处理透明度
                 fixed alpha = mainColor.a * _Opacity;
-                
+
                 // 预乘alpha
                 finalColor *= alpha;
-                
+
                 return fixed4(finalColor, alpha);
             }
             ENDCG
         }
     }
-} 
+}

@@ -8,8 +8,7 @@ namespace SpriteShadersUltimate
     [CustomEditor(typeof(WindParallax))]
     public class WindParallaxEditor : Editor
     {
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI(){
             GUIStyle style = new GUIStyle(GUI.skin.label);
             style.richText = true;
 

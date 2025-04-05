@@ -7,21 +7,17 @@ namespace SpriteShadersUltimate
 {
     public class ShaderInstancer : MonoBehaviour
     {
-        void Awake()
-        {
+        void Awake(){
             Renderer renderer = GetComponent<Renderer>();
 
-            if (renderer != null)
-            {
+            if (renderer != null) {
                 renderer.material = renderer.material;
             }
-            else
-            {
+            else {
                 //Check for Graphic:
                 Graphic graphic = GetComponent<Graphic>();
 
-                if (graphic.material != null)
-                {
+                if (graphic.material != null) {
                     graphic.material = Instantiate<Material>(graphic.material);
                 }
             }

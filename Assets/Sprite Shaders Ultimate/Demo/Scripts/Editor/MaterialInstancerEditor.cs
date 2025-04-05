@@ -11,21 +11,18 @@ namespace SpriteShadersUltimate
         MaterialInstancer materialInstancer;
 
         [ExecuteAlways]
-        private void Awake()
-        {
+        private void Awake(){
             materialInstancer = (MaterialInstancer)target;
         }
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI(){
             GUIStyle style = new GUIStyle();
             style.richText = true;
             EditorGUILayout.LabelField("<size=15><b>Material Instancer (Experimental)</b></size>", style);
 
             EditorGUILayout.Space();
 
-            if (materialInstancer != null && materialInstancer.HasMaterial() == false)
-            {
+            if (materialInstancer != null && materialInstancer.HasMaterial() == false) {
                 GUI.color = new Color(1, 0.7f, 0.7f, 1f);
                 EditorGUILayout.BeginVertical("Helpbox");
                 GUI.color = new Color(1, 1, 1, 1);
@@ -62,24 +59,21 @@ namespace SpriteShadersUltimate
 
             //Properties:
             int savedProperties = 0;
-            if(materialInstancer.properties != null)
-            {
+            if (materialInstancer.properties != null) {
                 savedProperties = materialInstancer.properties.Count;
             }
             EditorGUILayout.LabelField("Properties: <b>[" + savedProperties + "]</b>", style);
 
             //Shader:
             string shaderName = "<i>missing</i>";
-            if(materialInstancer.shader != null)
-            {
+            if (materialInstancer.shader != null) {
                 shaderName = materialInstancer.shader.name;
             }
             EditorGUILayout.LabelField("Shader: <b>[" + shaderName + "]</b>", style);
 
             //Original Material:
             string originalMaterial = "<i>missing</i>";
-            if(materialInstancer.original != null)
-            {
+            if (materialInstancer.original != null) {
                 originalMaterial = materialInstancer.original.name;
             }
 
@@ -90,16 +84,13 @@ namespace SpriteShadersUltimate
             EditorGUILayout.BeginVertical("Helpbox");
             EditorGUILayout.LabelField("<b>Tools:</b>", style);
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Manual Load"))
-            {
+            if (GUILayout.Button("Manual Load")) {
                 materialInstancer.Load();
             }
-            if (GUILayout.Button("Remove"))
-            {
+            if (GUILayout.Button("Remove")) {
                 materialInstancer.Remove();
             }
-            if (materialInstancer.original != null && GUILayout.Button("Original Material"))
-            {
+            if (materialInstancer.original != null && GUILayout.Button("Original Material")) {
                 EditorUtility.FocusProjectWindow();
                 Selection.activeObject = materialInstancer.original;
                 EditorGUIUtility.PingObject(materialInstancer.original);

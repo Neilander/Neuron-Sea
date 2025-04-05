@@ -8,8 +8,8 @@ Shader "Custom/SceneOverlayBlend"
 
     SubShader
     {
-        Tags 
-        { 
+        Tags
+        {
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
             "PreviewType" = "Plane"
@@ -30,15 +30,15 @@ Shader "Custom/SceneOverlayBlend"
 
             struct appdata_t
             {
-                float4 vertex   : POSITION;
-                float4 color    : COLOR;
+                float4 vertex : POSITION;
+                float4 color : COLOR;
                 float2 texcoord : TEXCOORD0;
             };
 
             struct v2f
             {
-                float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
+                float4 vertex : SV_POSITION;
+                fixed4 color : COLOR;
                 float2 texcoord : TEXCOORD0;
                 float4 worldPosition : TEXCOORD1;
             };
@@ -60,16 +60,16 @@ Shader "Custom/SceneOverlayBlend"
             fixed4 frag(v2f IN) : SV_Target
             {
                 half4 color = tex2D(_MainTex, IN.texcoord) * IN.color;
-                
+
                 // 预乘alpha
                 color.rgb *= color.a;
-                
+
                 // 应用不透明度
                 color.a *= _Opacity;
-                
+
                 return color;
             }
             ENDCG
         }
     }
-} 
+}

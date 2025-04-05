@@ -11,22 +11,29 @@ namespace SpriteShadersUltimate
         public static ShaderInformation[] shaderInfos;
 
         Shader standardShader;
+
         Shader litShader;
+
         Shader additiveShader;
+
         Shader multiplicativeShader;
+
         Shader uiShader;
+
         Shader additiveUiShader;
+
         Shader lit3DShader;
+
         Shader lit3DURPShader;
 
         bool hintUber;
+
         int enabledCount;
+
         int shaderCount;
 
-        public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
-        {
-            if (shaderInfos == null)
-            {
+        public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties){
+            if (shaderInfos == null) {
                 shaderInfos = Resources.LoadAll<ShaderInformation>("SSU/");
             }
 
@@ -37,76 +44,60 @@ namespace SpriteShadersUltimate
             string extraLine2 = "";
 
             int shaderType = 0;
-            if(shader.name.EndsWith("Standard Uber"))
-            {
+            if (shader.name.EndsWith("Standard Uber")) {
                 shaderType = 0;
             }
-            else if (shader.name.EndsWith("/Additive Uber"))
-            {
+            else if (shader.name.EndsWith("/Additive Uber")) {
                 shaderType = 1;
             }
-            else if (shader.name.EndsWith("Multiplicative Uber"))
-            {
+            else if (shader.name.EndsWith("Multiplicative Uber")) {
                 shaderType = 2;
             }
-            else if (shader.name.EndsWith("URP Lit Uber"))
-            {
+            else if (shader.name.EndsWith("URP Lit Uber")) {
                 shaderType = 3;
                 extraLine = "- Will only work in <b>URP</b> with a <b>2D Renderer</b>.";
             }
-            else if (shader.name.EndsWith("UI Uber"))
-            {
+            else if (shader.name.EndsWith("UI Uber")) {
                 shaderType = 4;
                 extraLine = "- For maskable <b>Image</b> and <b>Text</b> components.";
                 extraLine2 = "- When using <b>UI Masks</b> press [<b>Control + S</b>] to update changes.";
             }
-            else if (shader.name.EndsWith("UI Additive Uber"))
-            {
+            else if (shader.name.EndsWith("UI Additive Uber")) {
                 shaderType = 5;
                 extraLine = "- For maskable <b>Image</b> and <b>Text</b> components.";
                 extraLine2 = "- When using <b>UI Masks</b> press [<b>Control + S</b>] to update changes.";
             }
-            else if (shader.name.EndsWith("3D Lit Uber"))
-            {
+            else if (shader.name.EndsWith("3D Lit Uber")) {
                 shaderType = 6;
                 extraLine = "- Will not work in <b>URP</b> or <b>HDRP</b>.";
             }
-            else if (shader.name.EndsWith("3D Lit URP Uber"))
-            {
+            else if (shader.name.EndsWith("3D Lit URP Uber")) {
                 shaderType = 7;
                 extraLine = "- Will only work in <b>URP</b> with a <b>Forward Renderer</b>.";
             }
 
-            if (standardShader == null)
-            {
+            if (standardShader == null) {
                 standardShader = Shader.Find("Sprite Shaders Ultimate/Uber/Standard Uber");
             }
-            if (litShader == null)
-            {
+            if (litShader == null) {
                 litShader = Shader.Find("Sprite Shaders Ultimate/Uber/URP Lit Uber");
             }
-            if (additiveShader == null)
-            {
+            if (additiveShader == null) {
                 additiveShader = Shader.Find("Sprite Shaders Ultimate/Uber/Additive Uber");
             }
-            if (multiplicativeShader == null)
-            {
+            if (multiplicativeShader == null) {
                 multiplicativeShader = Shader.Find("Sprite Shaders Ultimate/Uber/Multiplicative Uber");
             }
-            if(uiShader == null)
-            {
+            if (uiShader == null) {
                 uiShader = Shader.Find("Sprite Shaders Ultimate/Uber/UI Uber");
             }
-            if (additiveUiShader == null)
-            {
+            if (additiveUiShader == null) {
                 additiveUiShader = Shader.Find("Sprite Shaders Ultimate/Uber/UI Additive Uber");
             }
-            if (lit3DShader == null)
-            {
+            if (lit3DShader == null) {
                 lit3DShader = Shader.Find("Sprite Shaders Ultimate/Uber/3D Lit Uber");
             }
-            if (lit3DURPShader == null)
-            {
+            if (lit3DURPShader == null) {
                 lit3DURPShader = Shader.Find("Sprite Shaders Ultimate/Uber/3D Lit URP Uber");
             }
 
@@ -123,92 +114,78 @@ namespace SpriteShadersUltimate
             int newShaderType = shaderType;
 
             int first = GUILayout.Toolbar(shaderType, new string[] { "Default", "Additive", "Multiply", "2D Lit URP" });
-            int second = 4 + GUILayout.Toolbar(shaderType - 4, new string[] { "UI Default", "UI Additive", "3D Lit", "3D Lit URP"});
+            int second = 4 + GUILayout.Toolbar(shaderType - 4, new string[] { "UI Default", "UI Additive", "3D Lit", "3D Lit URP" });
 
-            if(extraLine != "")
-            {
+            if (extraLine != "") {
                 GUI.color = new Color(1, 1, 1, 0.7f);
                 EditorGUILayout.LabelField(extraLine, style);
 
-                if(extraLine2 != "")
-                {
+                if (extraLine2 != "") {
                     EditorGUILayout.LabelField(extraLine2, style);
                 }
 
                 GUI.color = Color.white;
             }
 
-            if (second != newShaderType)
-            {
+            if (second != newShaderType) {
                 newShaderType = second;
             }
-            else
-            {
+            else {
                 newShaderType = first;
             }
 
-            if (newShaderType != shaderType)
-            {
-                switch (newShaderType)
-                {
+            if (newShaderType != shaderType) {
+                switch (newShaderType) {
                     case (0):
-                        if (standardShader != null)
-                        {
+                        if (standardShader != null) {
                             mat.shader = standardShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (1):
-                        if (additiveShader != null)
-                        {
+                        if (additiveShader != null) {
                             mat.shader = additiveShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (2):
-                        if (multiplicativeShader != null)
-                        {
+                        if (multiplicativeShader != null) {
                             mat.shader = multiplicativeShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (3):
-                        if (litShader != null)
-                        {
+                        if (litShader != null) {
                             mat.shader = litShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (4):
-                        if (uiShader != null)
-                        {
+                        if (uiShader != null) {
                             mat.shader = uiShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (5):
-                        if (additiveUiShader != null)
-                        {
+                        if (additiveUiShader != null) {
                             mat.shader = additiveUiShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (6):
-                        if (lit3DShader != null)
-                        {
+                        if (lit3DShader != null) {
                             mat.shader = lit3DShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                     case (7):
-                        if (lit3DURPShader != null)
-                        {
+                        if (lit3DURPShader != null) {
                             mat.shader = lit3DURPShader;
                             EditorUtility.SetDirty(mat);
                         }
                         break;
                 }
-                
+
                 shaderType = newShaderType;
             }
 
@@ -223,15 +200,14 @@ namespace SpriteShadersUltimate
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("<size=13><b>Uber Shader Hints</b></size>", style);
 
-            if (GUILayout.Button("<size=10>" + (hintUber ? "▼" : "▲") + "</size>", buttonStyle, GUILayout.Width(20)))
-            {
+            if (GUILayout.Button("<size=10>" + (hintUber ? "▼" : "▲") + "</size>", buttonStyle, GUILayout.Width(20))) {
                 hintUber = !hintUber;
             }
             GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
-            if (hintUber)
-            {
-                GUI.color = GUI.color = new Color(1, 1, 1, 0.7f); ;
+            if (hintUber) {
+                GUI.color = GUI.color = new Color(1, 1, 1, 0.7f);
+                ;
                 EditorGUILayout.LabelField("<b>Uber Shaders</b> allow you to stack multiple effects.", style);
                 EditorGUILayout.LabelField("Simply enable the shaders you need per material.", style);
                 EditorGUILayout.LabelField("Disabled shaders do not cost any performance.", style);
@@ -266,38 +242,29 @@ namespace SpriteShadersUltimate
             bool vGroup = false;
             shaderCount = enabledCount = 0;
             List<MaterialProperty> currentProperties = new List<MaterialProperty>();
-            for(int n = 0; n <= properties.Length; n++)
-            {
+            for (int n = 0; n <= properties.Length; n++) {
                 MaterialProperty prop = (n == properties.Length) ? null : properties[n];
 
-                if (n == properties.Length || prop.name.StartsWith("_Enable"))
-                {
+                if (n == properties.Length || prop.name.StartsWith("_Enable")) {
                     //Previous Shader:
-                    if(lastEnabled > 0.5f && lastEnabled != 1.1f)
-                    {
+                    if (lastEnabled > 0.5f && lastEnabled != 1.1f) {
                         MaterialProperty[] currentArray = new MaterialProperty[currentProperties.Count];
-                        for (int i = 0; i < currentProperties.Count; i++)
-                        {
+                        for (int i = 0; i < currentProperties.Count; i++) {
                             currentArray[i] = currentProperties[i];
                         }
                         ShaderInformation si = null;
-                        if (previousShader != "")
-                        {
-                            foreach (ShaderInformation shaderInfo in shaderInfos)
-                            {
-                                if (shaderInfo.name == previousShader)
-                                {
+                        if (previousShader != "") {
+                            foreach (ShaderInformation shaderInfo in shaderInfos) {
+                                if (shaderInfo.name == previousShader) {
                                     si = shaderInfo;
                                     break;
                                 }
                             }
 
-                            if (si != null && si.shaderDescription != null && si.shaderDescription != "")
-                            {
+                            if (si != null && si.shaderDescription != null && si.shaderDescription != "") {
                                 GUI.color = new Color(1, 1, 1, 0.7f);
                                 string[] descriptionLines = si.shaderDescription.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
-                                for (int l = 0; l < descriptionLines.Length; l++)
-                                {
+                                for (int l = 0; l < descriptionLines.Length; l++) {
                                     EditorGUILayout.LabelField(descriptionLines[l], style);
                                 }
                                 GUI.color = Color.white;
@@ -308,37 +275,30 @@ namespace SpriteShadersUltimate
                     }
 
                     //Grouping:
-                    if(vGroup)
-                    {
+                    if (vGroup) {
                         EditorGUILayout.EndVertical();
                         vGroup = false;
                     }
 
                     //Next Shader:
                     currentProperties = new List<MaterialProperty>();
-                    if(n < properties.Length - 1)
-                    {
-                        if(prop.name == "_EnableStrongTint")
-                        {
+                    if (n < properties.Length - 1) {
+                        if (prop.name == "_EnableStrongTint") {
                             NewCategory("COLOR");
-                        }else if(prop.name == "_EnableHologram")
-                        {
+                        }
+                        else if (prop.name == "_EnableHologram") {
                             NewCategory("EFFECT");
                         }
-                        else if (prop.name == "_EnableFullAlphaDissolve")
-                        {
+                        else if (prop.name == "_EnableFullAlphaDissolve") {
                             NewCategory("FADING");
                         }
-                        else if (prop.name == "_EnablePixelate")
-                        {
+                        else if (prop.name == "_EnablePixelate") {
                             NewCategory("TRANSFORM");
                         }
-                        else if (prop.name == "_EnableWind")
-                        {
+                        else if (prop.name == "_EnableWind") {
                             NewCategory("INTERACTIVE");
                         }
-                        else if (prop.name == "_EnableCheckerboard")
-                        {
+                        else if (prop.name == "_EnableCheckerboard") {
                             NewCategory("GENERATED");
                         }
 
@@ -346,35 +306,32 @@ namespace SpriteShadersUltimate
                         bool oldValue = prop.floatValue > 0.5f;
 
                         vGroup = true;
-                        float brightness =  oldValue ? (EditorGUIUtility.isProSkin ? 0f : (prop.floatValue == 1.1f ? 0.3f : 0.5f)) : 1f;
+                        float brightness = oldValue ? (EditorGUIUtility.isProSkin ? 0f : (prop.floatValue == 1.1f ? 0.3f : 0.5f)) : 1f;
                         GUI.color = new Color(brightness, brightness, brightness, 1);
                         EditorGUILayout.BeginVertical("Helpbox");
 
                         previousShader = prop.displayName.Replace("Enable ", "");
-                        startIndex = n+1;
+                        startIndex = n + 1;
 
                         GUI.color = new Color(1, 1, 1, oldValue ? 1f : 0.8f);
                         EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.PrefixLabel("<b><size=14>" + previousShader + "</size></b>",style,style);
+                        EditorGUILayout.PrefixLabel("<b><size=14>" + previousShader + "</size></b>", style, style);
                         materialEditor.ShaderProperty(prop, GUIContent.none);
                         bool currentValue = prop.floatValue > 0.5f;
 
                         shaderCount++;
-                        if (currentValue)
-                        {
+                        if (currentValue) {
                             bool expanded = prop.floatValue != 1.1f;
 
                             enabledCount++;
 
-                            if(GUILayout.Button("<size=10>" + (expanded ? "▼" : "▲") + "</size>", buttonStyle, GUILayout.Width(20))) {
+                            if (GUILayout.Button("<size=10>" + (expanded ? "▼" : "▲") + "</size>", buttonStyle, GUILayout.Width(20))) {
                                 expanded = !expanded;
 
-                                if (expanded)
-                                {
+                                if (expanded) {
                                     prop.floatValue = 1f;
                                 }
-                                else
-                                {
+                                else {
                                     prop.floatValue = 1.1f;
                                 }
                             }
@@ -385,46 +342,40 @@ namespace SpriteShadersUltimate
 
                         lastEnabled = prop.floatValue;
 
-                        if (oldValue != currentValue)
-                        {
-                            foreach (Material material in prop.targets)
-                            {
-                                if (currentValue)
-                                {
+                        if (oldValue != currentValue) {
+                            foreach (Material material in prop.targets) {
+                                if (currentValue) {
                                     material.EnableKeyword(keyword);
                                 }
-                                else
-                                {
+                                else {
                                     material.DisableKeyword(keyword);
                                 }
                             }
                         }
                     }
                 }
-                else
-                {
+                else {
                     currentProperties.Add(prop);
                 }
             }
-            if (vGroup)
-            {
+            if (vGroup) {
                 EditorGUILayout.EndVertical();
             }
 
             SingleShaderGUI.DisplayFinalInformation();
         }
 
-        public static void NewCategory(string category)
-        {
+        public static void NewCategory(string category){
             GUIStyle newStyle = new GUIStyle(GUI.skin.label);
             newStyle.alignment = TextAnchor.MiddleCenter;
             newStyle.richText = true;
-            newStyle.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.7f, 0.7f, 0.7f, 1) :  new Color(0.3f,0.3f,0.3f, 1);
+            newStyle.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.7f, 0.7f, 0.7f, 1) : new Color(0.3f, 0.3f, 0.3f, 1);
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
             GUI.color = new Color(1, 1, 1, 1f);
-            EditorGUILayout.LabelField("<b><size=20>──────────────────────────────────────────────────────────── " + category + " ────────────────────────────────────────────────────────────</size></b>", newStyle);
+            EditorGUILayout.LabelField(
+                "<b><size=20>──────────────────────────────────────────────────────────── " + category + " ────────────────────────────────────────────────────────────</size></b>", newStyle);
             GUI.color = Color.white;
         }
     }

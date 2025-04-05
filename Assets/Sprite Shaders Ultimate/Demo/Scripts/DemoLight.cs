@@ -6,31 +6,34 @@ namespace SpriteShadersUltimate
 {
     public class DemoLight : MonoBehaviour
     {
-        [Header("Automatic Movement:")]
-        public Vector3 positionA;
+        [Header("Automatic Movement:")] public Vector3 positionA;
+
         public Vector3 positionB;
+
         public float frequency = 1f;
 
         float currentTime;
 
         //Internal:
         float isAutomatic;
+
         bool mouseOver;
+
         bool isDragging;
+
         float shaderHighlight;
 
         //References:
         SpriteRenderer sprite;
+
         Material mat;
 
-        void Awake()
-        {
+        void Awake(){
             mouseOver = false;
             isAutomatic = 1f;
         }
 
-        private void Start()
-        {
+        private void Start(){
             sprite = GetComponent<SpriteRenderer>();
             mat = sprite.material;
 
@@ -38,53 +41,44 @@ namespace SpriteShadersUltimate
             UpdateVisuals();
         }
 
-        void OnMouseEnter()
-        {
+        void OnMouseEnter(){
             mouseOver = true;
         }
-        void OnMouseExit()
-        {
+
+        void OnMouseExit(){
             mouseOver = false;
         }
 
-        void LateUpdate()
-        {
+        void LateUpdate(){
             float oldHighlight = shaderHighlight;
 
-            if (mouseOver || isDragging)
-            {
+            if (mouseOver || isDragging) {
                 isAutomatic += (0f - isAutomatic) * Time.deltaTime * 3f;
 
-                if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-                {
+                if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) {
                     isDragging = true;
                     isAutomatic = 0;
                 }
-                else
-                {
-                    if (isDragging == true)
-                    {
+                else {
+                    if (isDragging == true) {
                         isAutomatic = 1f;
                     }
 
                     isDragging = false;
                 }
 
-                if (isDragging)
-                {
+                if (isDragging) {
                     Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     targetPosition.z = 0;
                     transform.position = targetPosition;
 
                     shaderHighlight = 1f;
                 }
-                else
-                {
+                else {
                     shaderHighlight = 0.5f;
                 }
             }
-            else
-            {
+            else {
                 isAutomatic += Time.deltaTime * 2f;
                 shaderHighlight = 0f;
             }
@@ -98,14 +92,12 @@ namespace SpriteShadersUltimate
             transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * isAutomatic * 2.5f);
 
             //Update Visuals:
-            if (shaderHighlight != oldHighlight)
-            {
+            if (shaderHighlight != oldHighlight) {
                 UpdateVisuals();
             }
         }
 
-        void UpdateVisuals()
-        {
+        void UpdateVisuals(){
             mat.SetFloat("_OutlineFade", shaderHighlight);
             sprite.color = new Color(1, 1, 1, 0.25f + 0.75f * shaderHighlight);
         }

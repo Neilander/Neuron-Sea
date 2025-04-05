@@ -8,8 +8,7 @@ namespace SpriteShadersUltimate
     [CustomEditor(typeof(WindManager)), CanEditMultipleObjects]
     public class WindManagerEditor : Editor
     {
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI(){
             //Draw Inspector:
             base.OnInspectorGUI();
 

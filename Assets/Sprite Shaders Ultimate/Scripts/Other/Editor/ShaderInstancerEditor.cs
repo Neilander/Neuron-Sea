@@ -8,8 +8,7 @@ namespace SpriteShadersUltimate
     [CustomEditor(typeof(ShaderInstancer))]
     public class ShaderInstancerEditor : Editor
     {
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI(){
             GUIStyle style = new GUIStyle(GUI.skin.label);
             style.richText = true;
 

@@ -1,8 +1,10 @@
-Shader "Custom/AdvancedSoftLight" {
-    Properties {
+Shader "Custom/AdvancedSoftLight"
+{
+    Properties
+    {
         [Header(Base Settings)]
         _MainTex ("Base Texture", 2D) = "white" {}
-        
+
         [Header(Blend Settings)]
         _BlendTex ("Blend Texture", 2D) = "white" {}
         _BlendColor ("Tint Color", Color) = (1,1,1,1)
@@ -13,23 +15,30 @@ Shader "Custom/AdvancedSoftLight" {
         _Brightness ("Effect Brightness", Range(-0.5, 0.5)) = 0.0
     }
 
-    SubShader {
-        Tags { "RenderType"="Opaque" }
+    SubShader
+    {
+        Tags
+        {
+            "RenderType"="Opaque"
+        }
         LOD 200
 
-        Pass {
+        Pass
+        {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma shader_feature _USETEXALPHA_ON
             #include "UnityCG.cginc"
 
-            struct appdata {
+            struct appdata
+            {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct v2f {
+            struct v2f
+            {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
             };
@@ -44,46 +53,49 @@ Shader "Custom/AdvancedSoftLight" {
             float _Brightness;
             float _UseTexAlpha;
 
-            v2f vert (appdata v) {
+            v2f vert(appdata v)
+            {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
-            float3 ApplySoftLight(float3 base, float3 blend) {
+            float3 ApplySoftLight(float3 base, float3 blend)
+            {
                 float3 case1 = 2.0 * base * blend + base * base * (1.0 - 2.0 * blend);
                 float3 case2 = 2.0 * base * (1.0 - blend) + sqrt(base) * (2.0 * blend - 1.0);
                 float3 condition = step(0.5, blend);
                 return lerp(case1, case2, condition);
             }
 
-            fixed4 frag (v2f i) : SV_Target {
-                // ²ÉÑù»ù´¡ÎÆÀí
+            fixed4 frag(v2f i) : SV_Target
+            {
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 fixed4 base = tex2D(_MainTex, i.uv);
-                
-                // ²ÉÑù»ìºÏÎÆÀí²¢Ó¦ÓÃÉ«µ÷
+
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½É«ï¿½ï¿½
                 fixed4 blend = tex2D(_BlendTex, i.uv);
                 blend.rgb *= _BlendColor.rgb;
 
-                // ¼ÆËã»ìºÏÇ¿¶È
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½
                 #if _USETEXALPHA_ON
                     float alpha = blend.a;
                 #else
-                    float alpha = 1.0;
+                float alpha = 1.0;
                 #endif
                 float finalIntensity = _Intensity * alpha;
 
-                // Ó¦ÓÃÈá¹â»ìºÏ
+                // Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 float3 result = ApplySoftLight(base.rgb, blend.rgb);
-                
-                // ÁÁ¶È¶Ô±È¶Èµ÷Õû
-                result = saturate(result + _Brightness); // ÁÁ¶ÈÆ«ÒÆ
-                result = pow(result, _Contrast);        // ¶Ô±È¶Èµ÷Õû
-                
-                // »ìºÏÔ­Ê¼ÑÕÉ«
+
+                // ï¿½ï¿½ï¿½È¶Ô±È¶Èµï¿½ï¿½ï¿½
+                result = saturate(result + _Brightness); // ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½
+                result = pow(result, _Contrast); // ï¿½Ô±È¶Èµï¿½ï¿½ï¿½
+
+                // ï¿½ï¿½ï¿½Ô­Ê¼ï¿½ï¿½É«
                 result = lerp(base.rgb, result, finalIntensity);
-                
+
                 return fixed4(result, base.a);
             }
             ENDCG

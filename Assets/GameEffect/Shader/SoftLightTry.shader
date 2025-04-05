@@ -2,12 +2,15 @@ Shader "Unlit/SoftLightTry"
 {
     Properties
     {
-        _BaseTex ("Base Texture", 2D) = "white" {}      // 底图：MainCamera 渲染的图
-        _BlendTex ("Blend Texture", 2D) = "white" {}    // 上层图：你叠加的效果
+        _BaseTex ("Base Texture", 2D) = "white" {} // 底图：MainCamera 渲染的图
+        _BlendTex ("Blend Texture", 2D) = "white" {} // 上层图：你叠加的效果
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" }
+        Tags
+        {
+            "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline"
+        }
 
         Pass
         {
@@ -46,9 +49,7 @@ Shader "Unlit/SoftLightTry"
 
             float SoftLight(float base, float blend)
             {
-                return (blend < 0.5) ? 
-                    (2.0 * base * blend + base * base * (1.0 - 2.0 * blend)) :
-                    (sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend));
+                return (blend < 0.5) ? (2.0 * base * blend + base * base * (1.0 - 2.0 * blend)) : (sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend));
             }
 
             float4 frag(Varyings i) : SV_Target

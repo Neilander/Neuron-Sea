@@ -9,11 +9,12 @@ namespace SpriteShadersUltimate
     public class InteractiveWindEditor : Editor
     {
         bool displaySetup;
+
         bool displayTroubleshooting;
+
         bool displayInformation;
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI(){
             //References:
             GUIStyle style = new GUIStyle(GUI.skin.label);
             style.richText = true;
@@ -32,7 +33,7 @@ namespace SpriteShadersUltimate
                 " ",
                 "- You can <b>flip</b> the shader for hanging objects.",
                 "- You can combine the shader with <b>UV Distort</b>."
-                );
+            );
             EditorGUILayout.LabelField(" ", GUILayout.Height(1));
             DisplayHints(ref displayTroubleshooting, "Troubleshooting",
                 " ",
@@ -53,7 +54,7 @@ namespace SpriteShadersUltimate
                 "- Set the <b>BoxCollider2D</b> to a <b>trigger</b>.",
                 "- Make sure a collision with the <b>BoxCollider2D</b> is happening.",
                 " "
-                );
+            );
             EditorGUILayout.LabelField(" ", GUILayout.Height(1));
             DisplayHints(ref displayInformation, "Information",
                 " ",
@@ -65,7 +66,7 @@ namespace SpriteShadersUltimate
                 "- Disable <b>Stay Bent</b> to have a temporary interaction.",
                 "- Only objects moving faster than <b>" + Mathf.RoundToInt(wind.minBendSpeed) + " unit/s</b> will interact.",
                 " "
-                );
+            );
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.Space();
@@ -84,8 +85,7 @@ namespace SpriteShadersUltimate
             EditorGUILayout.BeginVertical("Helpbox");
             EditorGUILayout.LabelField("<b>Method:</b>", style);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("stayBent"));
-            if(!wind.stayBent)
-            {
+            if (!wind.stayBent) {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("minBendSpeed"));
             }
             EditorGUILayout.EndVertical();
@@ -96,43 +96,34 @@ namespace SpriteShadersUltimate
             EditorGUILayout.BeginVertical("Helpbox");
             EditorGUILayout.LabelField("<b>Hyper Performance:</b>", style);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("hyperPerformanceMode"));
-            if (wind.hyperPerformanceMode)
-            {
+            if (wind.hyperPerformanceMode) {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("randomOffsetZ"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("customMaterial"));
-                if (wind.customMaterial)
-                {
+                if (wind.customMaterial) {
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("inactiveMaterial"));
                 }
-                else
-                {
+                else {
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("inactiveShader"));
                 }
 
                 //Hint:
                 GUI.color = new Color(1, 1, 1, 0.7f);
                 EditorGUILayout.LabelField("- GPU performance boost for <b>lowest-end</b> mobile phones.", style);
-                if(!wind.customMaterial)
-                {
+                if (!wind.customMaterial) {
                     EditorGUILayout.LabelField("- Sets the shader to <b>" + wind.inactiveShader + "</b> while inactive.", style);
                 }
-                else
-                {
-                    if(wind.inactiveMaterial != null)
-                    {
+                else {
+                    if (wind.inactiveMaterial != null) {
                         EditorGUILayout.LabelField("- Sets the material to <b>" + wind.inactiveMaterial.name + "</b> while inactive.", style);
                     }
-                    else
-                    {
+                    else {
                         GUIStyle warningStyle = new GUIStyle(GUI.skin.label);
                         warningStyle.richText = true;
 
-                        if (EditorGUIUtility.isProSkin)
-                        {
+                        if (EditorGUIUtility.isProSkin) {
                             warningStyle.normal.textColor = new Color(1, 0.7f, 0.7f, 1);
                         }
-                        else
-                        {
+                        else {
                             warningStyle.normal.textColor = new Color(0.3f, 0f, 0f, 1);
                         }
 
@@ -150,49 +141,41 @@ namespace SpriteShadersUltimate
             serializedObject.ApplyModifiedProperties();
 
             //Fix Layer:
-            if(wind.gameObject.layer != 2)
-            {
+            if (wind.gameObject.layer != 2) {
                 wind.gameObject.layer = 2;
             }
 
             //Fix BoxCollider2D:
             BoxCollider2D boxCollider = wind.gameObject.GetComponent<BoxCollider2D>();
-            if(boxCollider == null)
-            {
+            if (boxCollider == null) {
                 //Create new BoxCollider2D:
                 boxCollider = wind.gameObject.AddComponent<BoxCollider2D>();
                 boxCollider.isTrigger = true;
             }
 
             //Fix Variables:
-            if(wind.bendInSpeed < 0)
-            {
+            if (wind.bendInSpeed < 0) {
                 wind.bendInSpeed = 0;
             }
-            if (wind.bendOutSpeed < 0)
-            {
+            if (wind.bendOutSpeed < 0) {
                 wind.bendOutSpeed = 0;
             }
-            if (wind.minBendSpeed < 0)
-            {
+            if (wind.minBendSpeed < 0) {
                 wind.minBendSpeed = 0;
             }
         }
 
-        void DisplayHints(ref bool toggleVariable, string title,params string[] lines)
-        {
+        void DisplayHints(ref bool toggleVariable, string title, params string[] lines){
             GUIStyle style = new GUIStyle(GUI.skin.label);
             style.richText = true;
 
             GUIStyle button = new GUIStyle(GUI.skin.button);
             button.richText = true;
 
-            if (toggleVariable)
-            {
+            if (toggleVariable) {
                 GUI.color = new Color(1, 1, 1, 0.7f);
             }
-            else
-            {
+            else {
                 GUI.color = new Color(1, 1, 1, 0.5f);
             }
 
@@ -202,23 +185,18 @@ namespace SpriteShadersUltimate
             EditorGUILayout.BeginHorizontal();
             GUI.color = Color.white;
             EditorGUILayout.LabelField(title, style);
-            if (GUILayout.Button("<size=10>" + (toggleVariable ? "▼" : "▲") + "</size>", button, GUILayout.Width(20)))
-            {
+            if (GUILayout.Button("<size=10>" + (toggleVariable ? "▼" : "▲") + "</size>", button, GUILayout.Width(20))) {
                 toggleVariable = !toggleVariable;
             }
             EditorGUILayout.EndHorizontal();
 
-            if (toggleVariable == true)
-            {
+            if (toggleVariable == true) {
                 GUI.color = new Color(1, 1, 1, 0.7f);
-                for(int l = 0; l < lines.Length; l++)
-                {
-                    if(lines[l] == " ")
-                    {
-                        EditorGUILayout.LabelField(lines[l], style,GUILayout.Height(6));
+                for (int l = 0; l < lines.Length; l++) {
+                    if (lines[l] == " ") {
+                        EditorGUILayout.LabelField(lines[l], style, GUILayout.Height(6));
                     }
-                    else
-                    {
+                    else {
                         EditorGUILayout.LabelField(lines[l], style);
                     }
                 }

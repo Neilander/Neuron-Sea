@@ -1,17 +1,24 @@
-Shader "Hidden/Distortion" {
-    Properties {
+Shader "Hidden/Distortion"
+{
+    Properties
+    {
         _MainTex ("Texture", 2D) = "white" { }
-        _DistortTex ("Distortion Texture", 2D) = "white" { }//Å¤ÇúµÄÔëÉùÍ¼
-        _DistortAmount ("Distortion Amount", Range(0, 2)) = 0.5 //Å¤ÇúµÄ³Ì¶È
-        _DistortTexXSpeed ("Scroll speed X", Range(-50, 50)) = 5 //xÖáËÙ¶È
-        _DistortTexYSpeed ("Scroll speed Y", Range(-50, 50)) = 5 //yÖáËÙ¶È
+        _DistortTex ("Distortion Texture", 2D) = "white" { }//Å¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
+        _DistortAmount ("Distortion Amount", Range(0, 2)) = 0.5 //Å¤ï¿½ï¿½ï¿½Ä³Ì¶ï¿½
+        _DistortTexXSpeed ("Scroll speed X", Range(-50, 50)) = 5 //xï¿½ï¿½ï¿½Ù¶ï¿½
+        _DistortTexYSpeed ("Scroll speed Y", Range(-50, 50)) = 5 //yï¿½ï¿½ï¿½Ù¶ï¿½
 
     }
-    SubShader {
-        Tags { "Queue" = "Transparent" }
+    SubShader
+    {
+        Tags
+        {
+            "Queue" = "Transparent"
+        }
         Blend SrcAlpha OneMinusSrcAlpha
 
-        Pass {
+        Pass
+        {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -23,18 +30,21 @@ Shader "Hidden/Distortion" {
             half4 _DistortTex_ST;
             half _DistortTexXSpeed, _DistortTexYSpeed, _DistortAmount;
 
-            struct appdata {
+            struct appdata
+            {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct v2f {
+            struct v2f
+            {
                 float2 uv : TEXCOORD0;
                 float2 uvDistTex : TEXCOORD3;
                 float4 vertex : SV_POSITION;
             };
 
-            v2f vert(appdata v) {
+            v2f vert(appdata v)
+            {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
@@ -42,14 +52,15 @@ Shader "Hidden/Distortion" {
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target {
-                i.uvDistTex.x += (_Time * _DistortTexXSpeed) % 1;//¸ù¾ÝÊ±¼ä¿ØÖÆÁË¶ÔÅ¤ÇúÎÆÀíµÄ²ÉÑùÎ»ÖÃ¡£Í¨¹ýÈ¡Ä£ÔËËã£¬È·±£ÁË²ÉÑùÎ»ÖÃÔÚ[0, 1]·¶Î§ÄÚ
-                i.uvDistTex.y += (_Time * _DistortTexYSpeed) % 1;//Í¬Àí
-                ////¸ù¾Ý´ÓÔëÉùÍ¼ÖÐr½øÐÐÅ¤ÇúÇ¿¶ÈµÄ¼ÆËã -0.5ÊÇÒª½«[0,1]Ó³Éäµ½[-0.5, 0.5]
+            fixed4 frag(v2f i) : SV_Target
+            {
+                i.uvDistTex.x += (_Time * _DistortTexXSpeed) % 1; //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¶ï¿½Å¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½Î»ï¿½Ã¡ï¿½Í¨ï¿½ï¿½È¡Ä£ï¿½ï¿½ï¿½ã£¬È·ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½[0, 1]ï¿½ï¿½Î§ï¿½ï¿½
+                i.uvDistTex.y += (_Time * _DistortTexYSpeed) % 1; //Í¬ï¿½ï¿½
+                ////ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½rï¿½ï¿½ï¿½ï¿½Å¤ï¿½ï¿½Ç¿ï¿½ÈµÄ¼ï¿½ï¿½ï¿½ -0.5ï¿½ï¿½Òªï¿½ï¿½[0,1]Ó³ï¿½äµ½[-0.5, 0.5]
                 half distortAmnt = (tex2D(_DistortTex, i.uvDistTex).r - 0.5) * 0.2 * _DistortAmount;
-                i.uv.x += distortAmnt;//¸ù¾Ý¼ÆËã³öµÄÅ¤ÇúÇ¿¶ÈÈÃi.uv½øÐÐÁËÆ«ÒÆ
-                i.uv.y += distortAmnt;//Í¬Àí
-                fixed4 col = tex2D(_MainTex, i.uv);//²ÉÑù
+                i.uv.x += distortAmnt; //ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¤ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½i.uvï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½
+                i.uv.y += distortAmnt; //Í¬ï¿½ï¿½
+                fixed4 col = tex2D(_MainTex, i.uv); //ï¿½ï¿½ï¿½ï¿½
 
                 return col;
             }

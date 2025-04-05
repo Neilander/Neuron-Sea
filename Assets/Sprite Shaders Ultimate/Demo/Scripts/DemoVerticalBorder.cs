@@ -7,20 +7,18 @@ namespace SpriteShadersUltimate
     public class DemoVerticalBorder : MonoBehaviour
     {
         RectTransform rect;
+
         public Transform shaders;
 
-        void Start()
-        {
+        void Start(){
             rect = GetComponent<RectTransform>();
         }
 
-        void Update()
-        {
+        void Update(){
             if (shaders == null) return;
 
             float targetY = -shaders.GetChild(shaders.childCount - 1).GetComponent<RectTransform>().anchoredPosition.y + 27;
             rect.sizeDelta = new Vector2(rect.sizeDelta.x, Mathf.Lerp(rect.sizeDelta.y, targetY, Time.deltaTime * 10f));
         }
     }
-
 }

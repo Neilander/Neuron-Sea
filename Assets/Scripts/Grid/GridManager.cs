@@ -37,8 +37,11 @@ public class GridManager : MonoBehaviour
     private SwitchState curState = SwitchState.None;
 
     private bool getBothTarget = false;
+
     private SwitchableObj tempSwitchableObj;
+
     private bool ifLegalMove = true;
+
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos(){
         if (!displayInGizmos) return;
@@ -100,6 +103,7 @@ public class GridManager : MonoBehaviour
     [Header("测试用")] [SerializeField] private Vector3 testPosition;
 
     [SerializeField] private bool doTestGetPos = false;
+
     private void Update(){
         //编辑器中也会触发
         if (doTestGetPos) {
@@ -121,7 +125,7 @@ public class GridManager : MonoBehaviour
                     Debug.Log("有这么多：" + hits.Length);
                     foreach (var hit in hits) {
                         SwitchableObj switchable = hit.collider.GetComponent<SwitchableObj>();
-                        if (switchable != null && !switchable.inSwitchState&& switchable.IfCanSwitch()) {
+                        if (switchable != null && !switchable.inSwitchState && switchable.IfCanSwitch()) {
                             Debug.Log("进入switch state");
                             switchable.IntoSwitchState();
                             ReportSwitchableObj(switchable, true);
@@ -132,8 +136,7 @@ public class GridManager : MonoBehaviour
                 }
                 break;
             case SwitchState.Switch:
-                if (Input.GetMouseButton(0))
-                {
+                if (Input.GetMouseButton(0)) {
                     Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 rayOrigin = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
 
@@ -143,69 +146,55 @@ public class GridManager : MonoBehaviour
                     SwitchableObj switchable = null;
                     foreach (var hit in hits) {
                         switchable = hit.collider.GetComponent<SwitchableObj>();
-                        if (switchable != null && !switchable.inSwitchState&& switchable.IfCanSwitch())
-                        {
+                        if (switchable != null && !switchable.inSwitchState && switchable.IfCanSwitch()) {
                             getSwitchable = true;
                             break;
                         }
                     }
-                    if (getSwitchable)
-                    {
-                        if (switchable != tempSwitchableObj)
-                        {
+                    if (getSwitchable) {
+                        if (switchable != tempSwitchableObj) {
                             tempSwitchableObj = switchable;
                             //检查是否合法
                             ifLegalMove = switchableObjFrom.CheckIfCanMoveTo(switchable.SelfGridPos, switchable.gameObject)
-                            && switchable.CheckIfCanMoveTo(switchableObjFrom.SelfGridPos, switchableObjFrom.gameObject);
-                            if (ifLegalMove)
-                            {
+                                          && switchable.CheckIfCanMoveTo(switchableObjFrom.SelfGridPos, switchableObjFrom.gameObject);
+                            if (ifLegalMove) {
                                 tempSwitchableObj.IntoTempMoveState(switchableObjFrom.SelfGridPos);
                             }
-                            else
-                            {
-                                
+                            else {
                                 tempSwitchableObj.ControlFlash(true);
                                 switchableObjFrom.ControlFlash(true);
                             }
                         }
-                    } else
-                    {
-                        if (tempSwitchableObj != null)
-                        {
-                            if (ifLegalMove)
-                            {
+                    }
+                    else {
+                        if (tempSwitchableObj != null) {
+                            if (ifLegalMove) {
                                 tempSwitchableObj.OutTempMoveState();
                             }
-                            else
-                            {
+                            else {
                                 tempSwitchableObj.ControlFlash(false);
                                 switchableObjFrom.ControlFlash(false);
                             }
-                            
+
                             tempSwitchableObj = null;
                         }
                     }
                 }
 
-                if (Input.GetMouseButtonUp(0))
-                {
-                    if (tempSwitchableObj != null)
-                    {
-                        if (ifLegalMove)
-                        {
+                if (Input.GetMouseButtonUp(0)) {
+                    if (tempSwitchableObj != null) {
+                        if (ifLegalMove) {
                             DoSwitch();
                         }
-                        else
-                        {
+                        else {
                             tempSwitchableObj.ControlFlash(false);
                             switchableObjFrom.ControlFlash(false);
                             switchableObjFrom.OutSwitchState();
                         }
-                        
+
                         StartState(SwitchState.None);
                     }
-                    else
-                    {
+                    else {
                         switchableObjFrom.OutSwitchState();
                         StartState(SwitchState.None);
                     }
@@ -297,8 +286,6 @@ public class GridManager : MonoBehaviour
 
     #region 交换物体
 
-    
-
     private bool CanEnterSwitchState(){
         return true;
     }
@@ -308,7 +295,6 @@ public class GridManager : MonoBehaviour
             switchableObjFrom = obj;
         }
         else {
-            
             getBothTarget = true;
         }
     }
@@ -322,7 +308,7 @@ public class GridManager : MonoBehaviour
 
     private void ClearSwitchableObj(){
         switchableObjFrom = null;
-       
+
         tempSwitchableObj = null;
         getBothTarget = false;
     }
