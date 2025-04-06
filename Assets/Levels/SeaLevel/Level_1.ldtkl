@@ -208,28 +208,6 @@
 			"gridTiles": [],
 			"entityInstances": [
 				{
-					"__identifier": "Boom4",
-					"__grid": [30,25],
-					"__pivot": [0.5,0.5],
-					"__tags": [],
-					"__tile": null,
-					"__smartColor": "#BE4A2F",
-					"iid": "71dd9bb0-1030-11f0-8f8a-693037d93ad9",
-					"width": 144,
-					"height": 144,
-					"defUid": 218,
-					"px": [1080,900],
-					"fieldInstances": [
-						{ "__identifier": "BoomRadius", "__type": "Int", "__value": 4, "__tile": null, "defUid": 223, "realEditorValues": [] },
-						{ "__identifier": "SizeX", "__type": "Int", "__value": 4, "__tile": null, "defUid": 219, "realEditorValues": [] },
-						{ "__identifier": "SizeY", "__type": "Int", "__value": 4, "__tile": null, "defUid": 220, "realEditorValues": [] },
-						{ "__identifier": "PivotX", "__type": "Int", "__value": 0, "__tile": null, "defUid": 221, "realEditorValues": [] },
-						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 222, "realEditorValues": [] }
-					],
-					"__worldX": 1080,
-					"__worldY": -144
-				},
-				{
 					"__identifier": "Boom1",
 					"__grid": [59,12],
 					"__pivot": [0.5,0.5],
@@ -246,14 +224,14 @@
 						{ "__identifier": "SizeX", "__type": "Int", "__value": 1, "__tile": null, "defUid": 189, "realEditorValues": [] },
 						{ "__identifier": "SizeY", "__type": "Int", "__value": 1, "__tile": null, "defUid": 190, "realEditorValues": [] },
 						{ "__identifier": "PivotX", "__type": "Int", "__value": 1, "__tile": null, "defUid": 191, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
-						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 192, "realEditorValues": [] }
+						{ "__identifier": "PivotY", "__type": "Int", "__value": 1, "__tile": null, "defUid": 192, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
 					],
 					"__worldX": 2142,
 					"__worldY": -594
 				},
 				{
 					"__identifier": "Boom1",
-					"__grid": [61,15],
+					"__grid": [61,14],
 					"__pivot": [0.5,0.5],
 					"__tags": [],
 					"__tile": null,
@@ -262,7 +240,7 @@
 					"width": 36,
 					"height": 36,
 					"defUid": 188,
-					"px": [2214,558],
+					"px": [2214,522],
 					"fieldInstances": [
 						{ "__identifier": "BoomRadius", "__type": "Int", "__value": 1, "__tile": null, "defUid": 194, "realEditorValues": [] },
 						{ "__identifier": "SizeX", "__type": "Int", "__value": 1, "__tile": null, "defUid": 189, "realEditorValues": [] },
@@ -271,7 +249,29 @@
 						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 192, "realEditorValues": [] }
 					],
 					"__worldX": 2214,
-					"__worldY": -486
+					"__worldY": -522
+				},
+				{
+					"__identifier": "Boom5",
+					"__grid": [29,24],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#BE4A2F",
+					"iid": "40f882b0-1030-11f0-8f8a-cb084dbef229",
+					"width": 180,
+					"height": 180,
+					"defUid": 227,
+					"px": [1062,882],
+					"fieldInstances": [
+						{ "__identifier": "BoomRadius", "__type": "Int", "__value": 5, "__tile": null, "defUid": 232, "realEditorValues": [] },
+						{ "__identifier": "SizeX", "__type": "Int", "__value": 5, "__tile": null, "defUid": 228, "realEditorValues": [] },
+						{ "__identifier": "SizeY", "__type": "Int", "__value": 5, "__tile": null, "defUid": 229, "realEditorValues": [] },
+						{ "__identifier": "PivotX", "__type": "Int", "__value": 0, "__tile": null, "defUid": 230, "realEditorValues": [] },
+						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 231, "realEditorValues": [] }
+					],
+					"__worldX": 1062,
+					"__worldY": -162
 				}
 			]
 		},

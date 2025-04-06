@@ -294,7 +294,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         Collider2D col = GetComponent<Collider2D>();
         if (col is BoxCollider2D box)
         {
-            box.size = targetWorldSize*0.9f;
+            box.size = targetWorldSize;
             box.offset = Vector2.zero;
         }
         else

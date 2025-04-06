@@ -1,8 +1,9 @@
+using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosiveBox : MonoBehaviour
+public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
 {
     [SerializeField] private float waitTime;
 
@@ -18,11 +19,17 @@ public class ExplosiveBox : MonoBehaviour
 
     [SerializeField] private SpriteRenderer anchorRenderer;
 
-    [SerializeField] private float explosionRadius = 1.5f;
+    [SerializeField] private float explosionRadius;
 
     [SerializeField] private SpriteRenderer radiusVisualRenderer;
 
     [SerializeField] private GameObject RangeDisplayer;
+    
+    //自动导入关卡设定数据
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        explosionRadius = fields.GetInt("BoomRadius") * 1.5f;
+    }
 
     private void Start(){
         PauseEvent.OnPauseTriggered += Pause;
