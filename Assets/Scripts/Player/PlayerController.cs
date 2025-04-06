@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +11,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float jumpForce = 5f;
+
+    [SerializeField]
+    private float maxFallSpeed = -10f;
+
+    [Header("土狼时间(开始时刷新)")]
+    [SerializeField] private float extraJumpAllowTime = 0.1f;
     #endregion
     #region 地面检测点
     [Header("Ground Check Settings")]
@@ -50,6 +58,16 @@ public class PlayerController : MonoBehaviour
 
     private bool isTouchingWallRight;
     #endregion
+    #region Timer
+    float minJumpTime = 0.08f;
+    float minJumpTimer;
+    #endregion
+
+    #region 包装属性
+    private BoolRefresher ifJustGround;
+    private BoolRefresher ifGetControlledOutside;
+    #endregion
+
     #region 判断加速度正负
     private float previousSpeed; // 用于保存上一帧的速度值
     private float currentSpeed;
@@ -62,6 +80,15 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
+        if(ifGetControlledOutside == null)ifGetControlledOutside = new BoolRefresher(1);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //GridManager.Instance.LogTimeAction();
     }
 
     private void FixedUpdate()
@@ -69,19 +96,37 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
+        if (rb.velocity.y < maxFallSpeed)
+        {
+            Vector2 newVelocity = rb.velocity;
+            newVelocity.y = maxFallSpeed;
+            rb.velocity = newVelocity;
+        }
         CurrentYSpeed = rb.velocity.y;
-        if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1) {
             CurrentYSpeed = 0;
         }
         // print(CurrentYSpeed);
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
-        
-        Move();
-        Rotate();
-        CheckJump();
+
+        if (ifGetControlledOutside.Get())
+        {
+            MoveInControl();
+            RotateInControl();
+        }
+        else
+        {
+            Move();
+            Rotate();
+            CheckJump();
+        }
+        ifGetControlledOutside.Update(Time.deltaTime);
+        ifJustGround.Update(Time.deltaTime);
         // HandleWallCollision();
     }
+
+    private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }
 
     #region 判断地面
     private void GroundCheck()
@@ -94,6 +139,7 @@ public class PlayerController : MonoBehaviour
             if (hit.normal.y > 0.9f)
             {
                 isGrounded = true;
+                ifJustGround.Refresh();
                 break;
             }
         }
@@ -146,6 +192,7 @@ public class PlayerController : MonoBehaviour
     #region 角色跳跃
     void Jump()
     {
+        ifJustGround.Take();
         // 触发跳跃动画
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -165,10 +212,35 @@ public class PlayerController : MonoBehaviour
     }
     void CheckJumpStart()
     {
-        if (JumpInput.Jump.Pressed() && isGrounded)
+        if (JumpInput.Jump.Pressed() && (isGrounded || ifJustGround.Get()))
         {
             Jump();
         }
+    }
+    #endregion
+
+    #region 限制控制
+    private float controlInput;
+    public void StartControl(float controlInput, float time)
+    {
+        if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
+        ifGetControlledOutside.Refresh(time);
+        this.controlInput = Mathf.Clamp(controlInput,0,1) ;
+    }
+
+    private void MoveInControl()
+    {
+        rb.velocity = new Vector2(controlInput * moveSpeed, rb.velocity.y);
+        animator.SetFloat("Speed", Mathf.Abs(controlInput));
+    }
+
+    private void RotateInControl()
+    {
+        float moveInput = controlInput;
+        if (moveInput < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else if (moveInput > 0)
+            transform.localScale = new Vector3(1, 1, 1);
     }
     #endregion
 
@@ -232,4 +304,75 @@ public class PlayerController : MonoBehaviour
         previousSpeed = currentSpeed;
     }
     #endregion
+}
+
+
+public class BoolRefresher
+{
+    private bool value = false;
+    private float timer = 0f;
+    private float duration;
+
+    private Func<float> durationWatcher;
+    private float lastWatchedValue;
+
+    public BoolRefresher(float duration, Func<float> externalDurationGetter = null)
+    {
+        this.duration = duration;
+        this.durationWatcher = externalDurationGetter;
+        this.lastWatchedValue = externalDurationGetter?.Invoke() ?? duration;
+    }
+
+    /// <summary>
+    /// 设置为 true 并重置计时
+    /// </summary>
+    public void Refresh()
+    {
+        value = true;
+        timer = duration;
+    }
+
+    public void Refresh(float t)
+    {
+        value = true;
+        timer = t;
+    }
+
+    /// <summary>
+    /// 在 Update 中调用，刷新内部状态
+    /// </summary>
+    public void Update(float deltaTime)
+    {
+        // 检查外部 duration 是否改变
+        if (durationWatcher != null)
+        {
+            float current = durationWatcher.Invoke();
+            lastWatchedValue = current;
+            duration = current;
+        }
+
+        // 正常倒计时逻辑
+        if (!value) return;
+
+        timer -= deltaTime;
+        if (timer <= 0f)
+        {
+            value = false;
+            timer = 0f;
+        }
+    }
+
+    /// <summary>
+    /// 获取当前状态（true = 刷新中）
+    /// </summary>
+    public bool Get()
+    {
+        return value;
+    }
+
+    public void Take()
+    {
+        value = false;
+        timer = 0f;
+    }
 }

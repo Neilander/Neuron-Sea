@@ -8,10 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Fade
-  m_Shader: {fileID: 4800000, guid: f7c3583569f5e3d47b86916add4fcaf1, type: 3}
-  m_Parent: {fileID: 0}
+  m_Shader: {fileID: 4800000, guid: 0803c241834332942abfcbd27c498b46, type: 3}
+  m_Parent: {fileID: 2100000, guid: 524878720b915544eb65205ee1f54233, type: 2}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _SHADERSPACE_UV
+  - _TIMESETTINGS_LINEAR_DEFAULT
+  - _UBERFADING_NONE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -22,19 +25,12 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - _FadeTex:
-        m_Texture: {fileID: 8400000, guid: 39a01c4e3f8b73941b7d6948fd5d21fe, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 8400000, guid: 39a01c4e3f8b73941b7d6948fd5d21fe, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _FadeAmount: 1
-    - _FadeBurnWidth: 1
+    - _AddColorContrast: 0.5
+    - _AddColorFade: 1
+    - _EnableAddColor: 0
     m_Colors:
-    - _FadeColor: {r: 1, g: 0, b: 0, a: 1}
+    - _AddColorColor: {r: 4, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

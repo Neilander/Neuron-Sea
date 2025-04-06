@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,6 +40,9 @@ public class GridManager : MonoBehaviour
     private bool getBothTarget = false;
     private SwitchableObj tempSwitchableObj;
     private bool ifLegalMove = true;
+
+    private int switchTime = 0;
+
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos(){
         if (!displayInGizmos) return;
@@ -99,6 +103,8 @@ public class GridManager : MonoBehaviour
 
     [Header("测试用")] [SerializeField] private Vector3 testPosition;
 
+    public void LogTimeAction() { Debug.Log("logSwitchTime"+switchTime); }
+
     [SerializeField] private bool doTestGetPos = false;
     private void Update(){
         //编辑器中也会触发
@@ -125,6 +131,8 @@ public class GridManager : MonoBehaviour
                             Debug.Log("进入switch state");
                             switchable.IntoSwitchState();
                             ReportSwitchableObj(switchable, true);
+
+                            InAndOutSwitchEvent.InSwitch();
                             StartState(SwitchState.Switch);
                             break; // 只处理第一个
                         }
@@ -201,14 +209,13 @@ public class GridManager : MonoBehaviour
                             switchableObjFrom.ControlFlash(false);
                             switchableObjFrom.OutSwitchState();
                         }
-                        
-                        StartState(SwitchState.None);
                     }
                     else
                     {
                         switchableObjFrom.OutSwitchState();
-                        StartState(SwitchState.None);
                     }
+                    InAndOutSwitchEvent.OutSwitch();
+                    StartState(SwitchState.None);
                 }
 
                 /*
@@ -314,6 +321,7 @@ public class GridManager : MonoBehaviour
     }
 
     private void DoSwitch(){
+        switchTime += 1;
         Vector3 tempPos = switchableObjFrom.SelfGridPos;
         switchableObjFrom.OutSwitchState(tempSwitchableObj.SelfGridPos);
         tempSwitchableObj.ChangeFromTempMoveToNormal();
@@ -348,5 +356,22 @@ class Counter
 
     public bool IsZero(){
         return count <= 0;
+    }
+}
+
+//用来管理一些零散的开启/关闭Switch函数
+public static class InAndOutSwitchEvent
+{
+    public static event Action OnInSwitchTriggered;
+    public static event Action OnOutSwitchTriggered;
+
+    public static void InSwitch()
+    {
+        OnInSwitchTriggered?.Invoke();
+    }
+
+    public static void OutSwitch()
+    {
+        OnOutSwitchTriggered?.Invoke();
     }
 }
