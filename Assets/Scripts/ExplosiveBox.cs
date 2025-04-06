@@ -22,16 +22,34 @@ public class ExplosiveBox : MonoBehaviour
 
     [SerializeField] private SpriteRenderer radiusVisualRenderer;
 
+    [SerializeField] private GameObject RangeDisplayer;
+
     private void Start(){
         PauseEvent.OnPauseTriggered += Pause;
         PauseEvent.OnPauseResumed += Resume;
+        Vector3 desiredWorldScale = new Vector3(
+        explosionRadius * 2 * GridManager.Instance.gridWidth / RangeDisplayer.GetComponent<SpriteRenderer>().sprite.bounds.size.x,
+        explosionRadius * 2 * GridManager.Instance.gridWidth / RangeDisplayer.GetComponent<SpriteRenderer>().sprite.bounds.size.y,
+        1f
+        );
+        Vector3 parentWorldScale = RangeDisplayer.transform.parent != null ? RangeDisplayer.transform.parent.lossyScale : Vector3.one;
+        Vector3 newLocalScale = new Vector3(
+        desiredWorldScale.x / parentWorldScale.x,
+        desiredWorldScale.y / parentWorldScale.y,
+        desiredWorldScale.z / parentWorldScale.z
+        );
+        RangeDisplayer.transform.localScale = newLocalScale;
+
+        InAndOutSwitchEvent.OnInSwitchTriggered += ShowRange;
+        InAndOutSwitchEvent.OnOutSwitchTriggered += HideRange;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision){
         if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>()) {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
-            waveMunController.StartDisappearAnimation();
+            if(waveMunController!=null)waveMunController.StartDisappearAnimation();
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }
@@ -47,6 +65,7 @@ public class ExplosiveBox : MonoBehaviour
     public void Resume() => isPaused = false;
 
     IEnumerator ExplodeCountDown(float time){
+        RangeDisplayer.SetActive(true);
         int totalFlashes = 5;
         float[] flashTimings = new float[5];
 
@@ -135,5 +154,21 @@ public class ExplosiveBox : MonoBehaviour
         Color c = shineRenderer.color;
         c.a = a;
         shineRenderer.color = c;
+    }
+
+    public void ShowRange()
+    {
+        RangeDisplayer.SetActive(true);
+    }
+
+    public void HideRange()
+    {
+        if (!isInCountDown) RangeDisplayer.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        InAndOutSwitchEvent.OnInSwitchTriggered -= ShowRange;
+        InAndOutSwitchEvent.OnOutSwitchTriggered -= HideRange;
     }
 }
