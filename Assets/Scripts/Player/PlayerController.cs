@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -80,13 +81,14 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
-        ifGetControlledOutside = new BoolRefresher(1);
+        if(ifGetControlledOutside == null)ifGetControlledOutside = new BoolRefresher(1);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-            GridManager.Instance.LogTimeAction();
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //GridManager.Instance.LogTimeAction();
     }
 
     private void FixedUpdate()
@@ -221,6 +223,7 @@ public class PlayerController : MonoBehaviour
     private float controlInput;
     public void StartControl(float controlInput, float time)
     {
+        if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
         ifGetControlledOutside.Refresh(time);
         this.controlInput = Mathf.Clamp(controlInput,0,1) ;
     }
