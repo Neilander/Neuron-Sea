@@ -40,7 +40,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         ExpectedSize.y = fields.GetInt("SizeY");
         SizeToExpectedSize();
         ExpectedAnchorPos.x = fields.GetInt("PivotX");
-        ExpectedAnchorPos.x = fields.GetInt("PivotY");
+        ExpectedAnchorPos.y = fields.GetInt("PivotY");
         SetAnchorToAnchorPos();
     }
 
