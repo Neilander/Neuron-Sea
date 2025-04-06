@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
     [SerializeField]
-    private float moveSpeed = 10f;
+    private float moveSpeed = 7f;
 
     [SerializeField]
     private float jumpForce = 5f;

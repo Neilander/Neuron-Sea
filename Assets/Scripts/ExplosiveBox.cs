@@ -145,7 +145,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
 
 
         // 最终检测玩家
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, 2 * explosionRadius * Vector2.one, 0);
         foreach (var hit in hits) {
             if (hit.GetComponent<PlayerController>()) {
                 PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
