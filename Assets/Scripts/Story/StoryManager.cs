@@ -76,7 +76,7 @@ public class StoryManager : MonoBehaviour
         // 在剧情模式下，检测点击以继续对话
         if (currentState == GameState.StoryMode && isDialogueActive)
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetMouseButtonDown(0))// || Input.GetKeyDown(KeyCode.Space)
             {
                 ContinueDialogue();
             }
