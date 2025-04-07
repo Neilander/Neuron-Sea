@@ -1,5 +1,30 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8050005753232399107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
+  m_Name: ScanLineJitterFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    renderPassEvent: 550
+    jitterIntensity: 0.2
+    jitterFrequency: 20
+    scanLineThickness: 4
+    scanLineSpeed: 2
+    colorShiftIntensity: 0.1
+    noiseIntensity: 0.2
+    glitchProbability: 0.1
+    subtleGlitchPreset: 0
+    mediumGlitchPreset: 0
+    intenseGlitchPreset: 0
 --- !u!114 &-5872856305326986357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   blitMaterial: {fileID: 2100000, guid: b39c4b9acf6d842d99d136ec9a8d92be, type: 2}
   flipYPropertyName: _FlipY
 --- !u!114 &11400000
@@ -51,7 +76,8 @@ MonoBehaviour:
   - {fileID: 9107326194022101261}
   - {fileID: 8253623617867631603}
   - {fileID: -4893173975917759724}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc
+  - {fileID: -8050005753232399107}
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bcfd64bb0e6ba24890
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}

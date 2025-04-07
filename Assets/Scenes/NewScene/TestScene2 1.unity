@@ -874,6 +874,8 @@ GameObject:
   - component: {fileID: 519420036}
   - component: {fileID: 519420037}
   - component: {fileID: 519420038}
+  - component: {fileID: 519420040}
+  - component: {fileID: 519420039}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1002,7 +1004,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1071,6 +1073,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e659cceaa9ee1d64799a55bd8ec4ba3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &519420039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a72921316150a64183b3c59158d813a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glitchShader: {fileID: 4800000, guid: 9d556ceddf6fa04488212b8213ac1b5b, type: 3}
+  jitterIntensity: 0.05
+  jitterFrequency: 5
+  scanLineThickness: 1
+  scanLineSpeed: 0.5
+  colorShiftIntensity: 0.02
+  noiseIntensity: 0.05
+  glitchProbability: 0.02
+  subtleGlitchPreset: 0
+  mediumGlitchPreset: 0
+  intenseGlitchPreset: 0
+--- !u!114 &519420040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9405d8db860e10f4d894e75c5d004444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glitchEffect: {fileID: 519420039}
+  triggerKey: 103
+  toggleKey: 116
+  cyclePresetKey: 121
+  glitchDuration: 2
+  temporaryGlitchIntensity: 0.2
 --- !u!1001 &556674498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24475,7 +24518,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1521364220
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24561,12 +24604,12 @@ PrefabInstance:
     - target: {fileID: 5630025616032423162, guid: 115649bc7abbe4248a2adb57361a79fe,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.2
+      value: 20.25
       objectReference: {fileID: 0}
     - target: {fileID: 5630025616032423162, guid: 115649bc7abbe4248a2adb57361a79fe,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.09
+      value: -1.76
       objectReference: {fileID: 0}
     - target: {fileID: 5630025616032423162, guid: 115649bc7abbe4248a2adb57361a79fe,
         type: 3}
