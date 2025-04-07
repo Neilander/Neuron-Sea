@@ -31,6 +31,11 @@ public class ExplosiveBox : MonoBehaviour
         if (!isInCountDown && collision.gameObject.GetComponent<PlayerController>()) {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
+            // 获取剧情数据资源
+            StoryData storyData = Resources.Load<StoryData>("StoryData/IntroStory");
+
+            // 进入剧情模式
+            StoryManager.Instance.EnterStoryMode(storyData);
             waveMunController.StartDisappearAnimation();
             StartCoroutine(ExplodeCountDown(waitTime));
         }

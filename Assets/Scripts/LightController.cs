@@ -29,11 +29,11 @@ public class LightController : MonoBehaviour
             if (light != null)
             {
                 light.intensity = minIntensity;
-                Debug.Log($"初始化灯光: {light.name}, 亮度: {light.intensity}");
+                // Debug.Log($"初始化灯光: {light.name}, 亮度: {light.intensity}");
             }
             else
             {
-                Debug.LogWarning("发现空的Light2D引用！");
+                // Debug.LogWarning("发现空的Light2D引用！");
             }
         }
     }
@@ -62,7 +62,7 @@ public class LightController : MonoBehaviour
             isInTrigger = true;
             playerTransform = other.transform;
             StartCoroutine(UpdateLightIntensity());
-            Debug.Log("玩家进入触发器区域");
+            // Debug.Log("玩家进入触发器区域");
         }
     }
 
@@ -74,7 +74,7 @@ public class LightController : MonoBehaviour
         {
             isInTrigger = false;
             targetIntensity = minIntensity;
-            Debug.Log("玩家离开触发器区域");
+            // Debug.Log("玩家离开触发器区域");
         }
     }
 
@@ -93,7 +93,7 @@ public class LightController : MonoBehaviour
                 // 距离越近，亮度越高
                 float normalizedDistance = 1f - (distance / maxDistance);
                 targetIntensity = Mathf.Lerp(minIntensity, maxIntensity, normalizedDistance);
-                Debug.Log($"玩家在触发器内，距离: {distance}, 目标亮度: {targetIntensity}");
+                // Debug.Log($"玩家在触发器内，距离: {distance}, 目标亮度: {targetIntensity}");
             }
             else
             {
@@ -105,7 +105,7 @@ public class LightController : MonoBehaviour
     // 持续更新灯光亮度
     private IEnumerator UpdateLightIntensity()
     {
-        Debug.Log("开始更新灯光亮度");
+        // Debug.Log("开始更新灯光亮度");
         while (isInTrigger && playerTransform != null)
         {
             // 计算玩家到触发器中心的距离
@@ -117,7 +117,7 @@ public class LightController : MonoBehaviour
                 // 距离越近，亮度越高
                 float normalizedDistance = 1f - (distance / maxDistance);
                 targetIntensity = Mathf.Lerp(minIntensity, maxIntensity, normalizedDistance);
-                Debug.Log($"更新灯光亮度 - 距离: {distance}, 目标亮度: {targetIntensity}");
+                // Debug.Log($"更新灯光亮度 - 距离: {distance}, 目标亮度: {targetIntensity}");
             }
             else
             {
@@ -126,7 +126,7 @@ public class LightController : MonoBehaviour
 
             yield return new WaitForSeconds(0.1f);
         }
-        Debug.Log("停止更新灯光亮度");
+        // Debug.Log("停止更新灯光亮度");
     }
 
     // 在编辑器中绘制触发器范围（仅用于调试）
