@@ -98,7 +98,7 @@ public class WaveMunController : MonoBehaviour
     private IEnumerator AppearAnimation()
     {
         isAnimating = true;
-        float elapsedTime = 0f;
+        float elapsedTime = 0f;//已过时间
         float startValue = maxWaveValue; // 从最大值开始
         float targetValue = 0f; // 到0结束
 
@@ -110,7 +110,7 @@ public class WaveMunController : MonoBehaviour
         while (elapsedTime < appearDuration)
         {
             elapsedTime += Time.deltaTime;
-            float normalizedTime = elapsedTime / appearDuration;
+            float normalizedTime = elapsedTime / appearDuration;//正比化
             float currentValue = Mathf.Lerp(startValue, targetValue, normalizedTime);
             targetMaterial.SetFloat(propertyName, currentValue);
             yield return null;

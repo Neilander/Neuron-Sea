@@ -26,7 +26,6 @@ public class FadeController : MonoBehaviour
     private Coroutine currentAnimationCoroutine;
 
     private static readonly int FadeAmount = Shader.PropertyToID("_FadeAmount");
-    private static readonly int FadeDirection = Shader.PropertyToID("_FadeDirection");
 
     private void Start()
     {
@@ -76,7 +75,6 @@ public class FadeController : MonoBehaviour
 
         private IEnumerator DisappearAnimation()
     {
-        material.SetFloat(FadeDirection, 1f);
 
         float elapsedTime = 0f;
         float startValue = fadeAmount;
@@ -100,7 +98,6 @@ public class FadeController : MonoBehaviour
 
     private IEnumerator AppearAnimation()
     {
-        material.SetFloat(FadeDirection, -1f);
 
         float elapsedTime = 0f;
         float startValue = fadeAmount;
