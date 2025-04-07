@@ -5,12 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class DeathController : MonoBehaviour
 {
+    [Header("死亡线设置")]
+    [SerializeField] private float deathLineY = -10f; // 死亡线高度,可在Inspector中调整
+
+    [Header("死亡动画设置")]
     public Image deathImg;
     public float cameraRotateAngle = 20f;      // 相机Z轴旋转目标角度
     public float cameraZoomAmount = 2f;        // 相机向前移动的距离
     public float transitionDuration = 0.5f;    // 旋转 + 拉近的时间
     public float fadeDuration = 1.0f;
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    private PlayerController playerController;
+
+    private void Start()
+    {
+        // 获取玩家控制器
+        playerController = FindObjectOfType<PlayerController>();
+        if (playerController == null)
+        {
+            Debug.LogWarning("未找到PlayerController组件！");
+        }
+    }
 
     private void OnEnable()
     {
@@ -20,6 +36,15 @@ public class DeathController : MonoBehaviour
     private void OnDisable()
     {
         PlayerDeathEvent.OnDeathTriggered -= HandleDeath;
+    }
+
+    private void Update()
+    {
+        // 检测玩家是否低于死亡线
+        if (playerController != null && playerController.transform.position.y < deathLineY)
+        {
+            HandleDeath(playerController.gameObject);
+        }
     }
 
     public void HandleDeath(GameObject obj)

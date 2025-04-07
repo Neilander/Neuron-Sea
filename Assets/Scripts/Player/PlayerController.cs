@@ -93,13 +93,14 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
         }
         CurrentYSpeed = rb.velocity.y;
-        if (CurrentYSpeed > -1&&CurrentYSpeed<=1) {
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
+        {
             CurrentYSpeed = 0;
         }
         // print(CurrentYSpeed);
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
-        
+
         Move();
         Rotate();
         CheckJump();
@@ -192,7 +193,7 @@ public class PlayerController : MonoBehaviour
     }
     void CheckJumpStart()
     {
-        if (JumpInput.Jump.Pressed() &&( isGrounded|| ifJustGround.Get()))
+        if (JumpInput.Jump.Pressed() && (isGrounded || ifJustGround.Get()))
         {
             Jump();
         }
