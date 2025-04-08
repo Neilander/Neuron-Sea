@@ -39,11 +39,12 @@ public class GridManager : MonoBehaviour
 
     private bool getBothTarget = false;
     private SwitchableObj tempSwitchableObj;
-    private bool ifLegalMove = true;
+    private bool ifLegalMove = false;
 
     private int switchTime = 0;
 
     private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
+    
 
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos(){
@@ -129,7 +130,7 @@ public class GridManager : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
                 {
-                    if (switchInfoRecorder.IfHaveBoth() && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    if (switchInfoRecorder.IfHaveBoth() && ifLegalMove)
                         ShiftSwitch();
 
                 }
@@ -271,11 +272,17 @@ public class GridManager : MonoBehaviour
                             {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true,false);
                                 switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
+                                ifLegalMove = false;
                             }
                             else
                             {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
-                                if(switchInfoRecorder.IfHaveBoth())switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                                if (switchInfoRecorder.IfHaveBoth())
+                                {
+                                    ifLegalMove = true;
+                                    switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                                }
+                                
                             }
                            
                         }
