@@ -1,5 +1,79 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8050005753232399107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
+  m_Name: ScanLineJitterFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    renderPassEvent: 550
+    jitterIntensity: 1
+    jitterFrequency: 3.2
+    scanLineThickness: 0
+    scanLineSpeed: 1.38
+    colorShiftIntensity: 0.036
+    noiseIntensity: 0.077
+    glitchProbability: 0.054
+    waveIntensity: 0
+    waveFrequency: 15
+    waveSpeed: 3
+    bwEffect: 0
+    bwNoiseScale: 31.9
+    bwNoiseIntensity: 0.285
+    bwFlickerSpeed: 8
+    colorCorrection: 0
+    hueShift: -60
+    saturation: 0
+    brightness: 0.65
+    contrast: 1.1
+    redOffset: -0.2
+    greenOffset: 0.1
+    blueOffset: 0.1
+    subtleGlitchPreset: 0
+    mediumGlitchPreset: 0
+    intenseGlitchPreset: 0
+    waveOnlyPreset: 0
+    blackAndWhitePreset: 0
+    waveBlackAndWhitePreset: 0
+    fixPinkColorPreset: 0
+--- !u!114 &-5872856305326986357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
+  m_Name: CaptureScreenRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: 02a8f166cc17b4535bf744ecceb66920, type: 2}
+  flipYPropertyName: _FlipYZP
+--- !u!114 &-4893173975917759724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
+  m_Name: CaptureScreenRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: b39c4b9acf6d842d99d136ec9a8d92be, type: 2}
+  flipYPropertyName: _FlipY
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10,15 +84,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11145981673336645838492a2d98e247, type: 3}
-  m_Name: Renderer2D
+  m_Name: MyRander
   m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
       type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: 4637797661023561875}
-  m_RendererFeatureMap: 9368728d66c45c40
+  - {fileID: -5872856305326986357}
+  - {fileID: 9107326194022101261}
+  - {fileID: 8253623617867631603}
+  - {fileID: -4893173975917759724}
+  - {fileID: -8050005753232399107}
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bcfd64bb0e6ba24890
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -75,7 +153,7 @@ MonoBehaviour:
     type: 2}
   m_DefaultMaskMaterial: {fileID: 2100000, guid: 15d0c3709176029428a0da2f8cecf0b5,
     type: 2}
---- !u!114 &4637797661023561875
+--- !u!114 &8253623617867631603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,19 +162,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
-  m_Name: ScanLineJitterFeature
+  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
+  m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  settings:
-    renderPassEvent: 550
-    jitterIntensity: 0.1
-    jitterFrequency: 10
-    scanLineThickness: 2
-    scanLineSpeed: 1
-    colorShiftIntensity: 0.05
-    noiseIntensity: 0.1
-    glitchProbability: 0.05
-    subtleGlitchPreset: 1
-    mediumGlitchPreset: 0
-    intenseGlitchPreset: 1
+  blitMaterial: {fileID: 2100000, guid: e8e74d1c5cbfc450790679c7efb9ba64, type: 2}
+  flipYPropertyName: _FlipY
+--- !u!114 &9107326194022101261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
+  m_Name: CaptureScreenRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: 7d5fa219b340d4c24aa517e3bc35e9f2, type: 2}
+  flipYPropertyName: _FlipY
