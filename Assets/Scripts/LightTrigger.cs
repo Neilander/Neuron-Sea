@@ -8,16 +8,16 @@ public class LightTrigger : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("LightTrigger Start");
+        // Debug.Log("LightTrigger Start");
         if (lightController == null)
         {
-            Debug.LogError("LightController引用未设置！");
+            // Debug.LogError("LightController引用未设置！");
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"LightTrigger OnTriggerEnter2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
+        // Debug.Log($"LightTrigger OnTriggerEnter2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
         if (other.CompareTag("Player") && lightController != null)
         {
             // 通知灯光控制器玩家进入触发器
@@ -27,7 +27,7 @@ public class LightTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log($"LightTrigger OnTriggerExit2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
+        // Debug.Log($"LightTrigger OnTriggerExit2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
         if (other.CompareTag("Player") && lightController != null)
         {
             // 通知灯光控制器玩家离开触发器
