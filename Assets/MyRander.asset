@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
   m_Name: ScanLineJitterFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
-    jitterIntensity: 0
-    jitterFrequency: 64.5
+    jitterIntensity: 1
+    jitterFrequency: 3.2
     scanLineThickness: 0
-    scanLineSpeed: 0
-    colorShiftIntensity: 0
-    noiseIntensity: 0
-    glitchProbability: 1
+    scanLineSpeed: 1.38
+    colorShiftIntensity: 0.036
+    noiseIntensity: 0.077
+    glitchProbability: 0.054
     waveIntensity: 0
-    waveFrequency: 11.3
-    waveSpeed: 1.68
+    waveFrequency: 15
+    waveSpeed: 3
     bwEffect: 0
     bwNoiseScale: 31.9
     bwNoiseIntensity: 0.285
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   blitMaterial: {fileID: 2100000, guid: 02a8f166cc17b4535bf744ecceb66920, type: 2}
   flipYPropertyName: _FlipYZP
 --- !u!114 &-4893173975917759724
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11145981673336645838492a2d98e247, type: 3}
-  m_Name: New Universal Render Pipeline Asset_Renderer
+  m_Name: MyRander
   m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   blitMaterial: {fileID: 2100000, guid: e8e74d1c5cbfc450790679c7efb9ba64, type: 2}
   flipYPropertyName: _FlipY
 --- !u!114 &9107326194022101261
@@ -180,6 +180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   blitMaterial: {fileID: 2100000, guid: 7d5fa219b340d4c24aa517e3bc35e9f2, type: 2}
   flipYPropertyName: _FlipY
