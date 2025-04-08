@@ -26,6 +26,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private Vector2 ExpectedSize;
     [SerializeField] private Vector2 ExpectedAnchorPos;
 
+    [Header("重构后用到的变量")]
+    [SerializeField] private GameObject lockedStateDisplay;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -346,4 +349,14 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     public bool IfCanSwitch() { return ifEnableSwitch; }
+
+
+    #region 重构后Switch代码
+    public void SetLockedToSwitch(bool ifLocked, bool ifLegal)
+    {
+        lockedStateDisplay.GetComponent<SpriteRenderer>().color = ifLegal ? Color.white : Color.red;
+        if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
+        
+    }
+    #endregion
 }
