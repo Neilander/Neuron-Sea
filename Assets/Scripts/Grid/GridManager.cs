@@ -40,6 +40,11 @@ public class GridManager : MonoBehaviour
     private bool getBothTarget = false;
     private SwitchableObj tempSwitchableObj;
     private bool ifLegalMove = true;
+
+    private int switchTime = 0;
+
+    private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
+
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos(){
         if (!displayInGizmos) return;
@@ -100,8 +105,12 @@ public class GridManager : MonoBehaviour
 
     [Header("测试用")] [SerializeField] private Vector3 testPosition;
 
+    public void LogTimeAction() { Debug.Log("logSwitchTime"+switchTime); }
+
     [SerializeField] private bool doTestGetPos = false;
     private void Update(){
+        
+
         //编辑器中也会触发
         if (doTestGetPos) {
             doTestGetPos = false;
@@ -109,8 +118,23 @@ public class GridManager : MonoBehaviour
         }
         //只在运行时触发
         if (!Application.isPlaying) return;
+
         switch (curState) {
             case SwitchState.None:
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    StartState(SwitchState.Switch);
+                }
+
+                if (Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
+                {
+                    if (switchInfoRecorder.IfHaveBoth() && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                        ShiftSwitch();
+
+                }
+
+                /*
                 if (Input.GetMouseButtonDown(0) && CanEnterSwitchState()) // 你需要自定义这个判断方法
                 {
                     // 从鼠标位置转为世界坐标
@@ -132,9 +156,10 @@ public class GridManager : MonoBehaviour
                             break; // 只处理第一个
                         }
                     }
-                }
+                }*/
                 break;
             case SwitchState.Switch:
+                /*
                 if (Input.GetMouseButton(0))
                 {
                     Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -213,7 +238,311 @@ public class GridManager : MonoBehaviour
                     StartState(SwitchState.None);
                 }
 
-                /*
+                */
+
+                if(Input.GetKeyDown(KeyCode.Q))
+                {
+                    StartState(SwitchState.None);
+
+                }
+                
+                if (Input.GetMouseButtonDown(0))
+                {
+                    SwitchableObj tryGet;
+                    Debug.Log("尝试获取物体");
+                    if (TryGetSwitchableUnderMouse(out tryGet))
+                    {
+                        if (switchInfoRecorder.Take(tryGet))
+                        {
+                            tryGet.SetLockedToSwitch(false, true);
+                            if(switchInfoRecorder.hasFirst)
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+                            if (switchInfoRecorder.hasSecond)
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                        }
+                        else
+                        {
+                            SwitchableObj temp;
+                            if (switchInfoRecorder.Record(tryGet, out temp))
+                            {
+                                temp.SetLockedToSwitch(false, true);
+                            }
+                            if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                            {
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true,false);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
+                            }
+                            else
+                            {
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+                                if(switchInfoRecorder.IfHaveBoth())switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                            }
+                           
+                        }
+                    }
+                }
+
+                break;
+            case SwitchState.Move:
+                //现在没有用
+                if (counter.IsZero()) {
+                    StartNoneState();
+                }
+                break;
+        }
+    }
+
+    private void StartNoneState(){
+        StartState(SwitchState.None);
+    }
+
+    public void StartState(SwitchState state){
+        EndState(curState);
+
+        switch (state) {
+            case SwitchState.None:
+                
+                Debug.Log("进入none state");
+                break;
+            case SwitchState.Switch:
+                InAndOutSwitchEvent.InSwitch();
+                PauseEvent.Pause();
+                break;
+            case SwitchState.Move:
+
+                break;
+        }
+        curState = state;
+    }
+
+    private void EndState(SwitchState lastState)
+    {
+        switch (lastState)
+        {
+            case SwitchState.Switch:
+                InAndOutSwitchEvent.OutSwitch();
+                PauseEvent.Resume();
+                break;
+        }
+    }
+
+
+    public Vector3 GetClosestGridPoint(Vector3 position){
+        Vector3 closestPoint = new Vector3(
+            Mathf.Round(position.x - offsetX / gridWidth) * gridWidth + offsetX,
+            Mathf.Round(position.y - offsetY / gridWidth) * gridWidth + offsetY,
+            0
+        );
+        return closestPoint;
+    }
+
+    #region 交换物体
+
+    
+
+    private bool CanEnterSwitchState(){
+        return true;
+    }
+
+    void ReportSwitchableObj(SwitchableObj obj, bool isFrom){
+        if (isFrom) {
+            switchableObjFrom = obj;
+        }
+        else {
+            
+            getBothTarget = true;
+        }
+    }
+
+    /*
+    private void DoSwitch(){
+        switchTime += 1;
+        Vector3 tempPos = switchableObjFrom.SelfGridPos;
+
+
+        switchableObjFrom.OutSwitchState(tempSwitchableObj.SelfGridPos);
+        tempSwitchableObj.ChangeFromTempMoveToNormal();
+        ClearSwitchableObj();
+    }*/
+
+    private void ShiftSwitch()
+    {
+        switchTime += 1;
+        Vector3 tempPos = switchInfoRecorder.obj1.SelfGridPos;
+        switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
+        switchInfoRecorder.obj2.SetToGridPos(tempPos);
+    }
+
+    private void ClearSwitchableObj(){
+        switchableObjFrom = null;
+       
+        tempSwitchableObj = null;
+        getBothTarget = false;
+    }
+
+    public void CountDown(){
+        counter.CountDown();
+    }
+
+    public static bool TryGetSwitchableUnderMouse(out SwitchableObj target)
+    {
+        target = null;
+
+        // 1. 获取鼠标在世界中的位置
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 rayOrigin = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
+
+        // 2. 发射一条零向量射线（点检测）
+        RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, Vector2.zero);
+
+        // 3. 遍历命中的所有物体
+        foreach (var hit in hits)
+        {
+            SwitchableObj switchable = hit.collider.GetComponent<SwitchableObj>();
+            if (switchable != null&& switchable.IfCanSwitch())// && !switchable.inSwitchState 这个留着之后可能用
+            {
+                target = switchable;
+                return true; // 找到第一个合适的就返回
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsLegalMoveBetween(SwitchableObj from, SwitchableObj to)
+    {
+        if (from == null || to == null) return false;
+
+        bool fromCanMove = from.CheckIfCanMoveTo(to.SelfGridPos, to.gameObject);
+        bool toCanMove = to.CheckIfCanMoveTo(from.SelfGridPos, from.gameObject);
+
+        return fromCanMove && toCanMove;
+    }
+
+    #endregion
+}
+
+class Counter
+{
+    private int count = 0;
+
+    public void SetCount(int count){
+        this.count = count;
+    }
+
+    public void CountDown(){
+        count--;
+    }
+
+    public bool IsZero(){
+        return count <= 0;
+    }
+}
+
+class TwoObjectContainer<Type>
+{
+    public Type obj1 { get; private set; }
+    public Type obj2 { get; private set; }
+   
+
+    public bool hasFirst { get; private set; }
+    public bool hasSecond { get; private set; }
+
+    public TwoObjectContainer()
+    {
+        hasFirst = false;
+        hasSecond = false;
+    }
+
+    public TwoObjectContainer(Type obj1, Type obj2)
+    {
+        this.obj1 = obj1;
+        this.obj2 = obj2;
+        hasFirst = true;
+        hasSecond = true;
+    }
+
+    public TwoObjectContainer(Type obj1)
+    {
+        this.obj1 = obj1;
+        hasFirst = true;
+        hasSecond = false;
+    }
+
+    public bool Record(Type n, out Type poopOut)
+    {
+        poopOut = n;
+        if (hasFirst)
+        {
+            if (hasSecond)
+            {
+                poopOut = obj1;
+                obj1 = obj2;
+                obj2 = n;
+                return true;
+            }
+            else
+            {
+                obj2 = n;
+                hasSecond = true;
+            }
+        }
+        else
+        {
+            obj1 = n;
+            hasFirst = true;
+        }
+
+        return false;
+    }
+
+    public bool Take(Type obj)
+    {
+        if (hasFirst && obj1.Equals(obj))
+        {
+            hasFirst = false;
+            return true;
+        }
+        else if (hasSecond  &&obj2.Equals(obj))
+        {
+            hasSecond = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IfHaveBoth()
+    {
+        return hasFirst && hasSecond;
+    }
+
+    public void Refresh()
+    {
+        hasFirst = false;
+        hasSecond = false;
+    }
+}
+
+//用来管理一些零散的开启/关闭Switch函数
+public static class InAndOutSwitchEvent
+{
+    public static event Action OnInSwitchTriggered;
+    public static event Action OnOutSwitchTriggered;
+
+    public static void InSwitch()
+    {
+        OnInSwitchTriggered?.Invoke();
+    }
+
+    public static void OutSwitch()
+    {
+        OnOutSwitchTriggered?.Invoke();
+    }
+}
+
+//之前让两个物体移动的代码
+/*
                 if (Input.GetMouseButtonUp(0)) {
                     // 从鼠标位置转为世界坐标
                     Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -258,114 +587,3 @@ public class GridManager : MonoBehaviour
                         StartState(SwitchState.None);
                     }
                 }*/
-                break;
-            case SwitchState.Move:
-                if (counter.IsZero()) {
-                    StartNoneState();
-                }
-                break;
-        }
-    }
-
-    private void StartNoneState(){
-        StartState(SwitchState.None);
-    }
-
-    public void StartState(SwitchState state){
-        switch (state) {
-            case SwitchState.None:
-                PauseEvent.Resume();
-                Debug.Log("进入none state");
-                break;
-            case SwitchState.Switch:
-                PauseEvent.Pause();
-                break;
-            case SwitchState.Move:
-
-                break;
-        }
-        curState = state;
-    }
-
-
-    public Vector3 GetClosestGridPoint(Vector3 position){
-        Vector3 closestPoint = new Vector3(
-            Mathf.Round(position.x - offsetX / gridWidth) * gridWidth + offsetX,
-            Mathf.Round(position.y - offsetY / gridWidth) * gridWidth + offsetY,
-            0
-        );
-        return closestPoint;
-    }
-
-    #region 交换物体
-
-    
-
-    private bool CanEnterSwitchState(){
-        return true;
-    }
-
-    void ReportSwitchableObj(SwitchableObj obj, bool isFrom){
-        if (isFrom) {
-            switchableObjFrom = obj;
-        }
-        else {
-            
-            getBothTarget = true;
-        }
-    }
-
-    private void DoSwitch(){
-        Vector3 tempPos = switchableObjFrom.SelfGridPos;
-        switchableObjFrom.OutSwitchState(tempSwitchableObj.SelfGridPos);
-        tempSwitchableObj.ChangeFromTempMoveToNormal();
-        ClearSwitchableObj();
-    }
-
-    private void ClearSwitchableObj(){
-        switchableObjFrom = null;
-       
-        tempSwitchableObj = null;
-        getBothTarget = false;
-    }
-
-    public void CountDown(){
-        counter.CountDown();
-    }
-
-    #endregion
-}
-
-class Counter
-{
-    private int count = 0;
-
-    public void SetCount(int count){
-        this.count = count;
-    }
-
-    public void CountDown(){
-        count--;
-    }
-
-    public bool IsZero(){
-        return count <= 0;
-    }
-}
-
-//用来管理一些零散的开启/关闭Switch函数
-public static class InAndOutSwitchEvent
-{
-    public static event Action OnInSwitchTriggered;
-    public static event Action OnOutSwitchTriggered;
-
-    public static void InSwitch()
-    {
-        OnInSwitchTriggered?.Invoke();
-    }
-
-    public static void OutSwitch()
-    {
-        OnOutSwitchTriggered?.Invoke();
-    }
-}

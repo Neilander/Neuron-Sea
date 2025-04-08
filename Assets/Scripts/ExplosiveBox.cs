@@ -1,8 +1,9 @@
+using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosiveBox : MonoBehaviour
+public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
 {
     [SerializeField] private float waitTime;
 
@@ -18,13 +19,37 @@ public class ExplosiveBox : MonoBehaviour
 
     [SerializeField] private SpriteRenderer anchorRenderer;
 
-    [SerializeField] private float explosionRadius = 1.5f;
+    [SerializeField] private float explosionRadius;
 
     [SerializeField] private SpriteRenderer radiusVisualRenderer;
+
+    [SerializeField] private GameObject RangeDisplayer;
+    
+    //自动导入关卡设定数据
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        explosionRadius = fields.GetInt("BoomRadius") * 1.5f;
+    }
 
     private void Start(){
         PauseEvent.OnPauseTriggered += Pause;
         PauseEvent.OnPauseResumed += Resume;
+        Vector3 desiredWorldScale = new Vector3(
+        explosionRadius * 2 * GridManager.Instance.gridWidth / RangeDisplayer.GetComponent<SpriteRenderer>().sprite.bounds.size.x,
+        explosionRadius * 2 * GridManager.Instance.gridWidth / RangeDisplayer.GetComponent<SpriteRenderer>().sprite.bounds.size.y,
+        1f
+        );
+        Vector3 parentWorldScale = RangeDisplayer.transform.parent != null ? RangeDisplayer.transform.parent.lossyScale : Vector3.one;
+        Vector3 newLocalScale = new Vector3(
+        desiredWorldScale.x / parentWorldScale.x,
+        desiredWorldScale.y / parentWorldScale.y,
+        desiredWorldScale.z / parentWorldScale.z
+        );
+        RangeDisplayer.transform.localScale = newLocalScale;
+
+        InAndOutSwitchEvent.OnInSwitchTriggered += ShowRange;
+        InAndOutSwitchEvent.OnOutSwitchTriggered += HideRange;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision){
@@ -36,7 +61,7 @@ public class ExplosiveBox : MonoBehaviour
 
             // 进入剧情模式
             StoryManager.Instance.EnterStoryMode(storyData);
-            waveMunController.StartDisappearAnimation();
+            if(waveMunController!=null)waveMunController.StartDisappearAnimation();
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }
@@ -52,6 +77,7 @@ public class ExplosiveBox : MonoBehaviour
     public void Resume() => isPaused = false;
 
     IEnumerator ExplodeCountDown(float time){
+        RangeDisplayer.SetActive(true);
         int totalFlashes = 5;
         float[] flashTimings = new float[5];
 
@@ -124,7 +150,7 @@ public class ExplosiveBox : MonoBehaviour
 
 
         // 最终检测玩家
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, 2 * explosionRadius * Vector2.one, 0);
         foreach (var hit in hits) {
             if (hit.GetComponent<PlayerController>()) {
                 PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
@@ -140,5 +166,21 @@ public class ExplosiveBox : MonoBehaviour
         Color c = shineRenderer.color;
         c.a = a;
         shineRenderer.color = c;
+    }
+
+    public void ShowRange()
+    {
+        RangeDisplayer.SetActive(true);
+    }
+
+    public void HideRange()
+    {
+        if (!isInCountDown) RangeDisplayer.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        InAndOutSwitchEvent.OnInSwitchTriggered -= ShowRange;
+        InAndOutSwitchEvent.OnOutSwitchTriggered -= HideRange;
     }
 }

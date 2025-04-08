@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
     [SerializeField]
-    private float moveSpeed = 10f;
+    private float moveSpeed = 7f;
 
     [SerializeField]
     private float jumpForce = 5f;
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
 
     #region 包装属性
     private BoolRefresher ifJustGround;
+    private BoolRefresher ifGetControlledOutside;
     #endregion
 
     #region 判断加速度正负
@@ -79,6 +81,14 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
+        if(ifGetControlledOutside == null)ifGetControlledOutside = new BoolRefresher(1);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //GridManager.Instance.LogTimeAction();
     }
 
     private void FixedUpdate()
@@ -93,17 +103,25 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
         }
         CurrentYSpeed = rb.velocity.y;
-        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
-        {
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1) {
             CurrentYSpeed = 0;
         }
         // print(CurrentYSpeed);
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
 
-        Move();
-        Rotate();
-        CheckJump();
+        if (ifGetControlledOutside.Get())
+        {
+            MoveInControl();
+            RotateInControl();
+        }
+        else
+        {
+            Move();
+            Rotate();
+            CheckJump();
+        }
+        ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
         // HandleWallCollision();
     }
@@ -174,6 +192,7 @@ public class PlayerController : MonoBehaviour
     #region 角色跳跃
     void Jump()
     {
+        ifJustGround.Take();
         // 触发跳跃动画
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -197,6 +216,31 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+    }
+    #endregion
+
+    #region 限制控制
+    private float controlInput;
+    public void StartControl(float controlInput, float time)
+    {
+        if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
+        ifGetControlledOutside.Refresh(time);
+        this.controlInput = Mathf.Clamp(controlInput,0,1) ;
+    }
+
+    private void MoveInControl()
+    {
+        rb.velocity = new Vector2(controlInput * moveSpeed, rb.velocity.y);
+        animator.SetFloat("Speed", Mathf.Abs(controlInput));
+    }
+
+    private void RotateInControl()
+    {
+        float moveInput = controlInput;
+        if (moveInput < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else if (moveInput > 0)
+            transform.localScale = new Vector3(1, 1, 1);
     }
     #endregion
 
@@ -288,6 +332,12 @@ public class BoolRefresher
         timer = duration;
     }
 
+    public void Refresh(float t)
+    {
+        value = true;
+        timer = t;
+    }
+
     /// <summary>
     /// 在 Update 中调用，刷新内部状态
     /// </summary>
@@ -318,5 +368,11 @@ public class BoolRefresher
     public bool Get()
     {
         return value;
+    }
+
+    public void Take()
+    {
+        value = false;
+        timer = 0f;
     }
 }

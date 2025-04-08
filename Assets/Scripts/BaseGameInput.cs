@@ -127,7 +127,7 @@ public class BaseGameInput : MonoBehaviour
 
 public class JumpInput : BaseGameInput
 {
-    public static VisualButton Jump = new VisualButton(KeyCode.Space, 0.08f, 0.08f);
+    public static VisualButton Jump = new VisualButton(KeyCode.Space, 0.08f, 0.15f);
 
     private void Awake()
     {
