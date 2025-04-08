@@ -61,7 +61,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
 
             // 进入剧情模式
             StoryManager.Instance.EnterStoryMode(storyData);
-            if(waveMunController!=null)waveMunController.StartDisappearAnimation();
+            // if(waveMunController!=null)waveMunController.StartDisappearAnimation();
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }
