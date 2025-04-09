@@ -118,8 +118,7 @@ MonoBehaviour:
   - {fileID: -4893173975917759724}
   - {fileID: -8050005753232399107}
   - {fileID: -296660032710017732}
-  - {fileID: 2860167397576285958}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bcfd64bb0e6ba248903c7d43a3450de2fb061fb022185bb127
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bcfd64bb0e6ba248903c7d43a3450de2fb
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -176,24 +175,6 @@ MonoBehaviour:
     type: 2}
   m_DefaultMaskMaterial: {fileID: 2100000, guid: 15d0c3709176029428a0da2f8cecf0b5,
     type: 2}
---- !u!114 &2860167397576285958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cc199acb7b2144e1944961abe92a071, type: 3}
-  m_Name: distort
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  distortMaterial: {fileID: 2100000, guid: cb6ae85ac475a4ae1a46398e2657084b, type: 2}
-  effectCenter: {x: 0.5, y: 0.5}
-  patchBox: {x: 0.3, y: 0.3}
-  waveMun: 10
-  waveStrength: 0.02
 --- !u!114 &8253623617867631603
 MonoBehaviour:
   m_ObjectHideFlags: 0
