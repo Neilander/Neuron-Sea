@@ -2384,6 +2384,50 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1179309657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179309656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74e6bb65d3f0004cabfe56d93d18829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableScanLineJitter: 0
+  enableColorShift: 0
+  enableNoise: 0
+  enableGlitch: 0
+  enableWaveEffect: 0
+  enableBlackAndWhite: 0
+  jitterIntensity: 0
+  jitterFrequency: 0
+  scanLineThickness: 0
+  scanLineSpeed: 0
+  colorShiftIntensity: 0
+  noiseIntensity: 0
+  glitchProbability: 0
+  waveIntensity: 0
+  waveFrequency: 10
+  waveSpeed: 2
+  bwEffect: 0
+  bwNoiseScale: 1
+  bwNoiseIntensity: 0.2
+  bwFlickerSpeed: 5
+  colorCorrection: -1
+  hueShift: 0
+  saturation: 0
+  brightness: 1
+  contrast: 1
+  redOffset: 0
+  greenOffset: 0
+  blueOffset: 0
+  subtleGlitchPreset: 1
+  intenseGlitchPreset: 0
+  colorShiftPreset: 0
+  noisePreset: 0
 --- !u!4 &1179309658
 Transform:
   m_ObjectHideFlags: 0
@@ -3252,7 +3296,7 @@ GameObject:
   - component: {fileID: 1432612935}
   - component: {fileID: 1432612934}
   - component: {fileID: 1432612933}
-  - component: {fileID: 1432612936}
+  - component: {fileID: 1432612932}
   m_Layer: 6
   m_Name: CircleDeathEffectTrigger
   m_TagString: Untagged
@@ -3260,6 +3304,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1432612932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432612931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c1a4fe5f3e37c44bc4bff5c730d117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!58 &1432612933
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3363,78 +3419,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1432612936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1432612931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23c1a4fe5f3e37c44bc4bff5c730d117, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  transitionDuration: 0.5
-  effectDuration: 1
-  initialValues:
-    jitterIntensity: 0
-    jitterFrequency: 0
-    scanLineThickness: 0
-    scanLineSpeed: 0
-    colorShiftIntensity: 3.45
-    noiseIntensity: 3.12
-    glitchProbability: 3.69
-    waveIntensity: 4.16
-    waveFrequency: 2.98
-    waveSpeed: 4.22
-    bwEffect: 3.22
-    bwNoiseScale: 2.77
-    bwNoiseIntensity: 1.79
-    bwFlickerSpeed: 2.47
-    colorCorrection: 4.77
-    hueShift: 3.67
-    saturation: 3.46
-    brightness: 2.92
-    contrast: 2.07
-    redOffset: 2.46
-    greenOffset: 4.46
-    blueOffset: 1.07
-    enableScanLineJitter: 0
-    enableColorShift: 0
-    enableNoise: 0
-    enableGlitch: 0
-    enableWaveEffect: 0
-    enableBlackAndWhite: 0
-  targetValues:
-    jitterIntensity: 0
-    jitterFrequency: 0
-    scanLineThickness: 10
-    scanLineSpeed: 8.8
-    colorShiftIntensity: 0
-    noiseIntensity: 0.36
-    glitchProbability: 0
-    waveIntensity: 0
-    waveFrequency: 27
-    waveSpeed: 10
-    bwEffect: 0
-    bwNoiseScale: 15
-    bwNoiseIntensity: 0.2
-    bwFlickerSpeed: 8
-    colorCorrection: 1
-    hueShift: 0
-    saturation: 0
-    brightness: 1
-    contrast: 1
-    redOffset: 0
-    greenOffset: 0
-    blueOffset: 0
-    enableScanLineJitter: 1
-    enableColorShift: 1
-    enableNoise: 1
-    enableGlitch: 1
-    enableWaveEffect: 1
-    enableBlackAndWhite: 1
 --- !u!1 &1441374075
 GameObject:
   m_ObjectHideFlags: 0
