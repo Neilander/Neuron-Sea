@@ -9,7 +9,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
 
     [SerializeField] private float explodeDuration;
 
-    public WaveMunController waveMunController;
+    // public WaveMunController waveMunController;
 
     private bool isInCountDown = false;
 

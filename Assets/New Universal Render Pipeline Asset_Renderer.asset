@@ -53,7 +53,8 @@ MonoBehaviour:
   - {fileID: -4893173975917759724}
   - {fileID: 6869014672113936764}
   - {fileID: 2826358790675788178}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc7c294c6073a4535f9271086e583e3927
+  - {fileID: 6814045422367654797}
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc7c294c6073a4535f9271086e583e39278dc39993355a905e
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -129,6 +130,50 @@ MonoBehaviour:
   patchCenter: {x: 0.5, y: 0.5}
   waveMun: 1
   waveStrength: 0.1
+--- !u!114 &6814045422367654797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
+  m_Name: ScanLineJitterFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    renderPassEvent: 550
+    jitterIntensity: 0.1
+    jitterFrequency: 10
+    scanLineThickness: 2
+    scanLineSpeed: 1
+    colorShiftIntensity: 0.05
+    noiseIntensity: 0.1
+    glitchProbability: 0.05
+    waveIntensity: 0.2
+    waveFrequency: 10
+    waveSpeed: 2
+    bwEffect: 0
+    bwNoiseScale: 10
+    bwNoiseIntensity: 0.2
+    bwFlickerSpeed: 5
+    colorCorrection: 0
+    hueShift: 0
+    saturation: 1
+    brightness: 1
+    contrast: 1
+    redOffset: 0
+    greenOffset: 0
+    blueOffset: 0
+    subtleGlitchPreset: 0
+    mediumGlitchPreset: 0
+    intenseGlitchPreset: 0
+    waveOnlyPreset: 0
+    blackAndWhitePreset: 0
+    waveBlackAndWhitePreset: 0
+    fixPinkColorPreset: 0
 --- !u!114 &6869014672113936764
 MonoBehaviour:
   m_ObjectHideFlags: 0

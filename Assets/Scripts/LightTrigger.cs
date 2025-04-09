@@ -49,7 +49,7 @@ public class LightTrigger : MonoBehaviour
     {
         if (lightController != null)
         {
-            Gizmos.color = Color.green;
+            Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(transform.position, 0.5f);
         }
     }
