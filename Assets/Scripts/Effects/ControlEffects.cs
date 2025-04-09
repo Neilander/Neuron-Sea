@@ -543,6 +543,16 @@ public class ControlEffects : MonoBehaviour
         UpdateEffectSettings();
     }
 
+    // 提供公共方法给外部调用，确保特效设置被立即更新
+    public void ForceUpdateEffects()
+    {
+        UpdateEffectSettings();
+        if (feature != null && !feature.isActive)
+        {
+            Debug.LogWarning("特效参数已更新，但渲染特性当前是禁用状态！");
+        }
+    }
+
     // 启用ScanLineJitterFeature渲染特性
     public void EnableScanLineJitterFeature()
     {

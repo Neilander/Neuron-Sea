@@ -223,8 +223,23 @@ public class DeathEffectTrigger : MonoBehaviour
 
     private IEnumerator ApplyDeathEffectWithTransition()
     {
+        Debug.Log("开始应用死亡特效...");
+
         // 先启用ScanLineJitterFeature特性
         controlEffects.EnableScanLineJitterFeature();
+
+        // 检查特性是否成功启用
+        if (!controlEffects.IsFeatureActive())
+        {
+            Debug.LogError("无法启用ScanLineJitterFeature特性！特效可能无法正常显示");
+        }
+        else
+        {
+            Debug.Log("ScanLineJitterFeature特性已启用");
+        }
+
+        // 强制立即更新一次特效参数
+        controlEffects.ForceUpdateEffects();
 
         // 记录开始时的参数
         EffectParameters startValues = new EffectParameters();
@@ -283,9 +298,11 @@ public class DeathEffectTrigger : MonoBehaviour
         // 确保颜色校正和饱和度达到目标值
         controlEffects.colorCorrection = targetValues.colorCorrection;
         controlEffects.saturation = targetValues.saturation;
+        Debug.Log($"第一阶段完成：颜色校正={controlEffects.colorCorrection}, 饱和度={controlEffects.saturation}");
 
         // 第二步：开始其他所有参数的过渡
         elapsedTime = 0;
+        Debug.Log("开始第二阶段：其他参数的过渡");
 
         // 保存颜色校正已经完成后的当前状态
         EffectParameters currentValues = new EffectParameters();
@@ -349,9 +366,12 @@ public class DeathEffectTrigger : MonoBehaviour
 
         // 确保达到精确的目标值
         ApplyParameters(targetValues);
+        Debug.Log("已应用目标值，所有参数过渡完成");
 
         // 保持效果一段时间
+        Debug.Log($"效果将保持 {effectDuration} 秒");
         yield return new WaitForSeconds(effectDuration);
+        Debug.Log("开始恢复参数");
 
         // 平滑过渡回初始值
         // 先恢复除颜色校正外的所有参数
@@ -417,7 +437,9 @@ public class DeathEffectTrigger : MonoBehaviour
         }
 
         // 恢复其他参数后，等待指定时间
+        Debug.Log($"所有其他参数已恢复，颜色校正和饱和度将等待 {colorCorrectionRecoveryDelay} 秒后恢复");
         yield return new WaitForSeconds(colorCorrectionRecoveryDelay);
+        Debug.Log("开始恢复颜色校正和饱和度");
 
         // 最后再平滑恢复颜色校正和饱和度
         elapsedTime = 0;
@@ -457,6 +479,7 @@ public class DeathEffectTrigger : MonoBehaviour
 
         // 禁用ScanLineJitterFeature特性
         controlEffects.DisableScanLineJitterFeature();
+        Debug.Log("特效已完全禁用，效果结束");
 
         isEffectActive = false;
     }
