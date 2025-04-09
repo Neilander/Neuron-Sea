@@ -74,7 +74,6 @@ public class DeathEffectTrigger : MonoBehaviour
     [SerializeField]
     private EffectParameters targetValues = new EffectParameters
     {
-        // 默认设置为图片中的值，与截图匹配
         jitterIntensity = 0.195f,
         jitterFrequency = 64.5f,
         scanLineThickness = 0f,
