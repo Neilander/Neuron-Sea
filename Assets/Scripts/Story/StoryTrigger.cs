@@ -7,7 +7,7 @@ public class StoryTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other){
         if (other.gameObject.tag == "Player") {
-            print("碰到了！！");
+            print("碰到剧情效果触发器了！！");
             // 获取剧情数据资源
             StoryData storyData = Resources.Load<StoryData>("StoryData/IntroStory");
 

@@ -19,7 +19,7 @@ public class FadeController : MonoBehaviour
 
     private float fadeAmount;
 
-    private bool isAnimating = false;
+    // private bool isAnimating = false;
 
     private SpriteRenderer spriteRenderer;
 
