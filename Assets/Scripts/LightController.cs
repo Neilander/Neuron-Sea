@@ -22,7 +22,7 @@ public class LightController : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("LightController Start");
+        // Debug.Log("LightController Start");
         // 初始化所有灯光为关闭状态
         foreach (var light in playerLights)
         {
@@ -56,7 +56,7 @@ public class LightController : MonoBehaviour
     // 当进入触发器时调用
     public void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"OnTriggerEnter2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
+        // Debug.Log($"OnTriggerEnter2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
         if (other.CompareTag("Player"))
         {
             isInTrigger = true;
@@ -69,7 +69,7 @@ public class LightController : MonoBehaviour
     // 当离开触发器时调用
     public void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log($"OnTriggerExit2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
+        // Debug.Log($"OnTriggerExit2D: {other.gameObject.name}, Tag: {other.gameObject.tag}");
         if (other.CompareTag("Player"))
         {
             isInTrigger = false;
