@@ -51,7 +51,9 @@ MonoBehaviour:
   - {fileID: 9107326194022101261}
   - {fileID: 8253623617867631603}
   - {fileID: -4893173975917759724}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc
+  - {fileID: 6869014672113936764}
+  - {fileID: 2826358790675788178}
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc7c294c6073a4535f9271086e583e3927
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -108,6 +110,42 @@ MonoBehaviour:
     type: 2}
   m_DefaultMaskMaterial: {fileID: 2100000, guid: 15d0c3709176029428a0da2f8cecf0b5,
     type: 2}
+--- !u!114 &2826358790675788178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1d670c0c5f44410957c1775e1f23f2, type: 3}
+  m_Name: ScreenLuoXuanRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  patchMaterial: {fileID: 2100000, guid: 015675d4b7bbe4f0c9adcf496c150a1f, type: 2}
+  patchBoxX: 0.183
+  patchBoxY: 0.307
+  patchCenter: {x: 0.5, y: 0.5}
+  waveMun: 1
+  waveStrength: 0.1
+--- !u!114 &6869014672113936764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79956e1daee674fa1b2a20bc397ff231, type: 3}
+  m_Name: ScreenPatchEffectFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  patchMaterial: {fileID: 2100000, guid: 167ef94532e1746fea17b8dacd2df8b1, type: 2}
+  sourceUV: {x: 0.2, y: 0.2}
+  targetUV: {x: 0.5, y: 0.5}
+  patchSize: 100
 --- !u!114 &8253623617867631603
 MonoBehaviour:
   m_ObjectHideFlags: 0

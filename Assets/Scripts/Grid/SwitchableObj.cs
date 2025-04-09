@@ -98,7 +98,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if (col is BoxCollider2D box) {
             hitCount = Physics2D.OverlapBox(
                 (Vector2)checkPosition + box.offset,
-                box.size,
+                box.size*0.9f,
                 box.transform.eulerAngles.z,
                 filter,
                 results
