@@ -119,6 +119,8 @@ public class ControlEffects : MonoBehaviour
 
         // 初始化效果设置
         ApplyDefaultSettings();
+        // 默认禁用渲染特性
+        DisableScanLineJitterFeature();
         // Debug.Log("效果初始化完成");
     }
 
@@ -539,5 +541,37 @@ public class ControlEffects : MonoBehaviour
         saturation = 1.2f;
 
         UpdateEffectSettings();
+    }
+
+    // 启用ScanLineJitterFeature渲染特性
+    public void EnableScanLineJitterFeature()
+    {
+        if (feature == null) return;
+
+        if (!feature.isActive)
+        {
+            // 启用渲染特性
+            feature.SetActive(true);
+            Debug.Log("启用ScanLineJitterFeature");
+        }
+    }
+
+    // 禁用ScanLineJitterFeature渲染特性
+    public void DisableScanLineJitterFeature()
+    {
+        if (feature == null) return;
+
+        if (feature.isActive)
+        {
+            // 禁用渲染特性
+            feature.SetActive(false);
+            Debug.Log("禁用ScanLineJitterFeature");
+        }
+    }
+
+    // 获取渲染特性的活动状态
+    public bool IsFeatureActive()
+    {
+        return feature != null && feature.isActive;
     }
 }

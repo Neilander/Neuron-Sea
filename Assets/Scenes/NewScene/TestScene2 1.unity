@@ -3316,6 +3316,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c1a4fe5f3e37c44bc4bff5c730d117, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorCorrectionPreDelay: 1
+  transitionDuration: 0.5
+  effectDuration: 1
+  colorCorrectionRecoveryDelay: 0
+  initialValues:
+    jitterIntensity: 0
+    jitterFrequency: 0
+    scanLineThickness: 0
+    scanLineSpeed: 0
+    colorShiftIntensity: 0
+    noiseIntensity: 0
+    glitchProbability: 0
+    waveIntensity: 0
+    waveFrequency: 0
+    waveSpeed: 0
+    bwEffect: 0
+    bwNoiseScale: 0
+    bwNoiseIntensity: 0
+    bwFlickerSpeed: 0
+    colorCorrection: 0
+    hueShift: 0
+    saturation: 1
+    brightness: 1
+    contrast: 1
+    redOffset: 0
+    greenOffset: 0
+    blueOffset: 0
+    enableScanLineJitter: 0
+    enableColorShift: 0
+    enableNoise: 0
+    enableGlitch: 0
+    enableWaveEffect: 0
+    enableBlackAndWhite: 0
+  targetValues:
+    jitterIntensity: 0.195
+    jitterFrequency: 100
+    scanLineThickness: 0
+    scanLineSpeed: 4.2
+    colorShiftIntensity: 0
+    noiseIntensity: 0.172
+    glitchProbability: 1
+    waveIntensity: 0
+    waveFrequency: 27
+    waveSpeed: 10
+    bwEffect: 0
+    bwNoiseScale: 15
+    bwNoiseIntensity: 0.2
+    bwFlickerSpeed: 8
+    colorCorrection: 1
+    hueShift: 0
+    saturation: 0
+    brightness: 1
+    contrast: 1
+    redOffset: 0
+    greenOffset: 0
+    blueOffset: 0
+    enableScanLineJitter: 1
+    enableColorShift: 1
+    enableNoise: 1
+    enableGlitch: 1
+    enableWaveEffect: 1
+    enableBlackAndWhite: 1
 --- !u!58 &1432612933
 CircleCollider2D:
   m_ObjectHideFlags: 0
