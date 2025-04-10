@@ -69,7 +69,7 @@ public class distort : ScriptableRendererFeature
     {
         if (distortMaterial == null)
         {
-            Debug.LogError("请指定 ScreenRegionDistort 的材质！");
+            //Debug.LogError("请指定 ScreenRegionDistort 的材质！");
             return;
         }
 
