@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class ControlEffects : MonoBehaviour
 {
-    // URP资源和渲染器数据a
+    // URP资源和渲染器数据
     private UniversalRenderPipelineAsset urpRenderer;
     private Renderer2DData rendererData;
     private ScanLineJitterFeature feature;
