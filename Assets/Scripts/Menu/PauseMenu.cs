@@ -40,7 +40,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SettingGame(){
-        
+        if (volumeCanvas.Instance != null) volumeCanvas.Instance.OpenCanvas();
     }
 
     public void GoToTitle(){

@@ -51,7 +51,10 @@ MonoBehaviour:
   - {fileID: 9107326194022101261}
   - {fileID: 8253623617867631603}
   - {fileID: -4893173975917759724}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc
+  - {fileID: 6869014672113936764}
+  - {fileID: 2826358790675788178}
+  - {fileID: 6814045422367654797}
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc7c294c6073a4535f9271086e583e39278dc39993355a905e
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -108,6 +111,106 @@ MonoBehaviour:
     type: 2}
   m_DefaultMaskMaterial: {fileID: 2100000, guid: 15d0c3709176029428a0da2f8cecf0b5,
     type: 2}
+--- !u!114 &2826358790675788178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1d670c0c5f44410957c1775e1f23f2, type: 3}
+  m_Name: ScreenLuoXuanRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  intermediateMaterial: {fileID: 2100000, guid: 6777fb92cfb1d4246b2a6b8fc0914453,
+    type: 2}
+  patchMaterial: {fileID: 2100000, guid: 015675d4b7bbe4f0c9adcf496c150a1f, type: 2}
+  patchBoxX: 0.183
+  patchBoxY: 0.307
+  patchCenter: {x: 0.5, y: 0.5}
+  waveMun: 1
+  waveStrength: 0.1
+--- !u!114 &6814045422367654797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
+  m_Name: ScanLineJitterFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    renderPassEvent: 550
+    jitterIntensity: 0.000030741874
+    jitterFrequency: 0.015765063
+    scanLineThickness: 0
+    scanLineSpeed: 0.00066213263
+    colorShiftIntensity: 0
+    noiseIntensity: 0.00002711591
+    glitchProbability: 0
+    waveIntensity: 0
+    waveFrequency: 0.004256567
+    waveSpeed: 0.0015765063
+    bwEffect: 0
+    bwNoiseScale: 0.0023647596
+    bwNoiseIntensity: 0.000031530126
+    bwFlickerSpeed: 0.0012612051
+    colorCorrection: 0
+    hueShift: 0
+    saturation: 1
+    brightness: 1
+    contrast: 1
+    redOffset: 0
+    greenOffset: 0
+    blueOffset: 0
+    subtleGlitchPreset: 0
+    mediumGlitchPreset: 0
+    intenseGlitchPreset: 0
+    waveOnlyPreset: 0
+    blackAndWhitePreset: 0
+    waveBlackAndWhitePreset: 0
+    fixPinkColorPreset: 0
+--- !u!114 &6869014672113936764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79956e1daee674fa1b2a20bc397ff231, type: 3}
+  m_Name: ScreenPatchEffectFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  patchMaterial: {fileID: 2100000, guid: 167ef94532e1746fea17b8dacd2df8b1, type: 2}
+  sourceUV: {x: 0.2, y: 0.2}
+  targetUV: {x: 0.5, y: 0.5}
+  patchSize: 100
+--- !u!114 &7484797265902187775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cc199acb7b2144e1944961abe92a071, type: 3}
+  m_Name: distort
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  distortMaterial: {fileID: 0}
+  effectCenter: {x: 0.5, y: 0.5}
+  patchBox: {x: 0.3, y: 0.3}
+  waveMun: 20
+  waveStrength: 0.03
 --- !u!114 &8253623617867631603
 MonoBehaviour:
   m_ObjectHideFlags: 0
