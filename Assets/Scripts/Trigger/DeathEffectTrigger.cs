@@ -408,7 +408,7 @@ public class DeathEffectTrigger : MonoBehaviour
             {
                 float currentFade = Mathf.Lerp(0f, 1f, smoothT);
                 playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
-                Debug.Log($"GlitchFade 渐变中: {currentFade:F2}");
+                // Debug.Log($"GlitchFade 渐变中: {currentFade:F2}");
             }
 
             elapsedTime += Time.deltaTime;
@@ -548,7 +548,7 @@ public class DeathEffectTrigger : MonoBehaviour
             {
                 float currentFade = Mathf.Lerp(1f, 0f, smoothT);
                 playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
-                Debug.Log($"GlitchFade 恢复中: {currentFade:F2}");
+                // Debug.Log($"GlitchFade 恢复中: {currentFade:F2}");
             }
 
             elapsedTime += Time.deltaTime;
@@ -569,7 +569,7 @@ public class DeathEffectTrigger : MonoBehaviour
             Debug.Log("已恢复原始材质");
         }
 
-        
+
 
         // 平滑过渡回初始值
         // 先恢复除颜色校正外的所有参数
@@ -682,7 +682,8 @@ public class DeathEffectTrigger : MonoBehaviour
         // 等待一帧确保ScanLineJitterFeature完全禁用
         yield return new WaitForEndOfFrame();
         // 恢复玩家移动
-        if (playerController != null) {
+        if (playerController != null)
+        {
             playerController.EnableMovement();
             Debug.Log("已恢复玩家移动能力");
         }
