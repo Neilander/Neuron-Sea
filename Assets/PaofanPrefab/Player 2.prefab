@@ -308,7 +308,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  jumpForce: 20
+  jumpForce: 18
+  maxFallSpeed: -10
+  extraJumpAllowTime: 0.1
   collider: {fileID: 6146294706506608899}
   deviation: 0.02
   groundLayer:
