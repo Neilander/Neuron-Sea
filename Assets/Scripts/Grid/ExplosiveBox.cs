@@ -156,10 +156,10 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
                 PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
             }
             else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject) {
-                Destroy(hit.gameObject);
+                GridManager.Instance.DestroySwitchable(hit.GetComponent<SwitchableObj>());
             }
         }
-        Destroy(gameObject);
+        GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
     }
 
     private void SetAlpha(float a){

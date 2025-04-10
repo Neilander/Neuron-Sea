@@ -442,6 +442,19 @@ public class GridManager : MonoBehaviour
         return fromCanMove && toCanMove;
     }
 
+    //销毁所有的switchable都要通过这个
+    public void DestroySwitchable(SwitchableObj obj)
+    {
+        if (switchInfoRecorder.Take(obj))
+        {
+            if (switchInfoRecorder.hasFirst)
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+            if (switchInfoRecorder.hasSecond)
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+        }
+        Destroy(obj.gameObject);
+    }
+
     #endregion
 }
 
