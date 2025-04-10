@@ -3200,6 +3200,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8828224205428567915, guid: c382d05ad8158bd459207ea4e4f38bcc,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6659199518132553981, guid: c382d05ad8158bd459207ea4e4f38bcc, type: 3}
@@ -3330,6 +3335,7 @@ MonoBehaviour:
   transitionDuration: 0.5
   effectDuration: 1
   colorCorrectionRecoveryDelay: 0
+  deathEffectMaterial: {fileID: 2100000, guid: 77598294732a6d648b5031365f9a5b0b, type: 2}
   initialValues:
     jitterIntensity: 0
     jitterFrequency: 0

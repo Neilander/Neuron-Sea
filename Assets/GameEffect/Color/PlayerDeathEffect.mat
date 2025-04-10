@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\u4EBA\u7269\u6B7B\u4EA1\u7279\u6548"
+  m_Name: PlayerDeathEffect
   m_Shader: {fileID: 4800000, guid: 0803c241834332942abfcbd27c498b46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -221,10 +221,10 @@ Material:
     - _FullFade: 1
     - _FullGlowDissolveFade: 0.5
     - _FullGlowDissolveWidth: 0.5
-    - _GlitchBrightness: 6.17
-    - _GlitchFade: 1
+    - _GlitchBrightness: 4
+    - _GlitchFade: 0
     - _GlitchHueSpeed: 0
-    - _GlitchMaskMin: 0.57
+    - _GlitchMaskMin: 0.289
     - _HalftoneFade: 1
     - _HalftoneFadeWidth: 1.5
     - _HalftoneInvert: 0
@@ -390,13 +390,13 @@ Material:
     - _FullDistortionNoiseScale: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _FullGlowDissolveEdgeColor: {r: 11.98431, g: 0.627451, b: 0.627451, a: 0}
     - _FullGlowDissolveNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
-    - _GlitchDistortion: {r: 0.58, g: -0.2, b: 0, a: 0}
-    - _GlitchDistortionScale: {r: -0.31, g: 3, b: 0, a: 0}
-    - _GlitchDistortionSpeed: {r: 0.66, g: 1, b: 0, a: 0}
-    - _GlitchMaskScale: {r: 0.41, g: 0.2, b: 0, a: 0}
-    - _GlitchMaskSpeed: {r: 0.62, g: 4, b: 0, a: 0}
-    - _GlitchNoiseScale: {r: -5.16, g: 3, b: 0, a: 0}
-    - _GlitchNoiseSpeed: {r: -2.27, g: 1, b: 0, a: 0}
+    - _GlitchDistortion: {r: 0.1, g: 0, b: 0, a: 0}
+    - _GlitchDistortionScale: {r: 0, g: 3, b: 0, a: 0}
+    - _GlitchDistortionSpeed: {r: 0, g: 1, b: 0, a: 0}
+    - _GlitchMaskScale: {r: 0, g: 0.2, b: 0, a: 0}
+    - _GlitchMaskSpeed: {r: 0, g: 4, b: 0, a: 0}
+    - _GlitchNoiseScale: {r: 0, g: 3, b: 0, a: 0}
+    - _GlitchNoiseSpeed: {r: 0, g: 1, b: 0, a: 0}
     - _HalftonePosition: {r: 0, g: 0, b: 0, a: 0}
     - _HologramTint: {r: 0.3137255, g: 1.662745, b: 2.996078, a: 1}
     - _InkSpreadColor: {r: 8.47419, g: 5.013525, b: 0.08873497, a: 0}
