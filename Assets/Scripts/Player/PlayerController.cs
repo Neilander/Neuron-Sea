@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -79,6 +80,8 @@ public class PlayerController : MonoBehaviour
 
     private bool canMove = true; // 新增：控制是否可以移动的状态
 
+    [HideInInspector] public UnityEvent OnTabSelected = new UnityEvent();
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -93,7 +96,7 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         //GridManager.Instance.LogTimeAction();
 
-        
+
     }
 
     private void FixedUpdate()
