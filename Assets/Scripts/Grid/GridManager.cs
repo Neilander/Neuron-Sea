@@ -128,13 +128,29 @@ public class GridManager : MonoBehaviour
                     StartState(SwitchState.Switch);
                 }
 
-                if (Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
+                if (switchInfoRecorder.IfHaveBoth())
                 {
-                    if (switchInfoRecorder.IfHaveBoth() && ifLegalMove)
-                        ShiftSwitch();
+                    if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                        ifLegalMove = true;
+                    }
+                    else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
+                        ifLegalMove = false;
+                    }
 
+                    if (ifLegalMove)
+                    {
+                        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+                            ShiftSwitch();
+                    }
                 }
 
+               
                 /*
                 if (Input.GetMouseButtonDown(0) && CanEnterSwitchState()) // 你需要自定义这个判断方法
                 {
