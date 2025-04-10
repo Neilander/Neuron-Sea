@@ -124,6 +124,8 @@ MonoBehaviour:
   m_Name: ScreenLuoXuanRenderFeature
   m_EditorClassIdentifier: 
   m_Active: 0
+  intermediateMaterial: {fileID: 2100000, guid: 6777fb92cfb1d4246b2a6b8fc0914453,
+    type: 2}
   patchMaterial: {fileID: 2100000, guid: 015675d4b7bbe4f0c9adcf496c150a1f, type: 2}
   patchBoxX: 0.183
   patchBoxY: 0.307
@@ -191,6 +193,24 @@ MonoBehaviour:
   sourceUV: {x: 0.2, y: 0.2}
   targetUV: {x: 0.5, y: 0.5}
   patchSize: 100
+--- !u!114 &7484797265902187775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cc199acb7b2144e1944961abe92a071, type: 3}
+  m_Name: distort
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  distortMaterial: {fileID: 0}
+  effectCenter: {x: 0.5, y: 0.5}
+  patchBox: {x: 0.3, y: 0.3}
+  waveMun: 20
+  waveStrength: 0.03
 --- !u!114 &8253623617867631603
 MonoBehaviour:
   m_ObjectHideFlags: 0

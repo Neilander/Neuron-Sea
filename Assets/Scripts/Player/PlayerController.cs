@@ -92,6 +92,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         //GridManager.Instance.LogTimeAction();
+
+        
     }
 
     private void FixedUpdate()
