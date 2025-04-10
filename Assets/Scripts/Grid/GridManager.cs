@@ -41,7 +41,7 @@ public class GridManager : MonoBehaviour
     private SwitchableObj tempSwitchableObj;
     private bool ifLegalMove = false;
 
-    private int switchTime = 0;
+    public int SwitchTime{ get; private set; }
 
     private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
     
@@ -106,7 +106,7 @@ public class GridManager : MonoBehaviour
 
     [Header("测试用")] [SerializeField] private Vector3 testPosition;
 
-    public void LogTimeAction() { Debug.Log("logSwitchTime"+switchTime); }
+    public void LogTimeAction() { Debug.Log("logSwitchTime"+SwitchTime); }
 
     [SerializeField] private bool doTestGetPos = false;
     private void Update(){
@@ -374,7 +374,7 @@ public class GridManager : MonoBehaviour
 
     private void ShiftSwitch()
     {
-        switchTime += 1;
+        SwitchTime += 1;
         Vector3 tempPos = switchInfoRecorder.obj1.SelfGridPos;
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);

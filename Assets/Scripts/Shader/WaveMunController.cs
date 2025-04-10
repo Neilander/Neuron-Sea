@@ -7,7 +7,7 @@ public class WaveMunController : MonoBehaviour
     [SerializeField]
     private Material targetMaterial; // 目标材质
 
-    [SerializeField] private float cycleSpeed = 22f; // 循环速度
+    // [SerializeField] private float cycleSpeed = 22f; // 循环速度
 
     [SerializeField] private string propertyName = "_WaveMun"; // 属性名称
 

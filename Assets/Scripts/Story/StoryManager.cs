@@ -22,6 +22,11 @@ public class StoryManager : MonoBehaviour
     [Header("游戏状态设置")]
     [SerializeField] private GameState currentState = GameState.ActionMode;
     [SerializeField] private PlayerController playerController; // 玩家控制器引用
+    private Rigidbody2D playerRigidbody; // 玩家刚体引用
+    private Vector2 savedVelocity; // 保存玩家的速度
+    private bool wasKinematic; // 保存刚体的运动学状态
+    private bool isWaitingForLanding = false; // 是否正在等待玩家落地
+    private StoryData pendingStoryData;
 
     [Header("对话系统设置")]
     [SerializeField] private GameObject dialoguePanel; // 对话面板
@@ -60,7 +65,16 @@ public class StoryManager : MonoBehaviour
             playerController = FindObjectOfType<PlayerController>();
             if (playerController == null)
             {
-                Debug.LogError("未找到PlayerController组件！");
+                Debug.LogWarning("无法找到 PlayerController！部分功能可能无法正常工作。");
+            }
+            else
+            {
+                // 获取玩家的Rigidbody2D组件
+                playerRigidbody = playerController.GetComponent<Rigidbody2D>();
+                if (playerRigidbody == null)
+                {
+                    Debug.LogError("玩家对象上未找到Rigidbody2D组件！");
+                }
             }
         }
 
@@ -102,10 +116,18 @@ public class StoryManager : MonoBehaviour
         // 切换到剧情模式
         currentState = GameState.StoryMode;
 
-        // 禁用玩家控制器
+        // 如果玩家在地面上，立即禁用移动
+        // 如果玩家在空中，等待落地后再禁用移动
         if (playerController != null)
         {
-            playerController.enabled = false;
+            if (playerController.IsGrounded())
+            {
+                playerController.DisableMovement();
+            }
+            else
+            {
+                StartCoroutine(WaitForLandingToDisableMovement());
+            }
         }
 
         // 触发进入剧情模式事件
@@ -113,6 +135,25 @@ public class StoryManager : MonoBehaviour
 
         // 开始对话
         StartDialogue();
+    }
+
+    /// <summary>
+    /// 等待玩家落地后禁用移动
+    /// </summary>
+    private IEnumerator WaitForLandingToDisableMovement()
+    {
+        while (playerController != null && !playerController.IsGrounded())
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // 等待一帧确保完全落地
+        yield return null;
+
+        if (playerController != null && currentState == GameState.StoryMode)
+        {
+            playerController.DisableMovement();
+        }
     }
 
     /// <summary>
@@ -132,10 +173,10 @@ public class StoryManager : MonoBehaviour
         // 切换到动作模式
         currentState = GameState.ActionMode;
 
-        // 启用玩家控制器
+        // 启用玩家移动
         if (playerController != null)
         {
-            playerController.enabled = true;
+            playerController.EnableMovement();
         }
 
         // 触发退出剧情模式事件
@@ -241,5 +282,43 @@ public class StoryManager : MonoBehaviour
     public GameState GetCurrentState()
     {
         return currentState;
+    }
+
+    /// <summary>
+    /// 等待玩家落地后进入剧情模式
+    /// </summary>
+    /// <param name="storyData">要执行的剧情数据</param>
+    public void WaitForLandingThenEnterStoryMode(StoryData storyData)
+    {
+        if (playerController == null)
+        {
+            Debug.LogError("PlayerController 未找到，无法等待落地！");
+            return;
+        }
+
+        if (isWaitingForLanding)
+        {
+            Debug.LogWarning("已经在等待玩家落地，请勿重复调用！");
+            return;
+        }
+
+        pendingStoryData = storyData;
+        isWaitingForLanding = true;
+        StartCoroutine(CheckForLanding());
+    }
+
+    private IEnumerator CheckForLanding()
+    {
+        while (!playerController.IsGrounded())
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // 等待一帧确保完全落地
+        yield return null;
+
+        isWaitingForLanding = false;
+        EnterStoryMode(pendingStoryData);
+        pendingStoryData = null;
     }
 }

@@ -11,45 +11,74 @@ public class ControlEffects : MonoBehaviour
     private Renderer2DData rendererData;
     private ScanLineJitterFeature feature;
 
-    // Inspector中显示的参数
+    [Header("效果开关")]
+    public bool enableScanLineJitter = true;
+    public bool enableColorShift = true;
+    public bool enableNoise = true;
+    public bool enableGlitch = true;
+    public bool enableWaveEffect = true;
+    public bool enableBlackAndWhite = true;
+
     [Header("扫描线抖动效果")]
     [Range(0, 1)]
-    public float jitterIntensity = 0.2f;
-
-    [Range(0, 10)]
-    public float jitterFrequency = 5f;
-
-    [Range(0, 2)]
-    public float scanLineThickness = 1f;
-
-    [Range(0, 2)]
-    public float scanLineSpeed = 0.5f;
+    public float jitterIntensity = 0.195f;
+    [Range(0, 100)]
+    public float jitterFrequency = 6f;
+    [Range(0, 5)]
+    public float scanLineThickness = 0f;
+    [Range(0, 5)]
+    public float scanLineSpeed = 4.2f;
 
     [Header("颜色效果")]
-    [Range(0, 0.1f)]
-    public float colorShiftIntensity = 0.02f;
+    [Range(0, 1)]
+    public float colorShiftIntensity = 0.05f;
+    [Range(0, 1)]
+    public float noiseIntensity = 0.1f;
+    [Range(0, 1)]
+    public float glitchProbability = 0.05f;
 
-    [Range(0, 0.1f)]
-    public float noiseIntensity = 0.05f;
+    [Header("波浪效果")]
+    [Range(0, 1)]
+    public float waveIntensity = 0.2f;
+    [Range(0, 20)]
+    public float waveFrequency = 10f;
+    [Range(0, 5)]
+    public float waveSpeed = 2f;
 
-    [Range(0, 0.1f)]
-    public float glitchProbability = 0.02f;
+    [Header("黑白效果")]
+    [Range(0, 1)]
+    public float bwEffect = 0f;
+    [Range(0, 20)]
+    public float bwNoiseScale = 10f;
+    [Range(0, 1)]
+    public float bwNoiseIntensity = 0.2f;
+    [Range(0, 10)]
+    public float bwFlickerSpeed = 5f;
 
+    [Header("颜色校正")]
+    [Range(-1, 1)]
+    public float colorCorrection = 0f;
+    [Range(-1, 1)]
+    public float hueShift = 0f;
+    [Range(0, 2)]
+    public float saturation = 1f;
+    [Range(0, 2)]
+    public float brightness = 1f;
+    [Range(0, 2)]
+    public float contrast = 1f;
+    [Range(-1, 1)]
+    public float redOffset = 0f;
+    [Range(-1, 1)]
+    public float greenOffset = 0f;
+    [Range(-1, 1)]
+    public float blueOffset = 0f;
+
+    // Inspector中显示的参数
     [Header("预设")]
     public bool subtleGlitchPreset = true;
     public bool intenseGlitchPreset = false;
     public bool colorShiftPreset = false;
     public bool noisePreset = false;
-
-    [Header("波浪效果")]
-    public bool enableWaveEffect = false;
-    [Range(0, 1)]
-    public float waveIntensity = 0.2f;
-
-    [Header("黑白效果")]
-    public bool enableBlackAndWhite = false;
-    [Range(0, 1)]
-    public float blackAndWhiteIntensity = 0.5f;
 
     void Start()
     {
@@ -62,7 +91,7 @@ public class ControlEffects : MonoBehaviour
             return;
         }
 
-        Debug.Log("成功获取URP资源");
+        // Debug.Log("成功获取URP资源");
 
         // 获取渲染器数据
         rendererData = GetRendererData();
@@ -75,7 +104,7 @@ public class ControlEffects : MonoBehaviour
             return;
         }
 
-        Debug.Log("成功获取渲染器数据");
+        // Debug.Log("成功获取渲染器数据");
 
         // 获取特效组件
         feature = GetRendererFeature<ScanLineJitterFeature>();
@@ -86,11 +115,13 @@ public class ControlEffects : MonoBehaviour
             return;
         }
 
-        Debug.Log("成功获取ScanLineJitterFeature");
+        // Debug.Log("成功获取ScanLineJitterFeature");
 
         // 初始化效果设置
         ApplyDefaultSettings();
-        Debug.Log("效果初始化完成");
+        // 默认禁用渲染特性
+        DisableScanLineJitterFeature();
+        // Debug.Log("效果初始化完成");
     }
 
     void Update()
@@ -105,22 +136,34 @@ public class ControlEffects : MonoBehaviour
         if (feature == null) return;
 
         // 基本参数
-        feature.settings.jitterIntensity = jitterIntensity;
+        feature.settings.jitterIntensity = enableScanLineJitter ? jitterIntensity : 0f;
         feature.settings.jitterFrequency = jitterFrequency;
         feature.settings.scanLineThickness = scanLineThickness;
         feature.settings.scanLineSpeed = scanLineSpeed;
-        feature.settings.colorShiftIntensity = colorShiftIntensity;
-        feature.settings.noiseIntensity = noiseIntensity;
-        feature.settings.glitchProbability = glitchProbability;
-
-        // 预设
-        feature.settings.subtleGlitchPreset = subtleGlitchPreset;
-        feature.settings.intenseGlitchPreset = intenseGlitchPreset;
+        feature.settings.colorShiftIntensity = enableColorShift ? colorShiftIntensity : 0f;
+        feature.settings.noiseIntensity = enableNoise ? noiseIntensity : 0f;
+        feature.settings.glitchProbability = enableGlitch ? glitchProbability : 0f;
 
         // 波浪效果
-        feature.settings.waveIntensity = waveIntensity;
+        feature.settings.waveIntensity = enableWaveEffect ? waveIntensity : 0f;
+        feature.settings.waveFrequency = waveFrequency;
+        feature.settings.waveSpeed = waveSpeed;
 
         // 黑白效果
+        feature.settings.bwEffect = enableBlackAndWhite ? bwEffect : 0f;
+        feature.settings.bwNoiseScale = bwNoiseScale;
+        feature.settings.bwNoiseIntensity = bwNoiseIntensity;
+        feature.settings.bwFlickerSpeed = bwFlickerSpeed;
+
+        // 颜色校正
+        feature.settings.colorCorrection = colorCorrection;
+        feature.settings.hueShift = hueShift;
+        feature.settings.saturation = saturation;
+        feature.settings.brightness = brightness;
+        feature.settings.contrast = contrast;
+        feature.settings.redOffset = redOffset;
+        feature.settings.greenOffset = greenOffset;
+        feature.settings.blueOffset = blueOffset;
     }
 
     private Renderer2DData GetRendererData()
@@ -155,12 +198,12 @@ public class ControlEffects : MonoBehaviour
         }
 
         // 打印一下渲染器数据列表的信息，以便调试
-        Debug.Log($"渲染器数据列表包含 {rendererDataList.Length} 个渲染器");
+        // Debug.Log($"渲染器数据列表包含 {rendererDataList.Length} 个渲染器");
         for (int i = 0; i < rendererDataList.Length; i++)
         {
             if (rendererDataList[i] != null)
             {
-                Debug.Log($"渲染器 {i}: {rendererDataList[i].GetType().Name}");
+                // Debug.Log($"渲染器 {i}: {rendererDataList[i].GetType().Name}");
             }
             else
             {
@@ -231,11 +274,23 @@ public class ControlEffects : MonoBehaviour
             noiseIntensity = feature.settings.noiseIntensity;
             glitchProbability = feature.settings.glitchProbability;
 
-            subtleGlitchPreset = feature.settings.subtleGlitchPreset;
-            intenseGlitchPreset = feature.settings.intenseGlitchPreset;
-
             waveIntensity = feature.settings.waveIntensity;
+            waveFrequency = feature.settings.waveFrequency;
+            waveSpeed = feature.settings.waveSpeed;
 
+            bwEffect = feature.settings.bwEffect;
+            bwNoiseScale = feature.settings.bwNoiseScale;
+            bwNoiseIntensity = feature.settings.bwNoiseIntensity;
+            bwFlickerSpeed = feature.settings.bwFlickerSpeed;
+
+            colorCorrection = feature.settings.colorCorrection;
+            hueShift = feature.settings.hueShift;
+            saturation = feature.settings.saturation;
+            brightness = feature.settings.brightness;
+            contrast = feature.settings.contrast;
+            redOffset = feature.settings.redOffset;
+            greenOffset = feature.settings.greenOffset;
+            blueOffset = feature.settings.blueOffset;
         }
     }
 
@@ -363,7 +418,10 @@ public class ControlEffects : MonoBehaviour
 
         enableWaveEffect = false;
         enableBlackAndWhite = true;
-        blackAndWhiteIntensity = 0.8f;
+        bwEffect = 0.8f;
+        bwNoiseScale = 10f;
+        bwNoiseIntensity = 0.2f;
+        bwFlickerSpeed = 5f;
 
         UpdateEffectSettings();
     }
@@ -387,8 +445,143 @@ public class ControlEffects : MonoBehaviour
         enableWaveEffect = false;
         waveIntensity = 0.0f;
         enableBlackAndWhite = false;
-        blackAndWhiteIntensity = 0.0f;
+        bwEffect = 0f;
+        bwNoiseScale = 10f;
+        bwNoiseIntensity = 0.2f;
+        bwFlickerSpeed = 5f;
 
         UpdateEffectSettings();
+    }
+
+    [ContextMenu("应用默认扫描线效果")]
+    public void ApplyScanLineEffect()
+    {
+        enableScanLineJitter = true;
+        enableColorShift = false;
+        enableNoise = false;
+        enableGlitch = false;
+        enableWaveEffect = false;
+        enableBlackAndWhite = false;
+
+        jitterIntensity = 0.1f;
+        jitterFrequency = 10f;
+        scanLineThickness = 2f;
+        scanLineSpeed = 1f;
+
+        UpdateEffectSettings();
+    }
+
+    [ContextMenu("应用波浪扫描效果")]
+    public void ApplyWaveScanEffect()
+    {
+        enableScanLineJitter = true;
+        enableColorShift = false;
+        enableNoise = false;
+        enableGlitch = false;
+        enableWaveEffect = true;
+        enableBlackAndWhite = false;
+
+        jitterIntensity = 0.1f;
+        jitterFrequency = 10f;
+        scanLineThickness = 2f;
+        scanLineSpeed = 1f;
+        waveIntensity = 0.2f;
+        waveFrequency = 10f;
+        waveSpeed = 2f;
+
+        UpdateEffectSettings();
+    }
+
+    [ContextMenu("应用复古电影效果")]
+    public void ApplyVintageEffect()
+    {
+        enableScanLineJitter = true;
+        enableColorShift = false;
+        enableNoise = true;
+        enableGlitch = false;
+        enableWaveEffect = false;
+        enableBlackAndWhite = true;
+
+        jitterIntensity = 0.1f;
+        jitterFrequency = 10f;
+        scanLineThickness = 2f;
+        scanLineSpeed = 1f;
+        noiseIntensity = 0.1f;
+        bwEffect = 1f;
+        bwNoiseScale = 10f;
+        bwNoiseIntensity = 0.2f;
+        bwFlickerSpeed = 5f;
+        contrast = 1.2f;
+        brightness = 0.9f;
+
+        UpdateEffectSettings();
+    }
+
+    [ContextMenu("应用故障艺术效果")]
+    public void ApplyGlitchArtEffect()
+    {
+        enableScanLineJitter = true;
+        enableColorShift = true;
+        enableNoise = true;
+        enableGlitch = true;
+        enableWaveEffect = true;
+        enableBlackAndWhite = false;
+
+        jitterIntensity = 0.1f;
+        jitterFrequency = 10f;
+        scanLineThickness = 2f;
+        scanLineSpeed = 1f;
+        colorShiftIntensity = 0.05f;
+        noiseIntensity = 0.1f;
+        glitchProbability = 0.05f;
+        waveIntensity = 0.2f;
+        waveFrequency = 10f;
+        waveSpeed = 2f;
+        hueShift = 0.2f;
+        saturation = 1.2f;
+
+        UpdateEffectSettings();
+    }
+
+    // 提供公共方法给外部调用，确保特效设置被立即更新
+    public void ForceUpdateEffects()
+    {
+        UpdateEffectSettings();
+        if (feature != null && !feature.isActive)
+        {
+            Debug.LogWarning("特效参数已更新，但渲染特性当前是禁用状态！");
+        }
+    }
+
+    // 启用ScanLineJitterFeature渲染特性
+    public void EnableScanLineJitterFeature()
+    {
+        if (feature == null) return;
+
+        if (!feature.isActive)
+        {
+            // 启用渲染特性
+            feature.SetActive(true);
+            Debug.Log("启用ScanLineJitterFeature");
+        }
+    }
+
+    // 禁用ScanLineJitterFeature渲染特性
+    public void DisableScanLineJitterFeature()
+    {
+        if (feature == null) return;
+
+        if (feature.isActive)
+        {
+            // 禁用渲染特性
+            feature.SetActive(false);
+            Debug.Log("禁用ScanLineJitterFeature");
+        }
+    }
+
+    // 获取渲染特性的活动状态
+    public bool IsFeatureActive()
+    {
+        return feature != null && feature.isActive;
     }
 }

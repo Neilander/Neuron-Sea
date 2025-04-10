@@ -46,14 +46,13 @@ public class CompanionController : MonoBehaviour
             targetSpriteRenderer = target.GetComponent<SpriteRenderer>();
         }
 
-        if (animator != null)
+        if (animator == null)
         {
             animator = GetComponent<Animator>();
-            
-                
-            
-        }else{
-            Debug.LogWarning("未找到Animator组件！");
+            if (animator == null)
+            {
+                Debug.LogWarning("未找到Animator组件！");
+            }
         }
 
         lastPosition = transform.position;

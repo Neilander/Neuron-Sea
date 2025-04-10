@@ -39,11 +39,14 @@ public class BeginPanel : MonoBehaviour
     }
 
     public void Volume(){
+        volumeCanvas.Instance.OpenCanvas();
+
+        /*
         if(isRed){
             img.color = new Color(255, 255, 255);
         }
         else {
             img.color = new Color(255, 192, 203);
-        }
+        }*/
     }
 }

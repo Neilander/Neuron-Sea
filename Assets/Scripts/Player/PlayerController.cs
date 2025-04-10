@@ -76,12 +76,15 @@ public class PlayerController : MonoBehaviour
 
     private float CurrentYSpeed;
     #endregion
+
+    private bool canMove = true; // 新增：控制是否可以移动的状态
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
-        if(ifGetControlledOutside == null)ifGetControlledOutside = new BoolRefresher(1);
+        if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
     }
 
     private void Update()
@@ -89,11 +92,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         //GridManager.Instance.LogTimeAction();
+
+        
     }
 
     private void FixedUpdate()
     {
-
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         if (rb.velocity.y < maxFallSpeed)
@@ -103,12 +107,19 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
         }
         CurrentYSpeed = rb.velocity.y;
-        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1) {
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
+        {
             CurrentYSpeed = 0;
         }
-        // print(CurrentYSpeed);
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
+
+        if (!canMove) // 新增：如果不能移动，直接停止所有移动
+        {
+            rb.velocity = Vector2.zero;
+            animator.SetFloat("Speed", 0);
+            return;
+        }
 
         if (ifGetControlledOutside.Get())
         {
@@ -123,7 +134,6 @@ public class PlayerController : MonoBehaviour
         }
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
-        // HandleWallCollision();
     }
 
     private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }
@@ -225,7 +235,7 @@ public class PlayerController : MonoBehaviour
     {
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
         ifGetControlledOutside.Refresh(time);
-        this.controlInput = Mathf.Clamp(controlInput,0,1) ;
+        this.controlInput = Mathf.Clamp(controlInput, 0, 1);
     }
 
     private void MoveInControl()
@@ -304,6 +314,28 @@ public class PlayerController : MonoBehaviour
         previousSpeed = currentSpeed;
     }
     #endregion
+
+    // 新增：禁用移动的公共方法
+    public void DisableMovement()
+    {
+        canMove = false;
+        rb.velocity = Vector2.zero; // 立即停止所有移动
+        rb.isKinematic = true; // 防止物理影响
+        animator.SetFloat("Speed", 0); // 重置动画
+    }
+
+    // 新增：启用移动的公共方法
+    public void EnableMovement()
+    {
+        canMove = true;
+        rb.isKinematic = false; // 恢复物理系统
+    }
+
+    // 新增：获取是否在地面上的公共方法
+    public bool IsGrounded()
+    {
+        return isGrounded;
+    }
 }
 
 
