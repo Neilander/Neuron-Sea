@@ -340,6 +340,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         {
             ifEnableSwitch = false;
             anchorSprite.SetActive(false);
+            GridManager.Instance.ReleaseSelection(this);
         }
         else
         {

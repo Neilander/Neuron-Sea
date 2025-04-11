@@ -19,9 +19,9 @@ public class GridManager : MonoBehaviour
 
     [Header("格子数据调整")] public int gridWidth = 1;
 
-    [SerializeField] [Range(0, 1)] private float offsetX = 0;
+    [SerializeField][Range(0, 1)] private float offsetX = 0;
 
-    [SerializeField] [Range(0, 1)] private float offsetY = 0;
+    [SerializeField][Range(0, 1)] private float offsetY = 0;
 
     [SerializeField] private Vector2 displayAmount = new Vector2(10, 10);
 
@@ -41,13 +41,13 @@ public class GridManager : MonoBehaviour
     private SwitchableObj tempSwitchableObj;
     private bool ifLegalMove = false;
 
-    public int SwitchTime{ get; private set; }
+    public int SwitchTime { get; private set; }
 
     private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
-    
+
 
     //这部分是在编辑器中绘制网格
-    private void OnDrawGizmos(){
+    private void OnDrawGizmos() {
         if (!displayInGizmos) return;
         if (displayCenter == null) return;
 
@@ -83,7 +83,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void OnEnable(){
+    private void OnEnable() {
 #if UNITY_EDITOR
         // 编辑器状态下（不是播放或将要播放）
         if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) {
@@ -104,13 +104,13 @@ public class GridManager : MonoBehaviour
     }
 
 
-    [Header("测试用")] [SerializeField] private Vector3 testPosition;
+    [Header("测试用")][SerializeField] private Vector3 testPosition;
 
-    public void LogTimeAction() { Debug.Log("logSwitchTime"+SwitchTime); }
+    public void LogTimeAction() { Debug.Log("logSwitchTime" + SwitchTime); }
 
     [SerializeField] private bool doTestGetPos = false;
-    private void Update(){
-        
+    private void Update() {
+
 
         //编辑器中也会触发
         if (doTestGetPos) {
@@ -128,12 +128,28 @@ public class GridManager : MonoBehaviour
                     StartState(SwitchState.Switch);
                 }
 
-                if (Input.GetKeyDown(KeyCode.LeftShift)|| Input.GetKeyDown(KeyCode.RightShift))
+                if (switchInfoRecorder.IfHaveBoth())
                 {
-                    if (switchInfoRecorder.IfHaveBoth() && ifLegalMove)
-                        ShiftSwitch();
+                    if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                        ifLegalMove = true;
+                    }
+                    else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
+                        ifLegalMove = false;
+                    }
 
+                    if (ifLegalMove)
+                    {
+                        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+                            ShiftSwitch();
+                    }
                 }
+
 
                 /*
                 if (Input.GetMouseButtonDown(0) && CanEnterSwitchState()) // 你需要自定义这个判断方法
@@ -241,12 +257,12 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if(Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyDown(KeyCode.Q))
                 {
                     StartState(SwitchState.None);
 
                 }
-                
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     SwitchableObj tryGet;
@@ -256,7 +272,7 @@ public class GridManager : MonoBehaviour
                         if (switchInfoRecorder.Take(tryGet))
                         {
                             tryGet.SetLockedToSwitch(false, true);
-                            if(switchInfoRecorder.hasFirst)
+                            if (switchInfoRecorder.hasFirst)
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
                             if (switchInfoRecorder.hasSecond)
                                 switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
@@ -270,7 +286,7 @@ public class GridManager : MonoBehaviour
                             }
                             if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                             {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true,false);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, false);
                                 switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
                                 ifLegalMove = false;
                             }
@@ -282,9 +298,9 @@ public class GridManager : MonoBehaviour
                                     ifLegalMove = true;
                                     switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
                                 }
-                                
+
                             }
-                           
+
                         }
                     }
                 }
@@ -299,16 +315,16 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void StartNoneState(){
+    private void StartNoneState() {
         StartState(SwitchState.None);
     }
 
-    public void StartState(SwitchState state){
+    public void StartState(SwitchState state) {
         EndState(curState);
 
         switch (state) {
             case SwitchState.None:
-                
+
                 Debug.Log("进入none state");
                 break;
             case SwitchState.Switch:
@@ -334,7 +350,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-    public Vector3 GetClosestGridPoint(Vector3 position){
+    public Vector3 GetClosestGridPoint(Vector3 position) {
         Vector3 closestPoint = new Vector3(
             Mathf.Round(position.x - offsetX / gridWidth) * gridWidth + offsetX,
             Mathf.Round(position.y - offsetY / gridWidth) * gridWidth + offsetY,
@@ -345,18 +361,18 @@ public class GridManager : MonoBehaviour
 
     #region 交换物体
 
-    
 
-    private bool CanEnterSwitchState(){
+
+    private bool CanEnterSwitchState() {
         return true;
     }
 
-    void ReportSwitchableObj(SwitchableObj obj, bool isFrom){
+    void ReportSwitchableObj(SwitchableObj obj, bool isFrom) {
         if (isFrom) {
             switchableObjFrom = obj;
         }
         else {
-            
+
             getBothTarget = true;
         }
     }
@@ -380,14 +396,14 @@ public class GridManager : MonoBehaviour
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
     }
 
-    private void ClearSwitchableObj(){
+    private void ClearSwitchableObj() {
         switchableObjFrom = null;
-       
+
         tempSwitchableObj = null;
         getBothTarget = false;
     }
 
-    public void CountDown(){
+    public void CountDown() {
         counter.CountDown();
     }
 
@@ -406,7 +422,7 @@ public class GridManager : MonoBehaviour
         foreach (var hit in hits)
         {
             SwitchableObj switchable = hit.collider.GetComponent<SwitchableObj>();
-            if (switchable != null&& switchable.IfCanSwitch())// && !switchable.inSwitchState 这个留着之后可能用
+            if (switchable != null && switchable.IfCanSwitch())// && !switchable.inSwitchState 这个留着之后可能用
             {
                 target = switchable;
                 return true; // 找到第一个合适的就返回
@@ -424,6 +440,24 @@ public class GridManager : MonoBehaviour
         bool toCanMove = to.CheckIfCanMoveTo(from.SelfGridPos, from.gameObject);
 
         return fromCanMove && toCanMove;
+    }
+
+    //销毁所有的switchable都要通过这个
+    public void DestroySwitchable(SwitchableObj obj)
+    {
+        ReleaseSelection(obj);
+        Destroy(obj.gameObject);
+    }
+
+    public void ReleaseSelection(SwitchableObj obj)
+    {
+        if (switchInfoRecorder.Take(obj))
+        {
+            if (switchInfoRecorder.hasFirst)
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+            if (switchInfoRecorder.hasSecond)
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+        }
     }
 
     #endregion
