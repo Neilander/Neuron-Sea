@@ -77,6 +77,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
     public void Resume() => isPaused = false;
 
     IEnumerator ExplodeCountDown(float time){
+        
         RangeDisplayer.SetActive(true);
         int totalFlashes = 5;
         float[] flashTimings = new float[5];
@@ -113,10 +114,11 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
                 yield return null;
             }
         }
-
+        SetAlpha(0);
         // 设置初始缩放
         radiusVisualRenderer.gameObject.SetActive(true);
         radiusVisualRenderer.transform.localScale = Vector3.zero;
+        GetComponent<SwitchableObj>().SwitchEnableSwitchState();
 
         // 逐渐扩大 radiusVisualRenderer 的 scale
         float expandDuration = explodeDuration;
