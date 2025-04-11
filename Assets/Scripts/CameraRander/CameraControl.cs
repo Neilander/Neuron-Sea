@@ -9,23 +9,33 @@ public class CameraControl : MonoBehaviour
     private Camera cam;
     private float halfWidth;
     private float halfHeight;
+
     private bool setted = false;
     private bool queued = false;
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
+
+    // ✅ 新增：平滑移动控制
+    private Vector3 smoothTargetPosition;
+    private bool isTransitioning = false;
+    public float smoothSpeed = 5f;
 
     void Start()
     {
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
+        smoothTargetPosition = transform.position;
     }
 
     void LateUpdate()
     {
-        float targetX = target.position.x;
-        float targetY = target.position.y + 1.5f;
+        if (target == null) return;
 
+        // ✅ 每帧更新目标位置
+        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + 1.5f, transform.position.z);
+
+        // 应用限制（如果有）
         if (currentLimit != null)
         {
             if (currentLimit.left.HasValue && currentLimit.right.HasValue)
@@ -34,8 +44,7 @@ public class CameraControl : MonoBehaviour
                 float rightBound = currentLimit.right.Value - halfWidth;
                 if (leftBound < rightBound)
                 {
-                    //Debug.Log("限制x");
-                    targetX = Mathf.Clamp(targetX, leftBound, rightBound);
+                    desiredPos.x = Mathf.Clamp(desiredPos.x, leftBound, rightBound);
                 }
             }
 
@@ -45,22 +54,39 @@ public class CameraControl : MonoBehaviour
                 float bottomBound = currentLimit.bottom.HasValue ? currentLimit.bottom.Value + halfHeight : float.MinValue;
                 if (bottomBound < topBound)
                 {
-                    //Debug.Log("限制y");
-                    targetY = Mathf.Clamp(targetY, bottomBound, topBound);
+                    desiredPos.y = Mathf.Clamp(desiredPos.y, bottomBound, topBound);
                 }
             }
         }
 
-        transform.position = new Vector3(targetX, targetY, transform.position.z);
+        // ✅ 是否平滑移动中
+        if (isTransitioning)
+        {
+            // 每帧更新目标位置
+            smoothTargetPosition = desiredPos;
+
+            // 平滑插值移动
+            transform.position = Vector3.Lerp(transform.position, smoothTargetPosition, Time.deltaTime * smoothSpeed);
+
+            // 到达目标，停止平滑
+            if (Vector3.Distance(transform.position, smoothTargetPosition) < 0.01f)
+            {
+                transform.position = smoothTargetPosition;
+                isTransitioning = false;
+            }
+        }
+        else
+        {
+            // 正常锁定逻辑
+            transform.position = desiredPos;
+        }
     }
 
     public void SetLimitRegion(CameraLimitRegion newRegion)
     {
-        
-        
         if (setted)
         {
-            Debug.Log("设置到queue");
+            Debug.Log("设置到 queue");
             queuedLimit = newRegion;
             queued = true;
         }
@@ -68,29 +94,30 @@ public class CameraControl : MonoBehaviour
         {
             currentLimit = newRegion;
             setted = true;
+            isTransitioning = true; // ✅ 开启平滑过渡
         }
     }
 
     public void ClearLimitRegion(CameraRegionTrigger sender)
     {
-        if (setted && currentLimit.setter == sender)
+        if (setted && currentLimit != null && currentLimit.setter == sender)
         {
             if (queued)
             {
                 currentLimit = queuedLimit;
                 queuedLimit = null;
-                Debug.Log("替换了当前");
                 queued = false;
+                Debug.Log("替换了当前");
+                isTransitioning = true; // ✅ 新区域 → 平滑进入
             }
             else
             {
                 currentLimit = null;
                 Debug.Log("移除了当前");
                 setted = false;
+                isTransitioning = true; // ✅ 清空限制，也平滑
             }
         }
-
-        
     }
 }
 
