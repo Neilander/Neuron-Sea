@@ -11,7 +11,7 @@
 	"iid": "36983c80-e920-11ef-b1b5-03933dfe8782",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 478021,
-	"nextUid": 273,
+	"nextUid": 274,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "GridVania",
@@ -5407,7 +5407,7 @@
 			"exportToToc": false,
 			"allowOutOfBounds": false,
 			"doc": null,
-			"width": 720,
+			"width": 756,
 			"height": 432,
 			"resizableX": true,
 			"resizableY": true,
@@ -5594,7 +5594,45 @@
 				"averageColors": "000000000000201131111111211121110000000000000000000130111111301121110000000000000000000050113011401120110000000000000000000000000000000000000000"
 			}
 		}
-	], "enums": [], "externalEnums": [], "levelFields": [] },
+	], "enums": [], "externalEnums": [], "levelFields": [
+		{
+			"identifier": "LevelType",
+			"doc": null,
+			"__type": "Int",
+			"uid": 273,
+			"type": "F_Int",
+			"isArray": false,
+			"canBeNull": false,
+			"arrayMinLength": null,
+			"arrayMaxLength": null,
+			"editorDisplayMode": "Hidden",
+			"editorDisplayScale": 1,
+			"editorDisplayPos": "Above",
+			"editorLinkStyle": "StraightArrow",
+			"editorDisplayColor": null,
+			"editorAlwaysShow": false,
+			"editorShowInWorld": true,
+			"editorCutLongValues": true,
+			"editorTextSuffix": null,
+			"editorTextPrefix": null,
+			"useForSmartColor": false,
+			"exportToToc": false,
+			"searchable": false,
+			"min": 1,
+			"max": 3,
+			"regex": null,
+			"acceptFileTypes": null,
+			"defaultOverride": null,
+			"textLanguageMode": null,
+			"symmetricalRef": false,
+			"autoChainRef": true,
+			"allowOutOfLevelRef": true,
+			"allowedRefs": "OnlySame",
+			"allowedRefsEntityUid": null,
+			"allowedRefTags": [],
+			"tilesetUid": null
+		}
+	] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -5615,7 +5653,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_0.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [] }],
 			"layerInstances": null,
 			"__neighbours": [{ "levelIid": "d70c7480-1030-11f0-80a8-2b626afd2371", "dir": "n" }]
 		},
@@ -5638,7 +5676,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_25.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "36986390-e920-11ef-b1b5-376b4729e1e3", "dir": "s" }, { "levelIid": "d773e580-1030-11f0-8f8a-cbee64aa17dd", "dir": "e" } ]
 		},
@@ -5661,7 +5699,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_26.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "d70c7480-1030-11f0-80a8-2b626afd2371", "dir": "w" }, { "levelIid": "7683e380-1030-11f0-8f8a-7925c0cd8e5d", "dir": "e" } ]
 		},
@@ -5684,7 +5722,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_27.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "d773e580-1030-11f0-8f8a-cbee64aa17dd", "dir": "w" }, { "levelIid": "1b653080-1030-11f0-a174-116b57d39786", "dir": "e" } ]
 		},
@@ -5707,7 +5745,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_6.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "893b4b10-1030-11f0-b27c-6f9a9ead1872", "dir": "w" }, { "levelIid": "fd4eba90-1030-11f0-b9c2-c770e52d5075", "dir": "e" } ]
 		},
@@ -5730,7 +5768,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_28.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "7683e380-1030-11f0-8f8a-7925c0cd8e5d", "dir": "w" }, { "levelIid": "978c42f0-1030-11f0-a174-07c0379471d6", "dir": "e" } ]
 		},
@@ -5753,7 +5791,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_29.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "1b653080-1030-11f0-a174-116b57d39786", "dir": "w" }, { "levelIid": "d15ad110-1030-11f0-a174-0514e87b6f50", "dir": "e" } ]
 		},
@@ -5776,7 +5814,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_30.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "978c42f0-1030-11f0-a174-07c0379471d6", "dir": "w" }, { "levelIid": "93763db0-1030-11f0-ae54-6350219d42cf", "dir": "e" } ]
 		},
@@ -5799,7 +5837,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_31.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 3, "__tile": null, "defUid": 273, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }],
 			"layerInstances": null,
 			"__neighbours": [{ "levelIid": "d15ad110-1030-11f0-a174-0514e87b6f50", "dir": "w" }]
 		},
@@ -5822,7 +5860,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_1.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [{ "levelIid": "9534b190-1030-11f0-b27c-81155362d48d", "dir": "e" }]
 		},
@@ -5845,7 +5883,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_3.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "c2af7140-1030-11f0-b27c-457660add33c", "dir": "e" }, { "levelIid": "9534b190-1030-11f0-b27c-81155362d48d", "dir": "w" } ]
 		},
@@ -5868,7 +5906,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_5.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "50ab4290-1030-11f0-a174-73883c36c2b8", "dir": "e" }, { "levelIid": "c2af7140-1030-11f0-b27c-457660add33c", "dir": "w" } ]
 		},
@@ -5891,7 +5929,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_4.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "3bab5610-1030-11f0-b27c-1b3d73e97ab9", "dir": "w" }, { "levelIid": "893b4b10-1030-11f0-b27c-6f9a9ead1872", "dir": "e" } ]
 		},
@@ -5914,7 +5952,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_2.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "04db4670-1030-11f0-a0b0-4d342d7edb6f", "dir": "w" }, { "levelIid": "3bab5610-1030-11f0-b27c-1b3d73e97ab9", "dir": "e" } ]
 		},
@@ -5937,7 +5975,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_7.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [null] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "50ab4290-1030-11f0-a174-73883c36c2b8", "dir": "w" }, { "levelIid": "23ad6490-1030-11f0-b9c2-6132495b6506", "dir": "e" } ]
 		},
@@ -5960,7 +5998,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_8.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "fd4eba90-1030-11f0-b9c2-c770e52d5075", "dir": "w" }, { "levelIid": "82715dd0-1030-11f0-b9c2-db8c4feb8b50", "dir": "e" } ]
 		},
@@ -5983,7 +6021,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_9.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "23ad6490-1030-11f0-b9c2-6132495b6506", "dir": "w" }, { "levelIid": "861622e0-1030-11f0-b9c2-5157f43f0e8f", "dir": "e" } ]
 		},
@@ -6006,7 +6044,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_10.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "82715dd0-1030-11f0-b9c2-db8c4feb8b50", "dir": "w" }, { "levelIid": "87f8eca0-1030-11f0-b9c2-29f5c0ca8c12", "dir": "e" } ]
 		},
@@ -6029,7 +6067,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_11.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [] }],
 			"layerInstances": null,
 			"__neighbours": [ { "levelIid": "861622e0-1030-11f0-b9c2-5157f43f0e8f", "dir": "w" }, { "levelIid": "891a6230-1030-11f0-b9c2-3b0632e0cecd", "dir": "e" } ]
 		},
@@ -6052,7 +6090,7 @@
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
 			"externalRelPath": "SeaLevel/Level_12.ldtkl",
-			"fieldInstances": [],
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "Int", "__value": 1, "__tile": null, "defUid": 273, "realEditorValues": [] }],
 			"layerInstances": null,
 			"__neighbours": [{ "levelIid": "87f8eca0-1030-11f0-b9c2-29f5c0ca8c12", "dir": "w" }]
 		}

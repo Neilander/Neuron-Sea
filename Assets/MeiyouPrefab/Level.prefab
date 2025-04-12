@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7341541450088551686}
   - component: {fileID: 2362463861359956734}
+  - component: {fileID: 7917279772163393072}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -46,6 +47,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxCamera: {fileID: 0}
+--- !u!114 &7917279772163393072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5522705006006687104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6403ac50a1332e740a4e23b1fbde11dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1613121784970579976
 PrefabInstance:
   m_ObjectHideFlags: 0
