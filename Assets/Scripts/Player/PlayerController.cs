@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IMovementController
 {
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
@@ -77,7 +78,13 @@ public class PlayerController : MonoBehaviour
     private float CurrentYSpeed;
     #endregion
 
-    private bool canMove = true; // 新增：控制是否可以移动的状态
+    private bool canMove = true; // 控制是否可以移动的状态
+    private bool canInput = true; // 控制是否接受输入的状态
+
+    [HideInInspector] public UnityEvent OnTabSelected = new UnityEvent();
+
+    private Vector3 lockedPosition; // 存储锁定的位置
+    private bool isPositionLocked = false; // 位置是否被锁定
 
     private void Start()
     {
@@ -89,11 +96,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //GridManager.Instance.LogTimeAction();
-
-        
+        // 只有在可以输入时才处理输入
+        // if (canInput)
+        // {
+        //     if (Input.GetKeyDown(KeyCode.R))
+        //         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // }
     }
 
     private void FixedUpdate()
@@ -114,7 +122,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("VerticalSpeed", CurrentYSpeed);
         GetSpeedChange();
 
-        if (!canMove) // 新增：如果不能移动，直接停止所有移动
+        if (!canMove) // 如果不能移动，直接停止所有移动
         {
             rb.velocity = Vector2.zero;
             animator.SetFloat("Speed", 0);
@@ -126,7 +134,7 @@ public class PlayerController : MonoBehaviour
             MoveInControl();
             RotateInControl();
         }
-        else
+        else if (canInput) // 只有在可以输入时才处理移动和旋转
         {
             Move();
             Rotate();
@@ -167,24 +175,9 @@ public class PlayerController : MonoBehaviour
     #region 角色水平移动
     private void Move()
     {
-        float moveInput = Input.GetAxis("Horizontal");
+        // 只有在可以输入时才获取输入
+        float moveInput = canInput ? Input.GetAxis("Horizontal") : 0f;
 
-        /*防穿墙
-        if (Physics2D.BoxCast(collider.bounds.center + deviation * Vector3.left, new Vector2(collider.bounds.size.x, collider.bounds.size.y - deviation), 0f, Vector2.zero, 0, groundLayer))
-        {
-            transform.position += Vector3.right * deviation;
-            rb.velocity = new Vector2(0, rb.velocity.y);
-        }
-        else if (Physics2D.BoxCast(collider.bounds.center + deviation * Vector3.right, new Vector2(collider.bounds.size.x, collider.bounds.size.y - deviation), 0f, Vector2.zero, 0, groundLayer))
-        {
-            transform.position += Vector3.left * deviation;
-            rb.velocity = new Vector2(0, rb.velocity.y);
-        }
-        else
-        {
-            rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-        }
-        */
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
         animator.SetFloat("Speed", Mathf.Abs(moveInput));
     }
@@ -192,7 +185,9 @@ public class PlayerController : MonoBehaviour
     #region 角色身体转向
     private void Rotate()
     {
-        float moveInput = Input.GetAxis("Horizontal");
+        // 只有在可以输入时才获取输入
+        float moveInput = canInput ? Input.GetAxis("Horizontal") : 0f;
+
         if (moveInput < 0)
             transform.localScale = new Vector3(-1, 1, 1);
         else if (moveInput > 0)
@@ -210,8 +205,12 @@ public class PlayerController : MonoBehaviour
     }
     void CheckJump()
     {
-        CheckJumpStart();
-        CheckJumpInterrupt();
+        // 只有在可以输入时才检查跳跃
+        if (canInput)
+        {
+            CheckJumpStart();
+            CheckJumpInterrupt();
+        }
     }
     void CheckJumpInterrupt()
     {
@@ -315,26 +314,90 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    // 新增：禁用移动的公共方法
+    public void ResetMovement()
+    {
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            animator?.SetFloat("Speed", 0);
+            animator?.SetFloat("VerticalSpeed", 0);
+        }
+        Debug.Log("已重置玩家移动状态");
+    }
+
     public void DisableMovement()
     {
         canMove = false;
-        rb.velocity = Vector2.zero; // 立即停止所有移动
-        rb.isKinematic = true; // 防止物理影响
-        animator.SetFloat("Speed", 0); // 重置动画
+        canInput = false;
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            animator?.SetFloat("Speed", 0);
+            // 锁定位置
+            LockPosition();
+        }
+        Debug.Log("已禁用玩家移动并锁定位置");
     }
 
-    // 新增：启用移动的公共方法
     public void EnableMovement()
     {
         canMove = true;
-        rb.isKinematic = false; // 恢复物理系统
+        canInput = true;
+        // 解锁位置
+        UnlockPosition();
+        Debug.Log("已启用玩家移动并解锁位置");
+    }
+
+    // 新增：单独控制输入的方法
+    public void DisableInput()
+    {
+        canInput = false;
+    }
+
+    public void EnableInput()
+    {
+        canInput = true;
     }
 
     // 新增：获取是否在地面上的公共方法
     public bool IsGrounded()
     {
         return isGrounded;
+    }
+
+    private void LateUpdate()
+    {
+        // 如果位置被锁定，强制保持在锁定位置
+        if (isPositionLocked)
+        {
+            transform.position = lockedPosition;
+        }
+    }
+
+    // 锁定位置的方法
+    public void LockPosition()
+    {
+        lockedPosition = transform.position;
+        isPositionLocked = true;
+
+        // 完全锁定刚体的所有移动
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
+    }
+
+    // 解锁位置的方法
+    public void UnlockPosition()
+    {
+        isPositionLocked = false;
+
+        // 恢复刚体的正常约束
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
     }
 }
 
