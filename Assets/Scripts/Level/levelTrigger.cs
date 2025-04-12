@@ -52,40 +52,38 @@ public class levelTrigger : MonoBehaviour
 
         // 获取加载出来的场景
         Scene loadedScene = SceneManager.GetSceneByName(nextName);
-        GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+        GameObject rootObjects = loadedScene.GetRootGameObjects()[0];
 
         GameObject target = null;
-
-        foreach (var root in rootObjects)
+        var root = rootObjects;
+        
+        
+        if (root.name == "TotalControl")
         {
-            if (root.name == "TotalControl")
+            Transform child = root.transform.Find(targetObjectName);
+            if (child != null)
             {
-                Transform child = root.transform.Find(targetObjectName);
-                if (child != null)
+                target = Instantiate(child.gameObject);
+                target.transform.position = SetPos;
+
+                // 关闭 BackGrounds
+                Transform backgrounds = target.transform.Find("BackGrounds");
+                if (backgrounds != null)
                 {
-                    target = Instantiate(child.gameObject);
-                    target.transform.position = SetPos;
+                    backgrounds.gameObject.SetActive(false);
+                    Debug.Log("已禁用子物体 BackGrounds");
+                }
 
-                    // 关闭 BackGrounds
-                    Transform backgrounds = target.transform.Find("BackGrounds");
-                    if (backgrounds != null)
-                    {
-                        backgrounds.gameObject.SetActive(false);
-                        Debug.Log("已禁用子物体 BackGrounds");
-                    }
-
-                    // 关闭 gridAndSwitchManager
-                    Transform grid = target.transform.Find("gridAndSwitchManager");
-                    if (grid != null)
-                    {
-                        grid.gameObject.SetActive(false);
-                        Debug.Log("已禁用子物体 gridAndSwitchManager");
-                    }
-
-                    break;
+                // 关闭 gridAndSwitchManager
+                Transform grid = target.transform.Find("gridAndSwitchManager");
+                if (grid != null)
+                {
+                    grid.gameObject.SetActive(false);
+                    Debug.Log("已禁用子物体 gridAndSwitchManager");
                 }
             }
         }
+        
 
         if (target != null)
         {
