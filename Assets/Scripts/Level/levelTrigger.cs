@@ -6,11 +6,108 @@ using UnityEngine.SceneManagement;
 
 public class levelTrigger : MonoBehaviour
 {
+    private bool hasTriedLoad = false;
+    public Vector3 SetPos;
+
+    [Header("提取设置")]
+    public string targetObjectName = "Level_13"; // 想从TotalControl中提取的物体名
+    private string nextSceneName = "Level 2";
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        if (!hasTriedLoad)
+        {
+            hasTriedLoad = true;
+            StartCoroutine(PreloadAndExtract(nextSceneName));
+        }
+    }
+
+    IEnumerator PreloadAndExtract(string nextName)
+    {
+        //string currentScene = SceneManager.GetActiveScene().name;
+
+        /*
+        Match match = Regex.Match(currentScene, @"Level (\d+)");
+        if (!match.Success)
+        {
+            Debug.LogWarning("当前场景名不是 'Level n' 格式，无法加载");
+            yield break;
+        }*/
+
+        //int currentLevel = int.Parse(match.Groups[1].Value);
+        //int nextLevel = currentLevel + 1;
+        //nextSceneName = $"Level {nextLevel}";
+
+        if (!Application.CanStreamedLevelBeLoaded(nextName))
+        {
+            Debug.LogWarning($"场景 {nextName} 不存在！");
+            yield break;
+        }
+
+        Debug.Log($"开始加载场景：{nextName}");
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(nextName, LoadSceneMode.Additive);
+        yield return new WaitUntil(() => loadOp.isDone);
+
+        // 获取加载出来的场景
+        Scene loadedScene = SceneManager.GetSceneByName(nextName);
+        GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+
+        GameObject target = null;
+
+        foreach (var root in rootObjects)
+        {
+            if (root.name == "TotalControl")
+            {
+                Transform child = root.transform.Find(targetObjectName);
+                if (child != null)
+                {
+                    target = Instantiate(child.gameObject);
+                    target.transform.position = SetPos;
+
+                    // 关闭 BackGrounds
+                    Transform backgrounds = target.transform.Find("BackGrounds");
+                    if (backgrounds != null)
+                    {
+                        backgrounds.gameObject.SetActive(false);
+                        Debug.Log("已禁用子物体 BackGrounds");
+                    }
+
+                    // 关闭 gridAndSwitchManager
+                    Transform grid = target.transform.Find("gridAndSwitchManager");
+                    if (grid != null)
+                    {
+                        grid.gameObject.SetActive(false);
+                        Debug.Log("已禁用子物体 gridAndSwitchManager");
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (target != null)
+        {
+            target.SetActive(true);
+            Debug.Log($"成功提取目标对象：{target.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"在 TotalControl 中找不到子物体：{targetObjectName}");
+        }
+
+        // 卸载加载用的场景
+        SceneManager.UnloadSceneAsync(nextName);
+    }
+
+    /*
     private AsyncOperation preloadOp;
     private string nextSceneName;
     private bool isPreloading = false;
     private bool isReady = false;
     private bool hasTriedLoad = false;
+    public Vector3 SetPos;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -39,6 +136,15 @@ public class levelTrigger : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            StartCoroutine(LoadSingleObjectFromScene("Level 2", "Level_13", SetPos));
+        }
+    }*/
+
+    /*
     void PreloadNextScene()
     {
         if (hasTriedLoad)
@@ -73,8 +179,9 @@ public class levelTrigger : MonoBehaviour
         isPreloading = true;
 
         StartCoroutine(CheckPreloadReady());
-    }
+    }*/
 
+    /*
     IEnumerator CheckPreloadReady()
     {
         while (preloadOp != null && preloadOp.progress < 0.9f)
@@ -89,4 +196,64 @@ public class levelTrigger : MonoBehaviour
             Debug.Log($"场景 {nextSceneName} 已预加载完成，可激活");
         }
     }
+
+    IEnumerator LoadSingleObjectFromScene(string sceneName, string objectName, Vector3 targetPosition)
+    {
+        // 加载场景（Additive 不会切换当前场景）
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        yield return new WaitUntil(() => loadOp.isDone);
+
+        // 获取加载出来的场景
+        Scene loadedScene = SceneManager.GetSceneByName(sceneName);
+        GameObject[] rootObjects = loadedScene.GetRootGameObjects();
+
+        GameObject target = null;
+
+        foreach (var root in rootObjects)
+        {
+            if (root.name == "TotalControl")
+            {
+                // 在 TotalControl 下查找 objectName（比如 "Level"）
+                Transform child = root.transform.Find(objectName);
+                if (child != null)
+                {
+                    target = Instantiate(child.gameObject);
+                    target.transform.position = targetPosition;
+
+                    // 查找并禁用 BackGrounds
+                    Transform backgrounds = target.transform.Find("BackGrounds");
+                    if (backgrounds != null)
+                    {
+                        backgrounds.gameObject.SetActive(false);
+                        Debug.Log("已禁用子物体 BackGrounds");
+                    }
+
+                    // 查找并禁用 gridAndSwitchManager
+                    Transform grid = target.transform.Find("gridAndSwitchManager");
+                    if (grid != null)
+                    {
+                        grid.gameObject.SetActive(false);
+                        Debug.Log("已禁用子物体 gridAndSwitchManager");
+                    }
+
+                    break;
+                }
+            }
+        }
+        target.SetActive(true);
+
+        // 卸载加载用的场景
+        SceneManager.UnloadSceneAsync(sceneName);
+
+        if (target != null)
+        {
+            Debug.Log($"成功提取目标对象：{target.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"在 TotalControl 中找不到子物体：{objectName}");
+        }
+    }*/
+
+
 }
