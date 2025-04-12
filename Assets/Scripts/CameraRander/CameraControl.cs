@@ -15,10 +15,50 @@ public class CameraControl : MonoBehaviour
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
 
+    
+    private CameraLimitRegion defaultLimit;
+
+
     // ✅ 新增：平滑移动控制
     private Vector3 smoothTargetPosition;
     private bool isTransitioning = false;
     public float smoothSpeed = 5f;
+
+    [Header("默认区域配置")]
+    public Vector2 defaultOrigin; // 左下角坐标
+    public float defaultWidth = 10f;
+    public float defaultHeight = 5f;
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+
+        // 只有在编辑器下且设置了默认区域参数才绘制
+        float left = defaultOrigin.x;
+        float right = defaultOrigin.x + defaultWidth;
+        float bottom = defaultOrigin.y;
+        float top = defaultOrigin.y + defaultHeight;
+
+        Vector3 topLeft = new Vector3(left, top, 0);
+        Vector3 topRight = new Vector3(right, top, 0);
+        Vector3 bottomLeft = new Vector3(left, bottom, 0);
+        Vector3 bottomRight = new Vector3(right, bottom, 0);
+
+        // 画矩形边框
+        Gizmos.DrawLine(topLeft, topRight);
+        Gizmos.DrawLine(topRight, bottomRight);
+        Gizmos.DrawLine(bottomRight, bottomLeft);
+        Gizmos.DrawLine(bottomLeft, topLeft);
+
+        // 可选：在 Scene 里显示文字（需要 Handles）
+#if UNITY_EDITOR
+    UnityEditor.Handles.Label(new Vector3(left, top + 0.5f, 0), "Default Camera Limit", new GUIStyle()
+    {
+        fontStyle = FontStyle.Bold,
+        normal = new GUIStyleState { textColor = Color.cyan }
+    });
+#endif
+    }
 
     void Start()
     {
@@ -26,6 +66,14 @@ public class CameraControl : MonoBehaviour
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
+
+        // ✅ 构建默认限制区域
+        float left = defaultOrigin.x;
+        float right = defaultOrigin.x + defaultWidth;
+        float bottom = defaultOrigin.y;
+        float top = defaultOrigin.y + defaultHeight;
+
+        defaultLimit = new CameraLimitRegion(left, right, top, bottom, null);
     }
 
     void LateUpdate()
@@ -35,23 +83,25 @@ public class CameraControl : MonoBehaviour
         // ✅ 每帧更新目标位置
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + 1.5f, transform.position.z);
 
-        // 应用限制（如果有）
-        if (currentLimit != null)
+        // ✅ 选择使用 currentLimit 或 defaultLimit
+        CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
+
+        if (limitToUse != null)
         {
-            if (currentLimit.left.HasValue && currentLimit.right.HasValue)
+            if (limitToUse.left.HasValue && limitToUse.right.HasValue)
             {
-                float leftBound = currentLimit.left.Value + halfWidth;
-                float rightBound = currentLimit.right.Value - halfWidth;
+                float leftBound = limitToUse.left.Value + halfWidth;
+                float rightBound = limitToUse.right.Value - halfWidth;
                 if (leftBound < rightBound)
                 {
                     desiredPos.x = Mathf.Clamp(desiredPos.x, leftBound, rightBound);
                 }
             }
 
-            if (currentLimit.top.HasValue || currentLimit.bottom.HasValue)
+            if (limitToUse.top.HasValue || limitToUse.bottom.HasValue)
             {
-                float topBound = currentLimit.top.HasValue ? currentLimit.top.Value - halfHeight : float.MaxValue;
-                float bottomBound = currentLimit.bottom.HasValue ? currentLimit.bottom.Value + halfHeight : float.MinValue;
+                float topBound = limitToUse.top.HasValue ? limitToUse.top.Value - halfHeight : float.MaxValue;
+                float bottomBound = limitToUse.bottom.HasValue ? limitToUse.bottom.Value + halfHeight : float.MinValue;
                 if (bottomBound < topBound)
                 {
                     desiredPos.y = Mathf.Clamp(desiredPos.y, bottomBound, topBound);
