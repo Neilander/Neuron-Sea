@@ -170,6 +170,22 @@ public class CameraControl : MonoBehaviour
             }
         }
     }
+
+    public void SetDefaultRegionFromRect(Rect rect)
+    {
+        defaultOrigin = rect.position;         // 左下角
+        defaultWidth = rect.width;
+        defaultHeight = rect.height;
+
+        float left = defaultOrigin.x;
+        float right = defaultOrigin.x + defaultWidth;
+        float bottom = defaultOrigin.y;
+        float top = defaultOrigin.y + defaultHeight;
+
+        defaultLimit = new CameraLimitRegion(left, right, top, bottom, null);
+
+        Debug.Log($"[Camera] 设置默认区域：{rect}");
+    }
 }
 
 [System.Serializable]

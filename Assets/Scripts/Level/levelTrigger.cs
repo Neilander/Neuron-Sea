@@ -17,11 +17,13 @@ public class levelTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+        FindAnyObjectByType<levelManager>().SwitchToNextLevel();
+        /*
         if (!hasTriedLoad)
         {
             hasTriedLoad = true;
-            StartCoroutine(PreloadAndExtract(nextSceneName));
-        }
+            //StartCoroutine(PreloadAndExtract(nextSceneName));
+        }*/
     }
 
     IEnumerator PreloadAndExtract(string nextName)
