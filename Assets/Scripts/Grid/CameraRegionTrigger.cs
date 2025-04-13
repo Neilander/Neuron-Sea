@@ -29,8 +29,12 @@ public class CameraRegionTrigger : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
-        var camControl = Camera.main.GetComponent<CameraControl>();
+        CameraControl camControl = null;
+        if (Camera.main != null)
+        {
+            camControl = Camera.main.GetComponent<CameraControl>();
+        }
+            
         if (camControl == null) return;
 
         camControl.ClearLimitRegion(this);

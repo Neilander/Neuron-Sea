@@ -4503,7 +4503,7 @@ PrefabInstance:
     - target: {fileID: 4994227485657439157, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6326339127472285303, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
@@ -5687,6 +5687,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4459592341323453314, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: -4071260462010456299, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
         type: 3}
       propertyPath: m_ColliderPaths.Array.size
@@ -6327,6 +6332,16 @@ PrefabInstance:
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
       objectReference: {fileID: 872447067}
+    - target: {fileID: -190934803287194570, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
+        type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -190934803287194570, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
+        type: 3}
+      propertyPath: m_ColliderPaths.Array.data[0].m_Collider
+      value: 
+      objectReference: {fileID: 1928189279}
     - target: {fileID: 4048174123298161015, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
         type: 3}
       propertyPath: m_Name
@@ -13863,6 +13878,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: gridAndSwitchManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7009966546527464902, guid: e725ba04c39ee4604a46c51f58d968c4,
+        type: 3}
+      propertyPath: switchCode
+      value: 101
+      objectReference: {fileID: 0}
     - target: {fileID: 7168934150931858387, guid: e725ba04c39ee4604a46c51f58d968c4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16870,6 +16890,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7302705486092884586, guid: 36c4ca5981d72574babb4f405423479a,
+        type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7302705486092884586, guid: 36c4ca5981d72574babb4f405423479a,
+        type: 3}
+      propertyPath: m_ColliderPaths.Array.data[0].m_Collider
+      value: 
+      objectReference: {fileID: 1893883565}
     - target: {fileID: -486367997215585857, guid: 36c4ca5981d72574babb4f405423479a,
         type: 3}
       propertyPath: m_ColliderPaths.Array.size
@@ -17350,6 +17380,11 @@ PrefabInstance:
     - target: {fileID: 3584345144921902783, guid: 36c4ca5981d72574babb4f405423479a,
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045872976256427042, guid: 36c4ca5981d72574babb4f405423479a,
+        type: 3}
+      propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9034253981619198854, guid: 36c4ca5981d72574babb4f405423479a,
@@ -25538,6 +25573,18 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!19719996 &1893883565 stripped
+TilemapCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6826542497592226417, guid: 36c4ca5981d72574babb4f405423479a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1288325815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!19719996 &1928189279 stripped
+TilemapCollider2D:
+  m_CorrespondingSourceObject: {fileID: -3180719315631445825, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 440517447}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1936821405
 GameObject:
   m_ObjectHideFlags: 0

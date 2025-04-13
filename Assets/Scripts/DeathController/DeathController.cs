@@ -83,7 +83,7 @@ public class DeathController : MonoBehaviour
         }
 
         // Step 4: 等待 0.5 秒（真实时间）
-        yield return new WaitForSecondsRealtime(0.5f);
+        //yield return new WaitForSecondsRealtime(0.5f);
 
         // Step 5: 渐隐 UI 图片
         if (deathImg != null)
