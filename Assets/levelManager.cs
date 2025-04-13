@@ -9,7 +9,7 @@ public class levelManager : MonoBehaviour
     private GameObject currentLevelGO;
     private CameraControl cameraControl;
 
-    
+    private Rect recordRect;
     void Start()
     {
         cameraControl = Camera.main.GetComponent<CameraControl>();
@@ -22,7 +22,7 @@ public class levelManager : MonoBehaviour
         LoadLevel(currentLevelIndex);
     }
 
-    public void LoadLevel(int newLevelIndex)
+    public Rect LoadLevel(int newLevelIndex)
     {
         string newLevelName = $"Level_{newLevelIndex}";
         GameObject newLevelGO = FindInactiveObjectByName($"Level_{newLevelIndex}");
@@ -30,7 +30,7 @@ public class levelManager : MonoBehaviour
         if (newLevelGO == null)
         {
             Debug.LogError($"未找到名为 {newLevelName} 的关卡对象！");
-            return;
+            return new Rect();
         }
 
         // 关闭当前关卡
@@ -57,6 +57,7 @@ public class levelManager : MonoBehaviour
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
         controller.SetMovementBounds(data.levelBound);
+        return data.levelBound;
     }
 
     private void Update()
@@ -67,7 +68,7 @@ public class levelManager : MonoBehaviour
 
     public void SwitchToNextLevel()
     {
-        LoadLevel(currentLevelIndex + 1);
+        recordRect = LoadLevel(currentLevelIndex + 1);
 
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
         StartCoroutine(DelayEffect());
@@ -76,8 +77,10 @@ public class levelManager : MonoBehaviour
     IEnumerator DelayEffect()
     {
         yield return null;
-        FindAnyObjectByType<StartEffectController>().transform.position = new Vector3(-159, 119);
-        FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+        StartEffectController controller = FindAnyObjectByType<StartEffectController>();
+        PlayerController pController = FindAnyObjectByType<PlayerController>();
+        controller.transform.position = new Vector3(recordRect.xMin+1,pController.transform.position.y+5, controller.transform.position.z);
+       controller.TriggerStartEffect();
     }
 
     GameObject FindInactiveObjectByName(string name)
