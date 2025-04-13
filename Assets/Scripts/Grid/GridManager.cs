@@ -399,6 +399,11 @@ public class GridManager : MonoBehaviour
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
     }
 
+    public void RenewSwitch()
+    {
+        SwitchTime = 0;
+    }
+
     private void ClearSwitchableObj() {
         switchableObjFrom = null;
 

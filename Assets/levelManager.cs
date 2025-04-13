@@ -121,12 +121,12 @@ public class levelManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-            SwitchToNextLevel();
+        
     }
 
     public void SwitchToNextLevel()
     {
+        GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12), false);
         FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position+ Vector3.up*0.5f+Vector3.right*0.1f;
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
@@ -136,17 +136,20 @@ public class levelManager : MonoBehaviour
 
     public void SwitchToNextLevel_Direct()
     {
+        GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12),true);
     }
 
     public void SwitchToBeforeLevel()
     {
+        GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1,1,12),false);
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
     }
 
     public void SwitchToBeforeLevel_Direct()
     {
+        GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12),true);
     }
 
