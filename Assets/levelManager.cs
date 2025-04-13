@@ -67,7 +67,13 @@ public class levelManager : MonoBehaviour
         LoadLevel(currentLevelIndex + 1);
 
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
-        FindAnyObjectByType<StartEffectController>().transform.position = new Vector3(-159, 122);
+        StartCoroutine(DelayEffect());
+    }
+
+    IEnumerator DelayEffect()
+    {
+        yield return null;
+        FindAnyObjectByType<StartEffectController>().transform.position = new Vector3(-159, 119);
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
     }
 

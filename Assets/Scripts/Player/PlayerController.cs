@@ -96,12 +96,12 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private void Update()
     {
-        // 只有在可以输入时才处理输入
-        // if (canInput)
-        // {
-        //     if (Input.GetKeyDown(KeyCode.R))
-        //         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
+        //只有在可以输入时才处理输入
+         if (canInput)
+         {
+             if (Input.GetKeyDown(KeyCode.R))
+                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+         }
     }
 
     private void FixedUpdate()

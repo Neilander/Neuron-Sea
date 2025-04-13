@@ -8427,7 +8427,7 @@ PrefabInstance:
     - target: {fileID: 4003248820004921201, guid: a254e7a1030a34483ad45432785d4f4a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -162.56
+      value: -158.49
       objectReference: {fileID: 0}
     - target: {fileID: 4003248820004921201, guid: a254e7a1030a34483ad45432785d4f4a,
         type: 3}
@@ -10640,6 +10640,26 @@ PrefabInstance:
       propertyPath: fadeImage
       value: 
       objectReference: {fileID: 80552349}
+    - target: {fileID: 499425490956597475, guid: 36373a7c5abea4af4ba51c352fb36daf,
+        type: 3}
+      propertyPath: controlInput
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 499425490956597475, guid: 36373a7c5abea4af4ba51c352fb36daf,
+        type: 3}
+      propertyPath: controlDuration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 499425490956597475, guid: 36373a7c5abea4af4ba51c352fb36daf,
+        type: 3}
+      propertyPath: raycastDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 499425490956597475, guid: 36373a7c5abea4af4ba51c352fb36daf,
+        type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 2778021465556364233, guid: 36373a7c5abea4af4ba51c352fb36daf,
         type: 3}
       propertyPath: m_LocalPosition.x
