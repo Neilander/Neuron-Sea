@@ -29,6 +29,9 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] private GameObject displayCenter;
 
+    [Header("交换控制")]
+    [SerializeField] private KeyCode switchCode;
+
     private Counter counter = new Counter();
 
     private SwitchableObj switchableObjFrom;
@@ -145,7 +148,7 @@ public class GridManager : MonoBehaviour
 
                     if (ifLegalMove)
                     {
-                        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+                        if (Input.GetKeyDown(switchCode))
                             ShiftSwitch();
                     }
                 }

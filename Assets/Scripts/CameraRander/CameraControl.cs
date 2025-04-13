@@ -185,6 +185,38 @@ public class CameraControl : MonoBehaviour
         defaultLimit = new CameraLimitRegion(left, right, top, bottom, null);
 
         Debug.Log($"[Camera] 设置默认区域：{rect}");
+
+        if (target == null)
+        {
+            Debug.LogWarning("未找到跟随目标，无法立即设置相机位置");
+            return;
+        }
+
+        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + 1.5f, transform.position.z);
+
+        if (defaultLimit.left.HasValue && defaultLimit.right.HasValue)
+        {
+            float leftBound = defaultLimit.left.Value + halfWidth;
+            float rightBound = defaultLimit.right.Value - halfWidth;
+            if (leftBound < rightBound)
+            {
+                desiredPos.x = Mathf.Clamp(desiredPos.x, leftBound, rightBound);
+            }
+        }
+
+        if (defaultLimit.top.HasValue || defaultLimit.bottom.HasValue)
+        {
+            float topBound = defaultLimit.top.HasValue ? defaultLimit.top.Value - halfHeight : float.MaxValue;
+            float bottomBound = defaultLimit.bottom.HasValue ? defaultLimit.bottom.Value + halfHeight : float.MinValue;
+            if (bottomBound < topBound)
+            {
+                desiredPos.y = Mathf.Clamp(desiredPos.y, bottomBound, topBound);
+            }
+        }
+
+        transform.position = desiredPos;
+        smoothTargetPosition = desiredPos;
+        isTransitioning = false;
     }
 }
 
