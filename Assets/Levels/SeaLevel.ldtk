@@ -1943,7 +1943,7 @@
 							"alpha": 1,
 							"chance": 1,
 							"breakOnMatch": true,
-							"pattern": [-1,1,0,-1,1,0,0,1,0],
+							"pattern": [0,1,0,-1,1,0,0,1,0],
 							"flipX": false,
 							"flipY": false,
 							"xModulo": 1,
@@ -1975,7 +1975,7 @@
 							"alpha": 1,
 							"chance": 1,
 							"breakOnMatch": true,
-							"pattern": [0,1,-1,0,1,-1,0,1,0],
+							"pattern": [0,1,0,0,1,-1,0,1,0],
 							"flipX": false,
 							"flipY": false,
 							"xModulo": 1,
@@ -2007,7 +2007,7 @@
 							"alpha": 1,
 							"chance": 1,
 							"breakOnMatch": true,
-							"pattern": [-1,1,0,-1,1,0,0,1,0],
+							"pattern": [0,1,0,-1,1,0,0,1,0],
 							"flipX": false,
 							"flipY": false,
 							"xModulo": 1,
@@ -2039,7 +2039,7 @@
 							"alpha": 1,
 							"chance": 1,
 							"breakOnMatch": true,
-							"pattern": [0,1,-1,0,1,-1,0,1,0],
+							"pattern": [0,1,0,0,1,-1,0,1,0],
 							"flipX": false,
 							"flipY": false,
 							"xModulo": 1,
@@ -2530,7 +2530,7 @@
 						}
 					],
 					"usesWizard": true,
-					"requiredBiomeValues": [],
+					"requiredBiomeValues": ["LevelType3"],
 					"biomeRequirementMode": 0
 				},
 				{
@@ -2799,7 +2799,7 @@
 						}
 					],
 					"usesWizard": false,
-					"requiredBiomeValues": [],
+					"requiredBiomeValues": ["LevelType3"],
 					"biomeRequirementMode": 0
 				}
 			],
