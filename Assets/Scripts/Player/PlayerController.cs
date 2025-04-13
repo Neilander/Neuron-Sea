@@ -85,7 +85,10 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private Vector3 lockedPosition; // 存储锁定的位置
     private bool isPositionLocked = false; // 位置是否被锁定
+    private MovementComparison movementBounds;
 
+
+    private bool dropped = false;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -102,6 +105,16 @@ public class PlayerController : MonoBehaviour, IMovementController
              if (Input.GetKeyDown(KeyCode.R))
                  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
          }
+
+        if (movementBounds.IsAtRightEdge())
+        {
+            FindAnyObjectByType<levelManager>().SwitchToNextLevel();
+        }
+        else if (movementBounds.ShouldDrop()&& !dropped)
+        {
+            dropped = true;
+            PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
+        }
     }
 
     private void FixedUpdate()
@@ -314,6 +327,14 @@ public class PlayerController : MonoBehaviour, IMovementController
     }
     #endregion
 
+    #region 区域限制
+    public void SetMovementBounds(Rect rect)
+    {
+        movementBounds = new MovementComparison(rect, transform);
+    }
+
+    #endregion
+
     public void ResetMovement()
     {
         if (rb != null)
@@ -470,4 +491,50 @@ public class BoolRefresher
         value = false;
         timer = 0f;
     }
+}
+
+public class MovementComparison
+{
+    private float leftX;
+    private float rightX;
+    private float topY;
+    private float bottomY;
+
+    private Transform target;
+
+    public MovementComparison(Rect rect, Transform targetTransform)
+    {
+        leftX = rect.xMin;
+        rightX = rect.xMax;
+        bottomY = rect.yMin;
+        topY = rect.yMax;
+
+        target = targetTransform;
+    }
+
+    // ✅ 是否到达右边（例如可以前进）
+    public bool IsAtRightEdge()
+    {
+        return target.position.x >= rightX;
+    }
+
+    // ✅ 是否到达左边（例如不能再后退）
+    public bool IsAtLeftEdge()
+    {
+        return target.position.x <= leftX;
+    }
+
+    // ✅ 是否该掉落（例如到达下边）
+    public bool ShouldDrop()
+    {
+        return target.position.y <= bottomY;
+    }
+
+    // ✅ 是否到达顶部（例如可以跳的限制）
+    public bool IsAtTopEdge()
+    {
+        return target.position.y >= topY;
+    }
+
+    // ✅ 你可以添加更多判断方法
 }

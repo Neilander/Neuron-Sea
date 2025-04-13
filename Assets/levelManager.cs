@@ -54,6 +54,9 @@ public class levelManager : MonoBehaviour
         {
             Debug.LogWarning($"关卡 {newLevelName} 上没有找到 LevelData 组件！");
         }
+
+        PlayerController controller = FindAnyObjectByType<PlayerController>();
+        controller.SetMovementBounds(data.levelBound);
     }
 
     private void Update()

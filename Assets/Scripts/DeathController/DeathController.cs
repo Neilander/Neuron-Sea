@@ -41,10 +41,11 @@ public class DeathController : MonoBehaviour
     private void Update()
     {
         // 检测玩家是否低于死亡线
+        /*
         if (playerController != null && playerController.transform.position.y < deathLineY)
         {
             HandleDeath(playerController.gameObject);
-        }
+        }*/
     }
 
     public void HandleDeath(GameObject obj)
