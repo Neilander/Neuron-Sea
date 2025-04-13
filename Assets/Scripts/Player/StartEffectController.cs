@@ -23,7 +23,7 @@ public class StartEffectController : MonoBehaviour
     public Image fadeImage;
     public float fadeDuration = 1f;
 
-    void Start()
+    public void TriggerStartEffect()
     {
         playerController = FindFirstObjectByType<PlayerController>();
         if (playerController != null && startPosition != null)
