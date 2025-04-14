@@ -3,19 +3,35 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-// 添加碰撞监听类
+/// <summary>
+/// 用于检测和记录碰撞事件的组件
+/// </summary>
 public class CollisionListener : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Debug.Log($"玩家碰撞检测: 碰到了 {collision.gameObject.name}, 接触点: {collision.contactCount}, 位置: {transform.position}");
+        Debug.Log($"玩家碰撞检测: 碰到了 {collision.gameObject.name}, 接触点: {collision.contactCount}, 位置: {transform.position}");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Debug.Log($"玩家触发器检测: 进入了 {other.gameObject.name}, 位置: {transform.position}");
+        Debug.Log($"玩家触发器检测: 进入了 {other.gameObject.name}, 位置: {transform.position}");
     }
 }
+
+// 添加碰撞监听类
+// public class CollisionListener : MonoBehaviour
+// {
+//     private void OnCollisionEnter2D(Collision2D collision)
+//     {
+//         // Debug.Log($"玩家碰撞检测: 碰到了 {collision.gameObject.name}, 接触点: {collision.contactCount}, 位置: {transform.position}");
+//     }
+//
+//     private void OnTriggerEnter2D(Collider2D other)
+//     {
+//         // Debug.Log($"玩家触发器检测: 进入了 {other.gameObject.name}, 位置: {transform.position}");
+//     }
+// }
 
 public class DeathController : MonoBehaviour
 {
@@ -218,24 +234,24 @@ public class DeathController : MonoBehaviour
             }
         }
 
-        // 每5秒输出一次玩家状态和位置，用于调试
-        if (playerController != null && Time.frameCount % 300 == 0)
-        {
-            // 获取和打印碰撞体信息
-            Collider2D[] colliders = playerController.GetComponents<Collider2D>();
-            string colliderInfo = "";
-            foreach (Collider2D col in colliders)
-            {
-                colliderInfo += $"{col.GetType().Name}(启用:{col.enabled},触发器:{col.isTrigger}) ";
-            }
+        // // 每5秒输出一次玩家状态和位置，用于调试
+        // if (playerController != null && Time.frameCount % 300 == 0)
+        // {
+        //     // 获取和打印碰撞体信息
+        //     Collider2D[] colliders = playerController.GetComponents<Collider2D>();
+        //     string colliderInfo = "";
+        //     foreach (Collider2D col in colliders)
+        //     {
+        //         colliderInfo += $"{col.GetType().Name}(启用:{col.enabled},触发器:{col.isTrigger}) ";
+        //     }
 
-            // 获取和打印刚体信息
-            string rbInfo = playerRigidbody != null ?
-                $"刚体:(运动学:{playerRigidbody.isKinematic},模拟:{playerRigidbody.simulated},速度:{playerRigidbody.velocity})" :
-                "无刚体";
+        //     // 获取和打印刚体信息
+        //     string rbInfo = playerRigidbody != null ?
+        //         $"刚体:(运动学:{playerRigidbody.isKinematic},模拟:{playerRigidbody.simulated},速度:{playerRigidbody.velocity})" :
+        //         "无刚体";
 
-            // Debug.Log($"[状态检查] 玩家位置:{playerController.transform.position}, {colliderInfo}, {rbInfo}");
-        }
+        //     // Debug.Log($"[状态检查] 玩家位置:{playerController.transform.position}, {colliderInfo}, {rbInfo}");
+        // }
 
         // 检测玩家是否低于死亡线
         if (playerController != null && playerController.transform.position.y < deathLineY)
