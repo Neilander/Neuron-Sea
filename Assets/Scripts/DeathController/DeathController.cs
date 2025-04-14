@@ -5,9 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class DeathController : MonoBehaviour
 {
-    [Header("死亡线设置")]
-    [SerializeField] private float deathLineY = -10f; // 死亡线高度,可在Inspector中调整
-
     [Header("死亡动画设置")]
     public Image deathImg;
     public float cameraRotateAngle = 20f;      // 相机Z轴旋转目标角度
@@ -17,6 +14,8 @@ public class DeathController : MonoBehaviour
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private PlayerController playerController;
+    private leveldata currentLevelData;
+    private float deathLineY;
 
     private void Start()
     {
@@ -25,6 +24,19 @@ public class DeathController : MonoBehaviour
         if (playerController == null)
         {
             Debug.LogWarning("未找到PlayerController组件！");
+        }
+
+        // 获取当前关卡数据
+        currentLevelData = FindObjectOfType<leveldata>();
+        if (currentLevelData != null)
+        {
+            // 设置死亡线为关卡边界的最低点
+            deathLineY = currentLevelData.levelBound.yMin;
+            Debug.Log($"当前关卡死亡线高度: {deathLineY}");
+        }
+        else
+        {
+            Debug.LogWarning("未找到leveldata组件！");
         }
     }
 
@@ -76,7 +88,7 @@ public class DeathController : MonoBehaviour
             t += Time.unscaledDeltaTime;
             float normalizedT = Mathf.Clamp01(t / transitionDuration);
 
-            float curvedT = rotationCurve.Evaluate(normalizedT); // 用曲线控制插值进度
+            float curvedT = rotationCurve.Evaluate(normalizedT);
             cam.transform.rotation = Quaternion.Slerp(startRot, targetRot, curvedT);
 
             yield return null;

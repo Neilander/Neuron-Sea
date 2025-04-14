@@ -23,6 +23,12 @@ public class DeathEffectTrigger : MonoBehaviour
     private Rigidbody2D playerRigidbody; // 玩家刚体引用
     private PlayerInput playerInput; // 玩家输入组件引用
 
+    [Header("重生设置")]
+    [SerializeField] private Vector3 respawnPosition = Vector3.zero; // 玩家重生位置
+    [SerializeField] private bool useCustomRespawnPosition = false; // 是否使用自定义重生位置
+    [SerializeField] private Transform respawnTarget; // 目标物体的Transform组件
+    [SerializeField] private bool useTargetPosition = false; // 是否使用目标物体的位置
+
     [System.Serializable]
     public class EffectParameters
     {
@@ -212,6 +218,7 @@ public class DeathEffectTrigger : MonoBehaviour
                         playerRigidbody.isKinematic = true;
                     }
 
+
                     // 保存原始材质
                     originalMaterial = playerSpriteRenderer.material;
 
@@ -250,19 +257,19 @@ public class DeathEffectTrigger : MonoBehaviour
             Debug.Log("已禁用输入系统");
         }
 
-        // 禁用玩家移动并锁定位置
-        if (playerController != null)
-        {
-            playerController.DisableMovement();
-            // 强制重置任何正在进行的移动
-            if (playerController is IMovementController movementController)
-            {
-                movementController.ResetMovement();
-            }
-            // 确保位置被锁定
-            playerController.LockPosition();
-            Debug.Log("已禁用玩家移动和输入，并锁定位置");
-        }
+        // // 禁用玩家移动并锁定位置
+        // if (playerController != null)
+        // {
+        //     playerController.DisableMovement();
+        //     // 强制重置任何正在进行的移动
+        //     if (playerController is IMovementController movementController)
+        //     {
+        //         movementController.ResetMovement();
+        //     }
+        //     // 确保位置被锁定
+        //     playerController.LockPosition();
+        //     Debug.Log("已禁用玩家移动和输入，并锁定位置");
+        // }
 
         // 停止动画
         if (playerAnimator != null)
@@ -454,11 +461,30 @@ public class DeathEffectTrigger : MonoBehaviour
         endValues.greenOffset = controlEffects.greenOffset;
         endValues.blueOffset = controlEffects.blueOffset;
 
+        bool hasMovedPlayer = false; // 标记是否已经移动了玩家
+
         // 开始其他效果的过渡
         while (elapsedTime < transitionDuration)
         {
             float t = elapsedTime / transitionDuration; // 归一化时间，从0到1
             float smoothT = Mathf.SmoothStep(0, 1, t);
+
+            // // 在过渡进行到一半时移动玩家
+            // if (!hasMovedPlayer && t >= 0.5f)
+            // {
+            //     // 根据设置决定使用哪种重生位置
+            //     if (useTargetPosition && respawnTarget != null)
+            //     {
+            //         playerController.transform.position = respawnTarget.position;
+            //         Debug.Log($"已在第二阶段中间时间点将玩家移动到目标物体位置：{respawnTarget.position}");
+            //     }
+            //     else if (useCustomRespawnPosition)
+            //     {
+            //         playerController.transform.position = respawnPosition;
+            //         Debug.Log($"已在第二阶段中间时间点将玩家移动到自定义重生位置：{respawnPosition}");
+            //     }
+            //     hasMovedPlayer = true;
+            // }
 
             // 平滑插值所有其他参数，保持颜色校正不变
             controlEffects.jitterIntensity = Mathf.Lerp(endValues.jitterIntensity, targetValues.jitterIntensity, smoothT);
@@ -495,7 +521,33 @@ public class DeathEffectTrigger : MonoBehaviour
 
         // 保持效果一段时间
         Debug.Log($"效果将保持 {effectDuration} 秒");
-        yield return new WaitForSeconds(effectDuration);
+        float effectElapsedTime = 0;
+        hasMovedPlayer = false;
+
+        // 在效果保持阶段移动玩家
+        while (effectElapsedTime < effectDuration)
+        {
+            // 在效果保持阶段的一半时间点移动玩家
+            if (!hasMovedPlayer && effectElapsedTime >= effectDuration * 0.5f)
+            {
+                // 根据设置决定使用哪种重生位置
+                if (useTargetPosition && respawnTarget != null)
+                {
+                    playerController.transform.position = respawnTarget.position;
+                    Debug.Log($"已在效果保持阶段中间时间点将玩家移动到目标物体位置：{respawnTarget.position}");
+                }
+                else if (useCustomRespawnPosition)
+                {
+                    playerController.transform.position = respawnPosition;
+                    Debug.Log($"已在效果保持阶段中间时间点将玩家移动到自定义重生位置：{respawnPosition}");
+                }
+                hasMovedPlayer = true;
+            }
+
+            effectElapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
         Debug.Log("开始恢复参数");
 
         // 先恢复除颜色校正和GlitchFade之外的所有参数
@@ -569,8 +621,6 @@ public class DeathEffectTrigger : MonoBehaviour
             Debug.Log("已恢复原始材质");
         }
 
-
-
         // 平滑过渡回初始值
         // 先恢复除颜色校正外的所有参数
         elapsedTime = 0;
@@ -633,6 +683,22 @@ public class DeathEffectTrigger : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+// 恢复玩家移动
+        if (playerController != null)
+        {
+            playerController.EnableMovement();
+            Debug.Log("已恢复玩家移动能力");
+        }
+        // 恢复玩家的材质
+        if (playerSpriteRenderer != null && originalMaterial != null)
+        {
+            playerSpriteRenderer.material = originalMaterial;
+            Debug.Log("已恢复玩家原始材质");
+        }
+
+        // 解除玩家冻结状态
+        UnfreezePlayer();
+        Debug.Log("玩家状态已完全恢复");
 
         // 恢复其他参数后，等待指定时间
         Debug.Log($"所有其他参数已恢复，颜色校正和饱和度将等待 {colorCorrectionRecoveryDelay} 秒后恢复");
@@ -681,23 +747,7 @@ public class DeathEffectTrigger : MonoBehaviour
 
         // 等待一帧确保ScanLineJitterFeature完全禁用
         yield return new WaitForEndOfFrame();
-        // 恢复玩家移动
-        if (playerController != null)
-        {
-            playerController.EnableMovement();
-            Debug.Log("已恢复玩家移动能力");
-        }
-        // 恢复玩家的材质
-        if (playerSpriteRenderer != null && originalMaterial != null)
-        {
-            playerSpriteRenderer.material = originalMaterial;
-            Debug.Log("已恢复玩家原始材质");
-        }
-
-        // 解除玩家冻结状态
-        UnfreezePlayer();
-        Debug.Log("玩家状态已完全恢复");
-
+        
         isEffectActive = false;
     }
 }
