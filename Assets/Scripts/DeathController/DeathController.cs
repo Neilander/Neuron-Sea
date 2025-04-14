@@ -19,20 +19,6 @@ public class CollisionListener : MonoBehaviour
     }
 }
 
-// 添加碰撞监听类
-// public class CollisionListener : MonoBehaviour
-// {
-//     private void OnCollisionEnter2D(Collision2D collision)
-//     {
-//         // Debug.Log($"玩家碰撞检测: 碰到了 {collision.gameObject.name}, 接触点: {collision.contactCount}, 位置: {transform.position}");
-//     }
-//
-//     private void OnTriggerEnter2D(Collider2D other)
-//     {
-//         // Debug.Log($"玩家触发器检测: 进入了 {other.gameObject.name}, 位置: {transform.position}");
-//     }
-// }
-
 public class DeathController : MonoBehaviour
 {
     [Header("死亡动画设置")]
@@ -55,6 +41,13 @@ public class DeathController : MonoBehaviour
     [SerializeField] private bool useCustomRespawnPosition = false; // 是否使用自定义重生位置
     [SerializeField] private Transform respawnTarget; // 目标物体的Transform组件
     [SerializeField] private bool useTargetPosition = false; // 是否使用目标物体的位置
+
+    [Header("音效设置")]
+    [SerializeField] private AudioSource deathMusicSource; // 死亡音乐的音频源
+    [SerializeField] private float musicFadeInDuration = 0.5f; // 音乐淡入时间
+    [SerializeField] private float musicFadeOutDuration = 1.0f; // 音乐淡出时间
+
+    private Coroutine musicFadeCoroutine; // 音乐淡入淡出协程
 
     private PlayerController playerController;
     private leveldata currentLevelData;
@@ -256,13 +249,15 @@ public class DeathController : MonoBehaviour
         // 检测玩家是否低于死亡线
         if (playerController != null && playerController.transform.position.y < deathLineY)
         {
+
             // Debug.Log($"检测到玩家({playerController.name})低于死亡线! 当前位置Y: {playerController.transform.position.y}, 死亡线Y: {deathLineY}");
             HandleDeath(playerController.gameObject);
         }
     }
 
     public void HandleDeath(GameObject obj)
-    {
+    {   // 开始播放死亡音乐
+        PlayDeathMusic();
         // 获取玩家组件
         if (obj != null)
         {
@@ -418,14 +413,6 @@ public class DeathController : MonoBehaviour
             playerAnimator = playerObject.GetComponent<Animator>();
             playerInput = playerObject.GetComponent<PlayerInput>();
             playerSpriteRenderer = playerObject.GetComponent<SpriteRenderer>();
-
-            // 为玩家添加碰撞监听组件
-            CollisionListener collisionListener = playerObject.GetComponent<CollisionListener>();
-            if (collisionListener == null)
-            {
-                collisionListener = playerObject.AddComponent<CollisionListener>();
-                // Debug.Log("为玩家添加了碰撞监听组件");
-            }
 
             // 获取所有碰撞体并启用
             Collider2D[] colliders = playerObject.GetComponents<Collider2D>();
@@ -888,9 +875,79 @@ public class DeathController : MonoBehaviour
         controlEffects.DisableScanLineJitterFeature();
         // Debug.Log("特效已完全禁用，效果结束");
 
+        // 停止死亡音乐（带淡出效果）
+        StopDeathMusic();
+
         // 等待一帧确保ScanLineJitterFeature完全禁用
         yield return new WaitForEndOfFrame();
 
         isEffectActive = false;
+    }
+
+    // 播放死亡音乐（带渐入效果）
+    private void PlayDeathMusic()
+    {
+        // 检查音频源是否已设置
+        if (deathMusicSource == null) return;
+
+        // 停止之前的淡入淡出协程（如果有）
+        if (musicFadeCoroutine != null)
+        {
+            StopCoroutine(musicFadeCoroutine);
+        }
+
+        // 播放音乐并启动淡入协程
+        deathMusicSource.Play();
+        musicFadeCoroutine = StartCoroutine(FadeMusicVolume(0f, 1f, musicFadeInDuration));
+    }
+
+    // 停止死亡音乐（带渐出效果）
+    private void StopDeathMusic()
+    {
+        // 检查音频源是否已设置
+        if (deathMusicSource == null) return;
+
+        // 停止之前的淡入淡出协程（如果有）
+        if (musicFadeCoroutine != null)
+        {
+            StopCoroutine(musicFadeCoroutine);
+        }
+
+        // 启动淡出协程
+        musicFadeCoroutine = StartCoroutine(FadeMusicVolume(deathMusicSource.volume, 0f, musicFadeOutDuration, true));
+    }
+
+    // 音乐音量淡入淡出协程
+    private IEnumerator FadeMusicVolume(float startVolume, float targetVolume, float duration, bool stopAfterFade = false)
+    {
+        if (deathMusicSource == null) yield break;
+
+        float elapsedTime = 0;
+
+        // 设置初始音量
+        deathMusicSource.volume = startVolume;
+
+        while (elapsedTime < duration)
+        {
+            // 计算当前音量
+            float t = elapsedTime / duration;
+            float smoothT = Mathf.SmoothStep(0, 1, t);
+            deathMusicSource.volume = Mathf.Lerp(startVolume, targetVolume, smoothT);
+
+            // 更新时间
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // 确保达到目标音量
+        deathMusicSource.volume = targetVolume;
+
+        // 如果需要，停止音乐
+        if (stopAfterFade && targetVolume <= 0)
+        {
+            deathMusicSource.Stop();
+        }
+
+        musicFadeCoroutine = null;
     }
 }

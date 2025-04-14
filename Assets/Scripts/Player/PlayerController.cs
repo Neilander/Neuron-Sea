@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     private float moveSpeed = 7f;
 
     [SerializeField]
-    private float jumpForce = 5f;
+    private float jumpForce = 18f;
 
     [SerializeField]
     private float maxFallSpeed = -10f;
