@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     #region 判断地面
     private void GroundCheck()
     {
-        //bool wasGrounded = isGrounded;
+        bool wasGrounded = isGrounded;
         // 检测角色是否接触地面
         isGrounded = false;
         foreach (RaycastHit2D hit in Physics2D.BoxCastAll(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x + deviation * 0.8f, deviation), 0f, Vector2.down, deviation / 2, groundLayer))
@@ -220,10 +220,17 @@ public class PlayerController : MonoBehaviour, IMovementController
                 break;
             }
         }
-        //if(!wasGrounded && isGrounded)
-        //{
-        //    Debug.Log("Land");
-        //}
+
+        // 添加地面状态变化的调试
+        if (!wasGrounded && isGrounded)
+        {
+            Debug.Log($"玩家落地 - 位置: {transform.position}");
+        }
+        else if (wasGrounded && !isGrounded)
+        {
+            Debug.Log($"玩家离开地面 - 位置: {transform.position}");
+        }
+
         // 检测脚前方是否接触墙壁
         // Debug.Log("isTouchingWall: " + isTouchingWall);
         // isTouchingWallLeft = Physics2D.OverlapCircle(wallCheckLeft.position, wallCheckRadius, wallLayer);
@@ -302,6 +309,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         animator.SetTrigger("Jump");
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         JumpInput.Jump.OnTrigger();
+        Debug.Log($"玩家跳跃 - 位置: {transform.position}, 速度: {rb.velocity}, 跳跃力: {jumpForce}");
     }
     void CheckJump()
     {
@@ -317,13 +325,20 @@ public class PlayerController : MonoBehaviour, IMovementController
         if (!JumpInput.Jump.Checked() && !isGrounded && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
+            Debug.Log("跳跃中断");
         }
     }
     void CheckJumpStart()
     {
-        if (JumpInput.Jump.Pressed() && (isGrounded || ifJustGround.Get()))
+        bool jumpCondition = isGrounded || ifJustGround.Get();
+        if (JumpInput.Jump.Pressed() && jumpCondition)
         {
+            Debug.Log($"检测到跳跃输入 - 地面状态: {isGrounded}, 土狼时间: {ifJustGround.Get()}");
             Jump();
+        }
+        else if (JumpInput.Jump.Pressed() && !jumpCondition)
+        {
+            Debug.Log($"跳跃条件不满足 - 地面状态: {isGrounded}, 土狼时间: {ifJustGround.Get()}");
         }
     }
     #endregion
@@ -465,6 +480,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     public void EnableInput()
     {
         canInput = true;
+        Debug.Log("已启用玩家输入 - 可以接收跳跃指令");
     }
 
     // 新增：获取是否在地面上的公共方法
@@ -493,6 +509,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         {
             rb.velocity = Vector2.zero;
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            Debug.Log($"玩家位置已锁定 - 位置: {lockedPosition}, 刚体约束: 全部冻结");
         }
     }
 
@@ -505,6 +522,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            Debug.Log($"玩家位置已解锁 - 刚体约束: 仅冻结旋转");
         }
     }
 }

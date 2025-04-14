@@ -65,7 +65,6 @@ public class DeathController : MonoBehaviour
     private SpriteRenderer playerSpriteRenderer; // 玩家的SpriteRenderer
     private Animator playerAnimator; // 玩家动画器引用
     private Rigidbody2D playerRigidbody; // 玩家刚体引用
-    private PlayerInput playerInput; // 玩家输入组件引用
 
     [System.Serializable]
     public class EffectParameters
@@ -229,7 +228,6 @@ public class DeathController : MonoBehaviour
                 playerSpriteRenderer = playerObject.GetComponent<SpriteRenderer>();
                 playerAnimator = playerObject.GetComponent<Animator>();
                 playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
-                playerInput = playerObject.GetComponent<PlayerInput>();
                 // Debug.Log("已在Update中重新获取玩家引用");
             }
         }
@@ -270,15 +268,12 @@ public class DeathController : MonoBehaviour
             playerSpriteRenderer = obj.GetComponent<SpriteRenderer>();
             playerAnimator = obj.GetComponent<Animator>();
             playerRigidbody = obj.GetComponent<Rigidbody2D>();
-            playerInput = obj.GetComponent<PlayerInput>();
 
             if (playerController != null && playerSpriteRenderer != null)
             {
-                // 立即禁用输入系统
-                if (playerInput != null)
-                {
-                    playerInput.enabled = false;
-                }
+                // 使用 PlayerController 禁用输入
+                playerController.DisableInput();
+                Debug.Log("死亡处理: 已禁用玩家输入");
 
                 // 立即重置所有移动状态
                 if (playerRigidbody != null)
@@ -287,7 +282,7 @@ public class DeathController : MonoBehaviour
                     playerRigidbody.isKinematic = true;
                     // 保持碰撞体检测，但防止物理响应
                     playerRigidbody.simulated = true;  // 仍然模拟碰撞
-                    // Debug.Log("玩家刚体设置为运动学，但保持碰撞检测");
+                    Debug.Log($"死亡处理: 已设置玩家刚体 - 运动学: {playerRigidbody.isKinematic}, 模拟: {playerRigidbody.simulated}, 速度: {playerRigidbody.velocity}");
                 }
 
                 // 保存原始材质
@@ -359,10 +354,10 @@ public class DeathController : MonoBehaviour
     // 冻结玩家的所有移动和动画
     private void FreezePlayer()
     {
-        // 立即禁用输入系统
-        if (playerInput != null)
+        // 使用 PlayerController 禁用输入
+        if (playerController != null)
         {
-            playerInput.enabled = false;
+            playerController.DisableInput();
             // Debug.Log("已禁用输入系统");
         }
 
@@ -407,6 +402,7 @@ public class DeathController : MonoBehaviour
     {
         // 等待一帧确保所有特效和材质更改都已完成
         yield return new WaitForEndOfFrame();
+        Debug.Log("开始解冻玩家序列 - 恢复跳跃和移动功能");
 
         // 获取当前玩家（可能是重生后的新玩家）
         playerController = FindObjectOfType<PlayerController>();
@@ -416,8 +412,8 @@ public class DeathController : MonoBehaviour
             GameObject playerObject = playerController.gameObject;
             playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
             playerAnimator = playerObject.GetComponent<Animator>();
-            playerInput = playerObject.GetComponent<PlayerInput>();
             playerSpriteRenderer = playerObject.GetComponent<SpriteRenderer>();
+            Debug.Log($"解冻序列: 已获取玩家组件 - 位置: {playerObject.transform.position}");
 
             // 为玩家添加碰撞监听组件
             CollisionListener collisionListener = playerObject.GetComponent<CollisionListener>();
@@ -449,7 +445,7 @@ public class DeathController : MonoBehaviour
         }
         else
         {
-            // Debug.LogError("无法找到PlayerController！解冻操作无法完成");
+            Debug.LogError("无法找到PlayerController！解冻操作无法完成");
             yield break;
         }
 
@@ -458,17 +454,22 @@ public class DeathController : MonoBehaviour
         {
             // 先将模拟设置为true，再将isKinematic设置为false
             playerRigidbody.simulated = true;
+            Debug.Log("解冻序列: 已设置刚体模拟 = true");
             yield return new WaitForFixedUpdate();
 
             playerRigidbody.isKinematic = false;
+            Debug.Log("解冻序列: 已设置刚体运动学 = false");
             yield return new WaitForFixedUpdate();
 
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            Debug.Log("解冻序列: 已恢复刚体约束为仅冻结旋转");
             yield return new WaitForFixedUpdate();
 
-            // 添加一个明显的向下力，帮助重新检测地面
-            playerRigidbody.AddForce(Vector2.down * 5f, ForceMode2D.Impulse);
-            // Debug.Log($"已恢复玩家物理系统，当前速度: {playerRigidbody.velocity}，向下施加了力");
+            // playerRigidbody.AddForce(Vector2.down * 5f, ForceMode2D.Impulse);
+            Debug.Log($"已恢复玩家物理系统，当前速度: {playerRigidbody.velocity}");
+
+            // 测试跳跃所需的物理参数是否正确
+            Debug.Log($"解冻序列: 检查跳跃相关物理参数 - 重力缩放: {playerRigidbody.gravityScale}, 质量: {playerRigidbody.mass}, 阻力: {playerRigidbody.drag}");
 
             // 物理更新需要等待下一帧
             yield return new WaitForFixedUpdate();
@@ -478,21 +479,32 @@ public class DeathController : MonoBehaviour
         if (playerAnimator != null)
         {
             playerAnimator.enabled = true;
-            // Debug.Log("已恢复玩家动画");
-        }
+            // 检查跳跃相关的动画参数
+            try
+            {
+                playerAnimator.GetParameter(0); // 尝试获取任意参数来判断是否有参数
+                Debug.Log("解冻序列: 动画器已启用，准备接收跳跃动画");
+            }
+            catch (System.Exception)
+            {
+                Debug.LogWarning("解冻序列: 动画器参数获取失败");
+            }
 
-        // 恢复输入系统
-        if (playerInput != null)
-        {
-            playerInput.enabled = true;
-            // Debug.Log("已恢复输入系统");
+            Debug.Log("已恢复玩家动画");
         }
 
         // 最后恢复玩家移动和输入控制，同时解锁位置
         if (playerController != null)
         {
+            // 获取玩家的地面状态，确保跳跃检测正常
+            bool isGrounded = playerController.IsGrounded();
+            Debug.Log($"解冻序列: 玩家地面状态检查 - isGrounded: {isGrounded}");
+
             playerController.EnableMovement();
-            // Debug.Log("已恢复玩家移动和输入控制，并解锁位置");
+            Debug.Log("已恢复玩家移动和输入控制，并解锁位置");
+
+            // 测试是否可以接收跳跃输入
+            Debug.Log("解冻序列: 玩家现在应该可以跳跃了，请尝试按空格键");
         }
     }
 
@@ -708,7 +720,7 @@ public class DeathController : MonoBehaviour
             yield return null;
         }
 
-        // Debug.Log("开始恢复参数");
+        Debug.Log("开始恢复参数");
 
         // 先恢复除颜色校正和GlitchFade之外的所有参数
         elapsedTime = 0;
@@ -747,7 +759,7 @@ public class DeathController : MonoBehaviour
 
         // 等待一小段时间再开始恢复GlitchFade
         yield return new WaitForSeconds(0.2f);
-        // Debug.Log("开始恢复GlitchFade...");
+        Debug.Log("开始恢复GlitchFade...");
 
         // 恢复GlitchFade
         elapsedTime = 0;
@@ -770,14 +782,14 @@ public class DeathController : MonoBehaviour
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
             playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
-            // Debug.Log("GlitchFade 完全恢复: 0");
+            Debug.Log("GlitchFade 完全恢复: 0");
         }
 
         // 恢复原始材质
         if (playerSpriteRenderer != null && originalMaterial != null)
         {
             playerSpriteRenderer.material = originalMaterial;
-            // Debug.Log("已恢复原始材质");
+            Debug.Log("已恢复原始材质");
         }
 
         // 平滑过渡回初始值
@@ -844,9 +856,9 @@ public class DeathController : MonoBehaviour
         }
 
         // 恢复其他参数后，等待指定时间
-        // Debug.Log($"所有其他参数已恢复，颜色校正和饱和度将等待 {colorCorrectionRecoveryDelay} 秒后恢复");
+        Debug.Log($"所有其他参数已恢复，颜色校正和饱和度将等待 {colorCorrectionRecoveryDelay} 秒后恢复");
         yield return new WaitForSeconds(colorCorrectionRecoveryDelay);
-        // Debug.Log("开始恢复颜色校正和饱和度");
+        Debug.Log("开始恢复颜色校正和饱和度");
 
         // 最后再平滑恢复颜色校正和饱和度
         elapsedTime = 0;
@@ -882,11 +894,11 @@ public class DeathController : MonoBehaviour
         controlEffects.enableWaveEffect = originalValues.enableWaveEffect;
         controlEffects.enableBlackAndWhite = originalValues.enableBlackAndWhite;
 
-        // Debug.Log($"恢复后的饱和度值: {controlEffects.saturation}");
+        Debug.Log($"恢复后的饱和度值: {controlEffects.saturation}");
 
         // 禁用ScanLineJitterFeature特性
         controlEffects.DisableScanLineJitterFeature();
-        // Debug.Log("特效已完全禁用，效果结束");
+        Debug.Log("特效已完全禁用，效果结束");
 
         // 等待一帧确保ScanLineJitterFeature完全禁用
         yield return new WaitForEndOfFrame();
