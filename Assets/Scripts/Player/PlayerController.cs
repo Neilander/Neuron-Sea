@@ -51,12 +51,9 @@ public class PlayerController : MonoBehaviour, IMovementController
     private Rigidbody2D rb;
     #endregion
     #region 布尔值
-
     private bool isGrounded;
     private bool isTouchingWall;
-
     private bool isTouchingWallLeft;
-
     private bool isTouchingWallRight;
     #endregion
     #region Timer
@@ -100,10 +97,10 @@ public class PlayerController : MonoBehaviour, IMovementController
     private void Update()
     {
         //只有在可以输入时才处理输入
-         if (canInput)
-         {
-             if (Input.GetKeyDown(KeyCode.R))
-                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (canInput)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
             if (Input.GetKeyDown(KeyCode.J))
             {
@@ -113,13 +110,13 @@ public class PlayerController : MonoBehaviour, IMovementController
             {
                 levelManager.instance.SwitchToNextLevel_Direct();
             }
-         }
+        }
 
         if (movementBounds.IsAtRightEdge())
         {
             FindAnyObjectByType<levelManager>().SwitchToNextLevel();
         }
-        else if (movementBounds.ShouldDrop()&& !dropped)
+        else if (movementBounds.ShouldDrop() && !dropped)
         {
             dropped = true;
             PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
@@ -166,7 +163,7 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private void FixedUpdate()
     {
-        
+
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         if (rb.velocity.y < maxFallSpeed)
@@ -203,7 +200,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         }
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
-        
+
     }
 
     private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }
@@ -240,8 +237,49 @@ public class PlayerController : MonoBehaviour, IMovementController
         // 只有在可以输入时才获取输入
         float moveInput = canInput ? Input.GetAxis("Horizontal") : 0f;
 
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-        animator.SetFloat("Speed", Mathf.Abs(moveInput));
+        // 在地面上应用摩擦力
+        if (isGrounded)
+        {
+            // 类似图片中在蹲下和地面上的处理，应用水平方向的摩擦力
+            rb.velocity = new Vector2(
+                Mathf.MoveTowards(rb.velocity.x, 0, Constants.DuckFriction * Time.deltaTime),
+                rb.velocity.y);
+        }
+
+        // 获取移动方向乘数
+        float mult = isGrounded ? 1 : Constants.AirMult;
+
+        // 当前最大速度
+        float max = Constants.MaxRun;
+
+        // 如果有输入
+        if (moveInput != 0)
+        {
+            // 如果速度超过最大值且方向相同
+            if (Mathf.Abs(rb.velocity.x) > max && Mathf.Sign(rb.velocity.x) == Mathf.Sign(moveInput))
+            {
+                // 减速到最大速度
+                rb.velocity = new Vector2(
+                    Mathf.MoveTowards(rb.velocity.x, max * Mathf.Sign(moveInput), Constants.RunReduce * mult * Time.deltaTime),
+                    rb.velocity.y);
+            }
+            else
+            {
+                // 加速到目标速度
+                rb.velocity = new Vector2(
+                    Mathf.MoveTowards(rb.velocity.x, max * moveInput, Constants.RunAccel * mult * Time.deltaTime),
+                    rb.velocity.y);
+            }
+        }
+        else
+        {
+            // 无输入时，向0减速
+            rb.velocity = new Vector2(
+                Mathf.MoveTowards(rb.velocity.x, 0, Constants.RunReduce * Time.deltaTime),
+                rb.velocity.y);
+        }
+
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
     }
     #endregion
     #region 角色身体转向
@@ -586,4 +624,14 @@ public class MovementComparison
     }
 
     // ✅ 你可以添加更多判断方法
+}
+
+// 添加常量类
+public static class Constants
+{
+    public static float DuckFriction = 10.0f;     // 地面摩擦力
+    public static float AirMult = 0.6f;          // 空中移动乘数
+    public static float MaxRun = 7.0f;           // 最大奔跑速度
+    public static float RunReduce = 20.0f;       // 减速系数
+    public static float RunAccel = 25.0f;        // 加速系数
 }
