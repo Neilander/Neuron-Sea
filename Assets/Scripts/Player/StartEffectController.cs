@@ -25,7 +25,22 @@ public class StartEffectController : MonoBehaviour
 
     public void Start()
     {
-        TriggerStartEffect();
+        //TriggerStartEffect();
+    }
+
+    private void OnEnable()
+    {
+        PlayerDeathEvent.OnDeathTriggered += StopEffect;
+    }
+
+    private void OnDisable()
+    {
+        PlayerDeathEvent.OnDeathTriggered -= StopEffect;
+    }
+
+    public void StopEffect(GameObject obj)
+    {
+        StopAllCoroutines();
     }
 
     public void TriggerStartEffect()

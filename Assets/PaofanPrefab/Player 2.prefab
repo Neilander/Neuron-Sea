@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12639c298418df240900cad75a18625d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 8
   jumpForce: 18
   maxFallSpeed: -10
   extraJumpAllowTime: 0.1
@@ -317,6 +317,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   speedChangeThreshold: 0.01
+  OnTabSelected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4137772579069226716
 MonoBehaviour:
   m_ObjectHideFlags: 0

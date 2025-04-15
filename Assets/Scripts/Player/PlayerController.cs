@@ -104,6 +104,15 @@ public class PlayerController : MonoBehaviour, IMovementController
          {
              if (Input.GetKeyDown(KeyCode.R))
                  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                levelManager.instance.SwitchToBeforeLevel_Direct();
+            }
+            else if (Input.GetKeyDown(KeyCode.K))
+            {
+                levelManager.instance.SwitchToNextLevel_Direct();
+            }
          }
 
         if (movementBounds.IsAtRightEdge())
@@ -115,10 +124,7 @@ public class PlayerController : MonoBehaviour, IMovementController
             dropped = true;
             PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
         }
-    }
-
-    private void FixedUpdate()
-    {
+        /*
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         if (rb.velocity.y < maxFallSpeed)
@@ -155,6 +161,49 @@ public class PlayerController : MonoBehaviour, IMovementController
         }
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
+        */
+    }
+
+    private void FixedUpdate()
+    {
+        
+        GroundCheck();
+        animator.SetBool("isGrounded", isGrounded);
+        if (rb.velocity.y < maxFallSpeed)
+        {
+            Vector2 newVelocity = rb.velocity;
+            newVelocity.y = maxFallSpeed;
+            rb.velocity = newVelocity;
+        }
+        CurrentYSpeed = rb.velocity.y;
+        if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
+        {
+            CurrentYSpeed = 0;
+        }
+        animator.SetFloat("VerticalSpeed", CurrentYSpeed);
+        GetSpeedChange();
+
+        if (!canMove) // 如果不能移动，直接停止所有移动
+        {
+            rb.velocity = Vector2.zero;
+            animator.SetFloat("Speed", 0);
+            return;
+        }
+
+        if (ifGetControlledOutside.Get())
+        {
+            MoveInControl();
+            RotateInControl();
+        }
+        else if (canInput) // 只有在可以输入时才处理移动和旋转
+        {
+            Move();
+            Rotate();
+            CheckJump();
+        }
+        ifGetControlledOutside.Update(Time.deltaTime);
+        ifJustGround.Update(Time.deltaTime);
+        
     }
 
     private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }
