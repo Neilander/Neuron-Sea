@@ -50013,6 +50013,82 @@ PrefabInstance:
     m_AddedComponents: []
   m_SourcePrefab: {fileID: -1934345717165055291, guid: 8ac41cca7e55c0d449facdd75bfed2bd,
     type: 3}
+--- !u!1 &676158716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 676158718}
+  - component: {fileID: 676158717}
+  m_Layer: 0
+  m_Name: ControllCentre
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &676158717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676158716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74e6bb65d3f0004cabfe56d93d18829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableScanLineJitter: 1
+  enableColorShift: 1
+  enableNoise: 1
+  enableGlitch: 1
+  enableWaveEffect: 1
+  enableBlackAndWhite: 1
+  jitterIntensity: 0.195
+  jitterFrequency: 6
+  scanLineThickness: 0
+  scanLineSpeed: 4.2
+  colorShiftIntensity: 0.05
+  noiseIntensity: 0.1
+  glitchProbability: 0.05
+  waveIntensity: 0.2
+  waveFrequency: 10
+  waveSpeed: 2
+  bwEffect: 0
+  bwNoiseScale: 10
+  bwNoiseIntensity: 0.2
+  bwFlickerSpeed: 5
+  colorCorrection: 0
+  hueShift: 0
+  saturation: 1
+  brightness: 1
+  contrast: 1
+  redOffset: 0
+  greenOffset: 0
+  blueOffset: 0
+  subtleGlitchPreset: 1
+  intenseGlitchPreset: 0
+  colorShiftPreset: 0
+  noisePreset: 0
+--- !u!4 &676158718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676158716}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -224.85562, y: 115.421524, z: -0.019722328}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &679163007
 GameObject:
   m_ObjectHideFlags: 0
@@ -62708,6 +62784,11 @@ PrefabInstance:
       objectReference: {fileID: 80552349}
     - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
         type: 3}
+      propertyPath: respawnPoint
+      value: 
+      objectReference: {fileID: 1339277674}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
       propertyPath: respawnTarget
       value: 
       objectReference: {fileID: 1339277674}
@@ -67458,6 +67539,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 1213916365300914395, guid: 5894b6f145f77cc4d92393f30e21cb79,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6276066448363335232, guid: 5894b6f145f77cc4d92393f30e21cb79,
         type: 3}
       propertyPath: m_Name
@@ -67695,7 +67781,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8850142945699508814, guid: b13c861ea900329458be661f70c76556, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -67735,3 +67822,4 @@ SceneRoots:
   - {fileID: 2022483420}
   - {fileID: 1790506786}
   - {fileID: 3292721442930177659}
+  - {fileID: 676158718}

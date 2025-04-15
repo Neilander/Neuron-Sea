@@ -65,7 +65,6 @@ public class DeathController : MonoBehaviour
     private SpriteRenderer playerSpriteRenderer; // 玩家的SpriteRenderer
     private Animator playerAnimator; // 玩家动画器引用
     private Rigidbody2D playerRigidbody; // 玩家刚体引用
-    private PlayerInput playerInput; // 玩家输入组件引用
 
     [System.Serializable]
     public class EffectParameters
@@ -229,7 +228,6 @@ public class DeathController : MonoBehaviour
                 playerSpriteRenderer = playerObject.GetComponent<SpriteRenderer>();
                 playerAnimator = playerObject.GetComponent<Animator>();
                 playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
-                playerInput = playerObject.GetComponent<PlayerInput>();
                 // Debug.Log("已在Update中重新获取玩家引用");
             }
         }
@@ -270,15 +268,10 @@ public class DeathController : MonoBehaviour
             playerSpriteRenderer = obj.GetComponent<SpriteRenderer>();
             playerAnimator = obj.GetComponent<Animator>();
             playerRigidbody = obj.GetComponent<Rigidbody2D>();
-            playerInput = obj.GetComponent<PlayerInput>();
 
             if (playerController != null && playerSpriteRenderer != null)
             {
-                // 立即禁用输入系统
-                if (playerInput != null)
-                {
-                    playerInput.enabled = false;
-                }
+                playerController.DisableMovement();
 
                 // 立即重置所有移动状态
                 if (playerRigidbody != null)
@@ -359,12 +352,7 @@ public class DeathController : MonoBehaviour
     // 冻结玩家的所有移动和动画
     private void FreezePlayer()
     {
-        // 立即禁用输入系统
-        if (playerInput != null)
-        {
-            playerInput.enabled = false;
-            // Debug.Log("已禁用输入系统");
-        }
+        playerController.DisableMovement();
 
         // 停止动画
         if (playerAnimator != null)
@@ -416,7 +404,6 @@ public class DeathController : MonoBehaviour
             GameObject playerObject = playerController.gameObject;
             playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
             playerAnimator = playerObject.GetComponent<Animator>();
-            playerInput = playerObject.GetComponent<PlayerInput>();
             playerSpriteRenderer = playerObject.GetComponent<SpriteRenderer>();
 
             // 为玩家添加碰撞监听组件
@@ -466,10 +453,7 @@ public class DeathController : MonoBehaviour
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
             yield return new WaitForFixedUpdate();
 
-            // 添加一个明显的向下力，帮助重新检测地面
-            playerRigidbody.AddForce(Vector2.down * 5f, ForceMode2D.Impulse);
-            // Debug.Log($"已恢复玩家物理系统，当前速度: {playerRigidbody.velocity}，向下施加了力");
-
+            
             // 物理更新需要等待下一帧
             yield return new WaitForFixedUpdate();
         }
@@ -481,12 +465,7 @@ public class DeathController : MonoBehaviour
             // Debug.Log("已恢复玩家动画");
         }
 
-        // 恢复输入系统
-        if (playerInput != null)
-        {
-            playerInput.enabled = true;
-            // Debug.Log("已恢复输入系统");
-        }
+        playerController.EnableMovement();
 
         // 最后恢复玩家移动和输入控制，同时解锁位置
         if (playerController != null)
@@ -684,6 +663,8 @@ public class DeathController : MonoBehaviour
         float effectElapsedTime = 0;
         hasMovedPlayer = false;
 
+        playerController.UnlockPosition();
+
         // 在效果保持阶段移动玩家
         while (effectElapsedTime < effectDuration)
         {
@@ -746,7 +727,7 @@ public class DeathController : MonoBehaviour
         }
 
         // 等待一小段时间再开始恢复GlitchFade
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.01f);
         // Debug.Log("开始恢复GlitchFade...");
 
         // 恢复GlitchFade
@@ -766,12 +747,12 @@ public class DeathController : MonoBehaviour
             yield return null;
         }
 
-        // 确保GlitchFade完全恢复到0
-        if (playerSpriteRenderer != null && deathEffectMaterial != null)
-        {
-            playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
-            // Debug.Log("GlitchFade 完全恢复: 0");
-        }
+        // // 确保GlitchFade完全恢复到0
+        // if (playerSpriteRenderer != null && deathEffectMaterial != null)
+        // {
+        //     playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
+        //     // Debug.Log("GlitchFade 完全恢复: 0");
+        // }
 
         // 恢复原始材质
         if (playerSpriteRenderer != null && originalMaterial != null)
