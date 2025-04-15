@@ -8,7 +8,7 @@ using UnityEngine.Events;
 /// </summary>
 public enum GameState
 {
-    ActionMode,  // 动作模式，玩家可以自由移动
+    ActionMode,  // 动作模式，玩家可以自由移动111
     StoryMode    // 剧情模式，玩家不能移动，进行对话
 }
 
