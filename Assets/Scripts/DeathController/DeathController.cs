@@ -259,15 +259,20 @@ public class DeathController : MonoBehaviour
         }
     }
 
+    private bool ifHandled = false;
     public void HandleDeath(GameObject obj)
     {
+        Debug.Log("寄！");
         // 获取玩家组件
-        if (obj != null)
+        if (obj != null && !ifHandled)
         {
-            playerController = obj.GetComponent<PlayerController>();
-            playerSpriteRenderer = obj.GetComponent<SpriteRenderer>();
-            playerAnimator = obj.GetComponent<Animator>();
-            playerRigidbody = obj.GetComponent<Rigidbody2D>();
+            
+            ifHandled = true;
+
+            playerController = FindAnyObjectByType<PlayerController>();
+            playerSpriteRenderer = playerController.GetComponent<SpriteRenderer>();
+            playerAnimator = playerController.GetComponent<Animator>();
+            playerRigidbody = playerController.GetComponent<Rigidbody2D>();
 
             if (playerController != null && playerSpriteRenderer != null)
             {
@@ -505,7 +510,11 @@ public class DeathController : MonoBehaviour
 
             // 测试是否可以接收跳跃输入
             Debug.Log("解冻序列: 玩家现在应该可以跳跃了，请尝试按空格键");
+
+            
         }
+
+        ifHandled = false;
     }
 
     private void ApplyParameters(EffectParameters parameters)
