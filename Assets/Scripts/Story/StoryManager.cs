@@ -8,7 +8,7 @@ using UnityEngine.Events;
 /// </summary>
 public enum GameState
 {
-    ActionMode,  // 动作模式，玩家可以自由移动
+    ActionMode,  // 动作模式，玩家可以自由移动111
     StoryMode    // 剧情模式，玩家不能移动，进行对话
 }
 
@@ -33,6 +33,9 @@ public class StoryManager : MonoBehaviour
     [SerializeField] private TMPro.TextMeshProUGUI dialogueText; // 对话文本
     [SerializeField] private TMPro.TextMeshProUGUI speakerNameText; // 说话者名称文本
     [SerializeField] private GameObject continueIndicator; // 继续指示器
+    [SerializeField] private float typingSpeed = 0.05f; // 打字速度，每个字符间隔时间
+    [SerializeField] private AudioSource typingSoundEffect; // 打字声音效果（可选）
+    [SerializeField] private float typingSoundInterval = 0.1f; // 打字声音播放间隔（可选）
 
     [Header("事件")]
     public UnityEvent onEnterStoryMode; // 进入剧情模式时触发
@@ -42,6 +45,8 @@ public class StoryManager : MonoBehaviour
     private bool isDialogueActive = false; // 对话是否激活
     private StoryData currentStoryData; // 当前剧情数据
     private int currentDialogueIndex = 0; // 当前对话索引
+    private bool isTyping = false; // 是否正在显示打字效果
+    private Coroutine typingCoroutine; // 打字协程
 
     private void Awake()
     {
@@ -212,6 +217,13 @@ public class StoryManager : MonoBehaviour
     /// </summary>
     private void ContinueDialogue()
     {
+        // 如果正在打字，则直接显示全部文本
+        if (isTyping)
+        {
+            StopTypingEffect();
+            return;
+        }
+
         currentDialogueIndex++;
 
         // 检查是否还有更多对话
@@ -231,6 +243,41 @@ public class StoryManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 停止打字效果，直接显示完整文本
+    /// </summary>
+    private void StopTypingEffect()
+    {
+        if (typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+            typingCoroutine = null;
+        }
+
+        if (currentDialogueIndex < currentStoryData.dialogues.Count)
+        {
+            // 立即显示完整文本
+            DialogueData dialogue = currentStoryData.dialogues[currentDialogueIndex];
+            if (dialogueText != null)
+            {
+                dialogueText.text = dialogue.text;
+            }
+
+            if (speakerNameText != null)
+            {
+                speakerNameText.text = dialogue.speakerName;
+            }
+
+            // 显示继续指示器
+            if (continueIndicator != null)
+            {
+                continueIndicator.SetActive(true);
+            }
+        }
+
+        isTyping = false;
+    }
+
+    /// <summary>
     /// 显示当前对话
     /// </summary>
     private void DisplayCurrentDialogue()
@@ -242,24 +289,62 @@ public class StoryManager : MonoBehaviour
 
         DialogueData dialogue = currentStoryData.dialogues[currentDialogueIndex];
 
-        // 更新对话文本
-        if (dialogueText != null)
-        {
-            dialogueText.text = dialogue.text;
-        }
-
         // 更新说话者名称
         if (speakerNameText != null)
         {
             speakerNameText.text = dialogue.speakerName;
         }
 
-        // 如果有动画触发器，触发动画
-        if (!string.IsNullOrEmpty(dialogue.animationTrigger))
+        // 隐藏继续指示器
+        if (continueIndicator != null)
         {
-            // 这里可以添加触发动画的代码
-            // 例如：animator.SetTrigger(dialogue.animationTrigger);
+            continueIndicator.SetActive(false);
         }
+
+        // 启动打字机效果
+        if (dialogueText != null)
+        {
+            // 清空文本框
+            dialogueText.text = "";
+
+            // 启动打字机效果
+            typingCoroutine = StartCoroutine(TypeDialogue(dialogue.text));
+        }
+    }
+
+    /// <summary>
+    /// 打字机效果协程
+    /// </summary>
+    private IEnumerator TypeDialogue(string text)
+    {
+        isTyping = true;
+        float timeSinceLastSound = 0f;
+
+        // 逐字显示文本
+        for (int i = 0; i < text.Length; i++)
+        {
+            dialogueText.text += text[i];
+
+            // 播放打字声音（如果有）
+            if (typingSoundEffect != null && timeSinceLastSound >= typingSoundInterval)
+            {
+                typingSoundEffect.pitch = Random.Range(0.9f, 1.1f); // 稍微变化音调，增加真实感
+                typingSoundEffect.Play();
+                timeSinceLastSound = 0f;
+            }
+            timeSinceLastSound += typingSpeed;
+
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        // 显示完成后，显示继续指示器
+        if (continueIndicator != null)
+        {
+            continueIndicator.SetActive(true);
+        }
+
+        isTyping = false;
+        typingCoroutine = null;
     }
 
     /// <summary>

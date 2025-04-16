@@ -33,12 +33,12 @@ public class collectable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GridManager.Instance!=null)UpdateState(GridManager.Instance.SwitchTime);
+        if (GridManager.Instance != null) UpdateState(GridManager.Instance.SwitchTime);
     }
 
     void UpdateState(int curSTime)
     {
-        
+
         if (curSTime <= restrictedTime && !unlocked)
         {
             //可接触
@@ -64,7 +64,7 @@ public class collectable : MonoBehaviour
     {
         if (unlocked && collision.GetComponent<PlayerController>())
         {
-            GetCollected(); 
+            GetCollected();
         }
     }
 

@@ -58,8 +58,8 @@ public class levelTrigger : MonoBehaviour
 
         GameObject target = null;
         var root = rootObjects;
-        
-        
+
+
         if (root.name == "TotalControl")
         {
             Transform child = root.transform.Find(targetObjectName);
@@ -85,7 +85,7 @@ public class levelTrigger : MonoBehaviour
                 }
             }
         }
-        
+
 
         if (target != null)
         {
