@@ -459,40 +459,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d351fb1953ecb4ab2caab1280d21fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabGroup: {fileID: 0}
-  background: {fileID: 0}
-  tabText: {fileID: 0}
-  activeColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  hoverColor:
-    r: 0.9
-    g: 0.9
-    b: 0.9
-    a: 1
-  inactiveColor:
-    r: 0.8
-    g: 0.8
-    b: 0.8
-    a: 1
-  activeTextColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  hoverTextColor:
-    r: 0.1
-    g: 0.1
-    b: 0.1
-    a: 1
-  inactiveTextColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  button: {fileID: 0}
 --- !u!114 &84246922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2297,29 +2263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11eb3372d691154f963420e714a90fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contentContainer: {fileID: 0}
-  collectableItemPrefab: {fileID: 0}
-  noItemsMessage: {fileID: 0}
-  filterDropdown: {fileID: 0}
-  showCollectedToggle: {fileID: 0}
-  showUncollectedToggle: {fileID: 0}
-  collectibleCountText: {fileID: 0}
-  collectProgressSlider: {fileID: 0}
-  detailPanel: {fileID: 0}
-  detailIcon: {fileID: 0}
-  detailNameText: {fileID: 0}
-  detailDescriptionText: {fileID: 0}
-  detailCollectionTimeText: {fileID: 0}
-  collectedStatus: {fileID: 0}
-  uncollectedStatus: {fileID: 0}
-  spawnedItems: []
-  selectedCollectable:
-    id: 
-    displayName: 
-    description: 
-    icon: {fileID: 0}
-    rarity: 0
-    isCollected: 0
 --- !u!1 &419951630
 GameObject:
   m_ObjectHideFlags: 0
@@ -2510,11 +2453,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d6b48c35091164eb313f3446a58705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabButtons: []
-  contentPanels: []
-  selectedTab: {fileID: 0}
-  selectFirstTabOnStart: 1
-  registeredTabs: []
 --- !u!114 &421238892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2527,11 +2465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d6b48c35091164eb313f3446a58705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabButtons: []
-  contentPanels: []
-  selectedTab: {fileID: 0}
-  selectFirstTabOnStart: 1
-  registeredTabs: []
 --- !u!114 &421238893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4292,6 +4225,72 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 925939552071901525}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &840120805
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 840120807}
+  - component: {fileID: 840120806}
+  m_Layer: 0
+  m_Name: blue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!328 &840120806
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840120805}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: e8769771e25940d46bdc9fbe72f59393, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 1344251861}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 0
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 0
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
+--- !u!4 &840120807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840120805}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &843306188
 GameObject:
   m_ObjectHideFlags: 0
@@ -6060,40 +6059,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d351fb1953ecb4ab2caab1280d21fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabGroup: {fileID: 0}
-  background: {fileID: 0}
-  tabText: {fileID: 0}
-  activeColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  hoverColor:
-    r: 0.9
-    g: 0.9
-    b: 0.9
-    a: 1
-  inactiveColor:
-    r: 0.8
-    g: 0.8
-    b: 0.8
-    a: 1
-  activeTextColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  hoverTextColor:
-    r: 0.1
-    g: 0.1
-    b: 0.1
-    a: 1
-  inactiveTextColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  button: {fileID: 0}
 --- !u!114 &1294598719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8062,46 +8027,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d649e5c08dfbe4197a674175ee8cfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 1570132827}
-  nameText: {fileID: 1899906209}
-  rarityText: {fileID: 1117441952}
-  collectedIndicator: {fileID: 689618558}
-  lockedOverlay: {fileID: 1051225509}
-  normalColor:
-    r: 0.8
-    g: 0.8
-    b: 0.8
-    a: 1
-  rareColor:
-    r: 0
-    g: 0.5
-    b: 1
-    a: 1
-  epicColor:
-    r: 0.5
-    g: 0
-    b: 1
-    a: 1
-  legendaryColor:
-    r: 1
-    g: 0.5
-    b: 0
-    a: 1
-  mythicColor:
-    r: 1
-    g: 0
-    b: 0
-    a: 1
-  uncollectedAlpha: 0.6
-  useGrayscaleForUncollected: 1
-  data:
-    id: 
-    displayName: 
-    description: 
-    icon: {fileID: 0}
-    rarity: 0
-    isCollected: 0
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &1617088116
 GameObject:
   m_ObjectHideFlags: 0
@@ -9493,40 +9418,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d351fb1953ecb4ab2caab1280d21fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabGroup: {fileID: 0}
-  background: {fileID: 0}
-  tabText: {fileID: 0}
-  activeColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  hoverColor:
-    r: 0.9
-    g: 0.9
-    b: 0.9
-    a: 1
-  inactiveColor:
-    r: 0.8
-    g: 0.8
-    b: 0.8
-    a: 1
-  activeTextColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  hoverTextColor:
-    r: 0.1
-    g: 0.1
-    b: 0.1
-    a: 1
-  inactiveTextColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  button: {fileID: 0}
 --- !u!114 &1990272753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9661,40 +9552,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d351fb1953ecb4ab2caab1280d21fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabGroup: {fileID: 0}
-  background: {fileID: 0}
-  tabText: {fileID: 0}
-  activeColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  hoverColor:
-    r: 0.9
-    g: 0.9
-    b: 0.9
-    a: 1
-  inactiveColor:
-    r: 0.8
-    g: 0.8
-    b: 0.8
-    a: 1
-  activeTextColor:
-    r: 0
-    g: 0
-    b: 0
-    a: 1
-  hoverTextColor:
-    r: 0.1
-    g: 0.1
-    b: 0.1
-    a: 1
-  inactiveTextColor:
-    r: 0.5
-    g: 0.5
-    b: 0.5
-    a: 1
-  button: {fileID: 0}
 --- !u!114 &2003959141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10001,10 +9858,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08e4cd82c2c5bed4bb65d16f22877f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelOneName: TestScene2 1
+  LevelOneName: TestScene3
   aboutUs: 
   volume: {fileID: 812256830}
-  isRed: 0
+  videoPlayer: {fileID: 840120806}
+  videoCanvas: {fileID: 236365314}
+  skipVideoOnClick: 1
 --- !u!1 &2086195527
 GameObject:
   m_ObjectHideFlags: 0
@@ -10520,3 +10379,4 @@ SceneRoots:
   - {fileID: 925939552071901525}
   - {fileID: 659088844}
   - {fileID: 1676872514}
+  - {fileID: 840120807}

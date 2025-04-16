@@ -7,6 +7,8 @@ public class levelManager : MonoBehaviour
 {
 
     public static levelManager instance;
+
+    public Transform respawnTarget;
     public int currentLevelIndex = 0;  // 当前关卡编号
 
     private GameObject currentLevelGO;
@@ -29,7 +31,7 @@ public class levelManager : MonoBehaviour
             }
 
             // 重新加载当前关卡（基于 currentLevelIndex）
-            LoadLevel(currentLevelIndex,true);
+            LoadLevel(currentLevelIndex, true);
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
         }
         else
@@ -38,14 +40,14 @@ public class levelManager : MonoBehaviour
             return;
         }
 
-        
+
     }
-    
+
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayer)
     {
         string newLevelName = $"Level_{newLevelIndex}";
         GameObject newLevelGO = FindInactiveObjectByName($"Level_{newLevelIndex}");
-        Debug.Log("加载"+newLevelName);
+        Debug.Log("加载" + newLevelName);
         if (newLevelGO == null)
         {
             Debug.LogError($"未找到名为 {newLevelName} 的关卡对象！");
@@ -87,6 +89,20 @@ public class levelManager : MonoBehaviour
                 if (child.name.StartsWith("Respawn"))
                 {
                     respawnTarget = child;
+                    this.respawnTarget = child;
+
+                    // 找到重生点后，立即设置给DeathController
+                    DeathController deathController = FindAnyObjectByType<DeathController>();
+                    if (deathController != null)
+                    {
+                        deathController.respawnTarget = respawnTarget;
+                        Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController");
+                    }
+                    else
+                    {
+                        Debug.LogError("未找到DeathController，无法设置重生点！");
+                    }
+
                     break;
                 }
             }
@@ -98,7 +114,7 @@ public class levelManager : MonoBehaviour
                 {
                     effectController.transform.position = respawnTarget.position;
                     Debug.Log($"将 StartEffectController 移动到 {respawnTarget.name} 的位置");
-                    if(ifSetPlayer)controller.transform.position = respawnTarget.position + Vector3.down*0.5f;
+                    if (ifSetPlayer) controller.transform.position = respawnTarget.position + Vector3.down * 0.5f;
                     //
                 }
                 else
@@ -108,27 +124,43 @@ public class levelManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Entities 中没有找到以 Respawn 开头的物体");
+                // 如果没有找到重生点，创建一个默认的重生点
+                GameObject defaultRespawnObj = new GameObject("Respawn_Default");
+                defaultRespawnObj.transform.parent = entities;
+                defaultRespawnObj.transform.position = new Vector3(data.levelBound.center.x, data.levelBound.center.y, 0);
+
+                respawnTarget = defaultRespawnObj.transform;
+                this.respawnTarget = respawnTarget;
+
+                // 设置给DeathController
+                DeathController deathController = FindAnyObjectByType<DeathController>();
+                if (deathController != null)
+                {
+                    deathController.respawnTarget = respawnTarget;
+                    Debug.Log($"已将默认重生点设置给DeathController，位置：{respawnTarget.position}");
+                }
+
+                Debug.LogWarning($"在关卡 {newLevelName} 中没有找到以 Respawn 开头的物体，已创建默认重生点");
             }
         }
         else
         {
             Debug.LogWarning("未找到 Entities 物体");
         }
-        
+
         return data.levelBound;
     }
 
     private void Update()
     {
-        
+
     }
 
     public void SwitchToNextLevel()
     {
         GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12), false);
-        FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position+ Vector3.up*0.5f+Vector3.right*0.1f;
+        FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 0.5f + Vector3.right * 0.1f;
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
         //StartCoroutine(DelayEffect());
@@ -137,20 +169,20 @@ public class levelManager : MonoBehaviour
     public void SwitchToNextLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12),true);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12), true);
     }
 
     public void SwitchToBeforeLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1,1,12),false);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12), false);
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
     }
 
     public void SwitchToBeforeLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12),true);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12), true);
     }
 
     IEnumerator DelayEffect()
@@ -159,7 +191,7 @@ public class levelManager : MonoBehaviour
         //StartEffectController controller = FindAnyObjectByType<StartEffectController>();
         //PlayerController pController = FindAnyObjectByType<PlayerController>();
         //controller.transform.position = new Vector3(recordRect.xMin+1,pController.transform.position.y+5, controller.transform.position.z);
-       //controller.TriggerStartEffect();
+        //controller.TriggerStartEffect();
     }
 
     GameObject FindInactiveObjectByName(string name)
@@ -185,7 +217,7 @@ public class levelManager : MonoBehaviour
         }
 
         // 重新加载当前关卡（基于 currentLevelIndex）
-        LoadLevel(currentLevelIndex,true);
+        LoadLevel(currentLevelIndex, true);
     }
 
     void OnDestroy()
