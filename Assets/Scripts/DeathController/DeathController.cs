@@ -56,7 +56,7 @@ public class DeathController : MonoBehaviour
     [SerializeField] private bool useCustomRespawnPosition = false; // 是否使用自定义重生位置
     [SerializeField] public Transform respawnTarget; // 目标物体的Transform组件
     [SerializeField] private bool useTargetPosition = false; // 是否使用目标物体的位置
-    [SerializeField]private Material originalMaterial2;
+    [SerializeField] private Material originalMaterial2;
     private PlayerController playerController;
     private leveldata currentLevelData;
     private float deathLineY;
