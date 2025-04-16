@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
-  blitMaterial: {fileID: 2100000, guid: 02a8f166cc17b4535bf744ecceb66920, type: 2}
-  flipYPropertyName: _FlipYZP
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: 6a6f1f513bd4c443889063b55c52cedb, type: 2}
+  flipYPropertyName: _FlipY
 --- !u!114 &-4893173975917759724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,8 +27,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
-  blitMaterial: {fileID: 2100000, guid: b39c4b9acf6d842d99d136ec9a8d92be, type: 2}
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: 63e723a66ca584e17b707e45878bf285, type: 2}
   flipYPropertyName: _FlipY
 --- !u!114 &11400000
 MonoBehaviour:
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11145981673336645838492a2d98e247, type: 3}
-  m_Name: New Universal Render Pipeline Asset_Renderer
+  m_Name: "\u573A\u666F2Renderer"
   m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
@@ -48,13 +48,10 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -5872856305326986357}
-  - {fileID: 9107326194022101261}
   - {fileID: 8253623617867631603}
   - {fileID: -4893173975917759724}
-  - {fileID: 6869014672113936764}
-  - {fileID: 2826358790675788178}
   - {fileID: 6814045422367654797}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc7c294c6073a4535f9271086e583e39278dc39993355a905e
+  m_RendererFeatureMap: 8b6b12584e6c7faef34bc66cf3c28a7214733cad31f417bc8dc39993355a905e
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -111,27 +108,6 @@ MonoBehaviour:
     type: 2}
   m_DefaultMaskMaterial: {fileID: 2100000, guid: 15d0c3709176029428a0da2f8cecf0b5,
     type: 2}
---- !u!114 &2826358790675788178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d1d670c0c5f44410957c1775e1f23f2, type: 3}
-  m_Name: ScreenLuoXuanRenderFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  intermediateMaterial: {fileID: 2100000, guid: 6777fb92cfb1d4246b2a6b8fc0914453,
-    type: 2}
-  patchMaterial: {fileID: 2100000, guid: 015675d4b7bbe4f0c9adcf496c150a1f, type: 2}
-  patchBoxX: 0.183
-  patchBoxY: 0.307
-  patchCenter: {x: 0.5, y: 0.5}
-  waveMun: 1
-  waveStrength: 0.1
 --- !u!114 &6814045422367654797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,34 +123,25 @@ MonoBehaviour:
   m_Active: 0
   settings:
     renderPassEvent: 550
-    jitterIntensity: 0
-    jitterFrequency: 0
+    jitterIntensity: 0.000030741874
+    jitterFrequency: 0.015765063
     scanLineThickness: 0
-    scanLineSpeed: 0
+    scanLineSpeed: 0.00066213263
     colorShiftIntensity: 0
-    noiseIntensity: 0
+    noiseIntensity: 0.00002711591
     glitchProbability: 0
     waveIntensity: 0
-<<<<<<< HEAD
-    waveFrequency: 0
-    waveSpeed: 0
+    waveFrequency: 0.004256567
+    waveSpeed: 0.0015765063
     bwEffect: 0
-    bwNoiseScale: 0
-    bwNoiseIntensity: 0
-    bwFlickerSpeed: 0
-=======
-    waveFrequency: 10
-    waveSpeed: 2
-    bwEffect: 0
-    bwNoiseScale: 10
-    bwNoiseIntensity: 0.2
-    bwFlickerSpeed: 5
->>>>>>> Neil_Luoxuan
+    bwNoiseScale: 0.0023647596
+    bwNoiseIntensity: 0.000031530126
+    bwFlickerSpeed: 0.0012612051
     colorCorrection: 0
     hueShift: 0
     saturation: 1
     brightness: 1
-    contrast: 0
+    contrast: 1
     redOffset: 0
     greenOffset: 0
     blueOffset: 0
@@ -185,23 +152,6 @@ MonoBehaviour:
     blackAndWhitePreset: 0
     waveBlackAndWhitePreset: 0
     fixPinkColorPreset: 0
---- !u!114 &6869014672113936764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79956e1daee674fa1b2a20bc397ff231, type: 3}
-  m_Name: ScreenPatchEffectFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  patchMaterial: {fileID: 2100000, guid: 167ef94532e1746fea17b8dacd2df8b1, type: 2}
-  sourceUV: {x: 0.2, y: 0.2}
-  targetUV: {x: 0.5, y: 0.5}
-  patchSize: 100
 --- !u!114 &7484797265902187775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,21 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
-  blitMaterial: {fileID: 2100000, guid: e8e74d1c5cbfc450790679c7efb9ba64, type: 2}
-  flipYPropertyName: _FlipY
---- !u!114 &9107326194022101261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
-  m_Name: CaptureScreenRenderFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  blitMaterial: {fileID: 2100000, guid: 7d5fa219b340d4c24aa517e3bc35e9f2, type: 2}
-  flipYPropertyName: _FlipY
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: cb6dcd7bb74724622ad713408f3f9895, type: 2}
+  flipYPropertyName: _FlipYZP
