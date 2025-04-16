@@ -62899,6 +62899,16 @@ PrefabInstance:
       objectReference: {fileID: 1339277674}
     - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
         type: 3}
+      propertyPath: originalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 524878720b915544eb65205ee1f54233, type: 2}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
+      propertyPath: originalMaterial2
+      value: 
+      objectReference: {fileID: 2100000, guid: 524878720b915544eb65205ee1f54233, type: 2}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
       propertyPath: useTargetPosition
       value: 1
       objectReference: {fileID: 0}
@@ -62907,6 +62917,11 @@ PrefabInstance:
       propertyPath: deathEffectMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 77598294732a6d648b5031365f9a5b0b, type: 2}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
+      propertyPath: effectTransitionDuration
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
         type: 3}
       propertyPath: colorCorrectionRecoveryDelay
@@ -65115,6 +65130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469bc541eff2743bf8045df53bb77da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnTarget: {fileID: 0}
   currentLevelIndex: 1
 --- !u!4 &1982178333
 Transform:
