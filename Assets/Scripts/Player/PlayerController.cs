@@ -648,7 +648,7 @@ public class MovementComparison
 public static class Constants
 {
     public static float DuckFriction = 10.0f;     // 地面摩擦力
-    public static float AirMult = 0.6f;          // 空中移动乘数
+    public static float AirMult = 1f;          // 空中移动乘数
     public static float MaxRun = 7.0f;           // 最大奔跑速度
     public static float RunReduce = 20.0f;       // 减速系数
     public static float RunAccel = 25.0f;        // 加速系数
