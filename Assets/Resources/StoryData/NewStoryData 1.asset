@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb306f5ab86a6ef4c8b70daff774e319, type: 3}
+  m_Name: NewStoryData 1
+  m_EditorClassIdentifier: 
+  storyName: 111
+  backgroundImage: {fileID: 21300000, guid: a225befe4953547da8c4133e5d585029, type: 3}
+  dialogues:
+  - speakerName: 111
+    text: 111
+    portrait: {fileID: 21300000, guid: 4b8df3e837c15134e966ef69ce5e536d, type: 3}
+    avatar: {fileID: 21300000, guid: 42820af2772f24bda991ed7de294c2fd, type: 3}
+    portraitPosition: 0
+    showPortrait: 0
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 0
+    effectDuration: 0
+    animationTrigger: 
+    textColor: {r: 0, g: 0, b: 0, a: 0}
+    nameColor: {r: 0, g: 0, b: 0, a: 0}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  characters:
+  - characterName: 111
+    defaultAvatar: {fileID: 21300000, guid: 52422ada2db954026a3ae1f1ba6b4486, type: 3}
