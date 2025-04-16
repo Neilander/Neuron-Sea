@@ -54044,6 +54044,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169039286}
   m_CullTransparentMesh: 1
+--- !u!1 &1170794280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1170794282}
+  - component: {fileID: 1170794281}
+  - component: {fileID: 1170794283}
+  m_Layer: 0
+  m_Name: SpotLightManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1170794281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170794280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 623b027c1cbf8214687ad0dad0738ba6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransform: {fileID: 1103187856}
+  autoAddOnFirstScene: 1
+  firstSceneName: TestScene3
+  spotlightPrefab: {fileID: 0}
+--- !u!4 &1170794282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170794280}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -218.07687, y: 115.878006, z: -0.07141314}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1170794283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170794280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa689d218338a5944bfb38789385ccfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetToFollow: {fileID: 1103187856}
+  initialRadius: 1.31
+  finalRadius: 26.4
+  expandSpeed: 1.62
+  smoothness: 10
+  maskAlpha: 1
+  panelToDisable: {fileID: 0}
+  disableDelay: 4.78
 --- !u!1 &1184804724
 GameObject:
   m_ObjectHideFlags: 0
@@ -68304,3 +68373,4 @@ SceneRoots:
   - {fileID: 2136649370}
   - {fileID: 312929751}
   - {fileID: 3292721442930177659}
+  - {fileID: 1170794282}
