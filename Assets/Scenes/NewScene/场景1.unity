@@ -204,6 +204,12 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &11552950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4099232700594688472, guid: a64244f04fd7a1b4889d819445af463e,
+    type: 3}
+  m_PrefabInstance: {fileID: 223828650}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &15666527
 GameObject:
   m_ObjectHideFlags: 0
@@ -25885,6 +25891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnTarget: {fileID: 0}
   currentLevelIndex: 1
+  backGround: {fileID: 11552950}
 --- !u!4 &1982178333
 Transform:
   m_ObjectHideFlags: 0
