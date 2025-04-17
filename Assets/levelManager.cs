@@ -13,6 +13,7 @@ public class levelManager : MonoBehaviour
 
     private GameObject currentLevelGO;
     private CameraControl cameraControl;
+    public GameObject backGround;
 
     private Rect recordRect;
 
@@ -155,7 +156,7 @@ public class levelManager : MonoBehaviour
         {
             Debug.LogWarning("未找到 Entities 物体");
         }
-
+        backGround.transform.position = newLevelGO.transform.position;
         return data.levelBound;
     }
 
