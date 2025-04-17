@@ -2,6 +2,7 @@ using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 {
@@ -21,13 +22,14 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     private WorldMover mover;
 
-    [SerializeField]private new SpriteRenderer renderer;
+    [SerializeField]private SpriteRenderer renderer;
 
     [SerializeField] private Vector2 ExpectedSize;
     [SerializeField] private Vector2 ExpectedAnchorPos;
 
     [Header("重构后用到的变量")]
     [SerializeField] private GameObject lockedStateDisplay;
+    [SerializeField] private GameObject previewObj;
 
     public Vector3 SelfGridPos
     {
@@ -341,6 +343,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             ifEnableSwitch = false;
             anchorSprite.SetActive(false);
             GridManager.Instance.ReleaseSelection(this);
+            previewObj.SetActive(false);
         }
         else
         {
@@ -353,10 +356,21 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
 
     #region 重构后Switch代码
-    public void SetLockedToSwitch(bool ifLocked, bool ifLegal)
+    public void SetLockedToSwitch(bool ifLocked, bool ifLegal, bool ifPreview ,Vector3 gridPos)
     {
         lockedStateDisplay.GetComponent<SpriteRenderer>().color = ifLegal ? Color.white : Color.red;
         if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
+
+        /*
+        if (ifLocked && ifLegal&& ifPreview)
+        {
+            previewObj.transform.position = gridPos - anchor.transform.localPosition;
+            previewObj.SetActive(true);
+        }
+        else
+        {
+            previewObj.SetActive(false);
+        }*/
         
     }
     #endregion

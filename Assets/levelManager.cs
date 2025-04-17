@@ -62,6 +62,13 @@ public class levelManager : MonoBehaviour
 
         // 启用新关卡
         newLevelGO.SetActive(true);
+        foreach (Transform child in newLevelGO.transform)
+        {
+            if (child.name.StartsWith("BackGrounds"))
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
         currentLevelGO = newLevelGO;
         currentLevelIndex = newLevelIndex;
 

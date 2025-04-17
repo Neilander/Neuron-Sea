@@ -135,14 +135,14 @@ public class GridManager : MonoBehaviour
                 {
                     if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                     {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true,true,switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true,switchInfoRecorder.obj1.SelfGridPos);
                         ifLegalMove = true;
                     }
                     else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                     {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false,switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false,switchInfoRecorder.obj1.SelfGridPos);
                         ifLegalMove = false;
                     }
 
@@ -274,32 +274,37 @@ public class GridManager : MonoBehaviour
                     {
                         if (switchInfoRecorder.Take(tryGet))
                         {
-                            tryGet.SetLockedToSwitch(false, true);
+                            tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
                             if (switchInfoRecorder.hasFirst)
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
                             if (switchInfoRecorder.hasSecond)
-                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true,false, Vector3.zero);
                         }
                         else
                         {
                             SwitchableObj temp;
                             if (switchInfoRecorder.Record(tryGet, out temp))
                             {
-                                temp.SetLockedToSwitch(false, true);
+                                temp.SetLockedToSwitch(false, true,false,Vector3.zero);
                             }
                             if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                             {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, false);
-                                switchInfoRecorder.obj2.SetLockedToSwitch(true, false);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, false,true, switchInfoRecorder.obj2.SelfGridPos);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj1.SelfGridPos);
                                 ifLegalMove = false;
                             }
                             else
                             {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+
                                 if (switchInfoRecorder.IfHaveBoth())
                                 {
                                     ifLegalMove = true;
-                                    switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true,true, switchInfoRecorder.obj2.SelfGridPos);
+                                    switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+                                }
+                                else
+                                {
+                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
                                 }
 
                             }
@@ -462,9 +467,9 @@ public class GridManager : MonoBehaviour
         if (switchInfoRecorder.Take(obj))
         {
             if (switchInfoRecorder.hasFirst)
-                switchInfoRecorder.obj1.SetLockedToSwitch(true, true);
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
             if (switchInfoRecorder.hasSecond)
-                switchInfoRecorder.obj2.SetLockedToSwitch(true, true);
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, true,false,Vector3.zero);
         }
     }
 
