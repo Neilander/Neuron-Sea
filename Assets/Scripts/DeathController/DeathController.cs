@@ -137,20 +137,20 @@ public class DeathController : MonoBehaviour
         noiseIntensity = 0.172f,
         glitchProbability = 1f,
         waveIntensity = 0f,
-        waveFrequency = 11.3f,
-        waveSpeed = 1.68f,
+        waveFrequency = 27f,
+        waveSpeed = 10f,
         bwEffect = 0f,
-        bwNoiseScale = 31.9f,
-        bwNoiseIntensity = 0.285f,
+        bwNoiseScale = 15f,
+        bwNoiseIntensity = 0.2f,
         bwFlickerSpeed = 8f,
         colorCorrection = 1f,
-        hueShift = -60f,
+        hueShift = 0f,
         saturation = 0f,
-        brightness = 0.65f,
-        contrast = 1.1f,
-        redOffset = -0.2f,
-        greenOffset = 0.1f,
-        blueOffset = 0.1f,
+        brightness = 1f,
+        contrast = 1f,
+        redOffset = 0f,
+        greenOffset = 0f,
+        blueOffset = 0f,
         enableScanLineJitter = true,
         enableColorShift = true,
         enableNoise = true,
@@ -567,8 +567,10 @@ public class DeathController : MonoBehaviour
         Time.timeScale = 0f;
         Debug.Log("时停开始");
 
-        // 启用特效系统
+        // 先启用ScanLineJitterFeature特性
         controlEffects.EnableScanLineJitterFeature();
+
+        // 强制立即更新一次特效参数
         controlEffects.ForceUpdateEffects();
 
         // 2. 改变材质和开始颜色校正（人物故障特效）
@@ -579,18 +581,14 @@ public class DeathController : MonoBehaviour
             Debug.Log("初始化故障特效");
         }
 
-        // 3. 开始闪烁协程
-        StartCoroutine(FlickerEffect());
-
-        // 4. 同时变化颜色校正、饱和度（场景黑白化）和GlitchFade
+        // 3. 同时变化颜色校正、饱和度（场景黑白化）和GlitchFade
         float elapsedTime = 0;
-        float transitionDuration = 0.5f; // 转换到黑白的时间
         float initialColorCorrection = controlEffects.colorCorrection;
         float initialSaturation = controlEffects.saturation;
 
-        while (elapsedTime < transitionDuration)
+        while (elapsedTime < colorCorrectionPreDelay)
         {
-            float t = elapsedTime / transitionDuration;
+            float t = elapsedTime / colorCorrectionPreDelay;
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
             controlEffects.colorCorrection = Mathf.Lerp(initialColorCorrection, targetValues.colorCorrection, smoothT);
@@ -602,28 +600,43 @@ public class DeathController : MonoBehaviour
                 playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
             }
 
-            elapsedTime += Time.unscaledDeltaTime;
+            elapsedTime += Time.unscaledDeltaTime; // 使用unscaledDeltaTime以在时停时也能更新
             yield return null;
         }
 
-        // 5. 应用花屏特效
+        // 4. 花屏特效阶段
         ApplyParameters(targetValues);
         Debug.Log("花屏特效开始");
 
-        // 等待一段时间让特效显示
-        yield return new WaitForSecondsRealtime(1.0f);
+        // 实现2-3次闪烁效果
+        for (int i = 0; i < 3; i++)
+        {
+            // 闪烁开
+            controlEffects.jitterIntensity = 0.8f;
+            controlEffects.noiseIntensity = 0.5f;
+            controlEffects.glitchProbability = 1f;
+            yield return new WaitForSecondsRealtime(0.1f);
 
-        // 6. 移动玩家到重生点
+            // 闪烁关
+            controlEffects.jitterIntensity = 0.2f;
+            controlEffects.noiseIntensity = 0.1f;
+            controlEffects.glitchProbability = 0.3f;
+            yield return new WaitForSecondsRealtime(0.2f);
+        }
+
+        // 5. 移动玩家到重生点
         levelManager levelMgr = FindAnyObjectByType<levelManager>();
         Transform targetTransform = null;
 
         if (levelMgr != null && levelMgr.respawnTarget != null)
         {
             targetTransform = levelMgr.respawnTarget;
+            Debug.Log($"使用levelManager的重生点: {targetTransform.position}");
         }
         else if (respawnTarget != null)
         {
             targetTransform = respawnTarget;
+            Debug.Log($"使用DeathController的重生点: {targetTransform.position}");
         }
 
         if (targetTransform != null)
@@ -651,10 +664,7 @@ public class DeathController : MonoBehaviour
             }
         }
 
-        // 7. 恢复场景颜色（无时停）
-        Time.timeScale = 1f;
-        Debug.Log("时停结束");
-
+        // 6. 恢复场景颜色
         elapsedTime = 0;
         float recoveryDuration = 1.0f;
 
@@ -666,11 +676,15 @@ public class DeathController : MonoBehaviour
             controlEffects.saturation = Mathf.Lerp(0f, 1f, smoothT); // 从黑白恢复到彩色
             controlEffects.colorCorrection = Mathf.Lerp(targetValues.colorCorrection, originalValues.colorCorrection, smoothT);
 
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        // 8. 禁用所有特效
+        // 7. 恢复时间流速和特效
+        Time.timeScale = 1f;
+        Debug.Log("时停结束");
+
+        // 禁用所有特效
         controlEffects.jitterIntensity = 0f;
         controlEffects.jitterFrequency = 0f;
         controlEffects.scanLineThickness = 0f;
@@ -681,50 +695,8 @@ public class DeathController : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        // 9. 解除玩家控制限制
+        // 8. 解除玩家控制限制
         UnfreezePlayer();
         Debug.Log("死亡特效完成，玩家可以重新控制");
-    }
-
-    private IEnumerator FlickerEffect()
-    {
-        float flickerDuration = 4.0f; // 总闪烁持续时间
-        float elapsedTime = 0f;
-        int flickerCount = 0;
-        float maxFlickerCount = 3f; // 最大闪烁次数
-
-        while (elapsedTime < flickerDuration)
-        {
-            // 计算当前闪烁的强度（基于总体进度的渐变）
-            float progress = elapsedTime / flickerDuration;
-            float flickerIntensity = Mathf.Lerp(1f, 0.3f, progress); // 闪烁强度随时间减弱
-
-            // 闪烁开
-            float currentJitterIntensity = targetValues.jitterIntensity * (1f + flickerIntensity);
-            float currentNoiseIntensity = targetValues.noiseIntensity * (1f + flickerIntensity);
-
-            controlEffects.jitterIntensity = currentJitterIntensity;
-            controlEffects.noiseIntensity = currentNoiseIntensity;
-            controlEffects.glitchProbability = 1f;
-            controlEffects.bwNoiseIntensity = targetValues.bwNoiseIntensity * (1f + flickerIntensity);
-
-            yield return new WaitForSecondsRealtime(0.1f);
-
-            // 闪烁关
-            controlEffects.jitterIntensity = targetValues.jitterIntensity;
-            controlEffects.noiseIntensity = targetValues.noiseIntensity;
-            controlEffects.glitchProbability = targetValues.glitchProbability;
-            controlEffects.bwNoiseIntensity = targetValues.bwNoiseIntensity;
-
-            yield return new WaitForSecondsRealtime(0.2f);
-
-            flickerCount++;
-            if (flickerCount >= maxFlickerCount)
-            {
-                break;
-            }
-
-            elapsedTime += 0.3f; // 每次闪烁的总时间
-        }
     }
 }
