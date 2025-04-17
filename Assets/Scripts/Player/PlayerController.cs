@@ -120,6 +120,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         else if (movementBounds.ShouldDrop() && !dropped)
         {
             dropped = true;
+            Debug.Log("死亡在这里");
             PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
         }
         /*

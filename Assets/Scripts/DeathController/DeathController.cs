@@ -252,11 +252,12 @@ public class DeathController : MonoBehaviour
         //     // Debug.Log($"[状态检查] 玩家位置:{playerController.transform.position}, {colliderInfo}, {rbInfo}");
         // }
 
+        
         // 检测玩家是否低于死亡线
         if (playerController != null && playerController.transform.position.y < deathLineY)
         {
             // Debug.Log($"检测到玩家({playerController.name})低于死亡线! 当前位置Y: {playerController.transform.position.y}, 死亡线Y: {deathLineY}");
-            HandleDeath(playerController.gameObject);
+            //HandleDeath(playerController.gameObject);
         }
     }
 
@@ -565,7 +566,7 @@ public class DeathController : MonoBehaviour
 
     private IEnumerator ApplyDeathEffectWithTransition()
     {
-        // Debug.Log("开始应用死亡特效...");
+        Debug.Log("开始应用死亡特效...");
 
         // 先启用ScanLineJitterFeature特性
         controlEffects.EnableScanLineJitterFeature();
@@ -729,7 +730,9 @@ controlEffects.jitterIntensity = 0.3f;
         float effectElapsedTime = 0;
         hasMovedPlayer = false;
 
+        //这是之前的移动玩家逻辑
         // 在效果保持阶段移动玩家
+        /*
         while (effectElapsedTime < effectDuration)
         {
             // 在效果保持阶段的一半时间点移动玩家
@@ -752,6 +755,34 @@ controlEffects.jitterIntensity = 0.3f;
                 // 特效恢复完成后解除玩家冻结状态
 
 
+            }
+
+            effectElapsedTime += Time.deltaTime;
+            yield return null;
+        }*/
+
+        Debug.Log("应该开始移动"+(respawnTarget == null));
+        while (effectElapsedTime < effectDuration)
+        {
+            // 在效果保持阶段立即移动玩家到 respawnTarget
+            if (!hasMovedPlayer && respawnTarget != null)
+            {
+                playerController.transform.position = respawnTarget.position;
+                Debug.Log("移动完成");
+                // 恢复材质（如果有设置）
+                if (playerSpriteRenderer != null)
+                {
+                    if (originalMaterial2 != null)
+                    {
+                        playerSpriteRenderer.material = originalMaterial2;
+                    }
+                    else if (originalMaterial != null)
+                    {
+                        playerSpriteRenderer.material = originalMaterial;
+                    }
+                }
+
+                hasMovedPlayer = true;
             }
 
             effectElapsedTime += Time.deltaTime;
@@ -799,10 +830,13 @@ controlEffects.jitterIntensity = 0.3f;
         //     }
         // }
 
-        
+        //这个或许是被丢弃的移动玩家逻辑
+        /*
+        Debug.Log("应该开始移动玩家,time是"+effectElapsedTime+"还有dur"+effectDuration);
         // 在效果保持阶段移动玩家
         while (effectElapsedTime < effectDuration)
         {
+            Debug.Log("正在移动玩家");
             // 在效果保持阶段的早期就移动玩家
             if (!hasMovedPlayer && effectElapsedTime >= effectDuration * 0f)
             {
@@ -860,7 +894,7 @@ controlEffects.jitterIntensity = 0.3f;
 
             effectElapsedTime += Time.deltaTime;
             yield return null;
-        }
+        }*/
         
         Debug.Log("开始恢复参数");
 

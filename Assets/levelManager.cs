@@ -77,6 +77,7 @@ public class levelManager : MonoBehaviour
         if (data != null)
         {
             cameraControl.SetDefaultRegionFromRect(data.levelBound);
+            Debug.Log("已经加载level bound");
         }
         else
         {
@@ -103,7 +104,7 @@ public class levelManager : MonoBehaviour
                     if (deathController != null)
                     {
                         deathController.respawnTarget = respawnTarget;
-                        Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController");
+                        Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController"+deathController.gameObject.name);
                     }
                     else
                     {
@@ -167,7 +168,7 @@ public class levelManager : MonoBehaviour
     {
         GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12), false);
-        FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 0.5f + Vector3.right * 0.1f;
+        FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
         //StartCoroutine(DelayEffect());
