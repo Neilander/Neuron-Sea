@@ -35,6 +35,7 @@ public class CollisionListener : MonoBehaviour
 
 public class DeathController : MonoBehaviour
 {
+    [SerializeField] private float FLASHdelay=0f;
     [Header("死亡动画设置")]
     public Image deathImg;
     public float cameraRotateAngle = 20f;      // 相机Z轴旋转目标角度
@@ -568,10 +569,29 @@ public class DeathController : MonoBehaviour
 
         // 先启用ScanLineJitterFeature特性
         controlEffects.EnableScanLineJitterFeature();
-
+        // 设置所有开关
+        controlEffects.enableScanLineJitter = true;
+        controlEffects.enableColorShift = true;
+        controlEffects.enableNoise = true;
+        controlEffects.enableGlitch = true;
+        controlEffects.enableWaveEffect = true;
+        controlEffects.enableBlackAndWhite = true;
+        controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
         // 强制立即更新一次特效参数
         controlEffects.ForceUpdateEffects();
-
+controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
         // 第一步：改变材质和开始颜色校正
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
@@ -579,6 +599,13 @@ public class DeathController : MonoBehaviour
             // 设置初始GlitchFade值
             playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
             // Debug.Log($"初始化 GlitchFade 值: 0");
+            controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
         }
 
         float elapsedTime = 0;
@@ -594,12 +621,19 @@ public class DeathController : MonoBehaviour
             controlEffects.colorCorrection = Mathf.Lerp(initialColorCorrection, targetValues.colorCorrection, smoothT);
             controlEffects.saturation = Mathf.Lerp(initialSaturation, targetValues.saturation, smoothT);
 
-            if (playerSpriteRenderer != null && deathEffectMaterial != null)
-            {
-                float currentFade = Mathf.Lerp(0f, 1f, smoothT);
-                playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
-            }
+            // if (playerSpriteRenderer != null && deathEffectMaterial != null)
+            // {
+            //     float currentFade = Mathf.Lerp(0f, 1f, smoothT);
+            //     playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
+            // }
 
+            controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -620,13 +654,16 @@ public class DeathController : MonoBehaviour
 
         // 记录当前参数(目标效果值)
         EffectParameters endValues = new EffectParameters();
-        endValues.jitterIntensity = controlEffects.jitterIntensity;
-        endValues.jitterFrequency = controlEffects.jitterFrequency;
-        endValues.scanLineThickness = controlEffects.scanLineThickness;
-        endValues.scanLineSpeed = controlEffects.scanLineSpeed;
+     
+            controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
         endValues.colorShiftIntensity = controlEffects.colorShiftIntensity;
         endValues.noiseIntensity = controlEffects.noiseIntensity;
-        endValues.glitchProbability = controlEffects.glitchProbability;
         endValues.waveIntensity = controlEffects.waveIntensity;
         endValues.waveFrequency = controlEffects.waveFrequency;
         endValues.waveSpeed = controlEffects.waveSpeed;
@@ -651,15 +688,17 @@ public class DeathController : MonoBehaviour
             float t = elapsedTime / effectTransitionDuration; // 归一化时间，从0到1
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
-            // 平滑插值所有其他参数，保持颜色校正不变
-            controlEffects.jitterIntensity = Mathf.Lerp(endValues.jitterIntensity, targetValues.jitterIntensity, smoothT);
-            controlEffects.jitterFrequency = Mathf.Lerp(endValues.jitterFrequency, targetValues.jitterFrequency, smoothT);
-            controlEffects.scanLineThickness = Mathf.Lerp(endValues.scanLineThickness, targetValues.scanLineThickness, smoothT);
-            controlEffects.scanLineSpeed = Mathf.Lerp(endValues.scanLineSpeed, targetValues.scanLineSpeed, smoothT);
+            controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
             controlEffects.colorShiftIntensity = Mathf.Lerp(endValues.colorShiftIntensity, targetValues.colorShiftIntensity, smoothT);
             controlEffects.noiseIntensity = Mathf.Lerp(endValues.noiseIntensity, targetValues.noiseIntensity, smoothT);
             // glitchProbability直接设置为目标值，不进行平滑过渡
-            controlEffects.glitchProbability = targetValues.glitchProbability;
+            
             controlEffects.waveIntensity = Mathf.Lerp(endValues.waveIntensity, targetValues.waveIntensity, smoothT);
             controlEffects.waveFrequency = Mathf.Lerp(endValues.waveFrequency, targetValues.waveFrequency, smoothT);
             controlEffects.waveSpeed = Mathf.Lerp(endValues.waveSpeed, targetValues.waveSpeed, smoothT);
@@ -679,6 +718,7 @@ public class DeathController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+                    
 
         // 确保达到精确的目标值
         ApplyParameters(targetValues);
@@ -719,6 +759,47 @@ public class DeathController : MonoBehaviour
         }
         UnfreezePlayer();
 
+        // // 销毁当前玩家并重新创建
+        // if (playerController != null)
+        // {
+        //     // 获取玩家预制体的路径
+        //     GameObject playerPrefab = Resources.Load<GameObject>("Prefabs/Player 2");
+        //     if (playerPrefab != null)
+        //     {
+        //         // 记录当前玩家位置和状态
+        //         Vector3 playerPosition = playerController.transform.position;
+        //         Transform playerParent = playerController.transform.parent;
+        //
+        //         // 销毁当前玩家
+        //         Debug.Log("正在销毁当前玩家对象...");
+        //         Destroy(playerController.gameObject);
+        //
+        //         // 等待一帧确保玩家被销毁
+        //         yield return new WaitForEndOfFrame();
+        //
+        //         // 在相同位置实例化新玩家
+        //         GameObject newPlayer = Instantiate(playerPrefab, playerPosition, Quaternion.identity, playerParent);
+        //         Debug.Log($"已在位置 {playerPosition} 创建新玩家");
+        //
+        //         // 获取新玩家的组件引用
+        //         playerController = newPlayer.GetComponent<PlayerController>();
+        //         playerSpriteRenderer = newPlayer.GetComponent<SpriteRenderer>();
+        //         playerAnimator = newPlayer.GetComponent<Animator>();
+        //         playerRigidbody = newPlayer.GetComponent<Rigidbody2D>();
+        //
+        //         // 确保新玩家有正确的材质
+        //         if (playerSpriteRenderer != null && originalMaterial2 != null)
+        //         {
+        //             playerSpriteRenderer.material = originalMaterial2;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("无法加载玩家预制体！请确保预制体位于Resources/Prefabs/Player 2路径下");
+        //     }
+        // }
+
+        
         // 在效果保持阶段移动玩家
         while (effectElapsedTime < effectDuration)
         {
@@ -780,7 +861,7 @@ public class DeathController : MonoBehaviour
             effectElapsedTime += Time.deltaTime;
             yield return null;
         }
-        UnfreezePlayer();
+        
         Debug.Log("开始恢复参数");
 
         // 先恢复除颜色校正和GlitchFade之外的所有参数
@@ -791,14 +872,16 @@ public class DeathController : MonoBehaviour
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
             // 平滑插值所有参数回到原始值，但保持颜色校正、饱和度和GlitchFade不变
-            controlEffects.jitterIntensity = Mathf.Lerp(endValues.jitterIntensity, originalValues.jitterIntensity, smoothT);
-            controlEffects.jitterFrequency = Mathf.Lerp(endValues.jitterFrequency, originalValues.jitterFrequency, smoothT);
-            controlEffects.scanLineThickness = Mathf.Lerp(endValues.scanLineThickness, originalValues.scanLineThickness, smoothT);
-            controlEffects.scanLineSpeed = Mathf.Lerp(endValues.scanLineSpeed, originalValues.scanLineSpeed, smoothT);
+            
             controlEffects.colorShiftIntensity = Mathf.Lerp(endValues.colorShiftIntensity, originalValues.colorShiftIntensity, smoothT);
             controlEffects.noiseIntensity = Mathf.Lerp(endValues.noiseIntensity, originalValues.noiseIntensity, smoothT);
-            // glitchProbability直接恢复为原始值，不进行平滑过渡
-            controlEffects.glitchProbability = originalValues.glitchProbability;
+            controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = Mathf.Lerp(endValues.scanLineThickness, originalValues.scanLineThickness, smoothT);
+        controlEffects.scanLineSpeed = Mathf.Lerp(endValues.scanLineSpeed, originalValues.scanLineSpeed, smoothT);
+        
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0.01f;
             controlEffects.waveIntensity = Mathf.Lerp(endValues.waveIntensity, originalValues.waveIntensity, smoothT);
             controlEffects.waveFrequency = Mathf.Lerp(endValues.waveFrequency, originalValues.waveFrequency, smoothT);
             controlEffects.waveSpeed = Mathf.Lerp(endValues.waveSpeed, originalValues.waveSpeed, smoothT);
@@ -817,17 +900,17 @@ public class DeathController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
+        
+        
         // 恢复其他参数后，等待指定时间
         Debug.Log($"所有其他参数已恢复，颜色校正和饱和度将等待 {colorCorrectionRecoveryDelay} 秒后恢复");
-        yield return new WaitForSeconds(colorCorrectionRecoveryDelay);
         Debug.Log("开始恢复颜色校正和饱和度");
 
         // 最后再平滑恢复颜色校正和饱和度
         elapsedTime = 0;
         float finalColorCorrection = controlEffects.colorCorrection;
         float finalSaturation = controlEffects.saturation;
-
+        
         // 确保目标饱和度至少为1，避免绿色效果
         float targetSaturation = originalValues.saturation <= 0.01f ? 1.0f : originalValues.saturation;
 
@@ -838,6 +921,8 @@ public class DeathController : MonoBehaviour
 
             // 同时平滑变化颜色校正和饱和度参数
             float targetCorrection = originalValues.colorCorrection;
+            
+            
             controlEffects.colorCorrection = Mathf.Lerp(finalColorCorrection, targetCorrection, smoothT);
             controlEffects.saturation = Mathf.Lerp(finalSaturation, targetSaturation, smoothT);
 
@@ -848,7 +933,7 @@ public class DeathController : MonoBehaviour
         // 确保颜色校正和饱和度达到目标值
         controlEffects.colorCorrection = originalValues.colorCorrection;
         controlEffects.saturation = targetSaturation;
-
+        
         // 完全恢复到原始状态（开关设置）
         controlEffects.enableScanLineJitter = originalValues.enableScanLineJitter;
         controlEffects.enableColorShift = originalValues.enableColorShift;
@@ -858,7 +943,14 @@ public class DeathController : MonoBehaviour
         controlEffects.enableBlackAndWhite = originalValues.enableBlackAndWhite;
 
         Debug.Log($"恢复后的饱和度值: {controlEffects.saturation}");
+        yield return new WaitForSeconds(FLASHdelay);
+        controlEffects.jitterIntensity = 0f;
+        controlEffects.jitterFrequency = 0f;
+        controlEffects.scanLineThickness = 0f;
+        controlEffects.scanLineSpeed = 0f;
 
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.glitchProbability = 0f;
         // 禁用ScanLineJitterFeature特性
         controlEffects.DisableScanLineJitterFeature();
         Debug.Log("特效已完全禁用，效果结束");

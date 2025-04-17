@@ -82,8 +82,8 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private Vector3 lockedPosition; // 存储锁定的位置
     private bool isPositionLocked = false; // 位置是否被锁定
-    private MovementComparison movementBounds;
 
+    MovementComparison movementBounds;
 
     private bool dropped = false;
     private void Start()
@@ -111,6 +111,7 @@ public class PlayerController : MonoBehaviour, IMovementController
                 levelManager.instance.SwitchToNextLevel_Direct();
             }
         }
+
 
         if (movementBounds.IsAtRightEdge())
         {
