@@ -718,6 +718,7 @@ controlEffects.jitterIntensity = 0.3f;
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+                    
 
         // 确保达到精确的目标值
         ApplyParameters(targetValues);
@@ -739,7 +740,6 @@ controlEffects.jitterIntensity = 0.3f;
                 {
                     playerController.transform.position = respawnTarget.position;
                     playerSpriteRenderer.material = originalMaterial2;
-
                     // Debug.Log($"已在效果保持阶段中间时间点将玩家移动到目标物体位置：{respawnTarget.position}");
                 }
                 else if (useCustomRespawnPosition)
@@ -757,6 +757,8 @@ controlEffects.jitterIntensity = 0.3f;
             effectElapsedTime += Time.deltaTime;
             yield return null;
         }
+        UnfreezePlayer();
+
         // // 销毁当前玩家并重新创建
         // if (playerController != null)
         // {
@@ -875,8 +877,8 @@ controlEffects.jitterIntensity = 0.3f;
             controlEffects.noiseIntensity = Mathf.Lerp(endValues.noiseIntensity, originalValues.noiseIntensity, smoothT);
             controlEffects.jitterIntensity = 0.3f;
         controlEffects.jitterFrequency = 55f;
-        controlEffects.scanLineThickness = 1.1f;
-        controlEffects.scanLineSpeed = 1.9f;
+        controlEffects.scanLineThickness = Mathf.Lerp(endValues.scanLineThickness, originalValues.scanLineThickness, smoothT);
+        controlEffects.scanLineSpeed = Mathf.Lerp(endValues.scanLineSpeed, originalValues.scanLineSpeed, smoothT);
         
         // glitchProbability直接恢复为原始值，不进行平滑过渡
         controlEffects.glitchProbability = 0.01f;
@@ -900,11 +902,8 @@ controlEffects.jitterIntensity = 0.3f;
         }
         
         
-        yield return new WaitForSeconds(0f);
-        UnfreezePlayer();
         // 恢复其他参数后，等待指定时间
         Debug.Log($"所有其他参数已恢复，颜色校正和饱和度将等待 {colorCorrectionRecoveryDelay} 秒后恢复");
-        yield return new WaitForSeconds(colorCorrectionRecoveryDelay);
         Debug.Log("开始恢复颜色校正和饱和度");
 
         // 最后再平滑恢复颜色校正和饱和度
