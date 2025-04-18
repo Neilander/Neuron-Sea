@@ -23,7 +23,27 @@ public class StartEffectController : MonoBehaviour
     public Image fadeImage;
     public float fadeDuration = 1f;
 
-    void Start()
+    public void Start()
+    {
+        //TriggerStartEffect();
+    }
+
+    private void OnEnable()
+    {
+        PlayerDeathEvent.OnDeathTriggered += StopEffect;
+    }
+
+    private void OnDisable()
+    {
+        PlayerDeathEvent.OnDeathTriggered -= StopEffect;
+    }
+
+    public void StopEffect(GameObject obj)
+    {
+        StopAllCoroutines();
+    }
+
+    public void TriggerStartEffect()
     {
         playerController = FindFirstObjectByType<PlayerController>();
         if (playerController != null && startPosition != null)
@@ -34,6 +54,7 @@ public class StartEffectController : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(startPosition.position, Vector2.down, raycastDistance, groundLayer);
             if (hit.collider != null)
             {
+                Debug.Log(hit.collider.gameObject.name);
                 // 使用 BoxCollider2D 计算底部偏移
                 BoxCollider2D col = playerController.GetComponent<BoxCollider2D>();
                 float bottomOffset = 0.5f; // 默认值
@@ -47,6 +68,10 @@ public class StartEffectController : MonoBehaviour
                 finalPosition = hit.point - new Vector2(0f, bottomOffset);
 
                 Debug.Log("设置玩家位置：" + finalPosition);
+            }
+            else
+            {
+                Debug.Log("没有检测到");
             }
 
             // 设置玩家位置
