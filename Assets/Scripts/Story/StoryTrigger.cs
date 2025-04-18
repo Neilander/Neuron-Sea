@@ -8,9 +8,23 @@ using UnityEngine;
 /// </summary>
 public class StoryTrigger : MonoBehaviour
 {
+    public enum StorySourceType
+    {
+        ScriptableObject,  // 使用StoryData ScriptableObject
+        CSVResource        // 使用CSV文本资源
+    }
+
+    [Header("剧情来源设置")]
+    [Tooltip("剧情数据来源类型")]
+    [SerializeField] private StorySourceType storySourceType = StorySourceType.ScriptableObject;
+
     [Header("剧情资源")]
     [Tooltip("剧情数据资源路径，在Resources文件夹下的相对路径")]
     [SerializeField] private string storyResourcePath = "StoryData/IntroStory";
+
+    [Header("CSV数据设置")]
+    [Tooltip("CSV文件在Resources文件夹下的相对路径（仅当选择CSV来源时使用）")]
+    [SerializeField] private string csvResourcePath = "StoryData/CSV/story01";
 
     [Header("触发设置")]
     [Tooltip("是否只触发一次")]
@@ -89,23 +103,45 @@ public class StoryTrigger : MonoBehaviour
             }
         }
 
-        // 获取剧情数据资源
-        StoryData storyData = Resources.Load<StoryData>(storyResourcePath);
+        bool success = false;
 
-        if (storyData == null)
+        // 根据数据源类型选择加载方式
+        if (storySourceType == StorySourceType.ScriptableObject)
         {
-            Debug.LogError("无法加载剧情数据: " + storyResourcePath);
-            return;
+            // 获取剧情数据资源
+            StoryData storyData = Resources.Load<StoryData>(storyResourcePath);
+
+            if (storyData == null)
+            {
+                Debug.LogError("无法加载剧情数据: " + storyResourcePath);
+                return;
+            }
+
+            // 进入剧情模式
+            StoryManager.Instance.EnterStoryMode(storyData);
+            success = true;
+        }
+        else if (storySourceType == StorySourceType.CSVResource)
+        {
+            // 使用CSV资源加载剧情
+            success = StoryManager.Instance.LoadStoryFromResourceCSV(csvResourcePath);
+
+            if (!success)
+            {
+                Debug.LogError("无法从CSV加载剧情数据: " + csvResourcePath);
+                return;
+            }
         }
 
-        // 进入剧情模式
-        StoryManager.Instance.EnterStoryMode(storyData);
+        // 如果成功触发
+        if (success)
+        {
+            // 标记为已触发
+            hasTriggered = true;
 
-        // 标记为已触发
-        hasTriggered = true;
-
-        // 隐藏提示
-        HidePrompt();
+            // 隐藏提示
+            HidePrompt();
+        }
     }
 
     /// <summary>
@@ -127,14 +163,30 @@ public class StoryTrigger : MonoBehaviour
         // 确保玩家仍在触发区域内
         if (playerInTriggerArea)
         {
-            // 获取剧情数据资源
-            StoryData storyData = Resources.Load<StoryData>(storyResourcePath);
+            bool success = false;
 
-            if (storyData != null)
+            // 根据数据源类型选择加载方式
+            if (storySourceType == StorySourceType.ScriptableObject)
             {
-                // 进入剧情模式
-                StoryManager.Instance.EnterStoryMode(storyData);
+                // 获取剧情数据资源
+                StoryData storyData = Resources.Load<StoryData>(storyResourcePath);
 
+                if (storyData != null)
+                {
+                    // 进入剧情模式
+                    StoryManager.Instance.EnterStoryMode(storyData);
+                    success = true;
+                }
+            }
+            else if (storySourceType == StorySourceType.CSVResource)
+            {
+                // 使用CSV资源加载剧情
+                success = StoryManager.Instance.LoadStoryFromResourceCSV(csvResourcePath);
+            }
+
+            // 如果成功触发
+            if (success)
+            {
                 // 标记为已触发
                 hasTriggered = true;
 

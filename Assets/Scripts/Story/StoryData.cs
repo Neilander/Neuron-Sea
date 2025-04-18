@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO; // 添加文件操作命名空间
 
 /// <summary>
 /// 立绘位置枚举
@@ -94,4 +95,249 @@ public class StoryData : ScriptableObject
 
     [Header("角色配置")]
     public List<CharacterConfig> characters = new List<CharacterConfig>(); // 角色配置列表
+
+    #region 表格导入功能
+
+    /// <summary>
+    /// 从CSV文件导入对话数据
+    /// </summary>
+    /// <param name="csvFilePath">CSV文件路径</param>
+    /// <returns>是否成功导入</returns>
+    public bool ImportFromCSV(string csvFilePath)
+    {
+        if (!File.Exists(csvFilePath))
+        {
+            Debug.LogError($"CSV文件不存在: {csvFilePath}");
+            return false;
+        }
+
+        try
+        {
+            string[] lines = File.ReadAllLines(csvFilePath);
+            if (lines.Length <= 1) // 至少需要标题行和一行数据
+            {
+                Debug.LogError("CSV文件格式不正确，至少需要标题行和一行数据");
+                return false;
+            }
+
+            // 清空现有对话数据
+            dialogues.Clear();
+
+            // 跳过标题行，从第二行开始解析
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string line = lines[i].Trim();
+                if (string.IsNullOrEmpty(line)) continue;
+
+                // 解析CSV行
+                string[] fields = ParseCSVLine(line);
+                if (fields.Length < 2) // 至少需要角色名和对话内容
+                {
+                    Debug.LogWarning($"跳过无效行: {line}");
+                    continue;
+                }
+
+                // 创建对话数据
+                DialogueData dialogueData = new DialogueData();
+
+                // 解析基本字段
+                int fieldIndex = 0;
+                dialogueData.speakerName = fields[fieldIndex++];
+                dialogueData.text = fields[fieldIndex++];
+
+                // 如果有更多字段，解析其他设置
+                if (fields.Length > fieldIndex)
+                {
+                    // 解析立绘位置
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (System.Enum.TryParse(fields[fieldIndex], out PortraitPosition position))
+                        {
+                            dialogueData.portraitPosition = position;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析表情
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (System.Enum.TryParse(fields[fieldIndex], out PortraitExpression expression))
+                        {
+                            dialogueData.expression = expression;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析特效
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (System.Enum.TryParse(fields[fieldIndex], out PortraitEffect effect))
+                        {
+                            dialogueData.portraitEffect = effect;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析特效强度
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (float.TryParse(fields[fieldIndex], out float intensity))
+                        {
+                            dialogueData.effectIntensity = intensity;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析特效持续时间
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (float.TryParse(fields[fieldIndex], out float duration))
+                        {
+                            dialogueData.effectDuration = duration;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析显示立绘
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (bool.TryParse(fields[fieldIndex], out bool showPortrait))
+                        {
+                            dialogueData.showPortrait = showPortrait;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析隐藏其他立绘
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        if (bool.TryParse(fields[fieldIndex], out bool hideOthers))
+                        {
+                            dialogueData.hideOtherPortraits = hideOthers;
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析动画触发器
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        dialogueData.animationTrigger = fields[fieldIndex];
+                    }
+                    fieldIndex++;
+
+                    // 立绘和头像需要通过资源路径加载
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        string portraitPath = fields[fieldIndex];
+                        Sprite portraitSprite = Resources.Load<Sprite>(portraitPath);
+                        if (portraitSprite != null)
+                        {
+                            dialogueData.portrait = portraitSprite;
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"无法加载立绘: {portraitPath}");
+                        }
+                    }
+                    fieldIndex++;
+
+                    // 解析头像路径
+                    if (fieldIndex < fields.Length && !string.IsNullOrEmpty(fields[fieldIndex]))
+                    {
+                        string avatarPath = fields[fieldIndex];
+                        Sprite avatarSprite = Resources.Load<Sprite>(avatarPath);
+                        if (avatarSprite != null)
+                        {
+                            dialogueData.avatar = avatarSprite;
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"无法加载头像: {avatarPath}");
+                        }
+                    }
+                }
+
+                // 添加到对话列表
+                dialogues.Add(dialogueData);
+            }
+
+            Debug.Log($"成功从CSV导入 {dialogues.Count} 条对话数据");
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"导入CSV数据时出错: {e.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 解析CSV行，处理引号包围的字段
+    /// </summary>
+    private string[] ParseCSVLine(string line)
+    {
+        List<string> fields = new List<string>();
+        bool inQuotes = false;
+        string currentField = "";
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+
+            if (c == '"')
+            {
+                inQuotes = !inQuotes;
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                fields.Add(currentField);
+                currentField = "";
+            }
+            else
+            {
+                currentField += c;
+            }
+        }
+
+        // 添加最后一个字段
+        fields.Add(currentField);
+
+        return fields.ToArray();
+    }
+
+    /// <summary>
+    /// 创建CSV表格模板
+    /// </summary>
+    /// <param name="filePath">保存路径</param>
+    /// <returns>是否成功创建</returns>
+    public static bool CreateCSVTemplate(string filePath)
+    {
+        try
+        {
+            // 定义CSV表头
+            string header = "SpeakerName,DialogueText,PortraitPosition,Expression,Effect,EffectIntensity,EffectDuration,ShowPortrait,HideOtherPortraits,AnimationTrigger,PortraitPath,AvatarPath";
+
+            // 添加示例数据
+            string exampleRow1 = "角色A,\"这是第一句对话，CSV格式支持换行和特殊字符\",Left,Normal,None,1.0,1.0,true,false,,Characters/CharacterA,Avatars/AvatarA";
+            string exampleRow2 = "角色B,这是第二句对话,Right,Happy,Shake,1.5,2.0,true,false,,Characters/CharacterB,Avatars/AvatarB";
+
+            // 写入文件
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine(header);
+                writer.WriteLine(exampleRow1);
+                writer.WriteLine(exampleRow2);
+            }
+
+            Debug.Log($"CSV模板已创建: {filePath}");
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"创建CSV模板时出错: {e.Message}");
+            return false;
+        }
+    }
+
+    #endregion
 }
