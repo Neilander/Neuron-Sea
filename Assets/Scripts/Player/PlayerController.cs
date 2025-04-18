@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private void Update()
     {
+        dropped = false;
         //只有在可以输入时才处理输入
         if (canInput)
         {
