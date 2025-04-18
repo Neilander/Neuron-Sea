@@ -178,7 +178,7 @@ public class DeathController : MonoBehaviour
         }
         else
         {
-            // Debug.LogWarning("未找到leveldata组件！");
+            Debug.LogWarning("未找到leveldata组件！");
         }
 
         // 获取ControlEffects组件
