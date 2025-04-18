@@ -272,7 +272,7 @@ public class DeathController : MonoBehaviour
             playerSpriteRenderer = playerController.GetComponent<SpriteRenderer>();
             playerAnimator = playerController.GetComponent<Animator>();
             playerRigidbody = playerController.GetComponent<Rigidbody2D>();
-playerSpriteRenderer.material = deathEffectMaterial;
+            playerSpriteRenderer.material = deathEffectMaterial;
 
             if (playerController != null && playerSpriteRenderer != null)
             {
