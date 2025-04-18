@@ -274,6 +274,7 @@ public class GridManager : MonoBehaviour
                     {
                         if (switchInfoRecorder.Take(tryGet))
                         {
+                            //选中已经被选中的物体
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
                             if (switchInfoRecorder.hasFirst)
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
@@ -282,10 +283,13 @@ public class GridManager : MonoBehaviour
                         }
                         else
                         {
-                            SwitchableObj temp;
-                            if (switchInfoRecorder.Record(tryGet, out temp))
+                            SwitchableObj temp1;
+                            SwitchableObj temp2;
+                            if (switchInfoRecorder.Record(tryGet, out temp1, out temp2))
                             {
-                                temp.SetLockedToSwitch(false, true,false,Vector3.zero);
+                                //如果有顶掉的
+                                temp1.SetLockedToSwitch(false,true,false,Vector3.zero);
+                                temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
                             }
                             if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                             {
@@ -524,16 +528,18 @@ class TwoObjectContainer<Type>
         hasSecond = false;
     }
 
-    public bool Record(Type n, out Type poopOut)
+    public bool Record(Type n, out Type poopOut, out Type poopOut2)
     {
         poopOut = n;
+        poopOut2 = n;
         if (hasFirst)
         {
             if (hasSecond)
             {
                 poopOut = obj1;
-                obj1 = obj2;
-                obj2 = n;
+                poopOut2 = obj2;
+                obj1 = n;
+                hasSecond = false;
                 return true;
             }
             else
