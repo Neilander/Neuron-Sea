@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour, IMovementController
     private Vector3 lockedPosition; // 存储锁定的位置
     private bool isPositionLocked = false; // 位置是否被锁定
 
+    private bool inMoveSound = false;
+
     MovementComparison movementBounds;
 
     private bool dropped = false;
@@ -230,6 +232,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         // 添加地面状态变化的调试
         if (!wasGrounded && isGrounded)
         {
+            AudioManager.Instance.Play(SFXClip.Drop);
             Debug.Log($"玩家落地 - 位置: {transform.position}");
         }
         else if (wasGrounded && !isGrounded)
@@ -293,6 +296,16 @@ public class PlayerController : MonoBehaviour, IMovementController
         }
 
         animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+        if (!inMoveSound && Mathf.Abs(rb.velocity.x) > 0)
+        {
+            inMoveSound = true;
+            AudioManager.Instance.Play(SFXClip.Walk);
+        }
+        else if (inMoveSound && Mathf.Abs(rb.velocity.x) == 0)
+        {
+            inMoveSound = false;
+            AudioManager.Instance.Stop(SFXClip.Walk);
+        }
     }
     #endregion
     #region 角色身体转向
@@ -316,6 +329,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         JumpInput.Jump.OnTrigger();
         Debug.Log($"玩家跳跃 - 位置: {transform.position}, 速度: {rb.velocity}, 跳跃力: {jumpForce}");
+        AudioManager.Instance.Play(SFXClip.Jump);
     }
     void CheckJump()
     {

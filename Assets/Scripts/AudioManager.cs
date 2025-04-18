@@ -19,19 +19,29 @@ public class AudioManager : MonoBehaviour
     public List<WhiteNoiseEntry> whiteNoiseClips;
     public List<SFXEntry> sfxClips;
 
-    private Dictionary<BGMClip, AudioClip> bgmDict;
-    private Dictionary<WhiteNoiseClip, AudioClip> whiteNoiseDict;
+    private Dictionary<BGMClip, BGMEntry> bgmDict;
+    private Dictionary<WhiteNoiseClip, WhiteNoiseEntry> whiteNoiseDict;
     private Dictionary<SFXClip, SFXEntry> sfxDict;
 
     [System.Serializable]
-    public class BGMEntry { public BGMClip key; public AudioClip clip; }
+    public class BGMEntry { public BGMClip key; public AudioClip clip;
+        [Range(0, 1)]
+        public float volume;
+    }
     [System.Serializable]
-    public class WhiteNoiseEntry { public WhiteNoiseClip key; public AudioClip clip; }
+    public class WhiteNoiseEntry {
+        public WhiteNoiseClip key;
+        public AudioClip clip;
+        [Range(0, 1)]
+        public float volume;
+    }
     [System.Serializable]
     public class SFXEntry
     {
         public SFXClip key;
         public AudioClip clip;
+        [Range(0,1)]
+        public float volume;
         public bool loop;
     }
 
@@ -50,14 +60,14 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        bgmDict = bgmClips.ToDictionary(e => e.key, e => e.clip);
-        whiteNoiseDict = whiteNoiseClips.ToDictionary(e => e.key, e => e.clip);
-        sfxDict = sfxClips.ToDictionary(e => e.key, e => e);
+        bgmDict = bgmClips.ToDictionary(e => e.key, e => e);
+        whiteNoiseDict = whiteNoiseClips.ToDictionary(e => e.key, e => e);
+        sfxDict = sfxClips.ToDictionary(e => e.key, e => e); // 保持不动
     }
 
-    public void Play(BGMClip clipKey, float volume = 1f)
+    public void Play(BGMClip clipKey)
     {
-        if (!bgmDict.TryGetValue(clipKey, out var clip) || clip == null)
+        if (!bgmDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
             return;
 
         if (bgmSourceDict.TryGetValue(clipKey, out var oldSource))
@@ -67,17 +77,17 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
-        newSource.clip = clip;
+        newSource.clip = entry.clip;
         newSource.loop = true;
-        newSource.volume = volume;
+        newSource.volume = entry.volume;
         newSource.Play();
 
         bgmSourceDict[clipKey] = newSource;
     }
 
-    public void Play(WhiteNoiseClip clipKey, float volume = 1f)
+    public void Play(WhiteNoiseClip clipKey)
     {
-        if (!whiteNoiseDict.TryGetValue(clipKey, out var clip) || clip == null)
+        if (!whiteNoiseDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
             return;
 
         if (whiteNoiseSourceDict.TryGetValue(clipKey, out var oldSource))
@@ -87,15 +97,15 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
-        newSource.clip = clip;
+        newSource.clip = entry.clip;
         newSource.loop = true;
-        newSource.volume = volume;
+        newSource.volume = entry.volume;
         newSource.Play();
 
         whiteNoiseSourceDict[clipKey] = newSource;
     }
 
-    public void Play(SFXClip clipKey, float volume = 1f)
+    public void Play(SFXClip clipKey)
     {
         if (!sfxDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
         {
@@ -103,24 +113,20 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // 如果已经有旧的 source，在播放新的前先销毁
         if (sfxSourceDict.TryGetValue(clipKey, out var oldSource))
         {
             oldSource.Stop();
             Destroy(oldSource);
         }
 
-        // 创建新的 AudioSource 并播放
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
         newSource.clip = entry.clip;
         newSource.loop = entry.loop;
-        newSource.volume = volume;
+        newSource.volume = entry.volume;
         newSource.Play();
 
-        // 存入字典
         sfxSourceDict[clipKey] = newSource;
 
-        // 非 loop 的自动销毁 + 移除字典
         if (!entry.loop)
             StartCoroutine(DestroyWhenDone(newSource, clipKey));
     }
@@ -177,12 +183,15 @@ public enum BGMClip
 
 public enum WhiteNoiseClip
 {
-    Wind,
-    Rain,
-    Ocean
+    Scene1,
+    Scene2,
+    Scene3
 }
 
 public enum SFXClip
 {
     Walk,
+    Jump,
+    Drop,
+    Switch
 }

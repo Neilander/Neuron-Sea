@@ -402,6 +402,7 @@ public class GridManager : MonoBehaviour
         Vector3 tempPos = switchInfoRecorder.obj1.SelfGridPos;
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
+        AudioManager.Instance.Play(SFXClip.Switch);
     }
 
     public void RenewSwitch()
