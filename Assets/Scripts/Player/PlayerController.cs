@@ -123,6 +123,10 @@ public class PlayerController : MonoBehaviour, IMovementController
             Debug.Log("死亡在这里");
             PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
         }
+        else if (dropped && !movementBounds.ShouldDrop())
+        {
+            dropped = false;
+        }
         /*
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
