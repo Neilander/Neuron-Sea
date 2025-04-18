@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
   m_Name: CaptureScreenRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   blitMaterial: {fileID: 2100000, guid: 00e25eaa9621f4006b16d14bc634ee3b, type: 2}
   flipYPropertyName: _FlipYZP
 --- !u!114 &-4893173975917759724
@@ -121,26 +121,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d313a3629f21ae64e96121ac9819daa9, type: 3}
   m_Name: ScanLineJitterFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
-    jitterIntensity: 0.3
-    jitterFrequency: 55
-    scanLineThickness: 1.1
-    scanLineSpeed: 1.9
-    colorShiftIntensity: 0.02
-    noiseIntensity: 0.05
-    glitchProbability: 0.01
-    waveIntensity: 0.2
+    jitterIntensity: 0
+    jitterFrequency: 0
+    scanLineThickness: 0
+    scanLineSpeed: 0
+    colorShiftIntensity: 0
+    noiseIntensity: 0
+    glitchProbability: 0
+    waveIntensity: 0
     waveFrequency: 10
     waveSpeed: 2
     bwEffect: 0
     bwNoiseScale: 10
     bwNoiseIntensity: 0.2
     bwFlickerSpeed: 5
-    colorCorrection: 0.011722028
+    colorCorrection: 0
     hueShift: 0
-    saturation: 0.988278
+    saturation: 1
     brightness: 1
     contrast: 1
     redOffset: 0

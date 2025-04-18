@@ -57,6 +57,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         recordTempPos = renderer.transform.localPosition;
         anchorSprite.transform.localPosition = anchor.transform.localPosition;
         anchorSprite.transform.SetParent(renderer.transform);
+        previewObj.transform.localScale = renderer.gameObject.transform.localScale;
     }
 
     public void MoveToGridPos(Vector3 gridPos){
@@ -361,7 +362,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         lockedStateDisplay.GetComponent<SpriteRenderer>().color = ifLegal ? Color.white : Color.red;
         if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
 
-        /*
+        
         if (ifLocked && ifLegal&& ifPreview)
         {
             previewObj.transform.position = gridPos - anchor.transform.localPosition;
@@ -370,7 +371,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         else
         {
             previewObj.SetActive(false);
-        }*/
+        }
         
     }
     #endregion
