@@ -14,7 +14,7 @@ public static class PauseEvent
     {
         if (!isPaused)
         {
-            Time.timeScale = 0f; // 暂停游戏时间
+            Time.timeScale = 0.2f; // 暂停游戏时间
             isPaused = true;
             OnPauseTriggered?.Invoke();
         }

@@ -260,7 +260,7 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyUp(KeyCode.Q))
                 {
                     StartState(SwitchState.None);
 
