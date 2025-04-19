@@ -12,8 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ENABLEALPHATINT_ON
   - _ENABLESATURATION_ON
-  - _OUTEROUTLINEDISTORTIONTOGGLE_ON
   - _SHADERSPACE_UV
   - _TIMESETTINGS_LINEAR_DEFAULT
   - _UBERFADING_NONE
@@ -132,7 +132,7 @@ Material:
     - _AddHueSpeed: 1
     - _AlphaCutoff: 0.5
     - _AlphaTintFade: 1
-    - _AlphaTintMinAlpha: 0.05
+    - _AlphaTintMinAlpha: 0
     - _AlphaTintPower: 1
     - _BlackTintFade: 1
     - _BlackTintPower: 4.56
@@ -181,7 +181,7 @@ Material:
     - _DirectionalGlowFadeWidth: 0.1
     - _EnableAddColor: 0
     - _EnableAddHue: 0
-    - _EnableAlphaTint: 0
+    - _EnableAlphaTint: 1
     - _EnableBlackTint: 0
     - _EnableBrightness: 0
     - _EnableBurn: 0
@@ -281,9 +281,9 @@ Material:
     - _MetalHighlightDensity: 1
     - _Metallic: 0
     - _NormalIntensity: 1
-    - _OuterOutlineDistortionToggle: 1
+    - _OuterOutlineDistortionToggle: 0
     - _OuterOutlineFade: 1
-    - _OuterOutlineWidth: 0
+    - _OuterOutlineWidth: 1
     - _PixelateFade: 1
     - _PixelatePixelDensity: 16
     - _PixelsPerUnit: 100
@@ -376,7 +376,7 @@ Material:
     - _WindXPosition: 0
     m_Colors:
     - _AddColorColor: {r: 0.0017634247, g: 0.012500215, b: 0.025656123, a: 0}
-    - _AlphaTintColor: {r: 23.96863, g: 1.254902, b: 23.96863, a: 0}
+    - _AlphaTintColor: {r: 23.96863, g: 23.96863, b: 23.96863, a: 0}
     - _BlackTintColor: {r: 1, g: 0, b: 0, a: 0}
     - _BurnEdgeColor: {r: 11.98431, g: 1.129412, b: 0.1254902, a: 0}
     - _BurnEdgeNoiseScale: {r: 0.3, g: 0.3, b: 0, a: 0}
@@ -444,7 +444,7 @@ Material:
     - _MetalNoiseDistortionSpeed: {r: -0.05, g: -0.05, b: 0, a: 0}
     - _MetalNoiseScale: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _MetalNoiseSpeed: {r: 0.05, g: 0.05, b: 0, a: 0}
-    - _OuterOutlineColor: {r: 0, g: 0.87545013, b: 1, a: 1}
+    - _OuterOutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _OuterOutlineDistortionIntensity: {r: 0.22, g: 0.01, b: 0, a: 0}
     - _OuterOutlineNoiseScale: {r: 3.8, g: 4, b: 0, a: 0}
     - _OuterOutlineNoiseSpeed: {r: -0.52, g: 0.1, b: 0, a: 0}
