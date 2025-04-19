@@ -123,7 +123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4974078392279508006
 Transform:
   m_ObjectHideFlags: 0
@@ -152,11 +152,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ComponentVersion: 1
-  m_LightType: 3
+  m_LightType: 1
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_FalloffIntensity: 0.6
+  m_Color: {r: 0.2509804, g: 1, b: 1, a: 1}
+  m_Intensity: 0.1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 000000002161dfeb
@@ -173,8 +173,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0, y: -0.00000011920929, z: 0}
-    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+    m_Center: {x: -0.00909996, y: -0.019800007, z: 0}
+    m_Extent: {x: 1.2959, y: 1.2837, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -185,10 +185,10 @@ MonoBehaviour:
   m_ShapeLightFalloffSize: 0.5
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath:
-  - {x: -0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: 0.5, z: 0}
-  - {x: -0.5, y: 0.5, z: 0}
+  - {x: -0.7960969, y: -0.7878721, z: 0}
+  - {x: 0.77142227, y: -0.8043219, z: 0}
+  - {x: 0.7878721, y: 0.76319736, z: 0}
+  - {x: -0.8043219, y: 0.76319736, z: 0}
 --- !u!1 &6294614302020543127
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,6 +334,15 @@ MonoBehaviour:
   ExpectedAnchorPos: {x: 0, y: 0}
   lockedStateDisplay: {fileID: 8157706712536783926}
   previewObj: {fileID: 2934393342123167488}
+  selfAnimator: {fileID: 1416740256525171313}
+  ifAdjustY: 1
+  adjustYAmount:
+  - 0
+  - -0.53
+  - -0.8
+  - -1.07
+  - -1.3
+  lightTrans: {fileID: 4974078392279508006}
 --- !u!114 &8630382666741253706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,7 +580,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1657612727746896169}
@@ -657,7 +666,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7931312952261282179}
@@ -723,9 +732,9 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8418268330277156733}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6af1c7b0cb85942b992ea5ecf4feb208, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
