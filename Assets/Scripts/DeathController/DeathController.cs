@@ -264,7 +264,7 @@ public class DeathController : MonoBehaviour
 
     public void HandleDeath(GameObject obj)
     {
-
+         
         // 获取玩家组件
         if (obj != null)
         {
@@ -272,6 +272,7 @@ public class DeathController : MonoBehaviour
             playerSpriteRenderer = playerController.GetComponent<SpriteRenderer>();
             playerAnimator = playerController.GetComponent<Animator>();
             playerRigidbody = playerController.GetComponent<Rigidbody2D>();
+            playerSpriteRenderer.material = deathEffectMaterial;
 
             if (playerController != null && playerSpriteRenderer != null)
             {
@@ -596,7 +597,7 @@ controlEffects.jitterIntensity = 0.3f;
         // 第一步：改变材质和开始颜色校正
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
-            playerSpriteRenderer.material = deathEffectMaterial;
+           
             // 设置初始GlitchFade值
             playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
             // Debug.Log($"初始化 GlitchFade 值: 0");

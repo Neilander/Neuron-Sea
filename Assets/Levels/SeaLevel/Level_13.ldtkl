@@ -245,7 +245,8 @@
 						{ "__identifier": "PivotX", "__type": "Int", "__value": 0, "__tile": null, "defUid": 508, "realEditorValues": [] },
 						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 509, "realEditorValues": [] },
 						{ "__identifier": "TrackLengthX", "__type": "Int", "__value": 11, "__tile": null, "defUid": 510, "realEditorValues": [{ "id": "V_Int", "params": [11] }] },
-						{ "__identifier": "TrackLengthY", "__type": "Int", "__value": 3, "__tile": null, "defUid": 511, "realEditorValues": [] }
+						{ "__identifier": "TrackLengthY", "__type": "Int", "__value": 3, "__tile": null, "defUid": 511, "realEditorValues": [] },
+						{ "__identifier": "Reverse", "__type": "Bool", "__value": false, "__tile": null, "defUid": 747, "realEditorValues": [] }
 					],
 					"__worldX": -7218,
 					"__worldY": 7794
@@ -310,7 +311,8 @@
 						{ "__identifier": "PivotX", "__type": "Int", "__value": 0, "__tile": null, "defUid": 508, "realEditorValues": [null] },
 						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 509, "realEditorValues": [] },
 						{ "__identifier": "TrackLengthX", "__type": "Int", "__value": 11, "__tile": null, "defUid": 510, "realEditorValues": [{ "id": "V_Int", "params": [11] }] },
-						{ "__identifier": "TrackLengthY", "__type": "Int", "__value": 3, "__tile": null, "defUid": 511, "realEditorValues": [] }
+						{ "__identifier": "TrackLengthY", "__type": "Int", "__value": 3, "__tile": null, "defUid": 511, "realEditorValues": [] },
+						{ "__identifier": "Reverse", "__type": "Bool", "__value": false, "__tile": null, "defUid": 747, "realEditorValues": [] }
 					],
 					"__worldX": -5310,
 					"__worldY": 7398
@@ -335,6 +337,70 @@
 					],
 					"__worldX": -5454,
 					"__worldY": 6894
+				},
+				{
+					"__identifier": "Respawn",
+					"__grid": [21,36],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FF0000",
+					"iid": "cce66c70-1030-11f0-820c-1d77493cc64b",
+					"width": 36,
+					"height": 36,
+					"defUid": 475,
+					"px": [774,1314],
+					"fieldInstances": [],
+					"__worldX": -7686,
+					"__worldY": 7794
+				},
+				{
+					"__identifier": "Piece",
+					"__grid": [111,10],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#D7CF43",
+					"iid": "01cf0a50-1030-11f0-820c-89ac13b6c75a",
+					"width": 36,
+					"height": 36,
+					"defUid": 271,
+					"px": [4014,378],
+					"fieldInstances": [{ "__identifier": "SwitchTimeRequire", "__type": "Int", "__value": 0, "__tile": null, "defUid": 272, "realEditorValues": [] }],
+					"__worldX": -4446,
+					"__worldY": 6858
+				},
+				{
+					"__identifier": "CameraBound",
+					"__grid": [45,33],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#43D7C7",
+					"iid": "077ee1a0-1030-11f0-820c-b1cb6b8bee1e",
+					"width": 1404,
+					"height": 504,
+					"defUid": 263,
+					"px": [1638,1206],
+					"fieldInstances": [],
+					"__worldX": -6822,
+					"__worldY": 7686
+				},
+				{
+					"__identifier": "CameraBound",
+					"__grid": [87,17],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#43D7C7",
+					"iid": "1fb28f60-1030-11f0-820c-33f07b3c0cfb",
+					"width": 756,
+					"height": 936,
+					"defUid": 263,
+					"px": [3150,630],
+					"fieldInstances": [],
+					"__worldX": -5310,
+					"__worldY": 7110
 				}
 			]
 		},

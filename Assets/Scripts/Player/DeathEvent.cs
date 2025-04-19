@@ -8,6 +8,7 @@ public static class PlayerDeathEvent
 
     public static void Trigger(GameObject damageSource, DeathType deathType)
     {
+        Debug.Log("Trigger death event");
         OnDeathTriggered?.Invoke(damageSource);
     }
 }

@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Intensity: 2.56
   m_LightVolumeIntensity: 0.23
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: cb2c226e
+  m_ApplyToSortingLayers: cb2c226e431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -426,7 +426,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
-      objectReference: {fileID: 2031908259}
+      objectReference: {fileID: 0}
     - target: {fileID: -5915716007080126124, guid: 2e6314e1263842d4ebb216bc6edd668f,
         type: 3}
       propertyPath: m_TileSpriteArray.Array.data[0].m_Data
@@ -3606,6 +3606,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2947716137981427639, guid: a64244f04fd7a1b4889d819445af463e,
         type: 3}
+      propertyPath: m_Size.x
+      value: 20.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947716137981427639, guid: a64244f04fd7a1b4889d819445af463e,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 11.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947716137981427639, guid: a64244f04fd7a1b4889d819445af463e,
+        type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 8ef2be8c067c94a9dac90104f37d624b,
@@ -3634,6 +3644,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 4215537578546608958, guid: a64244f04fd7a1b4889d819445af463e,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 20.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4215537578546608958, guid: a64244f04fd7a1b4889d819445af463e,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 11.52
       objectReference: {fileID: 0}
     - target: {fileID: 4215537578546608958, guid: a64244f04fd7a1b4889d819445af463e,
         type: 3}
@@ -5558,19 +5578,13 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
-      objectReference: {fileID: 346134485}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: -1934345717165055291, guid: 62a88527e1fb96c4ab59c2f6dae09295,
     type: 3}
---- !u!19719996 &346134485 stripped
-TilemapCollider2D:
-  m_CorrespondingSourceObject: {fileID: 8364325091901368956, guid: 62a88527e1fb96c4ab59c2f6dae09295,
-    type: 3}
-  m_PrefabInstance: {fileID: 346134484}
-  m_PrefabAsset: {fileID: 0}
 --- !u!19719996 &395677665 stripped
 TilemapCollider2D:
   m_CorrespondingSourceObject: {fileID: -7433649407037038817, guid: 620938535306db34d9825f9582b0dfc2,
@@ -6490,7 +6504,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
-      objectReference: {fileID: 1928189279}
+      objectReference: {fileID: 0}
     - target: {fileID: 4048174123298161015, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
         type: 3}
       propertyPath: m_Name
@@ -8064,7 +8078,7 @@ MonoBehaviour:
   m_Intensity: 2.38
   m_LightVolumeIntensity: 0.23
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: cb2c226e
+  m_ApplyToSortingLayers: cb2c226e431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -8230,9 +8244,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1103187856}
   smoothSpeed: 5
-  defaultOrigin: {x: -240, y: 107}
-  defaultWidth: 40
-  defaultHeight: 20
+  defaultOrigin: {x: 0, y: 0}
+  defaultWidth: 10
+  defaultHeight: 5
 --- !u!114 &519420035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10537,7 +10551,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
-      objectReference: {fileID: 1017024592}
+      objectReference: {fileID: 0}
     - target: {fileID: 7492911437523719517, guid: 8ac41cca7e55c0d449facdd75bfed2bd,
         type: 3}
       propertyPath: m_ColliderPaths.Array.size
@@ -11009,7 +11023,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 6.4, y: 3.6}
+  m_Size: {x: 20.48, y: 11.52}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -14200,7 +14214,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000079cf5341f10c1762161dfeb9fe7e888cb2c226e7991fb8c8752cca6118f5467
+  m_ApplyToSortingLayers: 00000000079cf5341f10c1762161dfeb9fe7e888cb2c226e7991fb8c8752cca6118f5467431185e8
   m_LightCookieSprite: {fileID: 21300000, guid: 2ff12d232296f3f48af88e113af6fb71,
     type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
@@ -14313,12 +14327,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!19719996 &1017024592 stripped
-TilemapCollider2D:
-  m_CorrespondingSourceObject: {fileID: 1527031369987651535, guid: 8ac41cca7e55c0d449facdd75bfed2bd,
-    type: 3}
-  m_PrefabInstance: {fileID: 656750962}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1101581985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14679,7 +14687,7 @@ MonoBehaviour:
   colorShiftIntensity: 0.02
   noiseIntensity: 0.05
   glitchProbability: 0.02
-  waveIntensity: 0.2
+  waveIntensity: 0
   waveFrequency: 10
   waveSpeed: 2
   bwEffect: 0
@@ -14776,7 +14784,7 @@ Transform:
   m_GameObject: {fileID: 1184804724}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.338153, y: 0.6277783, z: -7.8827662}
+  m_LocalPosition: {x: 10.13, y: 0.83, z: -7.8827662}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17321,7 +17329,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
-      objectReference: {fileID: 1893883565}
+      objectReference: {fileID: 0}
     - target: {fileID: -486367997215585857, guid: 36c4ca5981d72574babb4f405423479a,
         type: 3}
       propertyPath: m_ColliderPaths.Array.size
@@ -20961,7 +20969,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_Collider
       value: 
-      objectReference: {fileID: 1707576060}
+      objectReference: {fileID: 0}
     - target: {fileID: 8111963561438740759, guid: d61327b2548ef85478c1c7b5767fc542,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21065,7 +21073,7 @@ MonoBehaviour:
   m_Intensity: 2.56
   m_LightVolumeIntensity: 0.23
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: cb2c226e
+  m_ApplyToSortingLayers: cb2c226e431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -23556,12 +23564,6 @@ Transform:
   - {fileID: 1615254485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!19719996 &1707576060 stripped
-TilemapCollider2D:
-  m_CorrespondingSourceObject: {fileID: 598042349337795295, guid: d61327b2548ef85478c1c7b5767fc542,
-    type: 3}
-  m_PrefabInstance: {fileID: 1432873703}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1754419579
 GameObject:
   m_ObjectHideFlags: 0
@@ -23599,7 +23601,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 079cf5348752cca6118f5467
+  m_ApplyToSortingLayers: 079cf5348752cca6118f5467431185e8
   m_LightCookieSprite: {fileID: 21300000, guid: 2ff12d232296f3f48af88e113af6fb71,
     type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
@@ -23697,7 +23699,7 @@ MonoBehaviour:
   m_Intensity: 6.65
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 9fe7e888
+  m_ApplyToSortingLayers: 9fe7e888431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -23803,6 +23805,21 @@ PrefabInstance:
       propertyPath: deathImg
       value: 
       objectReference: {fileID: 80552349}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
+      propertyPath: originalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 524878720b915544eb65205ee1f54233, type: 2}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
+      propertyPath: originalMaterial2
+      value: 
+      objectReference: {fileID: 2100000, guid: 524878720b915544eb65205ee1f54233, type: 2}
+    - target: {fileID: 5416670067610728553, guid: 0fa9225ac634f48d4a6ffd0688143243,
+        type: 3}
+      propertyPath: deathEffectMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 77598294732a6d648b5031365f9a5b0b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -23872,7 +23889,7 @@ MonoBehaviour:
   m_Intensity: 0
   m_LightVolumeIntensity: 0.72
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: cb2c226e
+  m_ApplyToSortingLayers: cb2c226e431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -25838,7 +25855,7 @@ MonoBehaviour:
   m_Intensity: 2.38
   m_LightVolumeIntensity: 0.23
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: cb2c226e
+  m_ApplyToSortingLayers: cb2c226e431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -26034,18 +26051,6 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!19719996 &1893883565 stripped
-TilemapCollider2D:
-  m_CorrespondingSourceObject: {fileID: 6826542497592226417, guid: 36c4ca5981d72574babb4f405423479a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1288325815}
-  m_PrefabAsset: {fileID: 0}
---- !u!19719996 &1928189279 stripped
-TilemapCollider2D:
-  m_CorrespondingSourceObject: {fileID: -3180719315631445825, guid: b72a09a1c6453964ebfb7d1cd3e9e7a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 440517447}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1936821405
 GameObject:
   m_ObjectHideFlags: 0
@@ -26098,7 +26103,7 @@ MonoBehaviour:
   m_Intensity: 2.56
   m_LightVolumeIntensity: 0.23
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: cb2c226e
+  m_ApplyToSortingLayers: cb2c226e431185e8
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -28414,12 +28419,6 @@ PrefabInstance:
     m_AddedComponents: []
   m_SourcePrefab: {fileID: -1934345717165055291, guid: 620938535306db34d9825f9582b0dfc2,
     type: 3}
---- !u!19719996 &2031908259 stripped
-TilemapCollider2D:
-  m_CorrespondingSourceObject: {fileID: 8715134669865434300, guid: 2e6314e1263842d4ebb216bc6edd668f,
-    type: 3}
-  m_PrefabInstance: {fileID: 100303236}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2060938988
 GameObject:
   m_ObjectHideFlags: 0
