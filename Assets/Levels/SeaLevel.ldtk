@@ -11,7 +11,7 @@
 	"iid": "36983c80-e920-11ef-b1b5-03933dfe8782",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 478021,
-	"nextUid": 758,
+	"nextUid": 762,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "GridVania",
@@ -13082,8 +13082,8 @@
 			"identifier": "Level_0",
 			"iid": "36986390-e920-11ef-b1b5-376b4729e1e3",
 			"uid": 0,
-			"worldX": 0,
-			"worldY": 0,
+			"worldX": 20556,
+			"worldY": 6624,
 			"worldDepth": 0,
 			"pxWid": 3600,
 			"pxHei": 1800,
@@ -13102,7 +13102,7 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": [{ "levelIid": "d70c7480-1030-11f0-80a8-2b626afd2371", "dir": "n" }]
+			"__neighbours": []
 		},
 		{
 			"identifier": "Level_25",
@@ -13128,7 +13128,7 @@
 				"params": ["LevelType3"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": [ { "levelIid": "36986390-e920-11ef-b1b5-376b4729e1e3", "dir": "s" }, { "levelIid": "d773e580-1030-11f0-8f8a-cbee64aa17dd", "dir": "e" } ]
+			"__neighbours": [{ "levelIid": "d773e580-1030-11f0-8f8a-cbee64aa17dd", "dir": "e" }]
 		},
 		{
 			"identifier": "Level_26",
@@ -13748,10 +13748,10 @@
 			"identifier": "Level_19",
 			"iid": "ae93d4f0-1030-11f0-a380-b5753c4ad5cb",
 			"uid": 740,
-			"worldX": 14220,
-			"worldY": 3852,
+			"worldX": 11664,
+			"worldY": 2520,
 			"worldDepth": 0,
-			"pxWid": 3600,
+			"pxWid": 3204,
 			"pxHei": 1368,
 			"__bgColor": "#696A79",
 			"bgColor": null,
@@ -13768,16 +13768,16 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": []
+			"__neighbours": [ { "levelIid": "8b44f200-1030-11f0-820c-256870b88ee1", "dir": "e" }, { "levelIid": "c2650330-1030-11f0-a380-e58a3f0f3ad5", "dir": "w" } ]
 		},
 		{
 			"identifier": "Level_20",
-			"iid": "afe3ad80-1030-11f0-a380-e3e14b08e886",
-			"uid": 741,
-			"worldX": 18684,
-			"worldY": 3744,
+			"iid": "8b44f200-1030-11f0-820c-256870b88ee1",
+			"uid": 758,
+			"worldX": 14868,
+			"worldY": 2268,
 			"worldDepth": 0,
-			"pxWid": 3600,
+			"pxWid": 2592,
 			"pxHei": 1368,
 			"__bgColor": "#696A79",
 			"bgColor": null,
@@ -13794,14 +13794,14 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": []
+			"__neighbours": [ { "levelIid": "ae93d4f0-1030-11f0-a380-b5753c4ad5cb", "dir": "w" }, { "levelIid": "b50dda10-1030-11f0-a380-39be7357cb09", "dir": "e" } ]
 		},
 		{
-			"identifier": "Level_21",
+			"identifier": "Level_reserve",
 			"iid": "b1955520-1030-11f0-a380-57c60c4b28e8",
 			"uid": 742,
-			"worldX": 22644,
-			"worldY": 3708,
+			"worldX": 24336,
+			"worldY": 6696,
 			"worldDepth": 0,
 			"pxWid": 3600,
 			"pxHei": 1368,
@@ -13814,7 +13814,7 @@
 			"bgPivotY": 0.5,
 			"__smartColor": "#ADADB5",
 			"__bgPos": null,
-			"externalRelPath": "SeaLevel/Level_21.ldtkl",
+			"externalRelPath": "SeaLevel/Level_reserve.ldtkl",
 			"fieldInstances": [{ "__identifier": "LevelType", "__type": "LocalEnum.LevelType", "__value": "LevelType2", "__tile": null, "defUid": 275, "realEditorValues": [{
 				"id": "V_String",
 				"params": ["LevelType2"]
@@ -13824,12 +13824,12 @@
 		},
 		{
 			"identifier": "Level_22",
-			"iid": "b26e9e20-1030-11f0-a380-853bea873a73",
-			"uid": 743,
-			"worldX": 26640,
-			"worldY": 3636,
+			"iid": "3a365660-1030-11f0-820c-49c7a8b46ba2",
+			"uid": 761,
+			"worldX": 20772,
+			"worldY": 1512,
 			"worldDepth": 0,
-			"pxWid": 3600,
+			"pxWid": 3168,
 			"pxHei": 1368,
 			"__bgColor": "#696A79",
 			"bgColor": null,
@@ -13846,16 +13846,16 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": []
+			"__neighbours": [ { "levelIid": "a90a5e60-1030-11f0-820c-232deb20d2b2", "dir": "e" }, { "levelIid": "b50dda10-1030-11f0-a380-39be7357cb09", "dir": "w" } ]
 		},
 		{
 			"identifier": "Level_23",
-			"iid": "b50dda10-1030-11f0-a380-39be7357cb09",
-			"uid": 744,
-			"worldX": 30312,
-			"worldY": 3672,
+			"iid": "a90a5e60-1030-11f0-820c-232deb20d2b2",
+			"uid": 759,
+			"worldX": 23940,
+			"worldY": 684,
 			"worldDepth": 0,
-			"pxWid": 3600,
+			"pxWid": 3168,
 			"pxHei": 1368,
 			"__bgColor": "#696A79",
 			"bgColor": null,
@@ -13872,16 +13872,42 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": []
+			"__neighbours": [ { "levelIid": "3a365660-1030-11f0-820c-49c7a8b46ba2", "dir": "w" }, { "levelIid": "b6f9f2a0-1030-11f0-a380-bbe4ad8befa3", "dir": "e" } ]
+		},
+		{
+			"identifier": "Level_21",
+			"iid": "b50dda10-1030-11f0-a380-39be7357cb09",
+			"uid": 744,
+			"worldX": 17460,
+			"worldY": 1692,
+			"worldDepth": 0,
+			"pxWid": 3312,
+			"pxHei": 1368,
+			"__bgColor": "#696A79",
+			"bgColor": null,
+			"useAutoIdentifier": false,
+			"bgRelPath": null,
+			"bgPos": null,
+			"bgPivotX": 0.5,
+			"bgPivotY": 0.5,
+			"__smartColor": "#ADADB5",
+			"__bgPos": null,
+			"externalRelPath": "SeaLevel/Level_21.ldtkl",
+			"fieldInstances": [{ "__identifier": "LevelType", "__type": "LocalEnum.LevelType", "__value": "LevelType2", "__tile": null, "defUid": 275, "realEditorValues": [{
+				"id": "V_String",
+				"params": ["LevelType2"]
+			}] }],
+			"layerInstances": null,
+			"__neighbours": [ { "levelIid": "8b44f200-1030-11f0-820c-256870b88ee1", "dir": "w" }, { "levelIid": "3a365660-1030-11f0-820c-49c7a8b46ba2", "dir": "e" } ]
 		},
 		{
 			"identifier": "Level_24",
 			"iid": "b6f9f2a0-1030-11f0-a380-bbe4ad8befa3",
 			"uid": 745,
-			"worldX": 34056,
-			"worldY": 3600,
+			"worldX": 27108,
+			"worldY": 468,
 			"worldDepth": 0,
-			"pxWid": 3600,
+			"pxWid": 2952,
 			"pxHei": 1368,
 			"__bgColor": "#696A79",
 			"bgColor": null,
@@ -13898,7 +13924,7 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": []
+			"__neighbours": [{ "levelIid": "a90a5e60-1030-11f0-820c-232deb20d2b2", "dir": "w" }]
 		},
 		{
 			"identifier": "Level_15",
@@ -13931,10 +13957,10 @@
 			"iid": "6f101420-1030-11f0-a380-d9fd1936a014",
 			"uid": 756,
 			"worldX": 5976,
-			"worldY": 3744,
+			"worldY": 3528,
 			"worldDepth": 0,
 			"pxWid": 2844,
-			"pxHei": 1404,
+			"pxHei": 1620,
 			"__bgColor": "#696A79",
 			"bgColor": null,
 			"useAutoIdentifier": false,
@@ -13976,7 +14002,7 @@
 				"params": ["LevelType2"]
 			}] }],
 			"layerInstances": null,
-			"__neighbours": [{ "levelIid": "6f101420-1030-11f0-a380-d9fd1936a014", "dir": "w" }]
+			"__neighbours": [ { "levelIid": "ae93d4f0-1030-11f0-a380-b5753c4ad5cb", "dir": "e" }, { "levelIid": "6f101420-1030-11f0-a380-d9fd1936a014", "dir": "w" } ]
 		},
 		{
 			"identifier": "Level_16",
