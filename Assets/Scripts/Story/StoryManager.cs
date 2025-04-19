@@ -127,7 +127,7 @@ public class StoryManager : MonoBehaviour
         {
             leftPortraitImage.gameObject.SetActive(false);
             Color c = leftPortraitImage.color;
-            c.a = 0;
+            c.a = 0;//从0改成了1
             leftPortraitImage.color = c;
         }
 
@@ -502,9 +502,15 @@ public class StoryManager : MonoBehaviour
         // 设置并显示立绘
         targetPortraitImage.sprite = dialogue.portrait;
         targetPortraitImage.gameObject.SetActive(true);
-
-        // 淡入新的立绘
-        StartCoroutine(FadeInPortrait(targetPortraitImage));
+        
+        // 只有第一次显示立绘或切换角色时才有淡入效果
+        if (!activePortraits[dialogue.portraitPosition] )//|| 
+            //(currentDialogueIndex > 0 && 
+             //currentDialogueIndex < currentStoryData.dialogues.Count && 
+            // currentStoryData.dialogues[currentDialogueIndex-1].speakerName != dialogue.speakerName))
+        {
+            StartCoroutine(FadeInPortrait(targetPortraitImage));
+        }
 
         // 应用立绘特效
         if (dialogue.portraitEffect != PortraitEffect.None)

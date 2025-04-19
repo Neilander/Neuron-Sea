@@ -23,7 +23,10 @@ public enum PortraitExpression
     Sad,        // 悲伤
     Angry,      // 生气
     Surprised,  // 惊讶
-    Custom      // 自定义表情(使用自定义sprite)
+    Custom,      // 自定义表情(使用自定义sprite)
+
+    Thoughtful
+    
 }
 
 /// <summary>
