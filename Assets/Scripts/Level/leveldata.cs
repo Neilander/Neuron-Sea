@@ -7,7 +7,7 @@ using static Cinemachine.DocumentationSortingAttribute;
 
 public class leveldata : MonoBehaviour, ILDtkImportedLevel
 {
-    [Header("¹Ø¿¨±ß½ç")]
+    [Header("????")]
     public Rect levelBound;
     public void OnLDtkImportLevel(LDtkUnity.Level level)
     {
