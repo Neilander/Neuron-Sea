@@ -787,4 +787,80 @@ public class StoryManager : MonoBehaviour
         isTyping = false;
         typingCoroutine = null;
     }
+
+    /// <summary>
+    /// 从CSV文件加载剧情数据并进入剧情模式
+    /// </summary>
+    /// <param name="csvFilePath">CSV文件的绝对路径</param>
+    /// <returns>是否成功加载并进入剧情模式</returns>
+    public bool LoadStoryFromCSV(string csvFilePath)
+    {
+        if (string.IsNullOrEmpty(csvFilePath) || !System.IO.File.Exists(csvFilePath))
+        {
+            Debug.LogError($"CSV文件不存在: {csvFilePath}");
+            return false;
+        }
+
+        // 创建临时的StoryData对象
+        StoryData tempStoryData = ScriptableObject.CreateInstance<StoryData>();
+        tempStoryData.storyName = System.IO.Path.GetFileNameWithoutExtension(csvFilePath);
+
+        // 导入CSV数据
+        bool success = tempStoryData.ImportFromCSV(csvFilePath);
+        if (!success)
+        {
+            Debug.LogError("从CSV导入剧情数据失败");
+            return false;
+        }
+
+        // 如果当前在剧情模式，先退出
+        if (currentState == GameState.StoryMode)
+        {
+            ExitStoryMode();
+        }
+
+        // 进入剧情模式
+        EnterStoryMode(tempStoryData);
+        return true;
+    }
+
+    /// <summary>
+    /// 从Resources文件夹下的CSV文件加载剧情数据并进入剧情模式
+    /// </summary>
+    /// <param name="resourcePath">Resources下的CSV文件路径（不含扩展名）</param>
+    /// <returns>是否成功加载并进入剧情模式</returns>
+    public bool LoadStoryFromResourceCSV(string resourcePath)
+    {
+        TextAsset csvAsset = Resources.Load<TextAsset>(resourcePath);
+        if (csvAsset == null)
+        {
+            Debug.LogError($"无法从Resources加载CSV文件: {resourcePath}");
+            return false;
+        }
+
+        // 创建临时文件保存CSV内容
+        string tempFilePath = System.IO.Path.Combine(Application.temporaryCachePath, "temp_story.csv");
+        try
+        {
+            System.IO.File.WriteAllText(tempFilePath, csvAsset.text);
+            return LoadStoryFromCSV(tempFilePath);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"处理CSV文件时出错: {e.Message}");
+            return false;
+        }
+        finally
+        {
+            // 清理临时文件
+            try
+            {
+                if (System.IO.File.Exists(tempFilePath))
+                {
+                    System.IO.File.Delete(tempFilePath);
+                }
+            }
+            catch { }
+        }
+    }
 }
