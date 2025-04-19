@@ -76,8 +76,45 @@ public class DialogueData
 public class CharacterConfig
 {
     public string characterName; // 角色名称
-    public Dictionary<PortraitExpression, Sprite> expressionSprites = new Dictionary<PortraitExpression, Sprite>(); // 表情对应的立绘
+    [Tooltip("不同表情对应的立绘")]
+    public List<ExpressionSprite> expressions = new List<ExpressionSprite>(); // 表情对应的立绘列表
     public Sprite defaultAvatar; // 默认头像
+
+    // 获取指定表情的立绘
+    public Sprite GetExpressionSprite(PortraitExpression expression)
+    {
+        foreach (var item in expressions)
+        {
+            if (item.expression == expression)
+            {
+                return item.sprite;
+            }
+        }
+        // 如果找不到指定表情，返回Normal表情或第一个可用的表情
+        foreach (var item in expressions)
+        {
+            if (item.expression == PortraitExpression.Normal)
+            {
+                return item.sprite;
+            }
+        }
+        // 如果连Normal都没有，返回第一个表情
+        if (expressions.Count > 0)
+        {
+            return expressions[0].sprite;
+        }
+        return null;
+    }
+}
+
+/// <summary>
+/// 表情与立绘的对应关系
+/// </summary>
+[System.Serializable]
+public class ExpressionSprite
+{
+    public PortraitExpression expression; // 表情类型
+    public Sprite sprite; // 对应的立绘
 }
 
 /// <summary>
@@ -335,6 +372,149 @@ public class StoryData : ScriptableObject
         catch (System.Exception e)
         {
             Debug.LogError($"创建CSV模板时出错: {e.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 从CSV文件导入角色表情配置
+    /// </summary>
+    /// <param name="csvFilePath">CSV文件路径</param>
+    /// <returns>是否成功导入</returns>
+    public bool ImportCharactersFromCSV(string csvFilePath)
+    {
+        if (!File.Exists(csvFilePath))
+        {
+            Debug.LogError($"角色配置CSV文件不存在: {csvFilePath}");
+            return false;
+        }
+
+        try
+        {
+            string[] lines = File.ReadAllLines(csvFilePath);
+            if (lines.Length <= 1) // 至少需要标题行和一行数据
+            {
+                Debug.LogError("角色配置CSV文件格式不正确，至少需要标题行和一行数据");
+                return false;
+            }
+
+            // 清空现有角色数据
+            characters.Clear();
+
+            // 临时存储角色数据
+            Dictionary<string, CharacterConfig> characterDict = new Dictionary<string, CharacterConfig>();
+
+            // 跳过标题行，从第二行开始解析
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string line = lines[i].Trim();
+                if (string.IsNullOrEmpty(line)) continue;
+
+                // 解析CSV行
+                string[] fields = ParseCSVLine(line);
+                if (fields.Length < 3) // 至少需要角色名、表情类型和立绘路径
+                {
+                    Debug.LogWarning($"跳过无效行: {line}");
+                    continue;
+                }
+
+                // 解析角色名
+                string characterName = fields[0];
+
+                // 如果角色不存在于字典中，创建新角色
+                if (!characterDict.ContainsKey(characterName))
+                {
+                    CharacterConfig newCharacter = new CharacterConfig();
+                    newCharacter.characterName = characterName;
+                    characterDict.Add(characterName, newCharacter);
+                }
+
+                // 获取角色配置
+                CharacterConfig character = characterDict[characterName];
+
+                // 解析表情类型
+                if (System.Enum.TryParse(fields[1], out PortraitExpression expression))
+                {
+                    // 解析立绘路径
+                    string spritePath = fields[2];
+                    Sprite expressionSprite = Resources.Load<Sprite>(spritePath);
+
+                    if (expressionSprite != null)
+                    {
+                        // 添加表情立绘
+                        ExpressionSprite expSprite = new ExpressionSprite();
+                        expSprite.expression = expression;
+                        expSprite.sprite = expressionSprite;
+                        character.expressions.Add(expSprite);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"无法加载立绘: {spritePath}");
+                    }
+                }
+
+                // 解析头像（如果有）
+                if (fields.Length > 3 && !string.IsNullOrEmpty(fields[3]))
+                {
+                    string avatarPath = fields[3];
+                    Sprite avatarSprite = Resources.Load<Sprite>(avatarPath);
+                    if (avatarSprite != null)
+                    {
+                        character.defaultAvatar = avatarSprite;
+                    }
+                }
+            }
+
+            // 将字典中的角色添加到列表
+            foreach (var character in characterDict.Values)
+            {
+                characters.Add(character);
+            }
+
+            Debug.Log($"成功从CSV导入 {characters.Count} 个角色配置");
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"导入角色配置时出错: {e.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 创建角色配置CSV模板
+    /// </summary>
+    /// <param name="filePath">保存路径</param>
+    /// <returns>是否成功创建</returns>
+    public static bool CreateCharacterCSVTemplate(string filePath)
+    {
+        try
+        {
+            // 定义CSV表头
+            string header = "CharacterName,Expression,SpritePath,AvatarPath";
+
+            // 添加示例数据
+            string exampleRow1 = "角色A,Normal,Characters/CharacterA/Normal,Avatars/AvatarA";
+            string exampleRow2 = "角色A,Happy,Characters/CharacterA/Happy,";
+            string exampleRow3 = "角色B,Normal,Characters/CharacterB/Normal,Avatars/AvatarB";
+            string exampleRow4 = "角色B,Sad,Characters/CharacterB/Sad,";
+
+            // 写入文件
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine(header);
+                writer.WriteLine(exampleRow1);
+                writer.WriteLine(exampleRow2);
+                writer.WriteLine(exampleRow3);
+                writer.WriteLine(exampleRow4);
+            }
+
+            Debug.Log($"角色配置CSV模板已创建: {filePath}");
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"创建角色配置CSV模板时出错: {e.Message}");
             return false;
         }
     }

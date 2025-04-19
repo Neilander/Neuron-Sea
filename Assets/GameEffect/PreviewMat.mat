@@ -8,12 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PreviewMat
-  m_Shader: {fileID: 4800000, guid: 15337b42027a4714aa61b63f9e98adf4, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0803c241834332942abfcbd27c498b46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENABLEADDHUE_ON
-  - _ENABLEHOLOGRAM_ON
   - _SHADERSPACE_UV
   - _TIMESETTINGS_LINEAR_DEFAULT
   - _UBERFADING_NONE
@@ -114,11 +112,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - PixelSnap: 0
     - _AddColorContrast: 0.5
     - _AddColorFade: 1
-    - _AddHueBrightness: 2
+    - _AddHueBrightness: 9.98
     - _AddHueContrast: 1
-    - _AddHueFade: 1
+    - _AddHueFade: 0.04
     - _AddHueSaturation: 1
     - _AddHueSpeed: 1
     - _AlphaCutoff: 0.5
@@ -171,7 +170,7 @@ Material:
     - _DirectionalGlowFadeRotation: 0
     - _DirectionalGlowFadeWidth: 0.1
     - _EnableAddColor: 0
-    - _EnableAddHue: 1
+    - _EnableAddHue: 0
     - _EnableAlphaTint: 0
     - _EnableBlackTint: 0
     - _EnableBrightness: 0
@@ -192,7 +191,7 @@ Material:
     - _EnableFullGlowDissolve: 0
     - _EnableGlitch: 0
     - _EnableHalftone: 0
-    - _EnableHologram: 1
+    - _EnableHologram: 0
     - _EnableHue: 0
     - _EnableInkSpread: 0
     - _EnableInnerOutline: 0
@@ -304,10 +303,10 @@ Material:
     - _ShineSmoothness: 2
     - _ShineSpeed: 0.1
     - _ShineWidth: 0.1
-    - _SineGlowContrast: 1
+    - _SineGlowContrast: 13.04
     - _SineGlowFade: 1
-    - _SineGlowFrequency: 4
-    - _SineGlowMax: 1
+    - _SineGlowFrequency: 5
+    - _SineGlowMax: 0.89
     - _SineGlowMin: 0
     - _SineMoveFade: 1
     - _SineRotateAngle: 15

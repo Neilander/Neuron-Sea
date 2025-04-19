@@ -15,56 +15,11 @@ MonoBehaviour:
   storyName: 111
   backgroundImage: {fileID: 21300000, guid: a225befe4953547da8c4133e5d585029, type: 3}
   dialogues:
-  - speakerName: AI
-    text: "\u5C0A\u656C\u7684\u89C2\u6D4B\u5458\u98A4\u6C27\uFF0C\u60A8\u597D\uFF0C\u6B22\u8FCE\u60A8\u767B\u5165\u62DF\u50CF\u7BA1\u7406\u7CFB\u7EDF\u3002"
-    portrait: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
-    avatar: {fileID: 0}
-    portraitPosition: 1
-    showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
-    animationTrigger: 
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    nameColor: {r: 1, g: 1, b: 1, a: 1}
-    voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
-  - speakerName: AI
-    text: "\u60A8\u7684\u51B3\u5FC3\u548C\u80FD\u529B\u5F97\u5230\u4E86\u8BF8\u4F4D\u7406\u4E8B\u7684\u80AF\u5B9A\uFF0C\u56E0\u6B64\u6279\u51C6\u60A8\u5F97\u4EE5\u4E8E\u4ECA\u65E5\u9996\u6B21\u8FDB\u884C\u62DF\u50CF\u6D77\u5355\u4EBA\u63A2\u7D22\u4EFB\u52A1\uFF0C\u4F5C\u4E3A\u60A8\u7684\u968F\u884Cai\uFF0C\u6211\u4F1A\u8F85\u4F50\u60A8\u987A\u5229\u5B8C\u6210\u672C\u6B21\u4EFB\u52A1\u3002"
-    portrait: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
-    avatar: {fileID: 0}
-    portraitPosition: 1
-    showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
-    animationTrigger: 
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    nameColor: {r: 1, g: 1, b: 1, a: 1}
-    voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
-  - speakerName: AI
-    text: "\u5728\u6B63\u5F0F\u8FDB\u5165\u62DF\u50CF\u6D77\u5185\u90E8\u524D\uFF0C\u60A8\u9700\u8981\u6700\u540E\u4E00\u6B21\u5B8C\u6210\u6A21\u62DF\u8BAD\u7EC3\u4EFB\u52A1\uFF0C\u4EE5\u4FBF\u4E8E\u60A8\u80FD\u591F\u66F4\u52A0\u719F\u6089\u60A8\u7684\u80FD\u529B\u3002"
-    portrait: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
-    avatar: {fileID: 0}
-    portraitPosition: 1
-    showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
-    animationTrigger: 
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    nameColor: {r: 1, g: 1, b: 1, a: 1}
-    voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
   - speakerName: Airflow
-    text: "\u6700\u521D\u7684\u4EBA\u7269\u8BA1\u5212\u91CC\u4F3C\u4E4E\u5E76\u6CA1\u6709\u8FD9\u4E00\u90E8\u5206\u3002"
-    portrait: {fileID: 21300000, guid: aad87cf37a5d2b9468ac1f4089527f06, type: 3}
+    text: "\u8FD9\u662F\u7B2C\u4E00\u53E5\u5BF9\u8BDD\uFF0CCSV\u683C\u5F0F\u652F\u6301\u6362\u884C\u548C\u7279\u6B8A\u5B57\u7B26"
+    portrait: {fileID: 0}
     avatar: {fileID: 0}
-    portraitPosition: 2
+    portraitPosition: 0
     showPortrait: 1
     expression: 0
     portraitEffect: 0
@@ -74,67 +29,30 @@ MonoBehaviour:
     textColor: {r: 1, g: 1, b: 1, a: 1}
     nameColor: {r: 1, g: 1, b: 1, a: 1}
     voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
-  - speakerName: AI
-    text: "\u662F\u7684\uFF0C\u89C2\u6D4B\u5458\u5973\u58EB\u3002\u4F46\u51FA\u4E8E\u5B89\u5168\u8003\u8651\uFF0C\u7814\u7A76\u6240\u5E0C\u671B\u80FD\u591F\u5728\u60A8\u719F\u6089\u80FD\u529B\u7684\u8FC7\u7A0B\u4E2D\u518D\u4E00\u6B21\u8BB0\u5F55\u60A8\u7684\u8EAB\u4F53\u6570\u636E\u548C\u80FD\u529B\u53D8\u5316\u3002"
-    portrait: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
-    avatar: {fileID: 0}
-    portraitPosition: 1
-    showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
-    animationTrigger: 
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    nameColor: {r: 1, g: 1, b: 1, a: 1}
-    voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
-  - speakerName: AI
-    text: "\u540C\u65F6\uFF0C\u4E3A\u4E86\u4FDD\u969C\u60A8\u6709\u8DB3\u591F\u7684\u7CBE\u529B\u5B8C\u6210\u63A2\u7D22\u4EFB\u52A1\uFF0C\u7406\u4E8B\u4F1A\u9009\u53D6\u4E86\u96BE\u5EA6\u8F83\u4F4E\u7684\u8BAD\u7EC3\uFF0C\u4EE5\u60A8\u8FC7\u53BB\u7684\u6210\u7EE9\u5224\u65AD\uFF0C\u8FD9\u975E\u5E38\u5BB9\u6613\u8FBE\u6210\u3002"
-    portrait: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
-    avatar: {fileID: 0}
-    portraitPosition: 1
-    showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
-    animationTrigger: 
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    nameColor: {r: 1, g: 1, b: 1, a: 1}
-    voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
+    hideOtherPortraits: 0
   - speakerName: Airflow
-    text: "\u6211\u4E86\u89E3\u4E86\uFF0C\u8BF7\u7EE7\u7EED\u5427\u3002"
-    portrait: {fileID: 21300000, guid: aad87cf37a5d2b9468ac1f4089527f06, type: 3}
+    text: "\u8FD9\u662F\u7B2C\u4E8C\u53E5\u5BF9\u8BDD"
+    portrait: {fileID: 0}
     avatar: {fileID: 0}
-    portraitPosition: 2
+    portraitPosition: 0
     showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
+    expression: 1
+    portraitEffect: 1
+    effectIntensity: 1.5
+    effectDuration: 2
     animationTrigger: 
     textColor: {r: 1, g: 1, b: 1, a: 1}
     nameColor: {r: 1, g: 1, b: 1, a: 1}
     voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
-  - speakerName: AI
-    text: "\u8BAD\u7EC3\u573A\u5730\u5C31\u5728\u9762\u524D\uFF0C\u795D\u60A8\u4E00\u8DEF\u987A\u5229\uFF0C\u89C2\u6D4B\u5458\u5973\u58EB\u3002"
-    portrait: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
-    avatar: {fileID: 0}
-    portraitPosition: 1
-    showPortrait: 1
-    expression: 0
-    portraitEffect: 0
-    effectIntensity: 1
-    effectDuration: 1
-    animationTrigger: 
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    nameColor: {r: 1, g: 1, b: 1, a: 1}
-    voiceClip: {fileID: 0}
-    hideOtherPortraits: 1
+    hideOtherPortraits: 0
   characters:
-  - characterName: 111
-    defaultAvatar: {fileID: 21300000, guid: 52422ada2db954026a3ae1f1ba6b4486, type: 3}
+  - characterName: Airflow
+    expressions:
+    - expression: 0
+      sprite: {fileID: 21300000, guid: ecf0c704c07589c4aba1bc5e1c75b84f, type: 3}
+    - expression: 1
+      sprite: {fileID: 21300000, guid: aad87cf37a5d2b9468ac1f4089527f06, type: 3}
+    defaultAvatar: {fileID: 0}
+  - characterName: "\u89D2\u8272B"
+    expressions: []
+    defaultAvatar: {fileID: 0}

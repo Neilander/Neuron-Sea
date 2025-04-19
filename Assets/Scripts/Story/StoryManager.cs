@@ -30,6 +30,9 @@ public class StoryManager : MonoBehaviour
     private bool isWaitingForLanding = false; // 是否正在等待玩家落地
     private StoryData pendingStoryData;
 
+    // 是否应该记录当前剧情（对回放的剧情不进行记录）
+    private bool shouldLogCurrentStory = true;
+
     [Header("对话系统设置")]
     [SerializeField] private GameObject dialoguePanel; // 对话面板
     [SerializeField] private TMPro.TextMeshProUGUI dialogueText; // 对话文本
@@ -201,6 +204,22 @@ public class StoryManager : MonoBehaviour
 
         // 开始对话
         StartDialogue();
+
+        // 判断是否应该记录当前剧情（如果StoryLogManager可用且不是在回放模式）
+        shouldLogCurrentStory = true;
+        if (StoryLogManager.Instance != null)
+        {
+            if (StoryLogManager.Instance.IsReplaying)
+            {
+                // 如果是回放模式，不记录
+                shouldLogCurrentStory = false;
+            }
+            else
+            {
+                // 记录剧情
+                StoryLogManager.Instance.LogStory(storyData);
+            }
+        }
     }
 
     /// <summary>
@@ -250,6 +269,12 @@ public class StoryManager : MonoBehaviour
 
         // 重置所有立绘状态
         ResetAllPortraits();
+
+        // 如果是回放模式，通知StoryLogManager结束回放
+        if (StoryLogManager.Instance != null && StoryLogManager.Instance.IsReplaying)
+        {
+            StoryLogManager.Instance.EndReplay();
+        }
 
         // 清除当前剧情数据
         currentStoryData = null;
@@ -443,6 +468,15 @@ public class StoryManager : MonoBehaviour
             }
         }
 
+        // 尝试从角色配置中查找表情
+        Sprite portraitSprite = FindCharacterExpressionSprite(dialogue.speakerName, dialogue.expression);
+
+        // 如果找到了表情立绘，使用它，否则使用对话中指定的立绘
+        if (portraitSprite != null)
+        {
+            dialogue.portrait = portraitSprite;
+        }
+
         // 处理立绘
         if (!dialogue.showPortrait || dialogue.portrait == null)
         {
@@ -480,6 +514,26 @@ public class StoryManager : MonoBehaviour
 
         // 标记此位置的立绘为活动状态
         activePortraits[dialogue.portraitPosition] = true;
+    }
+
+    /// <summary>
+    /// 查找角色对应表情的立绘
+    /// </summary>
+    private Sprite FindCharacterExpressionSprite(string characterName, PortraitExpression expression)
+    {
+        if (currentStoryData == null || string.IsNullOrEmpty(characterName))
+            return null;
+
+        // 在当前故事数据中查找角色配置
+        foreach (var character in currentStoryData.characters)
+        {
+            if (character.characterName == characterName)
+            {
+                return character.GetExpressionSprite(expression);
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
