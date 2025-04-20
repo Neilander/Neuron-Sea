@@ -284,7 +284,7 @@ public class DeathController : MonoBehaviour
                 // 立即重置所有移动状态
                 if (playerRigidbody != null)
                 {
-                    playerRigidbody.velocity = Vector2.zero;
+                    playerController.Speed = Vector2.zero;
                     playerRigidbody.isKinematic = true;
                     // 保持碰撞体检测，但防止物理响应
                     playerRigidbody.simulated = true;  // 仍然模拟碰撞
@@ -377,7 +377,7 @@ public class DeathController : MonoBehaviour
         // 冻结刚体，但保留碰撞检测功能
         if (playerRigidbody != null)
         {
-            playerRigidbody.velocity = Vector2.zero;
+            playerController.Speed = Vector2.zero;
             playerRigidbody.isKinematic = true;
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             playerRigidbody.simulated = true;  // 仍然进行碰撞检测
