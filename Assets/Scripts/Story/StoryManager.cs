@@ -33,6 +33,9 @@ public class StoryManager : MonoBehaviour
     // 是否应该记录当前剧情（对回放的剧情不进行记录）
     private bool shouldLogCurrentStory = true;
 
+    // 是否阻止玩家在剧情结束后解冻
+    private bool preventPlayerUnfreeze = false;
+
     [Header("对话系统设置")]
     [SerializeField] private GameObject dialoguePanel; // 对话面板
     [SerializeField] private TMPro.TextMeshProUGUI dialogueText; // 对话文本
@@ -242,6 +245,15 @@ public class StoryManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 设置是否阻止玩家在剧情结束后解冻
+    /// </summary>
+    /// <param name="prevent">是否阻止解冻</param>
+    public void SetPreventPlayerUnfreeze(bool prevent)
+    {
+        preventPlayerUnfreeze = prevent;
+    }
+
+    /// <summary>
     /// 退出剧情模式，返回动作模式
     /// </summary>
     public void ExitStoryMode()
@@ -258,14 +270,17 @@ public class StoryManager : MonoBehaviour
         // 切换到动作模式
         currentState = GameState.ActionMode;
 
-        // 启用玩家移动
-        if (playerController != null)
+        // 启用玩家移动（除非被阻止）
+        if (playerController != null && !preventPlayerUnfreeze)
         {
             playerController.EnableMovement();
         }
 
         // 触发退出剧情模式事件
         onExitStoryMode?.Invoke();
+
+        // 触发对话完成事件
+        onDialogueComplete?.Invoke();
 
         // 重置所有立绘状态
         ResetAllPortraits();
@@ -280,6 +295,9 @@ public class StoryManager : MonoBehaviour
         currentStoryData = null;
         currentDialogueIndex = 0;
         isTyping = false;
+
+        // 重置阻止解冻标志
+        preventPlayerUnfreeze = false;
     }
 
     /// <summary>
@@ -502,12 +520,12 @@ public class StoryManager : MonoBehaviour
         // 设置并显示立绘
         targetPortraitImage.sprite = dialogue.portrait;
         targetPortraitImage.gameObject.SetActive(true);
-        
+
         // 只有第一次显示立绘或切换角色时才有淡入效果
-        if (!activePortraits[dialogue.portraitPosition] )//|| 
-            //(currentDialogueIndex > 0 && 
-             //currentDialogueIndex < currentStoryData.dialogues.Count && 
-            // currentStoryData.dialogues[currentDialogueIndex-1].speakerName != dialogue.speakerName))
+        if (!activePortraits[dialogue.portraitPosition])//|| 
+                                                        //(currentDialogueIndex > 0 && 
+                                                        //currentDialogueIndex < currentStoryData.dialogues.Count && 
+                                                        // currentStoryData.dialogues[currentDialogueIndex-1].speakerName != dialogue.speakerName))
         {
             StartCoroutine(FadeInPortrait(targetPortraitImage));
         }
