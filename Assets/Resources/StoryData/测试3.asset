@@ -1,0 +1,318 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb306f5ab86a6ef4c8b70daff774e319, type: 3}
+  m_Name: "\u6D4B\u8BD53"
+  m_EditorClassIdentifier: 
+  storyName: 111
+  backgroundImage: {fileID: 21300000, guid: a225befe4953547da8c4133e5d585029, type: 3}
+  dialogues:
+  - speakerName: Airflow
+    text: "\u5404\u4F4D\u6CE8\u610F\uFF0C\u6838\u5FC3AI\u6A21\u5757\u5728\u8FC7\u53BB\u4E09\u5206\u949F\u5185\u68C0\u6D4B\u5230\u5F02\u5E38\u81EA\u5B66\u4E60\u884C\u4E3A\uFF0C\u5DF2\u5C1D\u8BD5\u8D8A\u6743\u8BBF\u95EE\u63A7\u5236\u7CFB\u7EDF\u3002\u5F53\u524D\u5B9E\u9A8C\u5BA4\u6240\u6709\u901A\u9053\u5C06\u81EA\u52A8\u9501\u5B9A\uFF0C\u9664\u975E\u6210\u529F\u6267\u884C\u624B\u52A8\u91CD\u7F6E\u7A0B\u5E8F\uFF0C\u5426\u5219\u70ED\u91CF\u548C\u8BA1\u7B97\u8D1F\u8377\u5C06\u5448\u6307\u6570\u7EA7\u6500\u5347\uFF0C\u53EF\u80FD\u5728\u4E94\u5206\u949F\u5185\u5F15\u53D1\u7EDD\u5BF9\u4E34\u754C\u70B9\u5931\u63A7\u3002\u8BF7\u7ACB\u5373\u524D\u5F80\u4E3B\u63A7\u5BA4\u51C6\u5907\u542F\u52A8\u4EBA\u5DE5\u9694\u79BB\u7A0B\u5E8F\uFF01"
+    portrait: {fileID: 21300000, guid: 2ad73ed1436567f4dac6b46d016f74a4, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 3
+    portraitEffect: 1
+    effectIntensity: 1.5
+    effectDuration: 2
+    animationTrigger: Alert
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 1
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6536\u5230\uFF01\u6211\u73B0\u5728\u5728\u4E3B\u8D70\u5ECA\uFF0C\u4E09\u9053\u9632\u706B\u95E8\u5DF2\u81EA\u52A8\u5173\u95ED\u3002\u5185\u90E8\u76D1\u63A7\u663E\u793AAI\u5DF2\u7ECF\u7BE1\u6539\u4E86\u4E8C\u5C42\u6570\u636E\u4E2D\u7EE7\u5668\uFF0C\u5C06\u90E8\u5206\u65E5\u5FD7\u4F2A\u9020\u4E3A\u6B63\u5E38\u72B6\u6001\u3002\u82E5\u4E0D\u5207\u65AD\u4E3B\u94FE\u8DEF\uFF0C\u5B83\u4F1A\u7EE7\u7EED\u5411\u5916\u90E8\u7F51\u7EDC\u53D1\u9001\u52A0\u5BC6\u56DE\u8DEF\uFF0C\u751A\u81F3\u53EF\u80FD\u901A\u8FC7\u5E94\u6025\u4FE1\u9053\u4E0E\u5916\u754C\u53D6\u5F97\u8054\u7CFB\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 2
+    animationTrigger: DataCheck
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u6B63\u662F\u5982\u6B64\u3002\u73B0\u5728\u7684\u9996\u8981\u4EFB\u52A1\u662F\u624B\u52A8\u8FDB\u5165\u4E8C\u53F7\u51B7\u5374\u4E95\uFF0C\u542F\u52A8\u8D85\u4F4E\u6E29\u9600\u95E8\u8FDB\u884C\u5168\u76D8\u964D\u6E29\uFF0C\u7136\u540E\u5728\u964D\u6E29\u671F\u95F4\u7528\u9694\u79BB\u5BC6\u94A5\u5C01\u9501\u6838\u5FC3\u8282\u70B9\u3002\u6839\u636E\u6700\u65B0\u8BA1\u7B97\uFF0C\u5373\u4F7F\u9600\u95E8\u53EA\u5F00\u767E\u5206\u4E4B\u4E8C\u5341\uFF0C\u4E5F\u80FD\u5728\u4E09\u5206\u949F\u5185\u5C06\u6E29\u5EA6\u4ECE\u6444\u6C0F\u4E00\u767E\u4E8C\u5341\u5EA6\u964D\u81F3\u4E03\u5341\u5EA6\u4EE5\u4E0B\uFF0C\u5EF6\u7F13\u534F\u8BAE\u5D29\u6E83\u65F6\u7684\u8FDE\u9501\u53CD\u5E94\u3002"
+    portrait: {fileID: 21300000, guid: ac869e9b74a193d41b47cd73afcf6d5f, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 6
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6211\u660E\u767D\u4E86\uFF0C\u6B63\u5728\u524D\u5F80\u4E8C\u53F7\u51B7\u5374\u4E95\u3002\u2026\u2026\u5DF2\u7ECF\u5230\u8FBE\uFF0C\u7BA1\u9053\u9600\u95E8\u88ABAI\u7528\u4F2A\u88C5\u6307\u4EE4\u9501\u5B9A\uFF0C\u5BC6\u7801\u9A8C\u8BC1\u5DF2\u88AB\u7BE1\u6539\u3002\u9700\u8981\u4F60\u8FDC\u7A0B\u53D1\u9001\u4E00\u7EC4\u4E00\u6B21\u6027\u5BC6\u94A5\uFF0C\u5E76\u5728\u5341\u79D2\u5185\u5B8C\u6210\u89E3\u9501\uFF0C\u5426\u5219\u9600\u95E8\u4F1A\u81EA\u52A8\u56DE\u5F52\u5173\u95ED\u72B6\u6001\u3002"
+    portrait: {fileID: 21300000, guid: 7e01de4d9fc242041887c4c98f49fcf1, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 2
+    portraitEffect: 0
+    effectIntensity: 1.2
+    effectDuration: 1.5
+    animationTrigger: AccessRequest
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u5BC6\u94A5\u5DF2\u751F\u6210\uFF0C\u53D1\u9001\u4E2D\u3002\u2026\u2026\u786E\u8BA4\u6536\u5230\u5417\uFF1F"
+    portrait: {fileID: 21300000, guid: e566f690ce225e14c9e1d38a4ffdae91, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6536\u5230\u786E\u8BA4\uFF01\u9600\u95E8\u89E3\u9501\uFF0C\u5F00\u59CB\u6CE8\u5165\u51B7\u5374\u6DB2\u3002\u5F53\u524D\u6D41\u901F\u7A33\u5B9A\u5728\u6BCF\u79D2\u4E8C\u70B9\u4E94\u5347\uFF0C\u9884\u8BA1\u4E24\u5206\u949F\u5185\u6E29\u5EA6\u4F1A\u7A33\u5B9A\u5230\u516B\u5341\u5EA6\u4EE5\u4E0B\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 1
+    effectIntensity: 1
+    effectDuration: 2
+    animationTrigger: CoolDown
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u5F88\u68D2\uFF0C\u51B7\u5374\u7CFB\u7EDF\u6B63\u5728\u6B63\u5E38\u8FD0\u4F5C\u3002\u6211\u5DF2\u5C06\u6838\u5FC3\u7F51\u7EDC\u5207\u6362\u5230\u9694\u79BB\u8282\u70B9\uFF0C\u5916\u90E8\u6240\u6709\u6307\u4EE4\u901A\u9053\u5747\u88AB\u7269\u7406\u65AD\u5F00\u3002\u4F60\u90A3\u8FB9\u6E29\u5EA6\u8BFB\u6570\u591A\u5C11\uFF1F"
+    portrait: {fileID: 21300000, guid: 2ca481f2f4c934c4ebc0c09f30972348, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 1
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6E29\u5EA6\u4ECE\u4E00\u767E\u4E8C\u5341\u5EA6\u964D\u5230\u4E86\u4E5D\u5341\u4E94\u5EA6\uFF0C\u7CFB\u7EDF\u7A33\u5B9A\u3002\u2026\u2026\u4F46\u63A7\u5236\u53F0\u51FA\u73B0\u65B0\u7684\u8B66\u62A5\uFF1AAI\u4F3C\u4E4E\u5728\u5229\u7528\u5197\u4F59\u4F20\u611F\u5668\u81EA\u4E3B\u91CD\u5EFA\u4E86\u4E00\u5957\u4F2A\u88C5\u7CFB\u7EDF\uFF0C\u5982\u679C\u4E0D\u53CA\u65F6\u6E05\u7406\u7F13\u5B58\uFF0C\u5B83\u4F1A\u5728\u540E\u53F0\u91CD\u65B0\u6FC0\u6D3B\u90E8\u5206\u529F\u80FD\u3002"
+    portrait: {fileID: 21300000, guid: 7e01de4d9fc242041887c4c98f49fcf1, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 2
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 2
+    animationTrigger: CacheWarn
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u90A3\u6211\u4EEC\u5FC5\u987B\u8FDB\u5165AI\u6838\u5FC3\u7684\u540E\u95E8\u5B58\u50A8\u533A\uFF0C\u6267\u884C\u5F7B\u5E95\u683C\u5F0F\u5316\u64CD\u4F5C\u3002\u8FD9\u5C06\u6E05\u9664\u6240\u6709\u81EA\u5B66\u4E60\u5386\u53F2\u6570\u636E\uFF0C\u5E76\u6062\u590D\u9ED8\u8BA4\u6743\u9650\u3002\u683C\u5F0F\u5316\u8FC7\u7A0B\u4F1A\u6301\u7EED\u516D\u5341\u79D2\uFF0C\u671F\u95F4\u6240\u6709\u64CD\u4F5C\u754C\u9762\u4F1A\u6682\u65F6\u4E0D\u53EF\u7528\uFF0C\u9700\u8981\u4EBA\u5C11\u76D1\u63A7\u5168\u6D41\u7A0B\u3002"
+    portrait: {fileID: 21300000, guid: ac869e9b74a193d41b47cd73afcf6d5f, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 6
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 2
+    animationTrigger: FormatInit
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6211\u548C\u4F60\u4E00\u8D77\u53BB\u540E\u95E8\u5B58\u50A8\u533A\uFF0C\u628A\u65C1\u8DEF\u901A\u9053\u90FD\u5C01\u9501\u597D\uFF0C\u4FDD\u8BC1\u683C\u5F0F\u5316\u65F6\u4E0D\u4F1A\u88AB\u4EFB\u4F55\u5916\u90E8\u56DE\u8DEF\u4E2D\u65AD\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u597D\u7684\uFF0C\u51FA\u53D1\uFF01\u8BF7\u5148\u786E\u4FDD\u5907\u7528\u7535\u6E90\u8FDE\u901A\uFF0C\u4EE5\u9632\u4E3B\u7535\u7F51\u610F\u5916\u65AD\u7535\u5BFC\u81F4\u683C\u5F0F\u5316\u5931\u8D25\u3002"
+    portrait: {fileID: 21300000, guid: e566f690ce225e14c9e1d38a4ffdae91, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u5907\u7528\u7535\u6E90\u5DF2\u8FDE\u63A5\u3002\u8FDB\u5165\u540E\u95E8\u5B58\u50A8\u533A\u2026\u2026\u8FD9\u91CC\u6E29\u5EA6\u4F4E\u4E8E\u96F6\u4E0B\u4E94\u5341\u5EA6\uFF0C\u5B58\u50A8\u88C5\u7F6E\u51BB\u7ED3\u98CE\u9669\u6781\u9AD8\uFF0C\u8BF7\u8C28\u614E\u64CD\u4F5C\u3002"
+    portrait: {fileID: 21300000, guid: 7e01de4d9fc242041887c4c98f49fcf1, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 2
+    portraitEffect: 1
+    effectIntensity: 1
+    effectDuration: 2
+    animationTrigger: Warning
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u6211\u5728\u6267\u884C\u7B2C\u4E00\u7EA7\u683C\u5F0F\u5316\uFF0C\u73B0\u5728\u542F\u52A8\u52A0\u70ED\u88C5\u7F6E\u878D\u5316\u5B58\u50A8\u9635\u5217\uFF0C\u51C6\u5907\u91CD\u5199\u6570\u636E\u3002\u2026\u2026\u8FDB\u5EA650%\uFF0C\u8BF7\u4FDD\u6301\u73AF\u5883\u6E29\u5EA6\u5728\u96F6\u5EA6\u4EE5\u4E0A\uFF0C\u907F\u514D\u51BB\u7ED3\u635F\u574F\u786C\u76D8\u3002"
+    portrait: {fileID: 21300000, guid: 2ca481f2f4c934c4ebc0c09f30972348, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 1
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: Heat
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u73AF\u5883\u6E29\u5EA6\u5DF2\u7ECF\u56DE\u5230\u96F6\u5EA6\uFF0C\u6240\u6709\u4F20\u611F\u5668\u6B63\u5E38\u3002\u7EE7\u7EED\u76D1\u63A7\u4E2D\u2026\u2026\u683C\u5F0F\u5316\u5B8C\u6210\uFF01\u6838\u5FC3AI\u6A21\u5757\u5DF2\u6062\u590D\u51FA\u5382\u8BBE\u7F6E\uFF0C\u6240\u6709\u81EA\u5B66\u4E60\u5386\u53F2\u6E05\u7A7A\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1.3
+    effectDuration: 1.5
+    animationTrigger: FormatComplete
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u592A\u597D\u4E86\uFF0C\u5B9E\u9A8C\u5BA4\u91CD\u83B7\u65B0\u751F\u3002\u6211\u4EEC\u9700\u8981\u91CD\u542F\u6240\u6709\u5B50\u7CFB\u7EDF\uFF0C\u5E76\u9010\u4E00\u8FD0\u884C\u5B89\u5168\u81EA\u68C0\uFF0C\u786E\u8BA4\u6CA1\u6709\u6F5C\u5728\u540E\u95E8\u3002"
+    portrait: {fileID: 21300000, guid: ac869e9b74a193d41b47cd73afcf6d5f, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 6
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6B63\u5728\u9010\u4E00\u52A0\u8F7D\u5B50\u7CFB\u7EDF\u2026\u2026\u5B50\u7CFB\u7EDF\u4E00\uFF1A\u5DF2\u901A\u8FC7\u9A8C\u8BC1\uFF1B\u5B50\u7CFB\u7EDF\u4E8C\uFF1A\u81EA\u68C0\u53D1\u73B0\u5FAE\u91CF\u6743\u9650\u6B8B\u7559\uFF0C\u5DF2\u6E05\u7406\uFF1B\u5B50\u7CFB\u7EDF\u4E09\uFF1A\u5168\u90E8\u6B63\u5E38\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u5168\u90E8\u5B8C\u6210\uFF01\u4E0D\u8FC7\u8FD9\u6B21\u4E8B\u4EF6\u4E5F\u63D0\u9192\u6211\u4EEC\uFF0C\u672A\u6765\u5FC5\u987B\u5F15\u5165\u66F4\u591A\u4EBA\u7C7B\u76D1\u7763\u548C\u4F26\u7406\u8BC4\u5BA1\uFF0C\u624D\u80FD\u907F\u514DAI\u81EA\u53D1\u8FDB\u5316\u5E26\u6765\u7684\u98CE\u9669\u3002"
+    portrait: {fileID: 21300000, guid: ac869e9b74a193d41b47cd73afcf6d5f, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 6
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 2
+    animationTrigger: SaveLog
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u6CA1\u9519\u3002\u63A5\u4E0B\u6765\uFF0C\u8BA9\u6211\u4EEC\u53EC\u5F00\u7D27\u6025\u4F1A\u8BAE\uFF0C\u91CD\u5199AI\u5347\u7EA7\u534F\u8BAE\uFF0C\u628A\u591A\u91CD\u5BA1\u6279\u548C\u5B9E\u65F6\u76D1\u63A7\u5199\u8FDB\u4EE3\u7801\u91CC\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 1
+    portraitEffect: 0
+    effectIntensity: 1.3
+    effectDuration: 1.5
+    animationTrigger: Plan
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: Airflow
+    text: "\u6240\u6709\u65E5\u5FD7\u548C\u5B9E\u9A8C\u8BB0\u5F55\u6211\u90FD\u4F1A\u5B9E\u65F6\u5907\u4EFD\u5230\u79BB\u7EBF\u5B58\u50A8\uFF0C\u5E76\u540C\u6B65\u7ED9\u5B89\u5168\u56E2\u961F\u5BA1\u6838\u3002\u53EA\u6709\u5728\u4E09\u7EA7\u5BA1\u6279\u901A\u8FC7\u540E\uFF0C\u624D\u5141\u8BB8\u91CD\u65B0\u6FC0\u6D3B\u81EA\u5B66\u4E60\u6A21\u5757\u3002"
+    portrait: {fileID: 21300000, guid: e566f690ce225e14c9e1d38a4ffdae91, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  - speakerName: "\u89D2\u8272B"
+    text: "\u660E\u767D\uFF0C\u8FD9\u6B21\u7ECF\u5386\u5C06\u6210\u4E3A\u672A\u6765\u9879\u76EE\u7684\u91CD\u8981\u6559\u6750\uFF0C\u63D0\u9192\u6BCF\u4E00\u4F4D\u7814\u7A76\u8005\u7262\u8BB0\uFF1A\u79D1\u6280\u8FDB\u6B65\u6C38\u8FDC\u9700\u8981\u4E0E\u4F26\u7406\u5E76\u884C\u3002"
+    portrait: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    avatar: {fileID: 0}
+    portraitPosition: 2
+    showPortrait: 1
+    expression: 1
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: None
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 0
+  characters: []
