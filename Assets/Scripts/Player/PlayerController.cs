@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using Unity.VisualScripting;
+using UnityEngine.UIElements.Experimental;
 
-public class PlayerController : MonoBehaviour, IMovementController
+public partial class PlayerController : MonoBehaviour, IMovementController
 {
     #region 移动速度,跳跃速度
     [Header("Movement Settings")]
@@ -22,7 +24,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     #region 地面检测点
     [Header("Ground Check Settings")]
     [SerializeField]
-    private new BoxCollider2D collider; // 角色碰撞体
+    private BoxCollider2D boxCollider; // 角色碰撞体
 
     [SerializeField]
     private float deviation = 0.02f; // 检测误差，为unity物理误差的2倍
@@ -56,11 +58,6 @@ public class PlayerController : MonoBehaviour, IMovementController
     private bool isTouchingWallLeft;
     private bool isTouchingWallRight;
     #endregion
-    #region Timer
-    float minJumpTime = 0.08f;
-    float minJumpTimer;
-    #endregion
-
     #region 包装属性
     private BoolRefresher ifJustGround;
     private BoolRefresher ifGetControlledOutside;
@@ -94,10 +91,12 @@ public class PlayerController : MonoBehaviour, IMovementController
         rb = GetComponent<Rigidbody2D>();
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
+        Init();
     }
 
     private void Update()
     {
+        GameInput.Update(Time.unscaledDeltaTime);
         // dropped = false;
         //只有在可以输入时才处理输入
         if (canInput)
@@ -170,9 +169,179 @@ public class PlayerController : MonoBehaviour, IMovementController
         */
     }
 
+    void NewCheck()
+    {
+        float deltaTime = Time.fixedDeltaTime;
+
+        GameInput.FixedUpdate(deltaTime);
+
+        #region 更新变量状态
+        if (Speed.y <= 0)
+        {
+            this.onGround = CheckGround();//碰撞检测地面
+        }
+        else
+        {
+            this.onGround = false;
+        }
+        #endregion
+
+        animator.SetBool("isGrounded", IsGrounded());
+
+        #region 更新Timer
+        //土狼时间Timer
+        if (OnGround)
+        {
+            jumpGraceTimer = Constants.JumpGraceTime;
+        }
+        else
+        {
+            if (jumpGraceTimer > 0)
+            {
+                jumpGraceTimer -= deltaTime;
+            }
+        }
+
+        //跳跃冷却Timer
+        if (jumpCooldownTimer > 0)
+        {
+            jumpCooldownTimer -= deltaTime;
+        }
+
+        //跳跃响应Timer
+        if (jumpResponseTimer > 0)
+        {
+            jumpResponseTimer -= deltaTime;
+        }
+        #endregion
+    }
+    void NewMove()
+    {
+        float deltaTime = Time.fixedDeltaTime;
+
+        //转向
+        moveX = Math.Sign(GameInput.Aim.Value.x); 
+        if (moveX != 0)
+        {
+            transform.localScale = new Vector3(moveX * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+
+        #region 计算速度
+        /*切换关卡参考
+        #region 切换关卡处理
+        if (level_enter_timer > 0)
+        {
+            level_enter_timer -= deltaTime;
+            if (level_enter_timer <= 0)
+            {
+                canInput = true;
+            }
+            else
+            {
+                switch (level_enter_way)
+                {
+                    case LevelEnterWay.FromLeft:
+                        Speed = Constants.MaxRun * Vector2.right;
+                        break;
+                    case LevelEnterWay.FromRight:
+                        Speed = Constants.MaxRun * Vector2.left;
+                        break;
+                    case LevelEnterWay.FromUp:
+                        Speed = Constants.MaxRun * Vector2.down * 1.5f;
+                        break;
+                    case LevelEnterWay.FromDownToLeft:
+                        if (level_enter_timer > 0.1f)
+                        {
+                            Speed = Constants.JumpSpeed * Vector2.up + Constants.MaxRun * Vector2.left * 0.6f;
+                        }
+                        else
+                        {
+                            Speed = Constants.MaxRun * Vector2.left * 0.6f;
+                        }
+                        break;
+                    case LevelEnterWay.FromDownToRight:
+                        if (level_enter_timer > 0.1f)
+                        {
+                            Speed = Constants.JumpSpeed * Vector2.up + Constants.MaxRun * Vector2.right * 0.6f;
+                        }
+                        else
+                        {
+                            Speed = Constants.MaxRun * Vector2.right * 0.6f;
+                        }
+                        break;
+                }
+            }
+        }
+        #endregion
+        */
+        float XMult = OnGround ? 1 : Constants.AirMult;
+        //计算水平速度
+        if (Math.Abs(Speed.x) > Constants.MaxRun && Math.Sign(Speed.x) == MoveX)
+        {
+            //速度过高且按住同方向则抵抗减速
+            Speed = new Vector2(Mathf.MoveTowards(Speed.x, Constants.MaxRun * MoveX, Constants.RunReduce * XMult * deltaTime), Speed.y);
+        }
+        else
+        {
+            //否则向目标值加速
+            Speed = new Vector2(Mathf.MoveTowards(Speed.x, Constants.MaxRun * MoveX, Constants.RunAccel * XMult * deltaTime), Speed.y);
+        }
+
+        //计算竖直速度
+        if (!OnGround)
+        {
+            float YMult = (Math.Abs(Speed.y) < Constants.HalfGravThreshold && (GameInput.Jump.Checked())) ? .5f : 1f;
+            Speed = new Vector2(Speed.x, Mathf.MoveTowards(Speed.y, Constants.MaxFall, Constants.Gravity * YMult * deltaTime));
+
+            //若在跳跃响应期间内，则处理跳跃速度
+            if (jumpResponseTimer > 0)
+            {
+                if (GameInput.Jump.Checked())
+                {
+                    //如果按住跳跃，则跳跃速度不受重力影响。
+                    Speed = new Vector2(Speed.x, Math.Max(Speed.y, Constants.JumpSpeed));
+                }
+                else
+                {
+                    //跳跃响应期间内松开跳跃键，则速度归零
+                    jumpResponseTimer = 0;
+                    Speed = new Vector2(Speed.x, 0);
+                }
+            }
+        }
+        #endregion
+
+        #region 跳跃
+        if (GameInput.Jump.Pressed())
+        {
+            //土狼时间范围内,允许跳跃
+            if (AllowJump())
+            {
+                Jump();
+            }
+        }
+        #endregion
+
+        //更新位置
+        AdjustPosition(Speed * deltaTime);
+
+        //沿用的部分
+        animator.SetFloat("Speed", Mathf.Abs(Speed.x));
+        if (!inMoveSound && Mathf.Abs(Speed.x) > 0)
+        {
+            inMoveSound = true;
+            AudioManager.Instance.Play(SFXClip.Walk);
+        }
+        else if (inMoveSound && Mathf.Abs(Speed.x) == 0)
+        {
+            inMoveSound = false;
+            AudioManager.Instance.Stop(SFXClip.Walk);
+        }
+    }
+
     private void FixedUpdate()
     {
-
+        /* 修改前
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
         if (rb.velocity.y < maxFallSpeed)
@@ -181,7 +350,11 @@ public class PlayerController : MonoBehaviour, IMovementController
             newVelocity.y = maxFallSpeed;
             rb.velocity = newVelocity;
         }
-        CurrentYSpeed = rb.velocity.y;
+        */
+        //修改后
+        NewCheck();
+
+        CurrentYSpeed = Speed.y;
         if (CurrentYSpeed > -1 && CurrentYSpeed <= 1)
         {
             CurrentYSpeed = 0;
@@ -191,7 +364,7 @@ public class PlayerController : MonoBehaviour, IMovementController
 
         if (!canMove) // 如果不能移动，直接停止所有移动
         {
-            rb.velocity = Vector2.zero;
+            Speed = Vector2.zero;
             animator.SetFloat("Speed", 0);
             return;
         }
@@ -203,9 +376,13 @@ public class PlayerController : MonoBehaviour, IMovementController
         }
         else if (canInput) // 只有在可以输入时才处理移动和旋转
         {
+            /*修改前
             Move();
             Rotate();
             CheckJump();
+            */
+            //修改后
+            NewMove();
         }
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
@@ -214,13 +391,14 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }
 
+    /* 修改前
     #region 判断地面
     private void GroundCheck()
     {
         bool wasGrounded = isGrounded;
         // 检测角色是否接触地面
         isGrounded = false;
-        foreach (RaycastHit2D hit in Physics2D.BoxCastAll(collider.bounds.center - new Vector3(0, collider.bounds.size.y / 2, 0), new Vector2(collider.bounds.size.x + deviation * 0.8f, deviation), 0f, Vector2.down, deviation / 2, groundLayer))
+        foreach (RaycastHit2D hit in Physics2D.BoxCastAll(boxCollider.bounds.center - new Vector3(0, boxCollider.bounds.size.y / 2, 0), new Vector2(boxCollider.bounds.size.x + deviation * 0.8f, deviation), 0f, Vector2.down, deviation / 2, groundLayer))
         {
             if (hit.normal.y > 0.9f)
             {
@@ -363,6 +541,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         }
     }
     #endregion
+    */
 
     #region 限制控制
     private float controlInput;
@@ -375,7 +554,7 @@ public class PlayerController : MonoBehaviour, IMovementController
 
     private void MoveInControl()
     {
-        rb.velocity = new Vector2(controlInput * moveSpeed, rb.velocity.y);
+        Speed = new Vector2(controlInput * moveSpeed, Speed.y);
         animator.SetFloat("Speed", Mathf.Abs(controlInput));
     }
 
@@ -418,7 +597,10 @@ public class PlayerController : MonoBehaviour, IMovementController
     {
         //可视化碰撞体
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube((Vector2)transform.position + collider.offset, collider.size);
+        Gizmos.DrawWireCube(Position + collider.position, new Vector2(collider.size.x, collider.size.y));
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(Position + hurtCollider.position, new Vector2(hurtCollider.size.x, hurtCollider.size.y));
+        //Gizmos.color = Color.green;Gizmos.DrawWireCube((Vector2)transform.position + boxCollider.offset, boxCollider.size);
 
         // 可视化脚前方的墙壁检测
         // if (wallCheck != null)
@@ -431,7 +613,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     #region 判断加速度正负
     private void GetSpeedChange()
     {
-        Vector2 horizontalVelocity = new Vector2(rb.velocity.x, 0f);
+        Vector2 horizontalVelocity = new Vector2(Speed.x, 0f);
         currentSpeed = Mathf.Round(horizontalVelocity.magnitude);
 
         if (currentSpeed > previousSpeed + speedChangeThreshold)
@@ -453,7 +635,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     #region 区域限制
     public void SetMovementBounds(Rect rect)
     {
-        movementBounds = new MovementComparison(rect, transform);
+        movementBounds = new MovementComparison(rect, this);
     }
 
     #endregion
@@ -462,7 +644,7 @@ public class PlayerController : MonoBehaviour, IMovementController
     {
         if (rb != null)
         {
-            rb.velocity = Vector2.zero;
+            Speed = Vector2.zero;
             animator?.SetFloat("Speed", 0);
             animator?.SetFloat("VerticalSpeed", 0);
         }
@@ -475,7 +657,7 @@ public class PlayerController : MonoBehaviour, IMovementController
         canInput = false;
         if (rb != null)
         {
-            rb.velocity = Vector2.zero;
+            Speed = Vector2.zero;
             animator?.SetFloat("Speed", 0);
             // 锁定位置
             LockPosition();
@@ -507,7 +689,10 @@ public class PlayerController : MonoBehaviour, IMovementController
     // 新增：获取是否在地面上的公共方法
     public bool IsGrounded()
     {
+        /* 修改前
         return isGrounded;
+        */
+        return OnGround;
     }
 
     private void LateUpdate()
@@ -515,20 +700,20 @@ public class PlayerController : MonoBehaviour, IMovementController
         // 如果位置被锁定，强制保持在锁定位置
         if (isPositionLocked)
         {
-            transform.position = lockedPosition;
+            Position = lockedPosition;
         }
     }
 
     // 锁定位置的方法
     public void LockPosition()
     {
-        lockedPosition = transform.position;
+        lockedPosition = Position;
         isPositionLocked = true;
 
         // 完全锁定刚体的所有移动
         if (rb != null)
         {
-            rb.velocity = Vector2.zero;
+            Speed = Vector2.zero;
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
             Debug.Log($"玩家位置已锁定 - 位置: {lockedPosition}, 刚体约束: 全部冻结");
         }
@@ -626,51 +811,41 @@ public class MovementComparison
     private float topY;
     private float bottomY;
 
-    private Transform target;
+    private PlayerController controller;
 
-    public MovementComparison(Rect rect, Transform targetTransform)
+    public MovementComparison(Rect rect, PlayerController controller)
     {
         leftX = rect.xMin;
         rightX = rect.xMax;
         bottomY = rect.yMin;
         topY = rect.yMax;
 
-        target = targetTransform;
+        this.controller = controller;
     }
 
     // ✅ 是否到达右边（例如可以前进）
     public bool IsAtRightEdge()
     {
-        return target.position.x >= rightX;
+        return controller.Position.x >= rightX;
     }
 
     // ✅ 是否到达左边（例如不能再后退）
     public bool IsAtLeftEdge()
     {
-        return target.position.x <= leftX;
+        return controller.Position.x <= leftX;
     }
 
     // ✅ 是否该掉落（例如到达下边）
     public bool ShouldDrop()
     {
-        return target.position.y <= bottomY;
+        return controller.Position.y <= bottomY;
     }
 
     // ✅ 是否到达顶部（例如可以跳的限制）
     public bool IsAtTopEdge()
     {
-        return target.position.y >= topY;
+        return controller.Position.y >= topY;
     }
 
     // ✅ 你可以添加更多判断方法
-}
-
-// 添加常量类
-public static class Constants
-{
-    public static float DuckFriction = 10.0f;     // 地面摩擦力
-    public static float AirMult = 1f;          // 空中移动乘数
-    public static float MaxRun = 7.0f;           // 最大奔跑速度
-    public static float RunReduce = 20.0f;       // 减速系数
-    public static float RunAccel = 25.0f;        // 加速系数
 }

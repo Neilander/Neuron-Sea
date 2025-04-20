@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Portal : MonoBehaviour
 {
@@ -74,6 +75,7 @@ public class Portal : MonoBehaviour
             targetPortalComponent.cooldownTimer = cooldownTime;
         }
 
+        /*修改前
         // 获取玩家的Rigidbody2D组件
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
 
@@ -101,6 +103,14 @@ public class Portal : MonoBehaviour
             player.transform.position = targetPortal.position;
             Debug.Log("使用备用方法传送玩家到: " + targetPortal.position);
         }
+        */
+
+        // 原来的位置和目标位置，用于计算偏移量
+        Vector2 originalPosition = player.transform.position;
+        Vector2 targetPosition = targetPortal.position;
+        Vector2 positionDelta = targetPosition - originalPosition;
+        // 直接设置玩家位置
+        player.GetComponent<PlayerController>().MovePosition(targetPortal.position);
 
         // 立即同步摄像机位置
         if (updateCameraImmediately)
