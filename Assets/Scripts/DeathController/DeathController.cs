@@ -769,7 +769,7 @@ public class DeathController : MonoBehaviour
             // 在效果保持阶段立即移动玩家到 respawnTarget
             if (!hasMovedPlayer && respawnTarget != null)
             {
-                playerController.transform.position = respawnTarget.position;
+                playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
                 //Debug.Log("移动完成");
                 // 恢复材质（如果有设置）
                 if (playerSpriteRenderer != null)

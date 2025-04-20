@@ -54,8 +54,6 @@ public partial class PlayerController : MonoBehaviour
     {
         this.GroundMask = LayerMask.GetMask("Ground");
 
-        Position = transform.position + Vector3.up * 0.01f;
-
         //this.collider = normalHitbox;
         //this.hurtCollider = normalHurtbox;
         collider = new Rect(boxCollider.offset, boxCollider.size);

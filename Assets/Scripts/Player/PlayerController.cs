@@ -700,14 +700,14 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         // 如果位置被锁定，强制保持在锁定位置
         if (isPositionLocked)
         {
-            transform.position = lockedPosition;
+            Position = lockedPosition;
         }
     }
 
     // 锁定位置的方法
     public void LockPosition()
     {
-        lockedPosition = transform.position;
+        lockedPosition = Position;
         isPositionLocked = true;
 
         // 完全锁定刚体的所有移动
