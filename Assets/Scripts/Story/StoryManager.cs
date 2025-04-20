@@ -897,6 +897,9 @@ public class StoryManager : MonoBehaviour
             ExitStoryMode();
         }
 
+        // 自动加载角色立绘配置
+        StoryManagerExtension.LoadCharacterConfigurations(tempStoryData);
+
         // 进入剧情模式
         EnterStoryMode(tempStoryData);
         return true;
@@ -916,12 +919,54 @@ public class StoryManager : MonoBehaviour
             return false;
         }
 
+        // 创建临时的StoryData对象
+        StoryData tempStoryData = ScriptableObject.CreateInstance<StoryData>();
+        tempStoryData.storyName = System.IO.Path.GetFileNameWithoutExtension(resourcePath);
+
+        // 尝试加载同目录下的角色配置文件
+        string characterCsvPath = resourcePath + "_characters";
+        TextAsset characterCsvAsset = Resources.Load<TextAsset>(characterCsvPath);
+
         // 创建临时文件保存CSV内容
         string tempFilePath = System.IO.Path.Combine(Application.temporaryCachePath, "temp_story.csv");
+        string tempCharacterFilePath = System.IO.Path.Combine(Application.temporaryCachePath, "temp_character.csv");
+
         try
         {
+            // 写入对话CSV临时文件
             System.IO.File.WriteAllText(tempFilePath, csvAsset.text);
-            return LoadStoryFromCSV(tempFilePath);
+
+            // 导入对话数据
+            bool success = tempStoryData.ImportFromCSV(tempFilePath);
+            if (!success)
+            {
+                Debug.LogError("从CSV导入剧情数据失败");
+                return false;
+            }
+
+            // 如果找到了角色配置文件，导入角色配置
+            if (characterCsvAsset != null)
+            {
+                Debug.Log($"找到角色配置文件: {characterCsvPath}");
+                System.IO.File.WriteAllText(tempCharacterFilePath, characterCsvAsset.text);
+                tempStoryData.ImportCharactersFromCSV(tempCharacterFilePath);
+            }
+            else
+            {
+                // 否则尝试自动加载角色配置
+                Debug.Log($"未找到角色配置文件，尝试自动加载角色立绘...");
+                StoryManagerExtension.LoadCharacterConfigurations(tempStoryData);
+            }
+
+            // 如果当前在剧情模式，先退出
+            if (currentState == GameState.StoryMode)
+            {
+                ExitStoryMode();
+            }
+
+            // 进入剧情模式
+            EnterStoryMode(tempStoryData);
+            return true;
         }
         catch (System.Exception e)
         {
@@ -936,6 +981,10 @@ public class StoryManager : MonoBehaviour
                 if (System.IO.File.Exists(tempFilePath))
                 {
                     System.IO.File.Delete(tempFilePath);
+                }
+                if (System.IO.File.Exists(tempCharacterFilePath))
+                {
+                    System.IO.File.Delete(tempCharacterFilePath);
                 }
             }
             catch { }
