@@ -107,10 +107,10 @@ public partial class PlayerController : MonoBehaviour
 
 public static class Constants
 {
-    public static float Gravity = 70f; //重力
+    public static float Gravity = 60f; //重力
 
     public static float HalfGravThreshold = 4f; //滞空时间阈值，竖直速度绝对值小于此数时重力减半
-    public static float MaxFall = -20f; //普通最大下落速度
+    public static float MaxFall = -16f; //普通最大下落速度
 
     public static float MaxRun = 7f;//最大移动速度
     //横向空气阻力倍率

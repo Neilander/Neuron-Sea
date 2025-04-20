@@ -173,7 +173,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     {
         float deltaTime = Time.fixedDeltaTime;
 
-        GameInput.FixedUpdate(deltaTime);Debug.Log(GameInput.Jump.Pressed());
+        GameInput.FixedUpdate(deltaTime);
 
         #region 更新变量状态
         if (Speed.y <= 0)
