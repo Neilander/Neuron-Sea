@@ -264,7 +264,7 @@ public class DeathController : MonoBehaviour
 
     public void HandleDeath(GameObject obj)
     {
-        print("我死了");
+        print("我死了"+ obj.name);
 
         // 获取玩家组件
         if (obj != null)
@@ -285,9 +285,9 @@ public class DeathController : MonoBehaviour
                 if (playerRigidbody != null)
                 {
                     playerController.Speed = Vector2.zero;
-                    playerRigidbody.isKinematic = true;
+                    //playerRigidbody.isKinematic = true;
                     // 保持碰撞体检测，但防止物理响应
-                    playerRigidbody.simulated = true;  // 仍然模拟碰撞
+                    //playerRigidbody.simulated = true;  // 仍然模拟碰撞
                     //Debug.Log($"死亡处理: 已设置玩家刚体 - 运动学: {playerRigidbody.isKinematic}, 模拟: {playerRigidbody.simulated}, 速度: {playerRigidbody.velocity}");
                 }
 
@@ -378,9 +378,9 @@ public class DeathController : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerController.Speed = Vector2.zero;
-            playerRigidbody.isKinematic = true;
+            //playerRigidbody.isKinematic = true;
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
-            playerRigidbody.simulated = true;  // 仍然进行碰撞检测
+            //playerRigidbody.simulated = true;  // 仍然进行碰撞检测
             // Debug.Log("已冻结玩家物理系统，但保留碰撞检测");
         }
 
@@ -457,11 +457,11 @@ public class DeathController : MonoBehaviour
         if (playerRigidbody != null)
         {
             // 先将模拟设置为true，再将isKinematic设置为false
-            playerRigidbody.simulated = true;
+            //playerRigidbody.simulated = true;
             //Debug.Log("解冻序列: 已设置刚体模拟 = true");
             yield return new WaitForFixedUpdate();
 
-            playerRigidbody.isKinematic = false;
+            //playerRigidbody.isKinematic = false;
             //Debug.Log("解冻序列: 已设置刚体运动学 = false");
             yield return new WaitForFixedUpdate();
 

@@ -187,7 +187,6 @@ GameObject:
   - component: {fileID: 6455184307025529443}
   - component: {fileID: 6628310257622383366}
   - component: {fileID: 7822789098640261918}
-  - component: {fileID: 4137772579069226716}
   - component: {fileID: 986748120663214123}
   - component: {fileID: 6146294706506608899}
   m_Layer: 9
@@ -277,7 +276,7 @@ Rigidbody2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4804650366100630319}
   m_BodyType: 1
-  m_Simulated: 1
+  m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
@@ -322,24 +321,7 @@ MonoBehaviour:
       m_Calls: []
   GroundMask: 0
   level_enter_timer: 0
---- !u!114 &4137772579069226716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4804650366100630319}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb505113ca184fb48a6d1d8d069db04d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallCheckRight: {fileID: 6422752636019305289}
-  isRightWall: 0
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  wallCheckRadius: 0.1
+  Position: {x: 0, y: 0}
 --- !u!95 &986748120663214123
 Animator:
   serializedVersion: 5

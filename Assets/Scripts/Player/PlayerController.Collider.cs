@@ -25,6 +25,10 @@ public partial class PlayerController
     }
 
     //碰撞检测
+    public RaycastHit2D CollideCheck(Vector2 position, float dist = 0)
+    {
+        return CollideCheck(position, Vector2.zero, dist);
+    }
     public RaycastHit2D CollideCheck(Vector2 position, Vector2 dir, float dist = 0)
     {
         Vector2 origin = position + collider.position;
@@ -106,12 +110,11 @@ public partial class PlayerController
         return CheckGround(Vector2.zero);
     }
 
-    //针对横向,进行碰撞检测.如果发生碰撞,
     private bool CheckGround(Vector2 offset)
     {
         Vector2 origin = this.Position + collider.position + offset;
         RaycastHit2D hit = Physics2D.BoxCast(origin, collider.size, 0, Vector2.down, DEVIATION, GroundMask);
-        if (hit && (hit.normal - Vector2.up).magnitude <= 0.05f)
+        if (hit)
         {
             return true;
         }

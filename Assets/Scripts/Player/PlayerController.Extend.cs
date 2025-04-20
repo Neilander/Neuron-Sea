@@ -45,7 +45,7 @@ public partial class PlayerController : MonoBehaviour
 
 
     public bool OnGround => this.onGround;
-    public Vector2 Position { get; set; }
+    public Vector2 Position;
 
 
     public int MoveX => moveX;

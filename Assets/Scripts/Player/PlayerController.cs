@@ -635,7 +635,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     #region 区域限制
     public void SetMovementBounds(Rect rect)
     {
-        movementBounds = new MovementComparison(rect, transform);
+        movementBounds = new MovementComparison(rect, this);
     }
 
     #endregion
@@ -811,40 +811,40 @@ public class MovementComparison
     private float topY;
     private float bottomY;
 
-    private Transform target;
+    private PlayerController controller;
 
-    public MovementComparison(Rect rect, Transform targetTransform)
+    public MovementComparison(Rect rect, PlayerController controller)
     {
         leftX = rect.xMin;
         rightX = rect.xMax;
         bottomY = rect.yMin;
         topY = rect.yMax;
 
-        target = targetTransform;
+        this.controller = controller;
     }
 
     // ✅ 是否到达右边（例如可以前进）
     public bool IsAtRightEdge()
     {
-        return target.position.x >= rightX;
+        return controller.Position.x >= rightX;
     }
 
     // ✅ 是否到达左边（例如不能再后退）
     public bool IsAtLeftEdge()
     {
-        return target.position.x <= leftX;
+        return controller.Position.x <= leftX;
     }
 
     // ✅ 是否该掉落（例如到达下边）
     public bool ShouldDrop()
     {
-        return target.position.y <= bottomY;
+        return controller.Position.y <= bottomY;
     }
 
     // ✅ 是否到达顶部（例如可以跳的限制）
     public bool IsAtTopEdge()
     {
-        return target.position.y >= topY;
+        return controller.Position.y >= topY;
     }
 
     // ✅ 你可以添加更多判断方法
