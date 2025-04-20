@@ -22,7 +22,7 @@ public class CameraControl : MonoBehaviour
 
     // ✅ 新增：平滑移动控制
     private Vector3 smoothTargetPosition;
-    private bool isTransitioning = false;
+    public bool isTransitioning = false;
     public float smoothSpeed = 5f;
 
     [Header("默认区域配置")]
