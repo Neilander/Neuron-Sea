@@ -24,12 +24,22 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     [SerializeField]private SpriteRenderer renderer;
 
-    [SerializeField] private Vector2 ExpectedSize;
+    [SerializeField] private Vector2Int ExpectedSize;
     [SerializeField] private Vector2 ExpectedAnchorPos;
 
     [Header("重构后用到的变量")]
     [SerializeField] private GameObject lockedStateDisplay;
     [SerializeField] private GameObject previewObj;
+
+    [Header("动画器")]
+    [SerializeField] private Animator selfAnimator;
+
+    [Header("Y调整")]
+    [SerializeField] private bool ifAdjustY = true;
+    [SerializeField] private List<float> adjustYAmount;
+
+    [Header("光照调整")]
+    [SerializeField] private Transform lightTrans;
 
     public Vector3 SelfGridPos
     {
@@ -50,6 +60,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     private void Start(){
+        SetAnchorToAnchorPos();
         mover = GetComponent<WorldMover>();
         Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
         //renderer = GetComponentInChildren<SpriteRenderer>();
@@ -57,7 +68,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         recordTempPos = renderer.transform.localPosition;
         anchorSprite.transform.localPosition = anchor.transform.localPosition;
         anchorSprite.transform.SetParent(renderer.transform);
-        previewObj.transform.localScale = renderer.gameObject.transform.localScale;
+        //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
+        if (selfAnimator != null)
+        {
+            selfAnimator.SetInteger("Size", (int)ExpectedSize.x);
+        }
+        
     }
 
     public void MoveToGridPos(Vector3 gridPos){
@@ -72,9 +88,21 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     public void SetToGridPos(Vector3 gridPos){
+
+        Vector3 recordPos = selfGridPos;
+        if (ifInPreview)
+        {
+            previewObj.transform.position = selfGridPos - anchor.transform.localPosition;
+        }
         transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
+        if (ifInPreview)
+        {
+            previewObj.transform.position = recordPos - anchor.transform.localPosition;
+        }
     }
+
+    
 
     public void SetToClosestGridPoint(){
         Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
@@ -267,73 +295,79 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             return;
         }
 
-        if (renderer == null || renderer.sprite == null)
-        {
-            Debug.LogError("SpriteRenderer or Sprite is missing.");
-            return;
-        }
-
         if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
         {
             Debug.LogError("Size不能是0");
             return;
         }
-           
-        float gridSize = GridManager.Instance.gridWidth;
 
-        Vector2 targetWorldSize = ExpectedSize * gridSize;
+        // 直接将物体的缩放设置为 ExpectedSize（1 = 1 unit）
+        //renderer.transform.localScale = new Vector3(ExpectedSize.x, ExpectedSize.y, 1f);
 
-        // 获取原始 sprite 世界单位大小
-        Vector2 spriteSize = renderer.sprite.bounds.size;
+        if (ifAdjustY && adjustYAmount.Count>=ExpectedSize.x)
+        {
+            renderer.transform.position += Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+        }
+        var pRenderer = previewObj.GetComponent<SpriteRenderer>();
+        if (pRenderer == null || pRenderer.sprite == null)
+        {
+            Debug.LogError("缺少 SpriteRenderer 或 Sprite");
+            return;
+        }
 
-        // 计算缩放比
+        if (lightTrans != null) lightTrans.localScale = new Vector3(ExpectedSize.x, ExpectedSize.y, 1);
+
+        // sprite 的原始世界尺寸（不考虑缩放）
+        Vector2 spriteSize = pRenderer.sprite.bounds.size;
+
+        // 计算缩放因子
         Vector3 scale = new Vector3(
-            targetWorldSize.x / spriteSize.x,
-            targetWorldSize.y / spriteSize.y,
+            ExpectedSize.x / spriteSize.x,
+            ExpectedSize.y / spriteSize.y,
             1f
         );
 
-        // 应用缩放
-        renderer.transform.localScale = scale;
+        previewObj.transform.localScale = scale;
 
-        // Collider 处理
+        // 让 BoxCollider 的大小和 ExpectedSize 保持一致
         Collider2D col = GetComponent<Collider2D>();
         if (col is BoxCollider2D box)
         {
-            box.size = targetWorldSize;
+            box.size = ExpectedSize;
             box.offset = Vector2.zero;
         }
         else
         {
             Debug.LogError("Only BoxCollider2D is supported.");
         }
+
         SetAnchorToAnchorPos();
-        //anchorSprite.transform.SetParent(renderer.transform);
     }
 
     public void SetAnchorToAnchorPos()
     {
         if (anchor != null)
         {
-            // 1. 获取 Sprite 的局部边界
-            Bounds spriteBounds = renderer.sprite.bounds;
-
-            // 2. 得到左下角（相对于 pivot 在中心的 sprite）
-            Vector3 localOrigin = new Vector3(spriteBounds.min.x, spriteBounds.min.y, 0f);
-
-            // 3. 把 localOrigin 转换到世界坐标
-            Vector3 worldOrigin = renderer.transform.TransformPoint(localOrigin);
-
-            // 4. 计算偏移量（以格子为单位）
             float gridSize = GridManager.Instance.gridWidth;
+
+            // 1. 计算世界单位下的 ExpectedSize 大小
+            Vector3 worldSize = new Vector3(ExpectedSize.x * gridSize, ExpectedSize.y * gridSize, 0f);
+
+            // 2. 当前物体中心点为原点，计算左下角（中心减去一半尺寸）
+            Vector3 worldOrigin = transform.position - worldSize * 0.5f;
+
+            // 3. 计算偏移位置
             Vector3 worldOffset = new Vector3(ExpectedAnchorPos.x * gridSize, ExpectedAnchorPos.y * gridSize, 0f);
 
-            // 5. 设置 anchor 的世界坐标
+            // 4. 最终锚点位置 = 左下角 + 偏移
             anchor.transform.position = worldOrigin + worldOffset;
         }
 
-        // 如果 anchorSprite 要跟随 anchor
-        anchorSprite.transform.position = anchor.transform.position;
+        // anchorSprite 跟随 anchor
+        if (anchorSprite != null)
+        {
+            anchorSprite.transform.position = anchor.transform.position;
+        }
     }
 
     private bool ifEnableSwitch = true;
@@ -357,6 +391,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
 
     #region 重构后Switch代码
+    private bool ifInPreview = false;
     public void SetLockedToSwitch(bool ifLocked, bool ifLegal, bool ifPreview ,Vector3 gridPos)
     {
         lockedStateDisplay.GetComponent<SpriteRenderer>().color = ifLegal ? Color.white : Color.red;
@@ -367,10 +402,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         {
             previewObj.transform.position = gridPos - anchor.transform.localPosition;
             previewObj.SetActive(true);
+            ifInPreview = true;
         }
         else
         {
             previewObj.SetActive(false);
+            ifInPreview = false;
         }
         
     }
