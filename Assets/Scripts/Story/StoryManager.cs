@@ -413,7 +413,8 @@ public class StoryManager : MonoBehaviour
             DialogueData dialogue = currentStoryData.dialogues[currentDialogueIndex];
             if (dialogueText != null)
             {
-                dialogueText.text = dialogue.text;
+                // 确保所有字符都可见
+                dialogueText.maxVisibleCharacters = int.MaxValue;
             }
 
             if (speakerNameText != null)
@@ -458,8 +459,9 @@ public class StoryManager : MonoBehaviour
         // 启动打字机效果
         if (dialogueText != null)
         {
-            // 清空文本框
+            // 重置文本显示状态
             dialogueText.text = "";
+            dialogueText.maxVisibleCharacters = 0;
 
             // 启动打字机效果
             typingCoroutine = StartCoroutine(TypeDialogue(dialogue.text));
@@ -838,10 +840,21 @@ public class StoryManager : MonoBehaviour
         isTyping = true;
         float timeSinceLastSound = 0f;
 
+        // 使用TMPro的原生方法处理富文本
+        // 先设置完整文本但设置为不可见
+        dialogueText.text = text;
+        dialogueText.maxVisibleCharacters = 0;
+
+        int totalVisibleCharacters = text.Length;
+        int counter = 0;
+
         // 逐字显示文本
-        for (int i = 0; i < text.Length; i++)
+        while (counter <= totalVisibleCharacters)
         {
-            dialogueText.text += text[i];
+            // 设置可见字符数
+            dialogueText.maxVisibleCharacters = counter;
+
+            counter++;
 
             // 播放打字声音（如果有）
             if (typingSoundEffect != null && timeSinceLastSound >= typingSoundInterval)
@@ -854,6 +867,9 @@ public class StoryManager : MonoBehaviour
 
             yield return new WaitForSeconds(typingSpeed);
         }
+
+        // 确保所有字符都可见
+        dialogueText.maxVisibleCharacters = totalVisibleCharacters;
 
         // 显示完成后，显示继续指示器
         if (continueIndicator != null)
