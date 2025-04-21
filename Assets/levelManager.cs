@@ -123,7 +123,7 @@ public class levelManager : MonoBehaviour
                 {
                     effectController.transform.position = respawnTarget.position;
                     Debug.Log($"将 StartEffectController 移动到 {respawnTarget.name} 的位置");
-                    if (ifSetPlayer) controller.transform.position = respawnTarget.position + Vector3.down * 0.5f;
+                    if (ifSetPlayer) controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
                     //
                 }
                 else

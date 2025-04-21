@@ -264,7 +264,7 @@ public class DeathController : MonoBehaviour
 
     public void HandleDeath(GameObject obj)
     {
-        print("我死了");
+        print("我死了"+ obj.name);
 
         // 获取玩家组件
         if (obj != null)
@@ -284,10 +284,10 @@ public class DeathController : MonoBehaviour
                 // 立即重置所有移动状态
                 if (playerRigidbody != null)
                 {
-                    playerRigidbody.velocity = Vector2.zero;
-                    playerRigidbody.isKinematic = true;
+                    playerController.Speed = Vector2.zero;
+                    //playerRigidbody.isKinematic = true;
                     // 保持碰撞体检测，但防止物理响应
-                    playerRigidbody.simulated = true;  // 仍然模拟碰撞
+                    //playerRigidbody.simulated = true;  // 仍然模拟碰撞
                     //Debug.Log($"死亡处理: 已设置玩家刚体 - 运动学: {playerRigidbody.isKinematic}, 模拟: {playerRigidbody.simulated}, 速度: {playerRigidbody.velocity}");
                 }
 
@@ -377,10 +377,10 @@ public class DeathController : MonoBehaviour
         // 冻结刚体，但保留碰撞检测功能
         if (playerRigidbody != null)
         {
-            playerRigidbody.velocity = Vector2.zero;
-            playerRigidbody.isKinematic = true;
+            playerController.Speed = Vector2.zero;
+            //playerRigidbody.isKinematic = true;
             playerRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
-            playerRigidbody.simulated = true;  // 仍然进行碰撞检测
+            //playerRigidbody.simulated = true;  // 仍然进行碰撞检测
             // Debug.Log("已冻结玩家物理系统，但保留碰撞检测");
         }
 
@@ -457,11 +457,11 @@ public class DeathController : MonoBehaviour
         if (playerRigidbody != null)
         {
             // 先将模拟设置为true，再将isKinematic设置为false
-            playerRigidbody.simulated = true;
+            //playerRigidbody.simulated = true;
             //Debug.Log("解冻序列: 已设置刚体模拟 = true");
             yield return new WaitForFixedUpdate();
 
-            playerRigidbody.isKinematic = false;
+            //playerRigidbody.isKinematic = false;
             //Debug.Log("解冻序列: 已设置刚体运动学 = false");
             yield return new WaitForFixedUpdate();
 
@@ -769,7 +769,7 @@ public class DeathController : MonoBehaviour
             // 在效果保持阶段立即移动玩家到 respawnTarget
             if (!hasMovedPlayer && respawnTarget != null)
             {
-                playerController.transform.position = respawnTarget.position;
+                playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
                 //Debug.Log("移动完成");
                 // 恢复材质（如果有设置）
                 if (playerSpriteRenderer != null)
