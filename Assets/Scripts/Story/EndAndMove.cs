@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class EndAndMove : MonoBehaviour
 {
+    private bool isSwitchActive;
 
+    private bool isSwitchCompleted;
+
+    [SerializeField] private float switchTimeout;
     public Camera mainCamera;
     private CameraControl camControl;
     public Transform newTarget;
@@ -86,12 +90,70 @@ public class EndAndMove : MonoBehaviour
         Transform tansTex = transform.Find("Square");
         tansTex.gameObject.SetActive(true);
         //TODO:时间停止，玩家交换一次物体，结束时停
+        StartCoroutine(StartSwitchMode());
+        
+    }
 
+    private IEnumerator StartSwitchMode(){
+        isSwitchActive = true;
+        Log("开始交换物体模式");
+
+        // // 暂停游戏时间
+        // Time.timeScale = 0;
+
+        // 设置交换状态
+        if (GridManager.Instance != null) {
+            // // 准备两个物体进行交换
+            // if (switchableObj1 != null && switchableObj2 != null) {
+            //     // 将两个物体添加到交换记录中
+            //     GridManager.Instance.ForceSelectObjectsForSwitch(switchableObj1, switchableObj2);
+            //     Log("已设置要交换的两个物体");
+            // }
+
+            // 切换到交换状态
+            GridManager.Instance.StartState(SwitchState.Switch);
+            Log("已进入交换状态");
+        }
+
+        // 等待玩家完成交换或超时
+        float timer = 0;
+        while (!isSwitchCompleted && timer < switchTimeout) {
+            // 检查是否交换了物体
+            if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
+                // 交换完成
+                isSwitchCompleted = true;
+                Log("交换物体完成!");
+
+                // 等待玩家确认（按键）
+                yield return new WaitForSecondsRealtime(0.5f);
+                break;
+            }
+
+            timer += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // 结束交换模式
+        EndSwitchMode();
+    }
+
+    private void EndSwitchMode(){
+        // // 恢复游戏时间
+        // Time.timeScale = 1;
+
+        // 如果仍在交换状态，退出交换状态
+        if (GridManager.Instance != null && GridManager.Instance.GetCurrentState() == SwitchState.Switch) {
+            GridManager.Instance.StartState(SwitchState.None);
+            Log("已退出交换状态");
+        }
+
+        isSwitchActive = false;
         //// 摄像机移回玩家
         camControl.target = playerController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
     }
+
     // 使用目标跟随的方法
     private void UseTargetFollow()
     {

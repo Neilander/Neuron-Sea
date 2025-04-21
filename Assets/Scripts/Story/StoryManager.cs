@@ -513,7 +513,7 @@ public class StoryManager : MonoBehaviour
         Image targetPortraitImage = GetPortraitImageByPosition(dialogue.portraitPosition);
         if (targetPortraitImage == null) return;
 
-        // 显示立绘面板
+        // 显示立绘面板（添加安全检查）
         if (portraitPanel != null && !portraitPanel.activeSelf)
         {
             portraitPanel.SetActive(true);
@@ -524,10 +524,7 @@ public class StoryManager : MonoBehaviour
         targetPortraitImage.gameObject.SetActive(true);
 
         // 只有第一次显示立绘或切换角色时才有淡入效果
-        if (!activePortraits[dialogue.portraitPosition])//|| 
-                                                        //(currentDialogueIndex > 0 && 
-                                                        //currentDialogueIndex < currentStoryData.dialogues.Count && 
-                                                        // currentStoryData.dialogues[currentDialogueIndex-1].speakerName != dialogue.speakerName))
+        if (!activePortraits[dialogue.portraitPosition])
         {
             StartCoroutine(FadeInPortrait(targetPortraitImage));
         }
