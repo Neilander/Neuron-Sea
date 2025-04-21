@@ -56,8 +56,8 @@ public partial class PlayerController : MonoBehaviour
 
         //this.collider = normalHitbox;
         //this.hurtCollider = normalHurtbox;
-        collider = new Rect(boxCollider.offset, boxCollider.size);
-        hurtCollider = collider;
+        collider = new Rect(boxCollider.offset * transform.localScale.x, boxCollider.size * transform.localScale.x);
+        hurtCollider = new Rect(boxCollider.offset * transform.localScale.x, boxCollider.size * transform.localScale.x * 0.7f);
 
         this.level_enter_way = level_enter_way;
         //根据进入的方式,决定初始状态
@@ -99,6 +99,7 @@ public partial class PlayerController : MonoBehaviour
     public void MovePosition(Vector2 targetPosition)
     {
         //TODO : 这里需要考虑碰撞检测
+        Debug.Log($"玩家被传送到{targetPosition}");
         Position = targetPosition;
     }
 }

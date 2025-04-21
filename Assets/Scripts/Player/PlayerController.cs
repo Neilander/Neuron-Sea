@@ -115,20 +115,6 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         }
 
 
-        if (movementBounds.IsAtRightEdge())
-        {
-            FindAnyObjectByType<levelManager>().SwitchToNextLevel();
-        }
-        else if (movementBounds.ShouldDrop() && !dropped)
-        {
-            dropped = true;
-            Debug.Log("死亡在这里");
-            PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
-        }
-        else if (dropped && !movementBounds.ShouldDrop())
-        {
-            dropped = false;
-        }
         /*
         GroundCheck();
         animator.SetBool("isGrounded", isGrounded);
@@ -387,6 +373,20 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
 
+        if (movementBounds.IsAtRightEdge())
+        {
+            FindAnyObjectByType<levelManager>().SwitchToNextLevel();
+        }
+        else if (movementBounds.ShouldDrop() && !dropped)
+        {
+            dropped = true;
+            Debug.Log("死亡在这里");
+            PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
+        }
+        else if (dropped && !movementBounds.ShouldDrop())
+        {
+            dropped = false;
+        }
     }
 
     private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }
