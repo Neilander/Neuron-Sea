@@ -306,6 +306,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
         if (ifAdjustY && adjustYAmount.Count>=ExpectedSize.x)
         {
+            Debug.Log("调整y的上下");
             renderer.transform.position += Vector3.up * adjustYAmount[ExpectedSize.x - 1];
         }
         var pRenderer = previewObj.GetComponent<SpriteRenderer>();
