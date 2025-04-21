@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class EndAndMove : MonoBehaviour
 {
+    public GameObject UIphoto;
     private bool isSwitchActive;
-
+    public StoryTrigger[] storyTriggers;
     private bool isSwitchCompleted;
 
     [SerializeField] private float switchTimeout;
@@ -53,6 +54,23 @@ public class EndAndMove : MonoBehaviour
     //     }
     // }
     // 方法1: 使用CameraControl的目标跟随功能移动
+    public void StopPlayerMove(){
+        playerController.DisableMovement();
+    }
+    public void StartFirstStory(){
+        StoryTrigger trigger1=storyTriggers[0];
+        trigger1.ForceStartStory();
+    }
+
+    public void EnablePicture(){
+        UIphoto.SetActive(true);
+        StartCoroutine(DisablePictureAfterDelay());
+    }
+    
+    private IEnumerator DisablePictureAfterDelay(){
+        yield return new WaitForSeconds(3f);
+        UIphoto.SetActive(false);
+    }
     public void MoveEnd()
     {
         print("Move End");
