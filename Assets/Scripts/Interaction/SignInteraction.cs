@@ -9,6 +9,15 @@ using System.Collections;
 /// </summary>
 public class SignInteraction : MonoBehaviour
 {
+    [Header("检测设置")] [SerializeField] private Vector2 triggerSize = new Vector2(2f, 2f); // 触发区域大小
+
+    [SerializeField] private float detectionInterval = 0.1f; // 检测频率
+
+    [SerializeField] private Vector2 triggerOffset = Vector2.zero; // 触发区域偏移
+
+    // 计算触发区域的世界坐标
+    private Vector2 TriggerWorldPosition => (Vector2)transform.position + triggerOffset;
+
     [Header("文本设置")]
     [SerializeField] private string signText = "这是一个指示牌"; // 要显示的文字
     [SerializeField, Multiline(3)] private string[] multiLineTexts; // 多行文本
@@ -87,55 +96,114 @@ public class SignInteraction : MonoBehaviour
 
         // 日志记录初始设置
         Debug.Log($"指示牌 '{gameObject.name}' 初始化, 文本位置设置为: {textDisplayPosition}, 偏移量: {textOffsetY}");
+        // 开始定期检测玩家
+        StartCoroutine(DetectPlayerRoutine());
     }
 
+    /// <summary>
+    /// 定期检测玩家是否在触发区域内
+    /// </summary>
+    private IEnumerator DetectPlayerRoutine(){
+        while (true) {
+            DetectPlayer();
+            yield return new WaitForSeconds(detectionInterval);
+        }
+    }
+    /// <summary>
+    /// 检测玩家是否在触发区域内，使用PlayerController的自定义碰撞检测
+    /// </summary>
+    private void DetectPlayer(){
+        // 找到场景中的所有玩家
+        PlayerController[] players = FindObjectsOfType<PlayerController>();
+        bool foundPlayer = false;
+
+        foreach (var player in players) {
+            // 使用玩家控制器的公共方法检查碰撞
+            if (player.IsCollidingWithRect(TriggerWorldPosition, triggerSize)) {
+                // 玩家进入区域
+                bool wasInRange = playerInRange;
+                playerInRange = true;
+                foundPlayer = true;
+
+                // 如果玩家刚进入范围，并且是自动激活模式，则显示文本
+                if (!wasInRange && autoActivate && !isDisplaying) {
+                    DisplaySignText();
+                }
+
+                break;
+            }
+        }
+
+        // 如果未检测到玩家，但之前检测到过
+        if (!foundPlayer && playerInRange) {
+            playerInRange = false;
+
+            // 如果玩家离开范围，并且正在显示文本，则终止显示
+            if (isDisplaying) {
+                StopDisplayText();
+            }
+        }
+    }
     private void Update()
     {
         // 检测玩家是否在范围内
-        CheckPlayerInRange();
+        // CheckPlayerInRange();
 
         // 如果玩家在范围内
-        if (playerInRange)
-        {
+        if (playerInRange) {
             // 如果当前没有显示文本且不是自动激活模式，检测激活键
-            if (!isDisplaying && !autoActivate)
-            {
+            if (!isDisplaying && !autoActivate) {
                 // 检测按键输入
-                if (Input.GetKeyDown(activationKey))
-                {
+                if (Input.GetKeyDown(activationKey)) {
                     DisplaySignText();
                 }
             }
             // 如果当前正在显示文本，检测是否按下激活键来显示下一段
-            else if (isDisplaying && Input.GetKeyDown(activationKey))
-            {
+            else if (isDisplaying && Input.GetKeyDown(activationKey)) {
                 // 如果有多行文本，则跳到下一句
-                if (multiLineTexts != null && multiLineTexts.Length > 1)
-                {
-                    // 检查是否是最后一段文本，如果是最后一段文本，则不直接关闭面板
-                    bool isLastText = (currentTextIndex == multiLineTexts.Length - 1);
-
-                    if (isLastText)
-                    {
-                        // 如果是最后一段文本，按E键时重新开始循环到第一段文本
-                        currentTextIndex = -1; // 设为-1，因为SkipToNextText会+1，变成0
-                        SkipToNextText();
-                        Debug.Log("用户按键循环到第一段文本");
-                    }
-                    else
-                    {
-                        SkipToNextText();
-                        Debug.Log("用户按键跳到下一句文本");
-                    }
+                if (multiLineTexts != null && multiLineTexts.Length > 1) {
+                    // 现有代码...
                 }
             }
         }
 
         // 如果当前正在显示文本，持续更新面板位置
-        if (isDisplaying && textPanel != null && textPanel.activeSelf)
-        {
+        if (isDisplaying && textPanel != null && textPanel.activeSelf) {
             UpdatePanelPosition();
         }
+        
+    }
+
+    // 修改OnDrawGizmosSelected方法，显示矩形触发区域而不是圆形
+    private void OnDrawGizmosSelected(){
+        // 绘制矩形触发区域
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(TriggerWorldPosition, triggerSize);
+
+        // 填充的半透明矩形
+        Gizmos.color = new Color(1, 1, 0, 0.3f);
+        Gizmos.DrawCube(TriggerWorldPosition, triggerSize);
+
+        // 绘制文本显示位置
+        Gizmos.color = Color.green;
+        Vector3 textPos;
+
+        if (textDisplayPosition == TextPosition.Above) {
+            textPos = transform.position + Vector3.up * textOffsetY;
+        }
+        else // TextPosition.Below
+        {
+            textPos = transform.position - Vector3.up * textOffsetY;
+        }
+
+        Gizmos.DrawLine(transform.position, textPos);
+        Gizmos.DrawSphere(textPos, 0.2f);
+
+
+        // 添加文本位置标签
+#if UNITY_EDITOR
+        UnityEditor.Handles.Label(textPos, "文本显示位置");
+#endif
     }
 
     private void CheckPlayerInRange()
@@ -526,32 +594,32 @@ public class SignInteraction : MonoBehaviour
     }
 
     // 在编辑器中绘制触发范围（仅在Unity编辑器中可见）
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, triggerRadius);
-
-        // 绘制文本显示位置
-        Gizmos.color = Color.green;
-        Vector3 textPos;
-
-        if (textDisplayPosition == TextPosition.Above)
-        {
-            textPos = transform.position + Vector3.up * textOffsetY;
-        }
-        else // TextPosition.Below
-        {
-            textPos = transform.position - Vector3.up * textOffsetY;
-        }
-
-        Gizmos.DrawLine(transform.position, textPos);
-        Gizmos.DrawSphere(textPos, 0.2f);
-
-        // 添加文本位置标签
-#if UNITY_EDITOR
-        UnityEditor.Handles.Label(textPos, "文本显示位置");
-#endif
-    }
+//     private void OnDrawGizmosSelected()
+//     {
+//         Gizmos.color = Color.yellow;
+//         Gizmos.DrawWireSphere(transform.position, triggerRadius);
+//
+//         // 绘制文本显示位置
+//         Gizmos.color = Color.green;
+//         Vector3 textPos;
+//
+//         if (textDisplayPosition == TextPosition.Above)
+//         {
+//             textPos = transform.position + Vector3.up * textOffsetY;
+//         }
+//         else // TextPosition.Below
+//         {
+//             textPos = transform.position - Vector3.up * textOffsetY;
+//         }
+//
+//         Gizmos.DrawLine(transform.position, textPos);
+//         Gizmos.DrawSphere(textPos, 0.2f);
+//
+//         // 添加文本位置标签
+// #if UNITY_EDITOR
+//         UnityEditor.Handles.Label(textPos, "文本显示位置");
+// #endif
+//     }
 
     // 添加OnDisable和OnDestroy方法，确保脚本被禁用或销毁时正确清理资源
     private void OnDisable()

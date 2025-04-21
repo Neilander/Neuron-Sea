@@ -47,7 +47,7 @@ public class StoryManager : MonoBehaviour
     [SerializeField] private AudioSource typingSoundEffect; // 打字声音效果（可选）
     [SerializeField] private float typingSoundInterval = 0.1f; // 打字声音播放间隔（可选）
 
-    
+
     public event Action onEnterStoryMode; // 进入剧情模式时触发
     public event Action onExitStoryMode; // 退出剧情模式时触发
     public event Action onDialogueComplete; // 对话完成时触发

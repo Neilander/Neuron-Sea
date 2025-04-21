@@ -69,7 +69,7 @@ public class StoryTrigger : MonoBehaviour
     [Tooltip("剧情结束后是否自动触发下一段剧情")]
     [SerializeField] private bool autoTriggerNextStory = false;
     [Tooltip("下一段剧情的触发器")]
-    [SerializeField] private StoryTrigger nextStoryTrigger;
+    [SerializeField] public StoryTrigger nextStoryTrigger;
     [Tooltip("下一段剧情触发前的延迟时间（秒）")]
     [SerializeField] private float nextStoryDelay = 0.5f;
 
