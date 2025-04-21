@@ -30,6 +30,9 @@ public class CameraControl : MonoBehaviour
     public float defaultWidth = 10f;
     public float defaultHeight = 5f;
 
+    [Header("y上offset")]
+    public float yOffset = 0.5f;
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -82,7 +85,7 @@ public class CameraControl : MonoBehaviour
         if (target == null) return;
 
         // ✅ 每帧更新目标位置
-        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + 1.5f, transform.position.z);
+        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
 
         // ✅ 选择使用 currentLimit 或 defaultLimit
         CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
@@ -192,7 +195,7 @@ public class CameraControl : MonoBehaviour
             return;
         }
 
-        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + 1.5f, transform.position.z);
+        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
 
         if (defaultLimit.left.HasValue && defaultLimit.right.HasValue)
         {
