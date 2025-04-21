@@ -129,7 +129,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if (col is BoxCollider2D box) {
             hitCount = Physics2D.OverlapBox(
                 (Vector2)checkPosition + box.offset,
-                box.size*0.9f,
+                box.size,
                 box.transform.eulerAngles.z,
                 filter,
                 results
@@ -334,7 +334,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         Collider2D col = GetComponent<Collider2D>();
         if (col is BoxCollider2D box)
         {
-            box.size = ExpectedSize;
+            box.size = ExpectedSize - Vector2.one * 0.041f;
             box.offset = Vector2.zero;
         }
         else
