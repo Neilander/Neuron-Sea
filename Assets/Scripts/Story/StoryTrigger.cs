@@ -9,10 +9,10 @@ using UnityEngine.Events;
 /// </summary>
 public class StoryTrigger : MonoBehaviour
 {
-    [Header("事件")]
-    public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
+    // [Header("事件")]
+    // public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
     public UnityEvent onExitSpecificStory; // 退出剧情模式时触发
-    public UnityEvent onSpecificDialogueComplete; // 对话完成时触发
+    // public UnityEvent onSpecificDialogueComplete; // 对话完成时触发
 
     public enum StorySourceType
     {
@@ -64,12 +64,12 @@ public class StoryTrigger : MonoBehaviour
     private PlayerController playerController;
     private bool isWaitingForStoryEnd = false;
 
-    private void Awake()
+    private void Start()
     {
         // 向StoryManager注册剧情完成事件
         if (StoryManager.Instance != null)
         {
-            StoryManager.Instance.onDialogueComplete.AddListener(OnDialogueComplete);
+            StoryManager.Instance.onDialogueComplete+=OnDialogueComplete;
         }
     }
 
@@ -78,7 +78,7 @@ public class StoryTrigger : MonoBehaviour
         // 取消注册事件
         if (StoryManager.Instance != null)
         {
-            StoryManager.Instance.onDialogueComplete.RemoveListener(OnDialogueComplete);
+            StoryManager.Instance.onDialogueComplete-=OnDialogueComplete;
         }
     }
 
@@ -193,7 +193,7 @@ public class StoryTrigger : MonoBehaviour
         }
 
         // 触发进入事件
-        onEnterSpecificStory?.Invoke();
+        // onEnterSpecificStory?.Invoke();
 
         // 标记正在等待剧情结束
         isWaitingForStoryEnd = true;

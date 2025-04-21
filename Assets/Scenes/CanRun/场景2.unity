@@ -3765,13 +3765,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 330552756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ec629b69e7d904ab7eabad4449e5af, type: 3}
+  m_Script: {fileID: 11500000, guid: 3696b0747e800d94e9cf5ece82fcf843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyTrigger: {fileID: 3459499840618679432}
-  cameraMovement: {fileID: 465806748}
-  targetPosition: {fileID: 465806747}
-  setupAutomatically: 1
+  mainCamera: {fileID: 519420031}
+  newTarget: {fileID: 465806747}
+  smoothSpeed: 5
+  delayBeforeReturn: 2
+  useDirectMovement: 0
+  debugMode: 1
 --- !u!1 &340097097
 GameObject:
   m_ObjectHideFlags: 0
@@ -8268,7 +8270,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 465806747}
-  - component: {fileID: 465806748}
   m_Layer: 0
   m_Name: 1
   m_TagString: Untagged
@@ -8291,24 +8292,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 330552758}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &465806748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 465806746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3696b0747e800d94e9cf5ece82fcf843, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  newTarget: {fileID: 0}
-  smoothSpeed: 5
-  delayBeforeReturn: 2
-  useDirectMovement: 0
-  debugMode: 1
 --- !u!114 &493046446 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8611922477588636139, guid: 115649bc7abbe4248a2adb57361a79fe,
@@ -25822,13 +25805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15d8de1d602f8c47bba39aa1e5367d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onEnterSpecificStory:
-    m_PersistentCalls:
-      m_Calls: []
   onExitSpecificStory:
-    m_PersistentCalls:
-      m_Calls: []
-  onSpecificDialogueComplete:
     m_PersistentCalls:
       m_Calls: []
   storySourceType: 1
@@ -28677,13 +28654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15d8de1d602f8c47bba39aa1e5367d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onEnterSpecificStory:
-    m_PersistentCalls:
-      m_Calls: []
   onExitSpecificStory:
-    m_PersistentCalls:
-      m_Calls: []
-  onSpecificDialogueComplete:
     m_PersistentCalls:
       m_Calls: []
   storySourceType: 1
@@ -29229,15 +29200,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15d8de1d602f8c47bba39aa1e5367d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onEnterSpecificStory:
-    m_PersistentCalls:
-      m_Calls: []
   onExitSpecificStory:
     m_PersistentCalls:
-      m_Calls: []
-  onSpecificDialogueComplete:
-    m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 330552759}
+        m_TargetAssemblyTypeName: EndAndMove, Assembly-CSharp
+        m_MethodName: MoveEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
   storySourceType: 1
   storyResourcePath: StoryData/NewStoryData 1
   csvResourcePath: "StoryData/CSV/Dialogue/\u5267\u60C51"
@@ -29894,15 +29871,6 @@ MonoBehaviour:
   typingSpeed: 0.05
   typingSoundEffect: {fileID: 0}
   typingSoundInterval: 0.1
-  onEnterStoryMode:
-    m_PersistentCalls:
-      m_Calls: []
-  onExitStoryMode:
-    m_PersistentCalls:
-      m_Calls: []
-  onDialogueComplete:
-    m_PersistentCalls:
-      m_Calls: []
   portraitPanel: {fileID: 4332945008858550350}
   leftPortraitImage: {fileID: 2531589468731553278}
   centerPortraitImage: {fileID: 3349372342572194927}

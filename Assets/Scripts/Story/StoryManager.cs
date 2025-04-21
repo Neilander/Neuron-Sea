@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 游戏状态枚举
@@ -45,10 +47,10 @@ public class StoryManager : MonoBehaviour
     [SerializeField] private AudioSource typingSoundEffect; // 打字声音效果（可选）
     [SerializeField] private float typingSoundInterval = 0.1f; // 打字声音播放间隔（可选）
 
-    [Header("事件")]
-    public UnityEvent onEnterStoryMode; // 进入剧情模式时触发
-    public UnityEvent onExitStoryMode; // 退出剧情模式时触发
-    public UnityEvent onDialogueComplete; // 对话完成时触发
+    
+    public event Action onEnterStoryMode; // 进入剧情模式时触发
+    public event Action onExitStoryMode; // 退出剧情模式时触发
+    public event Action onDialogueComplete; // 对话完成时触发
 
     private bool isDialogueActive = false; // 对话是否激活
     private StoryData currentStoryData; // 当前剧情数据
@@ -275,10 +277,10 @@ public class StoryManager : MonoBehaviour
         {
             playerController.EnableMovement();
         }
-
+        print("123");
         // 触发退出剧情模式事件
         onExitStoryMode?.Invoke();
-
+        print("56");
         // 触发对话完成事件
         onDialogueComplete?.Invoke();
 
