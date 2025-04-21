@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public enum SwitchState
-{ 
+{
     None,
 
     Switch,
@@ -31,7 +31,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject displayCenter;
 
     [Header("交换控制")]
-    [SerializeField] private KeyCode switchCode;
+    [SerializeField] private KeyCode switchCode = KeyCode.E;
+    [SerializeField] private bool autoSelectUnderMouse = true; // 是否自动选择鼠标下的物体
+    // [SerializeField] private KeyCode toggleAutoSelectKey = KeyCode.F; // 用于切换自动选择功能的按键
 
     private Counter counter = new Counter();
 
@@ -121,8 +123,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private bool doTestGetPos = false;
     private void Update()
     {
-
-
         //编辑器中也会触发
         if (doTestGetPos)
         {
@@ -132,6 +132,12 @@ public class GridManager : MonoBehaviour
         //只在运行时触发
         if (!Application.isPlaying) return;
 
+        // // 检测是否按下了切换自动选择功能的按键
+        // if (Input.GetKeyDown(toggleAutoSelectKey))
+        // {
+        //     ToggleAutoSelect();
+        // }
+
         switch (curState)
         {
             case SwitchState.None:
@@ -139,6 +145,19 @@ public class GridManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     StartState(SwitchState.Switch);
+
+                    // 如果启用了自动选择，尝试自动选择鼠标下的物体
+                    if (autoSelectUnderMouse)
+                    {
+                        SwitchableObj obj;
+                        if (TryGetSwitchableUnderMouse(out obj))
+                        {
+                            SwitchableObj temp1, temp2;
+                            switchInfoRecorder.Record(obj, out temp1, out temp2);
+                            obj.SetLockedToSwitch(true, true, false, Vector3.zero);
+                            Log("已自动选择鼠标下的物体作为第一个交换对象");
+                        }
+                    }
                 }
 
                 if (switchInfoRecorder.IfHaveBoth())
@@ -273,7 +292,12 @@ public class GridManager : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.Q))
                 {
                     StartState(SwitchState.None);
+                }
 
+                if (Input.GetKeyDown(switchCode) && switchInfoRecorder.IfHaveBoth() && ifLegalMove)
+                {
+                    ShiftSwitch();
+                    StartState(SwitchState.None);
                 }
 
                 if (Input.GetMouseButtonDown(0))
@@ -315,6 +339,9 @@ public class GridManager : MonoBehaviour
                                     ifLegalMove = true;
                                     switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
                                     switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+
+                                    // 在这里可以添加提示UI，显示"按E交换"
+                                    Log("选择了两个可交换物体，按E键交换");
                                 }
                                 else
                                 {
@@ -356,6 +383,9 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
+
+                // // 显示当前自动选择状态
+                // Log("当前自动选择功能" + (autoSelectUnderMouse ? "已开启" : "已关闭") + "，按" + toggleAutoSelectKey + "键切换");
                 break;
             case SwitchState.Move:
 
@@ -532,6 +562,12 @@ public class GridManager : MonoBehaviour
                 obj1.SetLockedToSwitch(true, true, true, obj2.SelfGridPos);
                 obj2.SetLockedToSwitch(true, true, true, obj1.SelfGridPos);
                 Log("已强制选择两个可交换物体，它们可以合法交换");
+
+                // 如果当前处于Switch状态，允许按E键交换
+                if (curState == SwitchState.Switch)
+                {
+                    // 在这里可以添加提示UI，显示"按E交换"
+                }
             }
             else
             {
@@ -545,6 +581,19 @@ public class GridManager : MonoBehaviour
     private void Log(string message)
     {
         Debug.Log("[GridManager] " + message);
+    }
+
+    // 切换自动选择功能
+    public void ToggleAutoSelect()
+    {
+        autoSelectUnderMouse = !autoSelectUnderMouse;
+        Log("自动选择功能已" + (autoSelectUnderMouse ? "开启" : "关闭"));
+    }
+
+    // 获取自动选择状态
+    public bool GetAutoSelectState()
+    {
+        return autoSelectUnderMouse;
     }
 }
 
