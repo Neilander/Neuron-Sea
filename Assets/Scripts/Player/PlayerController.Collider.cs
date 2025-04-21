@@ -14,8 +14,8 @@ public partial class PlayerController
     private readonly Rect normalHitbox = new Rect(0, -0.1f, 0.6f, 1.4f);
     private readonly Rect normalHurtbox = new Rect(0f, 0f, 0.55f, 1.2f);
 
-    private new Rect collider;
-    private Rect hurtCollider;
+    private new Rect collider;//运动学碰撞，其position属性是碰撞体中心
+    private Rect hurtCollider;//受伤碰撞
 
     public void AdjustPosition(Vector2 adjust)
     {
@@ -25,14 +25,19 @@ public partial class PlayerController
     }
 
     //碰撞检测
-    public RaycastHit2D CollideCheck(Vector2 position, float dist = 0)
+    public RaycastHit2D CollideCheck(int layerMask, Vector2 dir = default, float dist = 0)
     {
-        return CollideCheck(position, Vector2.zero, dist);
+        return CollideCheck(Position, layerMask, dir, dist);
     }
-    public RaycastHit2D CollideCheck(Vector2 position, Vector2 dir, float dist = 0)
+    public RaycastHit2D CollideCheck(Vector2 position, int layerMask, Vector2 dir = default, float dist = 0)
     {
         Vector2 origin = position + collider.position;
-        return Physics2D.BoxCast(origin, collider.size, 0, dir, dist + DEVIATION, GroundMask);
+        return Physics2D.BoxCast(origin, collider.size, 0, dir, dist + DEVIATION, layerMask);
+    }
+    public bool CollideCheck(Rect rect)
+    {
+        Vector2 origin = Position + collider.position;
+        return rect.Overlaps(new(origin - collider.size * 0.5f, collider.size));
     }
 
     //根据碰撞调整X轴上的最终移动距离

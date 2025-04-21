@@ -24,7 +24,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     #region 地面检测点
     [Header("Ground Check Settings")]
     [SerializeField]
-    private BoxCollider2D boxCollider; // 角色碰撞体
+    private BoxCollider2D boxCollider; // 非运动学碰撞
 
     [SerializeField]
     private float deviation = 0.02f; // 检测误差，为unity物理误差的2倍
