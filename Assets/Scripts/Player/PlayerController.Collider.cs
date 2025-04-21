@@ -205,5 +205,35 @@ public partial class PlayerController
         }
         return false;
     }
+    #region 新增方法
+    /// <summary>
+    /// 检查特定矩形区域是否与玩家碰撞
+    /// </summary>
+    /// <param name="worldRectPos">矩形区域位置（世界坐标）</param>
+    /// <param name="rectSize">矩形区域大小</param>
+    /// <returns>是否碰撞</returns>
+    public bool IsCollidingWithRect(Vector2 worldRectPos, Vector2 rectSize)
+    {
+        // 获取玩家碰撞盒在世界坐标系中的位置
+        Vector2 playerPos = this.Position;
+        Rect playerRect = new Rect(
+            playerPos.x + collider.x,
+            playerPos.y + collider.y,
+            collider.width,
+            collider.height
+        );
+        
+        // 创建检测矩形
+        Rect checkRect = new Rect(
+            worldRectPos.x - rectSize.x / 2,
+            worldRectPos.y - rectSize.y / 2,
+            rectSize.x,
+            rectSize.y
+        );
+        
+        // 检查重叠
+        return playerRect.Overlaps(checkRect);
+    }
+    #endregion
 }
     
