@@ -508,7 +508,7 @@ Transform:
   m_GameObject: {fileID: 157332951}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -280.07, y: 267.92, z: -0.024502076}
+  m_LocalPosition: {x: -280.07, y: 274.35, z: -0.024502076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -607,7 +607,7 @@ PrefabInstance:
     - target: {fileID: 8375420295587893616, guid: 5894b6f145f77cc4d92393f30e21cb79,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 269.18
+      value: 275.52
       objectReference: {fileID: 0}
     - target: {fileID: 8375420295587893616, guid: 5894b6f145f77cc4d92393f30e21cb79,
         type: 3}
@@ -12722,7 +12722,7 @@ Transform:
   m_GameObject: {fileID: 1436587308}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -265.48, y: 267.94, z: -0.024502076}
+  m_LocalPosition: {x: -265.48, y: 276.45, z: -0.024502076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12895,7 +12895,7 @@ Transform:
   m_GameObject: {fileID: 1464758293}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.43, y: -0.06, z: -7.861721}
+  m_LocalPosition: {x: -274.26, y: 276.16, z: -7.861721}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13380,12 +13380,12 @@ PrefabInstance:
     - target: {fileID: 5630025616032423162, guid: 115649bc7abbe4248a2adb57361a79fe,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -220.53
+      value: -268.8
       objectReference: {fileID: 0}
     - target: {fileID: 5630025616032423162, guid: 115649bc7abbe4248a2adb57361a79fe,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 112.54
+      value: 267.1
       objectReference: {fileID: 0}
     - target: {fileID: 5630025616032423162, guid: 115649bc7abbe4248a2adb57361a79fe,
         type: 3}
@@ -16117,7 +16117,7 @@ Transform:
   m_GameObject: {fileID: 1419062427189396026}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -254.27, y: 268.57, z: -0.024502076}
+  m_LocalPosition: {x: -254.27, y: 277.61, z: -0.024502076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16274,7 +16274,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 86ca59b9bca0e409b9ba2784fbe69f01,
+      objectReference: {fileID: 21300000, guid: d5fad44e8724257418ed26336aaa3666,
         type: 3}
     - target: {fileID: 653625391113148262, guid: dc3227cb9d687b742ac3189ea9fe8227,
         type: 3}
@@ -16299,12 +16299,12 @@ PrefabInstance:
     - target: {fileID: 908414241459213331, guid: dc3227cb9d687b742ac3189ea9fe8227,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.42
+      value: -271.01
       objectReference: {fileID: 0}
     - target: {fileID: 908414241459213331, guid: dc3227cb9d687b742ac3189ea9fe8227,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8
+      value: 269.05
       objectReference: {fileID: 0}
     - target: {fileID: 908414241459213331, guid: dc3227cb9d687b742ac3189ea9fe8227,
         type: 3}
@@ -16353,8 +16353,18 @@ PrefabInstance:
       objectReference: {fileID: 1103187856}
     - target: {fileID: 7539565987023721348, guid: dc3227cb9d687b742ac3189ea9fe8227,
         type: 3}
+      propertyPath: offset.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539565987023721348, guid: dc3227cb9d687b742ac3189ea9fe8227,
+        type: 3}
       propertyPath: followSpeed
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539565987023721348, guid: dc3227cb9d687b742ac3189ea9fe8227,
+        type: 3}
+      propertyPath: autoAdjustPosition
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16934,7 +16944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3696b0747e800d94e9cf5ece82fcf843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchTimeout: 20
+  switchTimeout: 10
   mainCamera: {fileID: 519420031}
   newTarget: {fileID: 292096883}
   smoothSpeed: 5

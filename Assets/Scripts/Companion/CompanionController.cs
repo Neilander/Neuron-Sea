@@ -5,7 +5,7 @@ public class CompanionController : MonoBehaviour
     [Header("跟随设置")]
     [SerializeField] private Transform target; // 跟随目标（玩家）
     [SerializeField] private float followSpeed = 5f; // 跟随速度
-    [SerializeField] private Vector3 offset = new Vector3(1f, 1f, 0f); // 相对于目标的偏移量
+    [SerializeField] private Vector3 offset = new Vector3(1f, 3f, 0f); // 相对于目标的偏移量
     [SerializeField] private float smoothTime = 0.3f; // 平滑时间
     [SerializeField] private bool autoAdjustPosition = true; // 是否自动根据玩家朝向调整位置
 
@@ -82,12 +82,12 @@ public class CompanionController : MonoBehaviour
             // 如果玩家朝左（scale.x = -1），跟随物在右上角
             if (target.localScale.x < 0)
             {
-                currentOffset = new Vector3(1f, 1f, 0f);
+                currentOffset = new Vector3(1.5f, 3f, 0f);
             }
             // 如果玩家朝右（scale.x = 1），跟随物在左上角
             else
             {
-                currentOffset = new Vector3(-1f, 1f, 0f);
+                currentOffset = new Vector3(-1.5f,3f, 0f);
             }
         }
         else
