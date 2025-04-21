@@ -193,5 +193,6 @@ public enum SFXClip
     Walk,
     Jump,
     Drop,
-    Switch
+    Switch,
+    IdleBox
 }

@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb306f5ab86a6ef4c8b70daff774e319, type: 3}
+  m_Name: "\u6D4B\u8BD51"
+  m_EditorClassIdentifier: 
+  storyName: 111
+  backgroundImage: {fileID: 21300000, guid: a225befe4953547da8c4133e5d585029, type: 3}
+  dialogues:
+  - speakerName: AI
+    text: "\u89C2\u6D4B\u5458\u5973\u58EB\uFF0C\u8BF7\u6CE8\u610F\uFF0C\u8BAD\u7EC3\u573A\u7684\u91CD\u529B\u53C2\u6570\u5DF2\u8C03\u6574\u4E3A\u6807\u51C6\u5730\u9762\u6A21\u62DF\u6A21\u5F0F\u3002"
+    portrait: {fileID: 0}
+    avatar: {fileID: 0}
+    portraitPosition: 1
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: 
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 1
+  - speakerName: Airflow
+    text: "\u8FD9\u79CD\u91CD\u529B\u8BBE\u5B9A\u8FD8\u633A\u8212\u670D\u7684\uFF0C\u6BD4\u4E4B\u524D\u7684\u6D4B\u8BD5\u7248\u672C\u8F7B\u677E\u591A\u4E86\u3002"
+    portrait: {fileID: 0}
+    avatar: {fileID: 0}
+    portraitPosition: 0
+    showPortrait: 1
+    expression: 1
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: 
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 1
+  - speakerName: AI
+    text: "\u8FD9\u4E5F\u5C06\u66F4\u597D\u5730\u53CD\u6620\u60A8\u5728\u6B63\u5E38\u4EFB\u52A1\u73AF\u5883\u4E2D\u7684\u9002\u5E94\u5EA6\uFF0C\u8BF7\u4FDD\u6301\u5F53\u524D\u72B6\u6001\u7EE7\u7EED\u524D\u8FDB\u3002"
+    portrait: {fileID: 0}
+    avatar: {fileID: 0}
+    portraitPosition: 1
+    showPortrait: 1
+    expression: 0
+    portraitEffect: 0
+    effectIntensity: 1
+    effectDuration: 1
+    animationTrigger: 
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    voiceClip: {fileID: 0}
+    hideOtherPortraits: 1
+  characters:
+  - characterName: Airflow
+    expressions:
+    - expression: 0
+      sprite: {fileID: 21300000, guid: e566f690ce225e14c9e1d38a4ffdae91, type: 3}
+    - expression: 1
+      sprite: {fileID: 21300000, guid: 2ca481f2f4c934c4ebc0c09f30972348, type: 3}
+    - expression: 3
+      sprite: {fileID: 21300000, guid: 2ad73ed1436567f4dac6b46d016f74a4, type: 3}
+    - expression: 6
+      sprite: {fileID: 21300000, guid: ac869e9b74a193d41b47cd73afcf6d5f, type: 3}
+    defaultAvatar: {fileID: 0}
+  - characterName: AI
+    expressions:
+    - expression: 0
+      sprite: {fileID: 21300000, guid: a4b7e1130e1f5fc48a34cfdb9a2a8f72, type: 3}
+    defaultAvatar: {fileID: 0}
+  - characterName: "\u89D2\u8272B"
+    expressions:
+    - expression: 0
+      sprite: {fileID: 21300000, guid: 95695a5f159225840b8200fcd103ad8a, type: 3}
+    - expression: 2
+      sprite: {fileID: 21300000, guid: 7e01de4d9fc242041887c4c98f49fcf1, type: 3}
+    defaultAvatar: {fileID: 0}

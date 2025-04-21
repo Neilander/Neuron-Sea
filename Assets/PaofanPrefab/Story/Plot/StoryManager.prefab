@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2409643642499654426
+--- !u!1 &8950435303712675714
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6878080297096883496}
-  - component: {fileID: 789325570119167387}
+  - component: {fileID: 6694481631446383463}
+  - component: {fileID: 7164688356436248881}
   m_Layer: 0
   m_Name: StoryManager
   m_TagString: Untagged
@@ -17,28 +17,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6878080297096883496
+--- !u!4 &6694481631446383463
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2409643642499654426}
+  m_GameObject: {fileID: 8950435303712675714}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.338153, y: 0.6277783, z: -7.8827662}
+  m_LocalPosition: {x: 10.13, y: 0.83, z: -7.8827662}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &789325570119167387
+--- !u!114 &7164688356436248881
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2409643642499654426}
+  m_GameObject: {fileID: 8950435303712675714}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2497e5425fe1e846996d845d17f5182, type: 3}
@@ -62,3 +62,10 @@ MonoBehaviour:
   onDialogueComplete:
     m_PersistentCalls:
       m_Calls: []
+  portraitPanel: {fileID: 0}
+  leftPortraitImage: {fileID: 0}
+  centerPortraitImage: {fileID: 0}
+  rightPortraitImage: {fileID: 0}
+  avatarImage: {fileID: 0}
+  backgroundImage: {fileID: 0}
+  portraitFadeDuration: 0.5

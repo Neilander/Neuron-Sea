@@ -44,11 +44,6 @@ public class levelManager : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        AudioManager.Instance.Play(WhiteNoiseClip.Scene1);
-    }
-
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayer)
     {
         string newLevelName = $"Level_{newLevelIndex}";

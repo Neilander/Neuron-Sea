@@ -2,12 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// 增强版剧情触发器
 /// </summary>
 public class StoryTrigger : MonoBehaviour
 {
+    // [Header("事件")]
+    // public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
+    public UnityEvent onExitSpecificStory; // 退出剧情模式时触发
+    // public UnityEvent onSpecificDialogueComplete; // 对话完成时触发
+
     public enum StorySourceType
     {
         ScriptableObject,  // 使用StoryData ScriptableObject
@@ -42,10 +48,77 @@ public class StoryTrigger : MonoBehaviour
     [Tooltip("提示UI预制体")]
     [SerializeField] private GameObject promptPrefab;
 
+    [Header("高级控制")]
+    [Tooltip("剧情结束时是否阻止玩家解冻（用于连续剧情）")]
+    [SerializeField] private bool preventPlayerUnfreeze = false;
+    [Tooltip("剧情结束后是否自动触发下一段剧情")]
+    [SerializeField] private bool autoTriggerNextStory = false;
+    [Tooltip("下一段剧情的触发器")]
+    [SerializeField] private StoryTrigger nextStoryTrigger;
+    [Tooltip("下一段剧情触发前的延迟时间（秒）")]
+    [SerializeField] private float nextStoryDelay = 0.5f;
+
     private bool hasTriggered = false;
     private bool playerInTriggerArea = false;
     private GameObject promptInstance;
     private PlayerController playerController;
+    private bool isWaitingForStoryEnd = false;
+
+    private void Start()
+    {
+        // 向StoryManager注册剧情完成事件
+        if (StoryManager.Instance != null)
+        {
+            StoryManager.Instance.onDialogueComplete+=OnDialogueComplete;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 取消注册事件
+        if (StoryManager.Instance != null)
+        {
+            StoryManager.Instance.onDialogueComplete-=OnDialogueComplete;
+        }
+    }
+
+    /// <summary>
+    /// 剧情完成事件处理
+    /// </summary>
+    private void OnDialogueComplete()
+    {
+        // 只处理正在等待结束的剧情
+        if (!isWaitingForStoryEnd) return;
+
+        // 重置等待标志
+        isWaitingForStoryEnd = false;
+
+        // 触发退出事件
+        onExitSpecificStory?.Invoke();
+
+        // 如果需要自动触发下一段剧情
+        if (autoTriggerNextStory && nextStoryTrigger != null)
+        {
+            StartCoroutine(TriggerNextStoryAfterDelay());
+        }
+    }
+
+    /// <summary>
+    /// 延迟触发下一段剧情
+    /// </summary>
+    private IEnumerator TriggerNextStoryAfterDelay()
+    {
+        yield return new WaitForSeconds(nextStoryDelay);
+        nextStoryTrigger.ForceStartStory();
+    }
+
+    /// <summary>
+    /// 强制开始剧情，忽略触发条件
+    /// </summary>
+    public void ForceStartStory()
+    {
+        StartStoryInternal();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -103,7 +176,27 @@ public class StoryTrigger : MonoBehaviour
             }
         }
 
+        StartStoryInternal();
+    }
+
+    /// <summary>
+    /// 内部启动剧情的方法
+    /// </summary>
+    private void StartStoryInternal()
+    {
         bool success = false;
+
+        // 设置阻止玩家解冻的标志（如果需要）
+        if (preventPlayerUnfreeze && StoryManager.Instance != null)
+        {
+            StoryManager.Instance.SetPreventPlayerUnfreeze(preventPlayerUnfreeze);
+        }
+
+        // 触发进入事件
+        // onEnterSpecificStory?.Invoke();
+
+        // 标记正在等待剧情结束
+        isWaitingForStoryEnd = true;
 
         // 根据数据源类型选择加载方式
         if (storySourceType == StorySourceType.ScriptableObject)
@@ -114,6 +207,7 @@ public class StoryTrigger : MonoBehaviour
             if (storyData == null)
             {
                 Debug.LogError("无法加载剧情数据: " + storyResourcePath);
+                isWaitingForStoryEnd = false;
                 return;
             }
 
@@ -129,6 +223,7 @@ public class StoryTrigger : MonoBehaviour
             if (!success)
             {
                 Debug.LogError("无法从CSV加载剧情数据: " + csvResourcePath);
+                isWaitingForStoryEnd = false;
                 return;
             }
         }
@@ -141,6 +236,10 @@ public class StoryTrigger : MonoBehaviour
 
             // 隐藏提示
             HidePrompt();
+        }
+        else
+        {
+            isWaitingForStoryEnd = false;
         }
     }
 
@@ -163,36 +262,7 @@ public class StoryTrigger : MonoBehaviour
         // 确保玩家仍在触发区域内
         if (playerInTriggerArea)
         {
-            bool success = false;
-
-            // 根据数据源类型选择加载方式
-            if (storySourceType == StorySourceType.ScriptableObject)
-            {
-                // 获取剧情数据资源
-                StoryData storyData = Resources.Load<StoryData>(storyResourcePath);
-
-                if (storyData != null)
-                {
-                    // 进入剧情模式
-                    StoryManager.Instance.EnterStoryMode(storyData);
-                    success = true;
-                }
-            }
-            else if (storySourceType == StorySourceType.CSVResource)
-            {
-                // 使用CSV资源加载剧情
-                success = StoryManager.Instance.LoadStoryFromResourceCSV(csvResourcePath);
-            }
-
-            // 如果成功触发
-            if (success)
-            {
-                // 标记为已触发
-                hasTriggered = true;
-
-                // 隐藏提示
-                HidePrompt();
-            }
+            StartStoryInternal();
         }
     }
 

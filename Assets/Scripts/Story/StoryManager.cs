@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 游戏状态枚举
@@ -30,6 +32,12 @@ public class StoryManager : MonoBehaviour
     private bool isWaitingForLanding = false; // 是否正在等待玩家落地
     private StoryData pendingStoryData;
 
+    // 是否应该记录当前剧情（对回放的剧情不进行记录）
+    private bool shouldLogCurrentStory = true;
+
+    // 是否阻止玩家在剧情结束后解冻
+    private bool preventPlayerUnfreeze = false;
+
     [Header("对话系统设置")]
     [SerializeField] private GameObject dialoguePanel; // 对话面板
     [SerializeField] private TMPro.TextMeshProUGUI dialogueText; // 对话文本
@@ -39,10 +47,10 @@ public class StoryManager : MonoBehaviour
     [SerializeField] private AudioSource typingSoundEffect; // 打字声音效果（可选）
     [SerializeField] private float typingSoundInterval = 0.1f; // 打字声音播放间隔（可选）
 
-    [Header("事件")]
-    public UnityEvent onEnterStoryMode; // 进入剧情模式时触发
-    public UnityEvent onExitStoryMode; // 退出剧情模式时触发
-    public UnityEvent onDialogueComplete; // 对话完成时触发
+    
+    public event Action onEnterStoryMode; // 进入剧情模式时触发
+    public event Action onExitStoryMode; // 退出剧情模式时触发
+    public event Action onDialogueComplete; // 对话完成时触发
 
     private bool isDialogueActive = false; // 对话是否激活
     private StoryData currentStoryData; // 当前剧情数据
@@ -124,7 +132,7 @@ public class StoryManager : MonoBehaviour
         {
             leftPortraitImage.gameObject.SetActive(false);
             Color c = leftPortraitImage.color;
-            c.a = 0;
+            c.a = 0;//从0改成了1
             leftPortraitImage.color = c;
         }
 
@@ -201,6 +209,22 @@ public class StoryManager : MonoBehaviour
 
         // 开始对话
         StartDialogue();
+
+        // 判断是否应该记录当前剧情（如果StoryLogManager可用且不是在回放模式）
+        shouldLogCurrentStory = true;
+        if (StoryLogManager.Instance != null)
+        {
+            if (StoryLogManager.Instance.IsReplaying)
+            {
+                // 如果是回放模式，不记录
+                shouldLogCurrentStory = false;
+            }
+            else
+            {
+                // 记录剧情
+                StoryLogManager.Instance.LogStory(storyData);
+            }
+        }
     }
 
     /// <summary>
@@ -223,6 +247,15 @@ public class StoryManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 设置是否阻止玩家在剧情结束后解冻
+    /// </summary>
+    /// <param name="prevent">是否阻止解冻</param>
+    public void SetPreventPlayerUnfreeze(bool prevent)
+    {
+        preventPlayerUnfreeze = prevent;
+    }
+
+    /// <summary>
     /// 退出剧情模式，返回动作模式
     /// </summary>
     public void ExitStoryMode()
@@ -239,22 +272,34 @@ public class StoryManager : MonoBehaviour
         // 切换到动作模式
         currentState = GameState.ActionMode;
 
-        // 启用玩家移动
-        if (playerController != null)
+        // 启用玩家移动（除非被阻止）
+        if (playerController != null && !preventPlayerUnfreeze)
         {
             playerController.EnableMovement();
         }
-
+        print("123");
         // 触发退出剧情模式事件
         onExitStoryMode?.Invoke();
+        print("56");
+        // 触发对话完成事件
+        onDialogueComplete?.Invoke();
 
         // 重置所有立绘状态
         ResetAllPortraits();
+
+        // 如果是回放模式，通知StoryLogManager结束回放
+        if (StoryLogManager.Instance != null && StoryLogManager.Instance.IsReplaying)
+        {
+            StoryLogManager.Instance.EndReplay();
+        }
 
         // 清除当前剧情数据
         currentStoryData = null;
         currentDialogueIndex = 0;
         isTyping = false;
+
+        // 重置阻止解冻标志
+        preventPlayerUnfreeze = false;
     }
 
     /// <summary>
@@ -443,6 +488,15 @@ public class StoryManager : MonoBehaviour
             }
         }
 
+        // 尝试从角色配置中查找表情
+        Sprite portraitSprite = FindCharacterExpressionSprite(dialogue.speakerName, dialogue.expression);
+
+        // 如果找到了表情立绘，使用它，否则使用对话中指定的立绘
+        if (portraitSprite != null)
+        {
+            dialogue.portrait = portraitSprite;
+        }
+
         // 处理立绘
         if (!dialogue.showPortrait || dialogue.portrait == null)
         {
@@ -469,8 +523,14 @@ public class StoryManager : MonoBehaviour
         targetPortraitImage.sprite = dialogue.portrait;
         targetPortraitImage.gameObject.SetActive(true);
 
-        // 淡入新的立绘
-        StartCoroutine(FadeInPortrait(targetPortraitImage));
+        // 只有第一次显示立绘或切换角色时才有淡入效果
+        if (!activePortraits[dialogue.portraitPosition])//|| 
+                                                        //(currentDialogueIndex > 0 && 
+                                                        //currentDialogueIndex < currentStoryData.dialogues.Count && 
+                                                        // currentStoryData.dialogues[currentDialogueIndex-1].speakerName != dialogue.speakerName))
+        {
+            StartCoroutine(FadeInPortrait(targetPortraitImage));
+        }
 
         // 应用立绘特效
         if (dialogue.portraitEffect != PortraitEffect.None)
@@ -480,6 +540,26 @@ public class StoryManager : MonoBehaviour
 
         // 标记此位置的立绘为活动状态
         activePortraits[dialogue.portraitPosition] = true;
+    }
+
+    /// <summary>
+    /// 查找角色对应表情的立绘
+    /// </summary>
+    private Sprite FindCharacterExpressionSprite(string characterName, PortraitExpression expression)
+    {
+        if (currentStoryData == null || string.IsNullOrEmpty(characterName))
+            return null;
+
+        // 在当前故事数据中查找角色配置
+        foreach (var character in currentStoryData.characters)
+        {
+            if (character.characterName == characterName)
+            {
+                return character.GetExpressionSprite(expression);
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -819,6 +899,9 @@ public class StoryManager : MonoBehaviour
             ExitStoryMode();
         }
 
+        // 自动加载角色立绘配置
+        StoryManagerExtension.LoadCharacterConfigurations(tempStoryData);
+
         // 进入剧情模式
         EnterStoryMode(tempStoryData);
         return true;
@@ -838,12 +921,54 @@ public class StoryManager : MonoBehaviour
             return false;
         }
 
+        // 创建临时的StoryData对象
+        StoryData tempStoryData = ScriptableObject.CreateInstance<StoryData>();
+        tempStoryData.storyName = System.IO.Path.GetFileNameWithoutExtension(resourcePath);
+
+        // 尝试加载同目录下的角色配置文件
+        string characterCsvPath = resourcePath + "_characters";
+        TextAsset characterCsvAsset = Resources.Load<TextAsset>(characterCsvPath);
+
         // 创建临时文件保存CSV内容
         string tempFilePath = System.IO.Path.Combine(Application.temporaryCachePath, "temp_story.csv");
+        string tempCharacterFilePath = System.IO.Path.Combine(Application.temporaryCachePath, "temp_character.csv");
+
         try
         {
+            // 写入对话CSV临时文件
             System.IO.File.WriteAllText(tempFilePath, csvAsset.text);
-            return LoadStoryFromCSV(tempFilePath);
+
+            // 导入对话数据
+            bool success = tempStoryData.ImportFromCSV(tempFilePath);
+            if (!success)
+            {
+                Debug.LogError("从CSV导入剧情数据失败");
+                return false;
+            }
+
+            // 如果找到了角色配置文件，导入角色配置
+            if (characterCsvAsset != null)
+            {
+                Debug.Log($"找到角色配置文件: {characterCsvPath}");
+                System.IO.File.WriteAllText(tempCharacterFilePath, characterCsvAsset.text);
+                tempStoryData.ImportCharactersFromCSV(tempCharacterFilePath);
+            }
+            else
+            {
+                // 否则尝试自动加载角色配置
+                Debug.Log($"未找到角色配置文件，尝试自动加载角色立绘...");
+                StoryManagerExtension.LoadCharacterConfigurations(tempStoryData);
+            }
+
+            // 如果当前在剧情模式，先退出
+            if (currentState == GameState.StoryMode)
+            {
+                ExitStoryMode();
+            }
+
+            // 进入剧情模式
+            EnterStoryMode(tempStoryData);
+            return true;
         }
         catch (System.Exception e)
         {
@@ -858,6 +983,10 @@ public class StoryManager : MonoBehaviour
                 if (System.IO.File.Exists(tempFilePath))
                 {
                     System.IO.File.Delete(tempFilePath);
+                }
+                if (System.IO.File.Exists(tempCharacterFilePath))
+                {
+                    System.IO.File.Delete(tempCharacterFilePath);
                 }
             }
             catch { }

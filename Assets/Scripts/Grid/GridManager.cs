@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum SwitchState
 {
@@ -588,8 +589,8 @@ class TwoObjectContainer<Type>
 //用来管理一些零散的开启/关闭Switch函数
 public static class InAndOutSwitchEvent
 {
-    public static event Action OnInSwitchTriggered;
-    public static event Action OnOutSwitchTriggered;
+    public static event UnityAction OnInSwitchTriggered;
+    public static event UnityAction OnOutSwitchTriggered;
 
     public static void InSwitch()
     {
