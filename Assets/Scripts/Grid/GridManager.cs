@@ -31,7 +31,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject displayCenter;
 
     [Header("交换控制")]
-    [SerializeField] private KeyCode switchCode;
+    [SerializeField] private KeyCode switchCode = KeyCode.E;
+    [SerializeField] private bool autoSelectUnderMouse = true; // 是否自动选择鼠标下的物体
+    // [SerializeField] private KeyCode toggleAutoSelectKey = KeyCode.F; // 用于切换自动选择功能的按键
 
     private Counter counter = new Counter();
 
@@ -51,7 +53,8 @@ public class GridManager : MonoBehaviour
 
 
     //这部分是在编辑器中绘制网格
-    private void OnDrawGizmos() {
+    private void OnDrawGizmos()
+    {
         if (!displayInGizmos) return;
         if (displayCenter == null) return;
 
@@ -72,14 +75,16 @@ public class GridManager : MonoBehaviour
         Vector3 inputOffset = new Vector3(offsetX, offsetY, 0);
 
         // 绘制10x10的网格
-        for (int i = 0; i <= displayAmount.x; i++) {
+        for (int i = 0; i <= displayAmount.x; i++)
+        {
             // 绘制垂直线
             Vector3 startPos = new Vector3(startX + (gridSpacing * i), startY, 0) - displayCenterOffset + inputOffset;
             Vector3 endPos = new Vector3(startX + (gridSpacing * i), startY + (gridSpacing * displayAmount.y), 0) - displayCenterOffset + inputOffset;
             Gizmos.DrawLine(startPos, endPos);
         }
 
-        for (int i = 0; i <= displayAmount.y; i++) {
+        for (int i = 0; i <= displayAmount.y; i++)
+        {
             // 绘制水平线
             Vector3 startPos = new Vector3(startX, startY + (gridSpacing * i), 0) - displayCenterOffset + inputOffset;
             Vector3 endPos = new Vector3(startX + (gridSpacing * displayAmount.x), startY + (gridSpacing * i), 0) - displayCenterOffset + inputOffset;
@@ -87,7 +92,8 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
 #if UNITY_EDITOR
         // 编辑器状态下（不是播放或将要播放）
         if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) {
@@ -99,10 +105,12 @@ public class GridManager : MonoBehaviour
 #endif
 
 
-        if (Instance == null) {
+        if (Instance == null)
+        {
             Instance = this;
         }
-        else if (Instance != this) {
+        else if (Instance != this)
+        {
             DestroyImmediate(gameObject);
         }
     }
@@ -113,37 +121,57 @@ public class GridManager : MonoBehaviour
     public void LogTimeAction() { Debug.Log("logSwitchTime" + SwitchTime); }
 
     [SerializeField] private bool doTestGetPos = false;
-    private void Update() {
-
-
+    private void Update()
+    {
         //编辑器中也会触发
-        if (doTestGetPos) {
+        if (doTestGetPos)
+        {
             doTestGetPos = false;
             Debug.Log(GetClosestGridPoint(testPosition));
         }
         //只在运行时触发
         if (!Application.isPlaying) return;
 
-        switch (curState) {
+        // // 检测是否按下了切换自动选择功能的按键
+        // if (Input.GetKeyDown(toggleAutoSelectKey))
+        // {
+        //     ToggleAutoSelect();
+        // }
+
+        switch (curState)
+        {
             case SwitchState.None:
 
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     StartState(SwitchState.Switch);
+
+                    // 如果启用了自动选择，尝试自动选择鼠标下的物体
+                    if (autoSelectUnderMouse)
+                    {
+                        SwitchableObj obj;
+                        if (TryGetSwitchableUnderMouse(out obj))
+                        {
+                            SwitchableObj temp1, temp2;
+                            switchInfoRecorder.Record(obj, out temp1, out temp2);
+                            obj.SetLockedToSwitch(true, true, false, Vector3.zero);
+                            Log("已自动选择鼠标下的物体作为第一个交换对象");
+                        }
+                    }
                 }
 
                 if (switchInfoRecorder.IfHaveBoth())
                 {
                     if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                     {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true,true,switchInfoRecorder.obj2.SelfGridPos);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true,switchInfoRecorder.obj1.SelfGridPos);
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
                         ifLegalMove = true;
                     }
                     else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                     {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false,switchInfoRecorder.obj2.SelfGridPos);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false,switchInfoRecorder.obj1.SelfGridPos);
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj1.SelfGridPos);
                         ifLegalMove = false;
                     }
 
@@ -264,7 +292,28 @@ public class GridManager : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.Q))
                 {
                     StartState(SwitchState.None);
+                }
 
+                if (switchInfoRecorder.IfHaveBoth())
+                {
+                    if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+                        ifLegalMove = true;
+                    }
+                    else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj1.SelfGridPos);
+                        ifLegalMove = false;
+                    }
+
+                    if (ifLegalMove)
+                    {
+                        if (Input.GetKeyDown(switchCode))
+                            ShiftSwitch();
+                    }
                 }
 
                 if (Input.GetMouseButtonDown(0))
@@ -278,9 +327,9 @@ public class GridManager : MonoBehaviour
                             //选中已经被选中的物体
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
                             if (switchInfoRecorder.hasFirst)
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
                             if (switchInfoRecorder.hasSecond)
-                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true,false, Vector3.zero);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
                         }
                         else
                         {
@@ -289,12 +338,12 @@ public class GridManager : MonoBehaviour
                             if (switchInfoRecorder.Record(tryGet, out temp1, out temp2))
                             {
                                 //如果有顶掉的
-                                temp1.SetLockedToSwitch(false,true,false,Vector3.zero);
+                                temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
                             }
                             if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                             {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, false,true, switchInfoRecorder.obj2.SelfGridPos);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj2.SelfGridPos);
                                 switchInfoRecorder.obj2.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj1.SelfGridPos);
                                 ifLegalMove = false;
                             }
@@ -304,12 +353,15 @@ public class GridManager : MonoBehaviour
                                 if (switchInfoRecorder.IfHaveBoth())
                                 {
                                     ifLegalMove = true;
-                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true,true, switchInfoRecorder.obj2.SelfGridPos);
+                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
                                     switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+
+                                    // 在这里可以添加提示UI，显示"按E交换"
+                                    Log("选择了两个可交换物体，按E键交换");
                                 }
                                 else
                                 {
-                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
+                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
                                 }
 
                             }
@@ -321,21 +373,25 @@ public class GridManager : MonoBehaviour
                 break;
             case SwitchState.Move:
                 //现在没有用
-                if (counter.IsZero()) {
+                if (counter.IsZero())
+                {
                     StartNoneState();
                 }
                 break;
         }
     }
 
-    private void StartNoneState() {
+    private void StartNoneState()
+    {
         StartState(SwitchState.None);
     }
 
-    public void StartState(SwitchState state) {
+    public void StartState(SwitchState state)
+    {
         EndState(curState);
 
-        switch (state) {
+        switch (state)
+        {
             case SwitchState.None:
 
                 Debug.Log("进入none state");
@@ -343,6 +399,9 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
+
+                // // 显示当前自动选择状态
+                // Log("当前自动选择功能" + (autoSelectUnderMouse ? "已开启" : "已关闭") + "，按" + toggleAutoSelectKey + "键切换");
                 break;
             case SwitchState.Move:
 
@@ -363,7 +422,8 @@ public class GridManager : MonoBehaviour
     }
 
 
-    public Vector3 GetClosestGridPoint(Vector3 position) {
+    public Vector3 GetClosestGridPoint(Vector3 position)
+    {
         Vector3 closestPoint = new Vector3(
             Mathf.Round(position.x - offsetX / gridWidth) * gridWidth + offsetX,
             Mathf.Round(position.y - offsetY / gridWidth) * gridWidth + offsetY,
@@ -376,15 +436,19 @@ public class GridManager : MonoBehaviour
 
 
 
-    private bool CanEnterSwitchState() {
+    private bool CanEnterSwitchState()
+    {
         return true;
     }
 
-    void ReportSwitchableObj(SwitchableObj obj, bool isFrom) {
-        if (isFrom) {
+    void ReportSwitchableObj(SwitchableObj obj, bool isFrom)
+    {
+        if (isFrom)
+        {
             switchableObjFrom = obj;
         }
-        else {
+        else
+        {
 
             getBothTarget = true;
         }
@@ -415,14 +479,16 @@ public class GridManager : MonoBehaviour
         SwitchTime = 0;
     }
 
-    private void ClearSwitchableObj() {
+    private void ClearSwitchableObj()
+    {
         switchableObjFrom = null;
 
         tempSwitchableObj = null;
         getBothTarget = false;
     }
 
-    public void CountDown() {
+    public void CountDown()
+    {
         counter.CountDown();
     }
 
@@ -473,28 +539,96 @@ public class GridManager : MonoBehaviour
         if (switchInfoRecorder.Take(obj))
         {
             if (switchInfoRecorder.hasFirst)
-                switchInfoRecorder.obj1.SetLockedToSwitch(true, true,false,Vector3.zero);
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
             if (switchInfoRecorder.hasSecond)
-                switchInfoRecorder.obj2.SetLockedToSwitch(true, true,false,Vector3.zero);
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
         }
     }
 
     #endregion
+
+    // 在GridManager类中添加获取当前状态的方法
+    public SwitchState GetCurrentState()
+    {
+        return curState;
+    }
+
+    // 添加强制选择两个可交换物体的方法
+    public void ForceSelectObjectsForSwitch(SwitchableObj obj1, SwitchableObj obj2)
+    {
+        // 清空当前选择
+        switchInfoRecorder.Refresh();
+
+        // 记录新的选择
+        if (obj1 != null && obj2 != null)
+        {
+            // 记录第一个对象
+            SwitchableObj poopOut, poopOut2;
+            switchInfoRecorder.Record(obj1, out poopOut, out poopOut2);
+
+            // 记录第二个对象
+            switchInfoRecorder.Record(obj2, out poopOut, out poopOut2);
+
+            // 检查是否为合法移动
+            ifLegalMove = IsLegalMoveBetween(obj1, obj2);
+
+            // 设置对象状态
+            if (ifLegalMove)
+            {
+                obj1.SetLockedToSwitch(true, true, true, obj2.SelfGridPos);
+                obj2.SetLockedToSwitch(true, true, true, obj1.SelfGridPos);
+                Log("已强制选择两个可交换物体，它们可以合法交换");
+
+                // 如果当前处于Switch状态，允许按E键交换
+                if (curState == SwitchState.Switch)
+                {
+                    // 在这里可以添加提示UI，显示"按E交换"
+                }
+            }
+            else
+            {
+                obj1.SetLockedToSwitch(true, false, false, obj2.SelfGridPos);
+                obj2.SetLockedToSwitch(true, false, false, obj1.SelfGridPos);
+                Log("已强制选择两个可交换物体，但它们不能合法交换");
+            }
+        }
+    }
+
+    private void Log(string message)
+    {
+        Debug.Log("[GridManager] " + message);
+    }
+
+    // 切换自动选择功能
+    public void ToggleAutoSelect()
+    {
+        autoSelectUnderMouse = !autoSelectUnderMouse;
+        Log("自动选择功能已" + (autoSelectUnderMouse ? "开启" : "关闭"));
+    }
+
+    // 获取自动选择状态
+    public bool GetAutoSelectState()
+    {
+        return autoSelectUnderMouse;
+    }
 }
 
 class Counter
 {
     private int count = 0;
 
-    public void SetCount(int count){
+    public void SetCount(int count)
+    {
         this.count = count;
     }
 
-    public void CountDown(){
+    public void CountDown()
+    {
         count--;
     }
 
-    public bool IsZero(){
+    public bool IsZero()
+    {
         return count <= 0;
     }
 }
@@ -503,7 +637,7 @@ class TwoObjectContainer<Type>
 {
     public Type obj1 { get; private set; }
     public Type obj2 { get; private set; }
-   
+
 
     public bool hasFirst { get; private set; }
     public bool hasSecond { get; private set; }
@@ -565,7 +699,7 @@ class TwoObjectContainer<Type>
             hasFirst = false;
             return true;
         }
-        else if (hasSecond  &&obj2.Equals(obj))
+        else if (hasSecond && obj2.Equals(obj))
         {
             hasSecond = false;
             return true;
