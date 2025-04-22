@@ -39,6 +39,9 @@ public class GridManager : MonoBehaviour
     [Header("卡肉时间")]
     [SerializeField] private float waitTime = 0.2f;
 
+    [Header("提示grid")]
+    [SerializeField] private GameObject gridObj;
+
     private Counter counter = new Counter();
 
     private SwitchableObj switchableObjFrom;
@@ -403,7 +406,7 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
-
+                gridObj.SetActive(true);
                 // // 显示当前自动选择状态
                 // Log("当前自动选择功能" + (autoSelectUnderMouse ? "已开启" : "已关闭") + "，按" + toggleAutoSelectKey + "键切换");
                 break;
@@ -423,6 +426,7 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
+                gridObj.SetActive(false);
                 break;
 
             case SwitchState.Move:

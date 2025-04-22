@@ -98,13 +98,13 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         Vector3 recordPos = selfGridPos;
         if (ifInPreview)
         {
-            previewObj.transform.position = selfGridPos - anchor.transform.localPosition;
+            previewObj.transform.position = selfGridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x-1];
         }
         transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
         if (ifInPreview)
         {
-            previewObj.transform.position = recordPos - anchor.transform.localPosition;
+            previewObj.transform.position = recordPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
         }
     }
 
@@ -339,7 +339,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             1f
         );
 
-        previewObj.transform.localScale = scale;
+        //previewObj.transform.localScale = scale;
 
         // 让 BoxCollider 的大小和 ExpectedSize 保持一致
         Collider2D col = GetComponent<Collider2D>();
@@ -355,6 +355,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         SetAnchorToAnchorPos();
+
+        
     }
 
     public void SetAnchorToAnchorPos()
@@ -413,7 +415,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         
         if (ifLocked && ifLegal&& ifPreview)
         {
-            previewObj.transform.position = gridPos - anchor.transform.localPosition;
+            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1]; ;
             previewObj.SetActive(true);
             ifInPreview = true;
         }
