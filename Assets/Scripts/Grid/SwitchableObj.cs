@@ -353,6 +353,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             box.size = ExpectedSize - Vector2.one * 0.041f;
             box.offset = Vector2.zero;
         }
+        else if (col is CircleCollider2D circle)
+        {
+            Debug.Log(gameObject.name + "正在适配碰撞体，大小是" + ExpectedSize);
+            circle.radius = (ExpectedSize.x - 0.041f) * 0.5f;
+            circle.offset = Vector2.zero;
+        }
         else
         {
             Debug.LogError("Only BoxCollider2D is supported.");

@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1416740256525171313, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f35eced468950dd4ea21f544a1652cb7, type: 2}
     - target: {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Size.x
@@ -82,7 +87,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300238, guid: 261212b977f594d5dbc48631a5c1295c,
+      objectReference: {fileID: 21300000, guid: e458554c1f4cc61498c28d1d5b5a4d1e,
         type: 3}
     - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
@@ -94,6 +99,26 @@ PrefabInstance:
       propertyPath: ExpectedSize.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: adjustYAmount.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: adjustYAmount.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: adjustYAmount.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: adjustYAmount.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6667943124777106081, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Name
@@ -102,7 +127,7 @@ PrefabInstance:
     - target: {fileID: 6667943124777106081, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7931312952261282179, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
@@ -144,7 +169,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -152,6 +178,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4762467555039636178}
+    - targetCorrespondingSourceObject: {fileID: 6667943124777106081, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7167790006872185967}
   m_SourcePrefab: {fileID: 100100000, guid: 27d026be3c3cb4cc2be86da963080eff, type: 3}
 --- !u!1 &4830477926405216549 stripped
 GameObject:
@@ -171,3 +201,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9bf927a7521042a3b3a9ea5914ef0ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &7167790006872185967
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4830477926405216549}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
