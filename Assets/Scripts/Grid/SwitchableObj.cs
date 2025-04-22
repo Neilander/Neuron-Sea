@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Rendering.Universal;
 
 public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 {
@@ -40,6 +41,11 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     [Header("光照调整")]
     [SerializeField] private Transform lightTrans;
+
+    [Header("点光源与大小对应")]
+    [SerializeField] private Light2D EnvironmentLight;
+    [SerializeField] private List<float> minRangeList;
+    [SerializeField] private List<float> maxRangeList;
 
     public Vector3 SelfGridPos
     {
@@ -317,6 +323,11 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         if (lightTrans != null) lightTrans.localScale = new Vector3(ExpectedSize.x, ExpectedSize.y, 1);
+        if (EnvironmentLight != null)
+        {
+            EnvironmentLight.pointLightInnerRadius = minRangeList[ExpectedSize.x-1];
+            EnvironmentLight.pointLightOuterRadius = maxRangeList[ExpectedSize.x-1];
+        }
 
         // sprite 的原始世界尺寸（不考虑缩放）
         Vector2 spriteSize = pRenderer.sprite.bounds.size;
@@ -334,6 +345,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         Collider2D col = GetComponent<Collider2D>();
         if (col is BoxCollider2D box)
         {
+            Debug.Log(gameObject.name+"正在适配碰撞体，大小是"+ExpectedSize);
             box.size = ExpectedSize - Vector2.one * 0.041f;
             box.offset = Vector2.zero;
         }
