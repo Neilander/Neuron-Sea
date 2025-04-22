@@ -294,10 +294,26 @@ public class GridManager : MonoBehaviour
                     StartState(SwitchState.None);
                 }
 
-                if (Input.GetKeyDown(switchCode) && switchInfoRecorder.IfHaveBoth() && ifLegalMove)
+                if (switchInfoRecorder.IfHaveBoth())
                 {
-                    ShiftSwitch();
-                    StartState(SwitchState.None);
+                    if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+                        ifLegalMove = true;
+                    }
+                    else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj1.SelfGridPos);
+                        ifLegalMove = false;
+                    }
+
+                    if (ifLegalMove)
+                    {
+                        if (Input.GetKeyDown(switchCode))
+                            ShiftSwitch();
+                    }
                 }
 
                 if (Input.GetMouseButtonDown(0))
