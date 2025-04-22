@@ -32,6 +32,7 @@ public class GridManager : MonoBehaviour
 
     [Header("交换控制")]
     [SerializeField] private KeyCode switchCode = KeyCode.E;
+    [SerializeField] private KeyCode modeCode = KeyCode.Mouse1;
     [SerializeField] private bool autoSelectUnderMouse = true; // 是否自动选择鼠标下的物体
     // [SerializeField] private KeyCode toggleAutoSelectKey = KeyCode.F; // 用于切换自动选择功能的按键
 
@@ -142,7 +143,7 @@ public class GridManager : MonoBehaviour
         {
             case SwitchState.None:
 
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyDown(modeCode))
                 {
                     StartState(SwitchState.Switch);
 
@@ -289,7 +290,7 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if (Input.GetKeyUp(KeyCode.Q))
+                if (Input.GetKeyUp(modeCode))
                 {
                     StartState(SwitchState.None);
                 }
