@@ -739,6 +739,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: signboard
       objectReference: {fileID: 0}
+    - target: {fileID: 6276066448363335232, guid: 5894b6f145f77cc4d92393f30e21cb79,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6894059824795021305, guid: 5894b6f145f77cc4d92393f30e21cb79,
         type: 3}
       propertyPath: m_SortingLayer
@@ -1138,6 +1143,127 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6.077352, y: -2.467725, z: -9.961724}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &389376657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 389376660}
+  - component: {fileID: 389376658}
+  - component: {fileID: 389376659}
+  m_Layer: 6
+  m_Name: StoryTrigger (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &389376658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389376657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15d8de1d602f8c47bba39aa1e5367d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerSize: {x: 2, y: 2}
+  triggerOffset: {x: 0, y: 0}
+  detectionInterval: 0.1
+  onExitSpecificStory:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9115551715187027604}
+        m_TargetAssemblyTypeName: EndAndMove, Assembly-CSharp
+        m_MethodName: RuturnCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  storySourceType: 1
+  storyResourcePath: StoryData/NewStoryData 1
+  csvResourcePath: "StoryData/CSV/Dialogue/\u5267\u60C53"
+  triggerOnce: 0
+  requireButtonPress: 0
+  triggerKey: 101
+  requireGrounded: 1
+  promptText: "\u6309 E \u952E\u89E6\u53D1\u5BF9\u8BDD"
+  promptPrefab: {fileID: 0}
+  preventPlayerUnfreeze: 0
+  autoTriggerNextStory: 0
+  nextStoryTrigger: {fileID: 389376658}
+  nextStoryDelay: 0.5
+--- !u!61 &389376659
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389376657}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.5724716, y: 4.1302032}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.6029205, y: 9.2604065}
+  m_EdgeRadius: 0
+--- !u!4 &389376660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389376657}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -280.07, y: 276.84, z: -0.024502076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11348,6 +11474,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "\u6E38\u620F\u83DC\u5355"
       objectReference: {fileID: 0}
+    - target: {fileID: 1143407770147430874, guid: c382d05ad8158bd459207ea4e4f38bcc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3680675125950971769, guid: c382d05ad8158bd459207ea4e4f38bcc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -13700,6 +13831,97 @@ TilemapCollider2D:
     type: 3}
   m_PrefabInstance: {fileID: 1480458234}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1496109520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1496109523}
+  - component: {fileID: 1496109522}
+  - component: {fileID: 1496109521}
+  m_Layer: 6
+  m_Name: TriggerJump
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1496109521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496109520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd5746a866e49546b0b591d9e13cc02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JumpImage: {fileID: 567592182}
+--- !u!61 &1496109522
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496109520}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.63153076, y: 1.0525513}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.2630615, y: 3.1051025}
+  m_EdgeRadius: 0
+--- !u!4 &1496109523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496109520}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -262.35, y: 267.37, z: -0.15251502}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1521364219
 GameObject:
   m_ObjectHideFlags: 0
@@ -13976,7 +14198,7 @@ GameObject:
   - component: {fileID: 1576442145}
   - component: {fileID: 1576442144}
   m_Layer: 5
-  m_Name: Image
+  m_Name: "\u6559\u7A0B\u6587\u5B57"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17442,6 +17664,7 @@ MonoBehaviour:
   - {fileID: 1436587310}
   - {fileID: 9115551715187027603}
   - {fileID: 157332953}
+  - {fileID: 389376658}
   switchTimeout: 10
   mainCamera: {fileID: 519420031}
   newTarget: {fileID: 292096883}
@@ -17512,6 +17735,7 @@ SceneRoots:
   - {fileID: 3448217828441909290}
   - {fileID: 1436587311}
   - {fileID: 157332954}
+  - {fileID: 389376660}
   - {fileID: 6452405642085120279}
   - {fileID: 1229546159}
   - {fileID: 868726741}
@@ -17521,3 +17745,4 @@ SceneRoots:
   - {fileID: 292096883}
   - {fileID: 220712167}
   - {fileID: 103219004}
+  - {fileID: 1496109523}

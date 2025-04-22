@@ -64,13 +64,13 @@ public class EndAndMove : MonoBehaviour
 
     public void EnablePicture(){
         UIphoto.SetActive(true);
-        StartCoroutine(DisablePictureAfterDelay());
+        // StartCoroutine(DisablePictureAfterDelay());
     }
     
-    private IEnumerator DisablePictureAfterDelay(){
-        yield return new WaitForSeconds(3f);
-        UIphoto.SetActive(false);
-    }
+    // private IEnumerator DisablePictureAfterDelay(){
+    //     yield return new WaitForSeconds(3f);
+    //     UIphoto.SetActive(false);
+    // }
     public void MoveEnd()
     {
         print("Move End");
@@ -105,8 +105,8 @@ public class EndAndMove : MonoBehaviour
 
 
 
-        Transform tansTex = transform.Find("Square");
-        tansTex.gameObject.SetActive(true);
+        // Transform tansTex = transform.Find("Square");
+        // tansTex.gameObject.SetActive(true);
         //TODO:时间停止，玩家交换一次物体，结束时停
         StartCoroutine(StartSwitchMode());
         
@@ -141,7 +141,7 @@ public class EndAndMove : MonoBehaviour
                 // 交换完成
                 isSwitchCompleted = true;
                 Log("交换物体完成!");
-
+                storyTriggers[3].ForceStartStory();
                 // 等待玩家确认（按键）
                 yield return new WaitForSecondsRealtime(0.5f);
                 break;
@@ -166,12 +166,15 @@ public class EndAndMove : MonoBehaviour
         }
 
         isSwitchActive = false;
+        
+    }
+
+    public void RuturnCamera(){
         //// 摄像机移回玩家
         camControl.target = playerController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
     }
-
     // 使用目标跟随的方法
     private void UseTargetFollow()
     {
