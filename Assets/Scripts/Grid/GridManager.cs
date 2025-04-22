@@ -32,8 +32,15 @@ public class GridManager : MonoBehaviour
 
     [Header("交换控制")]
     [SerializeField] private KeyCode switchCode = KeyCode.E;
+    [SerializeField] private KeyCode modeCode = KeyCode.Mouse1;
     [SerializeField] private bool autoSelectUnderMouse = true; // 是否自动选择鼠标下的物体
     // [SerializeField] private KeyCode toggleAutoSelectKey = KeyCode.F; // 用于切换自动选择功能的按键
+
+    [Header("卡肉时间")]
+    [SerializeField] private float waitTime = 0.2f;
+
+    [Header("提示grid")]
+    [SerializeField] private GameObject gridObj;
 
     private Counter counter = new Counter();
 
@@ -142,7 +149,7 @@ public class GridManager : MonoBehaviour
         {
             case SwitchState.None:
 
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKey(modeCode))
                 {
                     StartState(SwitchState.Switch);
 
@@ -289,7 +296,7 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if (Input.GetKeyUp(KeyCode.Q))
+                if (Input.GetKeyUp(modeCode))
                 {
                     StartState(SwitchState.None);
                 }
@@ -312,7 +319,11 @@ public class GridManager : MonoBehaviour
                     if (ifLegalMove)
                     {
                         if (Input.GetKeyDown(switchCode))
+                        {
                             ShiftSwitch();
+                            
+                        }
+                           
                     }
                 }
 
@@ -372,11 +383,7 @@ public class GridManager : MonoBehaviour
 
                 break;
             case SwitchState.Move:
-                //现在没有用
-                if (counter.IsZero())
-                {
-                    StartNoneState();
-                }
+                
                 break;
         }
     }
@@ -399,12 +406,14 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
-
+                gridObj.SetActive(true);
                 // // 显示当前自动选择状态
                 // Log("当前自动选择功能" + (autoSelectUnderMouse ? "已开启" : "已关闭") + "，按" + toggleAutoSelectKey + "键切换");
                 break;
             case SwitchState.Move:
-
+                Time.timeScale = 0;
+                
+                StartCoroutine(NoneStateCor());
                 break;
         }
         curState = state;
@@ -417,6 +426,11 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
+                gridObj.SetActive(false);
+                break;
+
+            case SwitchState.Move:
+                Time.timeScale = 1; 
                 break;
         }
     }
@@ -472,6 +486,7 @@ public class GridManager : MonoBehaviour
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
         AudioManager.Instance.Play(SFXClip.Switch);
+        StartState(SwitchState.Move);
     }
 
     public void RenewSwitch()
@@ -610,6 +625,15 @@ public class GridManager : MonoBehaviour
     public bool GetAutoSelectState()
     {
         return autoSelectUnderMouse;
+    }
+
+
+    IEnumerator NoneStateCor()
+    {
+        yield return new WaitForSecondsRealtime(waitTime);
+
+        // ✅ 这里写你想触发的事件
+        StartState(SwitchState.None);
     }
 }
 
