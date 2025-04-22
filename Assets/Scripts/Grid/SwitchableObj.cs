@@ -51,6 +51,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private Material ProjectionWhite;
     [SerializeField] private Material ProjectionRed;
 
+    [Header("是否允许交换")]
+    [SerializeField] private bool IfBanSwitch_SetWhenStart;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -79,6 +82,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         anchorSprite.transform.localPosition = anchor.transform.localPosition;
         anchorSprite.transform.SetParent(renderer.transform);
         //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
+        if (IfBanSwitch_SetWhenStart)
+            SwitchEnableSwitchState();
         
         
     }
@@ -174,7 +179,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         for (int i = 0; i < hitCount; i++) {
-            if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject) {
+            if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject&& !results[i].transform.IsChildOf(ignoreObject.transform)) {
                 return false; // 有碰撞，且不是要忽略的物体
             }
         }
