@@ -79,11 +79,16 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         anchorSprite.transform.localPosition = anchor.transform.localPosition;
         anchorSprite.transform.SetParent(renderer.transform);
         //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
+        
+        
+    }
+
+    private void OnEnable()
+    {
         if (selfAnimator != null)
         {
             selfAnimator.SetInteger("Size", (int)ExpectedSize.x);
         }
-        
     }
 
     public void MoveToGridPos(Vector3 gridPos){
