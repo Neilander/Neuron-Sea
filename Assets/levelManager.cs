@@ -177,6 +177,12 @@ public class levelManager : MonoBehaviour
         {
             backGround.transform.position = newLevelGO.transform.position;
         }
+        Vector3 intPos = new Vector3(
+            Mathf.Round(newLevelGO.transform.position.x),
+            Mathf.Round(newLevelGO.transform.position.y),
+            Mathf.Round(newLevelGO.transform.position.z)
+        );
+        if(GridManager.Instance!=null)GridManager.Instance.transform.position = intPos;
         //Vector3 topCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1f, 0f));
 
         return data.levelBound;
