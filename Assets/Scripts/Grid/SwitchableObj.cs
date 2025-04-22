@@ -47,6 +47,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private List<float> minRangeList;
     [SerializeField] private List<float> maxRangeList;
 
+    [Header("预览材质")]
+    [SerializeField] private Material ProjectionWhite;
+    [SerializeField] private Material ProjectionRed;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -413,12 +417,21 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
 
         
-        if (ifLocked && ifLegal&& ifPreview)
+        if (ifLocked && ifLegal && ifPreview)
         {
             previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
-            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1]; ;
+            previewObj.GetComponent<SpriteRenderer>().material = ProjectionWhite;
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
             previewObj.SetActive(true);
             ifInPreview = true;
+        }
+        else if (ifLocked && !ifLegal)
+        {
+            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+            previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.SetActive(true);
+            ifInPreview = false;
         }
         else
         {
