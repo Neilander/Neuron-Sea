@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ProjectionRed
-  m_Shader: {fileID: -6465566751694194690, guid: c4bf6ba9d5881844f92db6827e3eda93,
+  m_Name: Blackhole
+  m_Shader: {fileID: -6465566751694194690, guid: 9057e9bc4326c594580902862c6f5ae4,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -54,19 +54,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _: 20
+    - _: 0.2
     - _EnableExternalAlpha: 0
-    - __1: 0.3
-    - __2: 2
-    - __4: 0
-    - __5: 0.8
+    - _X: 0
+    - _Y: 0
+    - __4: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - __3: {r: 1, g: 0, b: 0, a: 1}
+    - __1: {r: 3, g: 3, b: 0, a: 0}
+    - __2: {r: 0, g: 0, b: 0, a: 0}
+    - __3: {r: -251, g: 263, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &7695664925213134575
+--- !u!114 &3236849705755027167
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

@@ -66,10 +66,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     {
         ExpectedSize.x = fields.GetInt("SizeX");
         ExpectedSize.y = fields.GetInt("SizeY");
-        SizeToExpectedSize();
         ExpectedAnchorPos.x = fields.GetInt("PivotX");
         ExpectedAnchorPos.y = fields.GetInt("PivotY");
-        SetAnchorToAnchorPos();
+        SizeToExpectedSize();
     }
 
     private void Start(){
@@ -309,12 +308,6 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     public void SizeToExpectedSize()
     {
-        if (GridManager.Instance == null)
-        {
-            Debug.LogError("GridManager.Instance is null.");
-            return;
-        }
-
         if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
         {
             Debug.LogError("Size不能是0");
@@ -371,19 +364,22 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
         else
         {
-            Debug.LogError("Only BoxCollider2D is supported.");
+            Debug.LogError("Only Box And Circle Collider2D is supported.");
         }
 
         SetAnchorToAnchorPos();
-
-        
     }
 
     public void SetAnchorToAnchorPos()
     {
         if (anchor != null)
         {
-            float gridSize = GridManager.Instance.gridWidth;
+            if (GridManager.Instance == null)
+            {
+                Debug.LogError("GridManager.Instance is null.");
+            }
+
+            float gridSize = GridManager.Instance ? GridManager.Instance.gridWidth : 1f;
 
             // 1. 计算世界单位下的 ExpectedSize 大小
             Vector3 worldSize = new Vector3(ExpectedSize.x * gridSize, ExpectedSize.y * gridSize, 0f);
