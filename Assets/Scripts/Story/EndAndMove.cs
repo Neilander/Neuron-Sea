@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class EndAndMove : MonoBehaviour
@@ -9,6 +10,7 @@ public class EndAndMove : MonoBehaviour
     public StoryTrigger[] storyTriggers;
     private bool isSwitchCompleted;
 
+    private Transform text;
     [SerializeField] private float switchTimeout;
     public Camera mainCamera;
     private CameraControl camControl;
@@ -65,6 +67,7 @@ public class EndAndMove : MonoBehaviour
     public void EnablePicture(){
         UIphoto.SetActive(true);
         // StartCoroutine(DisablePictureAfterDelay());
+        
     }
     
     // private IEnumerator DisablePictureAfterDelay(){
@@ -130,6 +133,8 @@ public class EndAndMove : MonoBehaviour
 
             // 切换到交换状态
             GridManager.Instance.StartState(SwitchState.Switch);
+            text=UIphoto.transform.Find("Text (TMP)");
+            text.GetComponent<TMP_Text>().text = "交换";
             Log("已进入交换状态");
         }
 
@@ -141,7 +146,6 @@ public class EndAndMove : MonoBehaviour
                 // 交换完成
                 isSwitchCompleted = true;
                 Log("交换物体完成!");
-                storyTriggers[3].ForceStartStory();
                 // 等待玩家确认（按键）
                 yield return new WaitForSecondsRealtime(0.5f);
                 break;
@@ -174,6 +178,7 @@ public class EndAndMove : MonoBehaviour
         camControl.target = playerController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
+        UIphoto.SetActive(false);
     }
     // 使用目标跟随的方法
     private void UseTargetFollow()
@@ -189,31 +194,34 @@ public class EndAndMove : MonoBehaviour
         camControl.target = tempTarget.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
-
+        
+        text = UIphoto.transform.Find("Text (TMP)");
+        text.GetComponent<TMP_Text>().text = "交换";
         Log("已设置摄像机目标并开启平滑过渡");
         // StoryTrigger tri = transform.GetComponent<StoryTrigger>();
         // if (tri != null && tri.nextStoryTrigger != null) {
-        //     StoryTrigger triNext = tri.nextStoryTrigger;
+        //     // StoryTrigger triNext = tri.nextStoryTrigger;
         //     
         //     // 注册剧情完成事件，在剧情完成后恢复相机
         //     StoryManager.Instance.onDialogueComplete += () => {
         //         // 确保只执行一次
         //         StoryManager.Instance.onDialogueComplete -= () => {};
         //         // 触发下一段剧情
-        //         triNext.ForceStartStory();
-        //         Log("已触发下一段剧情: " + triNext.name);
+        //         // triNext.ForceStartStory();
+        //         // Log("已触发下一段剧情: " + triNext.name);
         //         // 恢复相机到原始目标
         //         if (camControl != null && originalTarget != null) {
-        // //             camControl.target = originalTarget;
-        // //             camControl.isTransitioning = true;
+        //             camControl.target = originalTarget;
+        //             camControl.isTransitioning = true;
         //             Log("剧情完成，恢复摄像机原始目标");
         //         }
         //     };
-
-
+        //
+        //
         // }
-        // // 等待相机移动完成后返回原位
-        // StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
+        // 等待相机移动完成后返回原位
+        StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
+        playerController.EnableMovement();
     }
     // 直接移动摄像机的方法
     private IEnumerator MoveDirectly()
@@ -233,10 +241,10 @@ public class EndAndMove : MonoBehaviour
         // 确保到达目标位置
         mainCamera.transform.position = targetPosition;
         Log("摄像机已直接移动到目标位置");
-
+        
         // 停留一段时间
         yield return new WaitForSeconds(delayBeforeReturn);
-
+        // UIphoto.SetActive(false);
         // 可以在这里实现返回原位的逻辑
     }
 
@@ -253,6 +261,7 @@ public class EndAndMove : MonoBehaviour
 
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
+            UIphoto.SetActive(false);
         }
         else
         {

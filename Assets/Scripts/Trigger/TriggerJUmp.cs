@@ -10,7 +10,8 @@ public class TriggerJUmp : MonoBehaviour
     public TMP_Text JumpImage;
 
     private void OnTriggerEnter2D(Collider2D other){
-        if (other.tag == "Player") {
+        if (other.transform.GetComponent<PlayerController>()!= null) {
+            print("Player entered");
             if (JumpImage != null) {
                 JumpImage.text = "跳跃";
             }
