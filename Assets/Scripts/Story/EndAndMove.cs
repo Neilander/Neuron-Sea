@@ -257,7 +257,7 @@ public class EndAndMove : MonoBehaviour
         if (original != null)
         {
             Log("恢复摄像机原始目标: " + original.name);
-            cam.target = original;
+            cam.target = playerController.transform;
 
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
