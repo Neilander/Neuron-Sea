@@ -99,8 +99,8 @@ public partial class PlayerController : MonoBehaviour
     public void MovePosition(Vector2 targetPosition)
     {
         //TODO : 这里需要考虑碰撞检测
-        Debug.Log($"玩家被传送到{targetPosition}");
         Position = targetPosition;
+        transform.position = Position;
     }
 }
 

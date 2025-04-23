@@ -34,10 +34,11 @@ public partial class PlayerController
         Vector2 origin = position + collider.position;
         return Physics2D.BoxCast(origin, collider.size, 0, dir, dist + DEVIATION, layerMask);
     }
-    public bool CollideCheck(Rect rect)
+    public bool CollideCheck(Rect rect, Vector2 dir = default, float dist = 0)
     {
         Vector2 origin = Position + collider.position;
-        return rect.Overlaps(new(origin - collider.size * 0.5f, collider.size));
+        Vector2 path = dir == Vector2.zero ? Vector2.zero : dir.normalized * dist;
+        return rect.Overlaps(new(origin - collider.size * 0.5f - new Vector2(Mathf.Abs(path.x) - path.x, Mathf.Abs(path.y) - path.y) * 0.5f, collider.size + new Vector2(Mathf.Abs(path.x), Mathf.Abs(path.y))));
     }
 
     //根据碰撞调整X轴上的最终移动距离
