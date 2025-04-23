@@ -47,9 +47,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private List<float> minRangeList;
     [SerializeField] private List<float> maxRangeList;
 
-    [Header("预览材质")]
+    [Header("材质")]
     [SerializeField] private Material ProjectionWhite;
     [SerializeField] private Material ProjectionRed;
+    [SerializeField] private Material switchMaterial;
 
     [Header("是否允许交换")]
     [SerializeField] private bool IfBanSwitch_SetWhenStart;
@@ -109,19 +110,27 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     public void SetToGridPos(Vector3 gridPos){
 
         Vector3 recordPos = selfGridPos;
-        if (ifInPreview)
-        {
-            previewObj.transform.position = selfGridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x-1];
-        }
         transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
         if (ifInPreview)
         {
             previewObj.transform.position = recordPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.SetActive(false);
+            StartCoroutine(TurnPreviewOn());
+            renderer.material = switchMaterial;
+            renderer.material.SetFloat("_KaiShiShiJian", Time.unscaledTime);
+            renderer.material.SetVector("_MoXingDaXiaoWangGeZuoBiao", (Vector2)ExpectedSize);
+            renderer.material.SetVector("_MaoDianWangGeZuoBiao", ExpectedAnchorPos);
+            renderer.material.SetVector("_MaoDianShiJieZuoBiao", recordPos);
+            renderer.material.SetVector("_MuBiaoMaoDianShiJieZuoBiao", anchor.transform.position);
         }
     }
 
-    
+    IEnumerator TurnPreviewOn()
+    {
+        yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime); 
+        previewObj.SetActive(true);
+    }
 
     public void SetToClosestGridPoint(){
         Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
@@ -443,7 +452,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
             previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
             previewObj.SetActive(true);
-            ifInPreview = false;
+            ifInPreview = true;
         }
         else
         {
