@@ -1,7 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
+    public CameraSequencePlayer BigCamera;
+
     [Header("跟随设置")]
     [SerializeField] private Transform target; // 跟随目标（玩家）
     [SerializeField] private float followSpeed = 5f; // 跟随速度
@@ -25,6 +28,7 @@ public class CompanionController : MonoBehaviour
         new Vector3(1f, 0.5f, 0f)  // 右侧
     };
 
+    private Transform oldTrans;
     private Vector3 velocity = Vector3.zero;
     private SpriteRenderer spriteRenderer;
     private SpriteRenderer targetSpriteRenderer;
@@ -33,6 +37,8 @@ public class CompanionController : MonoBehaviour
     private Vector3 lastPosition;
     private bool isMoving;
 
+    public bool hasStopped;
+    public bool startMode;
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -80,14 +86,15 @@ public class CompanionController : MonoBehaviour
         if (autoAdjustPosition)
         {
             // 如果玩家朝左（scale.x = -1），跟随物在右上角
-            if (target.localScale.x < 0)
+            if (target.localScale.x < 0||startMode)
             {
-                currentOffset = new Vector3(1.5f, 3f, 0f);
+                currentOffset = new Vector3(1.5f, 2.18f, 0f);
+                
             }
             // 如果玩家朝右（scale.x = 1），跟随物在左上角
             else
             {
-                currentOffset = new Vector3(-1.5f,3f, 0f);
+                currentOffset = new Vector3(-1.5f,2.18f, 0f);
             }
         }
         else
@@ -106,10 +113,21 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
-
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped) {
+            hasStopped = true;
+            oldTrans =this.transform;
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+            StartCoroutine(StopStartMode());
+        }
         lastPosition = transform.position;
     }
 
+    private IEnumerator StopStartMode(){
+        yield return new WaitForSeconds(2f);
+        startMode = false;
+        transform.localScale = new Vector3(1f, 1f, 1f);
+        BigCamera.PlaySequence();
+    }
     // 设置跟随目标
     public void SetTarget(Transform newTarget)
     {
@@ -120,6 +138,13 @@ public class CompanionController : MonoBehaviour
         }
     }
 
+    public void SetTargetToPlayer(){
+        target = FindAnyObjectByType<PlayerController>().transform;
+        startMode = true;
+        if (target != null) {
+            targetSpriteRenderer = target.GetComponent<SpriteRenderer>();
+        }
+    }
     // 切换到下一个位置预设
     public void SwitchToNextPosition()
     {
@@ -152,4 +177,5 @@ public class CompanionController : MonoBehaviour
     {
         autoAdjustPosition = value;
     }
+    
 }

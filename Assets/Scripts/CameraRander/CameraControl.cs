@@ -7,6 +7,7 @@ public class CameraControl : MonoBehaviour
 {
     public Transform target;
 
+    public Transform startTarget;
     private Camera cam;
     private float halfWidth;
     private float halfHeight;
@@ -18,7 +19,7 @@ public class CameraControl : MonoBehaviour
 
     
     private CameraLimitRegion defaultLimit;
-
+    public CompanionController companionController;
 
     // ✅ 新增：平滑移动控制
     private Vector3 smoothTargetPosition;
@@ -70,7 +71,9 @@ public class CameraControl : MonoBehaviour
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
-
+        companionController.SetTarget(null);
+        Animator animator = companionController.GetComponent<Animator>();
+        animator.Play("robot_move");
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;
         float right = defaultOrigin.x + defaultWidth;
@@ -84,6 +87,7 @@ public class CameraControl : MonoBehaviour
     {
         if (target == null) return;
 
+        
         // ✅ 每帧更新目标位置
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
 

@@ -66,14 +66,21 @@ public class EndAndMove : MonoBehaviour
 
     public void EnablePicture(){
         UIphoto.SetActive(true);
-        // StartCoroutine(DisablePictureAfterDelay());
+        StartCoroutine(DisablePictureAfterDelay(2f));
         
     }
     
-    // private IEnumerator DisablePictureAfterDelay(){
-    //     yield return new WaitForSeconds(3f);
-    //     UIphoto.SetActive(false);
-    // }
+    private IEnumerator DisablePictureAfterDelay(float disableTime){
+        yield return new WaitForSeconds(disableTime);
+        UIphoto.SetActive(false);
+    }
+
+    public void ReturnCameraToPlayer(){
+        camControl.isTransitioning = true; // 开启平滑过渡
+        camControl.smoothSpeed = 3f; // 设置平滑速度
+        Camera.main.transform.GetComponent<CameraControl>().target = playerController.transform;
+        
+    }
     public void MoveEnd()
     {
         print("Move End");
@@ -91,7 +98,7 @@ public class EndAndMove : MonoBehaviour
 
         Log("开始移动摄像机到: " + newTarget.position);
 
-        if (useDirectMovement)
+        if (useDirectMovement)//x
         {
             // 方法2: 直接使用协程控制摄像机位置
             StartCoroutine(MoveDirectly());
@@ -123,20 +130,20 @@ public class EndAndMove : MonoBehaviour
         // Time.timeScale = 0;
 
         // 设置交换状态
-        if (GridManager.Instance != null) {
-            // // 准备两个物体进行交换
-            // if (switchableObj1 != null && switchableObj2 != null) {
-            //     // 将两个物体添加到交换记录中
-            //     GridManager.Instance.ForceSelectObjectsForSwitch(switchableObj1, switchableObj2);
-            //     Log("已设置要交换的两个物体");
-            // }
-
-            // 切换到交换状态
-            GridManager.Instance.StartState(SwitchState.Switch);
-            text=UIphoto.transform.Find("Text (TMP)");
-            text.GetComponent<TMP_Text>().text = "交换";
-            Log("已进入交换状态");
-        }
+        // if (GridManager.Instance != null) {
+        //     // // 准备两个物体进行交换
+        //     // if (switchableObj1 != null && switchableObj2 != null) {
+        //     //     // 将两个物体添加到交换记录中
+        //     //     GridManager.Instance.ForceSelectObjectsForSwitch(switchableObj1, switchableObj2);
+        //     //     Log("已设置要交换的两个物体");
+        //     // }
+        //
+        //     // 切换到交换状态
+        //     GridManager.Instance.StartState(SwitchState.Switch);
+        //     text=UIphoto.transform.Find("Text (TMP)");
+        //     text.GetComponent<TMP_Text>().text = "交换";
+        //     Log("已进入交换状态");
+        // }
 
         // 等待玩家完成交换或超时
         float timer = 0;
@@ -145,6 +152,7 @@ public class EndAndMove : MonoBehaviour
             if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
                 // 交换完成
                 isSwitchCompleted = true;
+                StartCoroutine(DisablePictureAfterDelay(1f));
                 Log("交换物体完成!");
                 // 等待玩家确认（按键）
                 yield return new WaitForSecondsRealtime(0.5f);
@@ -156,7 +164,7 @@ public class EndAndMove : MonoBehaviour
         }
 
         // 结束交换模式
-        EndSwitchMode();
+        // EndSwitchMode();
     }
 
     private void EndSwitchMode(){
@@ -193,10 +201,10 @@ public class EndAndMove : MonoBehaviour
         // 设置摄像机控制参数
         camControl.target = tempTarget.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
-        camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
+        camControl.smoothSpeed = 5f; // 设置平滑速度
         
-        text = UIphoto.transform.Find("Text (TMP)");
-        text.GetComponent<TMP_Text>().text = "交换";
+        // text = UIphoto.transform.Find("Text (TMP)");
+        // text.GetComponent<TMP_Text>().text = "交换";
         Log("已设置摄像机目标并开启平滑过渡");
         // StoryTrigger tri = transform.GetComponent<StoryTrigger>();
         // if (tri != null && tri.nextStoryTrigger != null) {
@@ -222,6 +230,11 @@ public class EndAndMove : MonoBehaviour
         // 等待相机移动完成后返回原位
         StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
         playerController.EnableMovement();
+        UIphoto.SetActive(true);
+        text = UIphoto.transform.Find("Text (TMP)");
+        text.GetComponent<TMP_Text>().text = "交换";
+        StartCoroutine(StartSwitchMode());
+        
     }
     // 直接移动摄像机的方法
     private IEnumerator MoveDirectly()
@@ -261,7 +274,7 @@ public class EndAndMove : MonoBehaviour
 
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
-            UIphoto.SetActive(false);
+            // UIphoto.SetActive(false);
         }
         else
         {
