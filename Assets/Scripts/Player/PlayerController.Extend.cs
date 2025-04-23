@@ -63,7 +63,7 @@ public partial class PlayerController : MonoBehaviour
         //根据进入的方式,决定初始状态
         if (level_enter_way == LevelEnterWay.FromRight || level_enter_way == LevelEnterWay.FromDownToLeft)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
         if (level_enter_way == LevelEnterWay.FromRight || level_enter_way == LevelEnterWay.FromLeft || level_enter_way == LevelEnterWay.FromUp)
         {

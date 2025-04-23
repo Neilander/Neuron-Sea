@@ -12,6 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ENABLEADDCOLOR_ON
+  - _ENABLEHOLOGRAM_ON
   - _SHADERSPACE_UV
   - _TIMESETTINGS_LINEAR_DEFAULT
   - _UBERFADING_NONE
@@ -169,7 +171,7 @@ Material:
     - _DirectionalGlowFadeNoiseFactor: 0.2
     - _DirectionalGlowFadeRotation: 0
     - _DirectionalGlowFadeWidth: 0.1
-    - _EnableAddColor: 0
+    - _EnableAddColor: 1
     - _EnableAddHue: 0
     - _EnableAlphaTint: 0
     - _EnableBlackTint: 0
@@ -191,7 +193,7 @@ Material:
     - _EnableFullGlowDissolve: 0
     - _EnableGlitch: 0
     - _EnableHalftone: 0
-    - _EnableHologram: 0
+    - _EnableHologram: 1
     - _EnableHue: 0
     - _EnableInkSpread: 0
     - _EnableInnerOutline: 0
@@ -245,16 +247,16 @@ Material:
     - _HalftoneFadeWidth: 1.5
     - _HalftoneInvert: 0
     - _HalftoneTiling: 4
-    - _HologramContrast: 0.85
-    - _HologramDistortionDensity: 0.27
-    - _HologramDistortionOffset: 0.8
+    - _HologramContrast: 1
+    - _HologramDistortionDensity: 0.5
+    - _HologramDistortionOffset: 0.5
     - _HologramDistortionScale: 10
-    - _HologramDistortionSpeed: 1.39
-    - _HologramFade: 0.46
+    - _HologramDistortionSpeed: 2
+    - _HologramFade: 1
     - _HologramLineFrequency: 200
-    - _HologramLineGap: 3.2
-    - _HologramLineSpeed: 0.39
-    - _HologramMinAlpha: 0
+    - _HologramLineGap: 3
+    - _HologramLineSpeed: 0.28
+    - _HologramMinAlpha: 0.2
     - _Hue: 0
     - _InkSpreadContrast: 2
     - _InkSpreadDistance: 3
@@ -362,7 +364,7 @@ Material:
     - _WindSquishWindFactor: 0
     - _WindXPosition: 0
     m_Colors:
-    - _AddColorColor: {r: 0.722997, g: 3.174444, b: 4.3614955, a: 0}
+    - _AddColorColor: {r: 1, g: 1, b: 1, a: 0}
     - _AlphaTintColor: {r: 23.96863, g: 1.254902, b: 23.96863, a: 0}
     - _BlackTintColor: {r: 1, g: 0, b: 0, a: 0}
     - _BurnEdgeColor: {r: 11.98431, g: 1.129412, b: 0.1254902, a: 0}

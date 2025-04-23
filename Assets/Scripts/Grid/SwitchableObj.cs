@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Rendering.Universal;
 
 public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 {
@@ -41,6 +42,18 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [Header("光照调整")]
     [SerializeField] private Transform lightTrans;
 
+    [Header("点光源与大小对应")]
+    [SerializeField] private Light2D EnvironmentLight;
+    [SerializeField] private List<float> minRangeList;
+    [SerializeField] private List<float> maxRangeList;
+
+    [Header("预览材质")]
+    [SerializeField] private Material ProjectionWhite;
+    [SerializeField] private Material ProjectionRed;
+
+    [Header("是否允许交换")]
+    [SerializeField] private bool IfBanSwitch_SetWhenStart;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -69,11 +82,18 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         anchorSprite.transform.localPosition = anchor.transform.localPosition;
         anchorSprite.transform.SetParent(renderer.transform);
         //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
+        if (IfBanSwitch_SetWhenStart)
+            SwitchEnableSwitchState();
+        
+        
+    }
+
+    private void OnEnable()
+    {
         if (selfAnimator != null)
         {
             selfAnimator.SetInteger("Size", (int)ExpectedSize.x);
         }
-        
     }
 
     public void MoveToGridPos(Vector3 gridPos){
@@ -92,13 +112,13 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         Vector3 recordPos = selfGridPos;
         if (ifInPreview)
         {
-            previewObj.transform.position = selfGridPos - anchor.transform.localPosition;
+            previewObj.transform.position = selfGridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x-1];
         }
         transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
         if (ifInPreview)
         {
-            previewObj.transform.position = recordPos - anchor.transform.localPosition;
+            previewObj.transform.position = recordPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
         }
     }
 
@@ -159,7 +179,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         for (int i = 0; i < hitCount; i++) {
-            if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject) {
+            if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject&& !results[i].transform.IsChildOf(ignoreObject.transform)) {
                 return false; // 有碰撞，且不是要忽略的物体
             }
         }
@@ -317,6 +337,11 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         if (lightTrans != null) lightTrans.localScale = new Vector3(ExpectedSize.x, ExpectedSize.y, 1);
+        if (EnvironmentLight != null)
+        {
+            EnvironmentLight.pointLightInnerRadius = minRangeList[ExpectedSize.x-1];
+            EnvironmentLight.pointLightOuterRadius = maxRangeList[ExpectedSize.x-1];
+        }
 
         // sprite 的原始世界尺寸（不考虑缩放）
         Vector2 spriteSize = pRenderer.sprite.bounds.size;
@@ -328,14 +353,21 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             1f
         );
 
-        previewObj.transform.localScale = scale;
+        //previewObj.transform.localScale = scale;
 
         // 让 BoxCollider 的大小和 ExpectedSize 保持一致
         Collider2D col = GetComponent<Collider2D>();
         if (col is BoxCollider2D box)
         {
+            Debug.Log(gameObject.name+"正在适配碰撞体，大小是"+ExpectedSize);
             box.size = ExpectedSize - Vector2.one * 0.041f;
             box.offset = Vector2.zero;
+        }
+        else if (col is CircleCollider2D circle)
+        {
+            Debug.Log(gameObject.name + "正在适配碰撞体，大小是" + ExpectedSize);
+            circle.radius = (ExpectedSize.x - 0.041f) * 0.5f;
+            circle.offset = Vector2.zero;
         }
         else
         {
@@ -343,6 +375,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         SetAnchorToAnchorPos();
+
+        
     }
 
     public void SetAnchorToAnchorPos()
@@ -399,11 +433,21 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
 
         
-        if (ifLocked && ifLegal&& ifPreview)
+        if (ifLocked && ifLegal && ifPreview)
         {
-            previewObj.transform.position = gridPos - anchor.transform.localPosition;
+            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+            previewObj.GetComponent<SpriteRenderer>().material = ProjectionWhite;
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
             previewObj.SetActive(true);
             ifInPreview = true;
+        }
+        else if (ifLocked && !ifLegal)
+        {
+            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+            previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.SetActive(true);
+            ifInPreview = false;
         }
         else
         {

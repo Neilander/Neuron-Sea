@@ -156,7 +156,35 @@ public class levelManager : MonoBehaviour
         {
             Debug.LogWarning("未找到 Entities 物体");
         }
-        backGround.transform.position = newLevelGO.transform.position;
+
+        // 1. 查找 Layer-0
+        Transform layer0 = backGround.transform.Find("Layer-0");
+
+        if (layer0 != null)
+        {
+            // 2. 记录移动前的世界 Y 坐标
+            float worldY = layer0.position.y;
+
+            // 3. 移动 background
+            backGround.transform.position = newLevelGO.transform.position;
+
+            // 4. 保持 Layer-0 的世界 Y 坐标不变
+            Vector3 layer0Pos = layer0.position;
+            layer0Pos.y = worldY;
+            layer0.position = layer0Pos;
+        }
+        else
+        {
+            backGround.transform.position = newLevelGO.transform.position;
+        }
+        Vector3 intPos = new Vector3(
+            Mathf.Round(newLevelGO.transform.position.x),
+            Mathf.Round(newLevelGO.transform.position.y),
+            Mathf.Round(newLevelGO.transform.position.z)
+        );
+        if(GridManager.Instance!=null)GridManager.Instance.transform.position = intPos;
+        //Vector3 topCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1f, 0f));
+
         return data.levelBound;
     }
 

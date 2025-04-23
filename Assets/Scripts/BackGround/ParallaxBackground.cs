@@ -13,7 +13,11 @@ public class ParallaxBackground : MonoBehaviour
             parallaxCamera = Camera.main.GetComponent<ParallaxCamera>();
 
         if (parallaxCamera != null)
-            parallaxCamera.onCameraTranslate += Move;
+        {
+            parallaxCamera.onCameraTranslateX += MoveX;
+            parallaxCamera.onCameraTranslateY += MoveY;
+        }
+            
 
         SetLayers();
     }
@@ -34,17 +38,28 @@ public class ParallaxBackground : MonoBehaviour
         }
     }
 
-    void Move(float delta)
+    void MoveX(float deltaX)
     {
         foreach (ParallaxLayer layer in parallaxLayers)
         {
-            layer.Move(delta);
+            layer.MoveX(deltaX);
+        }
+    }
+
+    void MoveY(float deltaY)
+    {
+        foreach (ParallaxLayer layer in parallaxLayers)
+        {
+            layer.MoveY(deltaY);
         }
     }
 
     private void OnDestroy()
     {
         if (parallaxCamera != null)
-            parallaxCamera.onCameraTranslate -= Move;
+        {
+            parallaxCamera.onCameraTranslateX -= MoveX;
+            parallaxCamera.onCameraTranslateY -= MoveY;
+        }
     }
 }
