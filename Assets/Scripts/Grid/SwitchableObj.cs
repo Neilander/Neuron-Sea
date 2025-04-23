@@ -116,7 +116,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         {
             previewObj.transform.position = recordPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
             previewObj.SetActive(false);
-            StartCoroutine(TurnPreviewOn());
+            StartCoroutine(WhatCanISay(renderer.material));
             renderer.material = switchMaterial;
             renderer.material.SetFloat("_KaiShiShiJian", Time.unscaledTime);
             renderer.material.SetVector("_MoXingDaXiaoWangGeZuoBiao", (Vector2)ExpectedSize);
@@ -126,10 +126,13 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
     }
 
-    IEnumerator TurnPreviewOn()
+    IEnumerator WhatCanISay(Material originMaterial)
     {
         yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime); 
         previewObj.SetActive(true);
+        yield return new WaitForSecondsRealtime(renderer.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
+        renderer.material = originMaterial;
+
     }
 
     public void SetToClosestGridPoint(){
