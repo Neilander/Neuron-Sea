@@ -148,6 +148,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27d026be3c3cb4cc2be86da963080eff, type: 3}
+--- !u!61 &8338202108880255295 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7435346994079339196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8869485231065428119 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2033680214464422443, guid: 27d026be3c3cb4cc2be86da963080eff,
@@ -307,6 +313,7 @@ MonoBehaviour:
   target: {fileID: 8869485231065428119}
   pointA: {x: 0, y: 0, z: 0}
   pointB: {x: 2, y: 0, z: 0}
+  moveStanbyDuration: 0.3
   moveDuration: 1
   waitDuration: 0.5
   moveCurve:
@@ -333,6 +340,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  playerController: {fileID: 0}
+  targetCollider: {fileID: 8338202108880255295}
 --- !u!4 &8362974489238840098 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2033680214464422443, guid: 27d026be3c3cb4cc2be86da963080eff,

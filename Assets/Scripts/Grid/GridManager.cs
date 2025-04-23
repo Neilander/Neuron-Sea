@@ -37,7 +37,7 @@ public class GridManager : MonoBehaviour
     // [SerializeField] private KeyCode toggleAutoSelectKey = KeyCode.F; // 用于切换自动选择功能的按键
 
     [Header("卡肉时间")]
-    [SerializeField] private float waitTime = 0.2f;
+    [SerializeField] public float waitTime = 0.2f;
 
     [Header("提示grid")]
     [SerializeField] private GameObject gridObj;
