@@ -4714,7 +4714,7 @@ GameObject:
   m_Layer: 0
   m_Name: TriggerJumpEnd
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -9734,12 +9734,12 @@ PrefabInstance:
     - target: {fileID: -7773603841889701819, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.11
+      value: 14.47
       objectReference: {fileID: 0}
     - target: {fileID: -7773603841889701819, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.62
+      value: 5.55
       objectReference: {fileID: 0}
     - target: {fileID: -3963943116433552214, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
@@ -13766,7 +13766,7 @@ GameObject:
   m_Layer: 0
   m_Name: TriggerJump
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -13783,6 +13783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   JumpImage: {fileID: 567592182}
+  JumpText: "\u8DF3\u8DC3"
 --- !u!61 &1496109522
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17303,7 +17304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6452405642085120279}
   m_Layer: 0
-  m_Name: Story
+  m_Name: StoryPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17622,6 +17623,7 @@ MonoBehaviour:
   useDirectMovement: 0
   playerController: {fileID: 1218908777}
   debugMode: 1
+  ExchangeText: "\u4EA4\u6362"
 --- !u!114 &9173265683197466786
 MonoBehaviour:
   m_ObjectHideFlags: 0

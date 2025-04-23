@@ -22,6 +22,8 @@ public class EndAndMove : MonoBehaviour
     // 调试标记
     public bool debugMode = true;
 
+    [SerializeField] private string ExchangeText="交换";
+
     void Start()
     {
         // 获取主摄像机
@@ -58,6 +60,7 @@ public class EndAndMove : MonoBehaviour
     // 方法1: 使用CameraControl的目标跟随功能移动
     public void StopPlayerMove(){
         playerController.DisableMovement();
+        print("endAndMove禁用玩家移动");
     }
     public void StartFirstStory(){
         StoryTrigger trigger1=storyTriggers[0];
@@ -72,6 +75,7 @@ public class EndAndMove : MonoBehaviour
     
     private IEnumerator DisablePictureAfterDelay(float disableTime){
         yield return new WaitForSeconds(disableTime);
+        if(UIphoto.transform.GetChild(0).transform.GetComponent<TMP_Text>().text==ExchangeText)
         UIphoto.SetActive(false);
     }
 
@@ -232,7 +236,7 @@ public class EndAndMove : MonoBehaviour
         playerController.EnableMovement();
         UIphoto.SetActive(true);
         text = UIphoto.transform.Find("Text (TMP)");
-        text.GetComponent<TMP_Text>().text = "交换";
+        text.GetComponent<TMP_Text>().text = ExchangeText;
         StartCoroutine(StartSwitchMode());
         
     }

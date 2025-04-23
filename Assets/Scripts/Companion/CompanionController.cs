@@ -5,6 +5,8 @@ public class CompanionController : MonoBehaviour
 {
     public CameraSequencePlayer BigCamera;
 
+    private bool canFollow = true;
+
     [Header("跟随设置")]
     [SerializeField] private Transform target; // 跟随目标（玩家）
     [SerializeField] private float followSpeed = 5f; // 跟随速度
@@ -38,7 +40,7 @@ public class CompanionController : MonoBehaviour
     private bool isMoving;
 
     public bool hasStopped;
-    public bool startMode;
+    private bool startMode=true;//改成true之后出现报空
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -66,7 +68,7 @@ public class CompanionController : MonoBehaviour
 
     private void Update()
     {
-        if (target == null) return;
+        if (target == null ||!canFollow) return;
 
         // 检测是否在移动
         float distance = Vector3.Distance(transform.position, lastPosition);
@@ -104,7 +106,7 @@ public class CompanionController : MonoBehaviour
 
         // 计算目标位置（目标位置 + 偏移量）
         Vector3 targetPosition = target.position + currentOffset;
-
+        if(canFollow)
         // 使用Mathf.Lerp实现平滑跟随
         transform.position = Vector3.SmoothDamp(
             transform.position,
@@ -115,17 +117,35 @@ public class CompanionController : MonoBehaviour
         );
         if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped) {
             hasStopped = true;
+            print("我到达目的地了！");
+            // startMode = true;
             oldTrans =this.transform;
-            transform.localScale = new Vector3(-1f, 1f, 1f);
+            
             StartCoroutine(StopStartMode());
         }
         lastPosition = transform.position;
     }
 
     private IEnumerator StopStartMode(){
-        yield return new WaitForSeconds(2f);
+        canFollow = false;
+        print("不能跟随了！");
+        transform.localScale = new Vector3(-1f, 1f, 1f);
+        print("转向了！");
+        GetComponent<Animator>().Play("robot_move");
+        print("播放动画了！");
+        // 等待动画状态真正进入 robot_move 状态
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("robot_move"));
+
+        // 等待动画播放完（normalizedTime >= 1）
+        yield return new WaitUntil(() =>
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
+            
+        );print("播完了！");
         startMode = false;
+        canFollow = true;
         transform.localScale = new Vector3(1f, 1f, 1f);
+        print("转回去了！");
+        
         BigCamera.PlaySequence();
     }
     // 设置跟随目标
