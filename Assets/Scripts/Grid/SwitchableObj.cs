@@ -249,11 +249,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     private void Update(){
+        /*
         if (inSwitchState) {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorldPos.z = transform.position.z; // 保持 Z 不变（避免摄像机深度偏移）
             transform.position = mouseWorldPos + dragOffset;
-        }
+        }*/
     }
 
     public void SetAlpha(float alpha){
@@ -468,6 +469,37 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             ifInPreview = false;
         }
         
+    }
+
+    public bool IsSpriteVisibleOnScreen()
+    {
+        SpriteRenderer sr = renderer;
+        Camera cam = Camera.main;
+
+        Bounds bounds = sr.bounds;
+
+        // 获取四个角点（世界坐标）
+        Vector3[] worldCorners = new Vector3[4];
+        worldCorners[0] = new Vector3(bounds.min.x, bounds.min.y); // 左下
+        worldCorners[1] = new Vector3(bounds.min.x, bounds.max.y); // 左上
+        worldCorners[2] = new Vector3(bounds.max.x, bounds.min.y); // 右下
+        worldCorners[3] = new Vector3(bounds.max.x, bounds.max.y); // 右上
+
+        foreach (Vector3 corner in worldCorners)
+        {
+            Vector3 screenPos = cam.WorldToScreenPoint(corner);
+
+            // 只判断摄像机前方
+            if (screenPos.z < 0) continue;
+
+            if (screenPos.x >= 0 && screenPos.x <= Screen.width &&
+                screenPos.y >= 0 && screenPos.y <= Screen.height)
+            {
+                return true; // 有一个角点在屏幕上
+            }
+        }
+
+        return false; // 全部角点都不在屏幕范围
     }
     #endregion
 }

@@ -167,6 +167,7 @@ public class GridManager : MonoBehaviour
                     }
                 }
 
+                checkIfSwitchableInView(switchInfoRecorder);
                 if (switchInfoRecorder.IfHaveBoth())
                 {
                     if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
@@ -300,6 +301,7 @@ public class GridManager : MonoBehaviour
                 {
                     StartState(SwitchState.None);
                 }
+                checkIfSwitchableInView(switchInfoRecorder);
 
                 if (switchInfoRecorder.IfHaveBoth())
                 {
@@ -321,9 +323,9 @@ public class GridManager : MonoBehaviour
                         if (Input.GetKeyDown(switchCode))
                         {
                             ShiftSwitch();
-                            
+
                         }
-                           
+
                     }
                 }
 
@@ -373,7 +375,7 @@ public class GridManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                    switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 }
 
                             }
@@ -384,7 +386,7 @@ public class GridManager : MonoBehaviour
 
                 break;
             case SwitchState.Move:
-                
+
                 break;
         }
     }
@@ -413,7 +415,7 @@ public class GridManager : MonoBehaviour
                 break;
             case SwitchState.Move:
                 Time.timeScale = 0;
-                
+
                 StartCoroutine(NoneStateCor());
                 break;
         }
@@ -431,7 +433,7 @@ public class GridManager : MonoBehaviour
                 break;
 
             case SwitchState.Move:
-                Time.timeScale = 1; 
+                Time.timeScale = 1;
                 break;
         }
     }
@@ -555,9 +557,9 @@ public class GridManager : MonoBehaviour
         if (switchInfoRecorder.Take(obj))
         {
             if (switchInfoRecorder.hasFirst)
-                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
             if (switchInfoRecorder.hasSecond)
-                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
         }
     }
 
@@ -603,8 +605,8 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                obj1.SetLockedToSwitch(true, false, false, obj2.SelfGridPos);
-                obj2.SetLockedToSwitch(true, false, false, obj1.SelfGridPos);
+                obj1.SetLockedToSwitch(true, false, true, obj2.SelfGridPos);
+                obj2.SetLockedToSwitch(true, false, true, obj1.SelfGridPos);
                 Log("已强制选择两个可交换物体，但它们不能合法交换");
             }
         }
@@ -635,6 +637,46 @@ public class GridManager : MonoBehaviour
 
         // ✅ 这里写你想触发的事件
         StartState(SwitchState.None);
+    }
+
+    void checkIfSwitchableInView(TwoObjectContainer<SwitchableObj> obj)
+    {
+        SwitchableObj record1 = obj.obj1;
+        SwitchableObj record2 = obj.obj2;
+
+        bool ifChangeOne = !obj.hasFirst;
+        bool ifChangeTwo = !obj.hasSecond;
+        if (obj.hasFirst && !obj.obj1.IsSpriteVisibleOnScreen())
+        {
+
+            obj.Take(record1);
+            record1.SetLockedToSwitch(false, true, true, Vector3.zero);
+            ifChangeOne = true;
+
+        }
+
+        if (obj.hasSecond && !obj.obj2.IsSpriteVisibleOnScreen())
+        {
+            obj.Take(record2);
+            record2.SetLockedToSwitch(false, true, true, Vector3.zero);
+            ifChangeTwo = true;
+        }
+        if (ifChangeOne ^ ifChangeTwo)
+        {
+            if (!ifChangeOne) obj.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+            else if (!ifChangeTwo) obj.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+        }
+    }
+
+    public void RefreshSelection()
+    {
+        if (switchInfoRecorder == null)
+            return;
+        if (switchInfoRecorder.hasFirst)
+            switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+        if (switchInfoRecorder.hasSecond)
+            switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+        switchInfoRecorder.Refresh();
     }
 }
 
