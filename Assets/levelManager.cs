@@ -86,6 +86,9 @@ public class levelManager : MonoBehaviour
         }
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
+        if(newLevelGO.name=="Level_1"){
+            controller.DisableInput();
+        }
         controller.SetMovementBounds(data.levelBound);
 
         Transform entities = newLevelGO.transform.Find("Entities");
@@ -246,6 +249,7 @@ public class levelManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        
         cameraControl = Camera.main.GetComponent<CameraControl>();
         if (cameraControl == null)
         {

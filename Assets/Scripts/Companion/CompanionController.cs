@@ -1,7 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
+    public CameraSequencePlayer BigCamera;
+
+    public bool canFollow = true;
+
     [Header("跟随设置")]
     [SerializeField] private Transform target; // 跟随目标（玩家）
     [SerializeField] private float followSpeed = 5f; // 跟随速度
@@ -25,6 +30,7 @@ public class CompanionController : MonoBehaviour
         new Vector3(1f, 0.5f, 0f)  // 右侧
     };
 
+    private Transform oldTrans;
     private Vector3 velocity = Vector3.zero;
     private SpriteRenderer spriteRenderer;
     private SpriteRenderer targetSpriteRenderer;
@@ -33,6 +39,8 @@ public class CompanionController : MonoBehaviour
     private Vector3 lastPosition;
     private bool isMoving;
 
+    public bool hasStopped;
+    private bool startMode=true;//改成true之后出现报空
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -60,7 +68,7 @@ public class CompanionController : MonoBehaviour
 
     private void Update()
     {
-        if (target == null) return;
+        if (target == null ||!canFollow) return;
 
         // 检测是否在移动
         float distance = Vector3.Distance(transform.position, lastPosition);
@@ -80,14 +88,15 @@ public class CompanionController : MonoBehaviour
         if (autoAdjustPosition)
         {
             // 如果玩家朝左（scale.x = -1），跟随物在右上角
-            if (target.localScale.x < 0)
+            if (target.localScale.x < 0||startMode)
             {
-                currentOffset = new Vector3(1.5f, 3f, 0f);
+                currentOffset = new Vector3(1.5f, 2.18f, 0f);
+                
             }
             // 如果玩家朝右（scale.x = 1），跟随物在左上角
             else
             {
-                currentOffset = new Vector3(-1.5f,3f, 0f);
+                currentOffset = new Vector3(-1.5f,2.18f, 0f);
             }
         }
         else
@@ -97,7 +106,7 @@ public class CompanionController : MonoBehaviour
 
         // 计算目标位置（目标位置 + 偏移量）
         Vector3 targetPosition = target.position + currentOffset;
-
+        if(canFollow)
         // 使用Mathf.Lerp实现平滑跟随
         transform.position = Vector3.SmoothDamp(
             transform.position,
@@ -106,10 +115,46 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
-
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped) {
+            hasStopped = true;
+            print("我到达目的地了！");
+            // startMode = true;
+            oldTrans =this.transform;
+            
+            StartCoroutine(StopStartMode());
+        }
         lastPosition = transform.position;
     }
 
+    public void CannotMove(){
+        this.enabled = false;
+    }
+    public void CanMove(){
+        this.enabled = true;
+    }
+    private IEnumerator StopStartMode(){
+        canFollow = false;
+        print("不能跟随了！");
+        transform.localScale = new Vector3(-1f, 1f, 1f);
+        print("转向了！");
+        GetComponent<Animator>().Play("robot_scan");
+        print("播放动画了！");
+        // 等待动画状态真正进入 robot_move 状态
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("robot_scan"));
+
+        // 等待动画播放完（normalizedTime >= 1）
+        yield return new WaitUntil(() =>
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
+            
+        );print("播完了！");
+        startMode = false;
+        // canFollow = true;
+        // transform.localScale = new Vector3(1f, 1f, 1f);
+        print("转回去了！");
+        
+        if(BigCamera!=null)
+            BigCamera.PlaySequence();
+    }
     // 设置跟随目标
     public void SetTarget(Transform newTarget)
     {
@@ -120,6 +165,13 @@ public class CompanionController : MonoBehaviour
         }
     }
 
+    public void SetTargetToPlayer(){
+        target = FindAnyObjectByType<PlayerController>().transform;
+        startMode = true;
+        if (target != null) {
+            targetSpriteRenderer = target.GetComponent<SpriteRenderer>();
+        }
+    }
     // 切换到下一个位置预设
     public void SwitchToNextPosition()
     {
@@ -152,4 +204,5 @@ public class CompanionController : MonoBehaviour
     {
         autoAdjustPosition = value;
     }
+    
 }

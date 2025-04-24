@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class EndAndMove : MonoBehaviour
@@ -9,6 +10,7 @@ public class EndAndMove : MonoBehaviour
     public StoryTrigger[] storyTriggers;
     private bool isSwitchCompleted;
 
+    private Transform text;
     [SerializeField] private float switchTimeout;
     public Camera mainCamera;
     private CameraControl camControl;
@@ -19,6 +21,8 @@ public class EndAndMove : MonoBehaviour
     public PlayerController playerController;
     // 调试标记
     public bool debugMode = true;
+
+    [SerializeField] private string ExchangeText="交换";
 
     void Start()
     {
@@ -56,6 +60,7 @@ public class EndAndMove : MonoBehaviour
     // 方法1: 使用CameraControl的目标跟随功能移动
     public void StopPlayerMove(){
         playerController.DisableMovement();
+        print("endAndMove禁用玩家移动");
     }
     public void StartFirstStory(){
         StoryTrigger trigger1=storyTriggers[0];
@@ -64,12 +69,22 @@ public class EndAndMove : MonoBehaviour
 
     public void EnablePicture(){
         UIphoto.SetActive(true);
-        StartCoroutine(DisablePictureAfterDelay());
+        StartCoroutine(DisablePictureAfterDelay(2f));
+        
     }
     
-    private IEnumerator DisablePictureAfterDelay(){
-        yield return new WaitForSeconds(3f);
+    private IEnumerator DisablePictureAfterDelay(float disableTime){
+        yield return new WaitForSeconds(disableTime);
+        if(UIphoto.transform.GetChild(0).transform.GetComponent<TMP_Text>().text==ExchangeText)
         UIphoto.SetActive(false);
+    }
+
+    public void ReturnCameraToPlayer(){
+        camControl.isTransitioning = true; // 开启平滑过渡
+        camControl.smoothSpeed = 3f; // 设置平滑速度
+        Camera.main.transform.GetComponent<CameraControl>().target = playerController.transform;
+        FindAnyObjectByType<CompanionController>().canFollow = true;
+        FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
     }
     public void MoveEnd()
     {
@@ -88,7 +103,7 @@ public class EndAndMove : MonoBehaviour
 
         Log("开始移动摄像机到: " + newTarget.position);
 
-        if (useDirectMovement)
+        if (useDirectMovement)//x
         {
             // 方法2: 直接使用协程控制摄像机位置
             StartCoroutine(MoveDirectly());
@@ -105,8 +120,8 @@ public class EndAndMove : MonoBehaviour
 
 
 
-        Transform tansTex = transform.Find("Square");
-        tansTex.gameObject.SetActive(true);
+        // Transform tansTex = transform.Find("Square");
+        // tansTex.gameObject.SetActive(true);
         //TODO:时间停止，玩家交换一次物体，结束时停
         StartCoroutine(StartSwitchMode());
         
@@ -120,18 +135,20 @@ public class EndAndMove : MonoBehaviour
         // Time.timeScale = 0;
 
         // 设置交换状态
-        if (GridManager.Instance != null) {
-            // // 准备两个物体进行交换
-            // if (switchableObj1 != null && switchableObj2 != null) {
-            //     // 将两个物体添加到交换记录中
-            //     GridManager.Instance.ForceSelectObjectsForSwitch(switchableObj1, switchableObj2);
-            //     Log("已设置要交换的两个物体");
-            // }
-
-            // 切换到交换状态
-            GridManager.Instance.StartState(SwitchState.Switch);
-            Log("已进入交换状态");
-        }
+        // if (GridManager.Instance != null) {
+        //     // // 准备两个物体进行交换
+        //     // if (switchableObj1 != null && switchableObj2 != null) {
+        //     //     // 将两个物体添加到交换记录中
+        //     //     GridManager.Instance.ForceSelectObjectsForSwitch(switchableObj1, switchableObj2);
+        //     //     Log("已设置要交换的两个物体");
+        //     // }
+        //
+        //     // 切换到交换状态
+        //     GridManager.Instance.StartState(SwitchState.Switch);
+        //     text=UIphoto.transform.Find("Text (TMP)");
+        //     text.GetComponent<TMP_Text>().text = "交换";
+        //     Log("已进入交换状态");
+        // }
 
         // 等待玩家完成交换或超时
         float timer = 0;
@@ -140,8 +157,8 @@ public class EndAndMove : MonoBehaviour
             if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
                 // 交换完成
                 isSwitchCompleted = true;
+                StartCoroutine(DisablePictureAfterDelay(1f));
                 Log("交换物体完成!");
-
                 // 等待玩家确认（按键）
                 yield return new WaitForSecondsRealtime(0.5f);
                 break;
@@ -152,7 +169,7 @@ public class EndAndMove : MonoBehaviour
         }
 
         // 结束交换模式
-        EndSwitchMode();
+        // EndSwitchMode();
     }
 
     private void EndSwitchMode(){
@@ -166,12 +183,16 @@ public class EndAndMove : MonoBehaviour
         }
 
         isSwitchActive = false;
+        
+    }
+
+    public void RuturnCamera(){
         //// 摄像机移回玩家
         camControl.target = playerController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
+        UIphoto.SetActive(false);
     }
-
     // 使用目标跟随的方法
     private void UseTargetFollow()
     {
@@ -185,32 +206,40 @@ public class EndAndMove : MonoBehaviour
         // 设置摄像机控制参数
         camControl.target = tempTarget.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
-        camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
-
+        camControl.smoothSpeed = 5f; // 设置平滑速度
+        
+        // text = UIphoto.transform.Find("Text (TMP)");
+        // text.GetComponent<TMP_Text>().text = "交换";
         Log("已设置摄像机目标并开启平滑过渡");
         // StoryTrigger tri = transform.GetComponent<StoryTrigger>();
         // if (tri != null && tri.nextStoryTrigger != null) {
-        //     StoryTrigger triNext = tri.nextStoryTrigger;
+        //     // StoryTrigger triNext = tri.nextStoryTrigger;
         //     
         //     // 注册剧情完成事件，在剧情完成后恢复相机
         //     StoryManager.Instance.onDialogueComplete += () => {
         //         // 确保只执行一次
         //         StoryManager.Instance.onDialogueComplete -= () => {};
         //         // 触发下一段剧情
-        //         triNext.ForceStartStory();
-        //         Log("已触发下一段剧情: " + triNext.name);
+        //         // triNext.ForceStartStory();
+        //         // Log("已触发下一段剧情: " + triNext.name);
         //         // 恢复相机到原始目标
         //         if (camControl != null && originalTarget != null) {
-        // //             camControl.target = originalTarget;
-        // //             camControl.isTransitioning = true;
+        //             camControl.target = originalTarget;
+        //             camControl.isTransitioning = true;
         //             Log("剧情完成，恢复摄像机原始目标");
         //         }
         //     };
-
-
+        //
+        //
         // }
-        // // 等待相机移动完成后返回原位
-        // StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
+        // 等待相机移动完成后返回原位
+        StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
+        playerController.EnableMovement();
+        UIphoto.SetActive(true);
+        text = UIphoto.transform.Find("Text (TMP)");
+        text.GetComponent<TMP_Text>().text = ExchangeText;
+        StartCoroutine(StartSwitchMode());
+        
     }
     // 直接移动摄像机的方法
     private IEnumerator MoveDirectly()
@@ -230,10 +259,10 @@ public class EndAndMove : MonoBehaviour
         // 确保到达目标位置
         mainCamera.transform.position = targetPosition;
         Log("摄像机已直接移动到目标位置");
-
+        
         // 停留一段时间
         yield return new WaitForSeconds(delayBeforeReturn);
-
+        // UIphoto.SetActive(false);
         // 可以在这里实现返回原位的逻辑
     }
 
@@ -246,10 +275,11 @@ public class EndAndMove : MonoBehaviour
         if (original != null)
         {
             Log("恢复摄像机原始目标: " + original.name);
-            cam.target = original;
+            cam.target = playerController.transform;
 
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
+            // UIphoto.SetActive(false);
         }
         else
         {
