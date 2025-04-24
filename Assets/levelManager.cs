@@ -86,7 +86,9 @@ public class levelManager : MonoBehaviour
         }
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
-        controller.DisableInput();
+        if(newLevelGO.name=="Level_1"){
+            controller.DisableInput();
+        }
         controller.SetMovementBounds(data.levelBound);
 
         Transform entities = newLevelGO.transform.Find("Entities");
