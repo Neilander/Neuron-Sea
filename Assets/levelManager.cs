@@ -17,6 +17,8 @@ public class levelManager : MonoBehaviour
 
     private Rect recordRect;
 
+    
+
     [Header("是否开启剧情")]
     public bool ifStartStory;
 
@@ -62,11 +64,16 @@ public class levelManager : MonoBehaviour
         // 关闭当前关卡
         if (currentLevelGO != null)
         {
-            currentLevelGO.SetActive(false);
+            Destroy(currentLevelGO);
         }
 
         // 启用新关卡
+        //newLevelGO.SetActive(true);
+        GameObject duplicatedLevel = Instantiate(newLevelGO);
+        newLevelGO = duplicatedLevel;
         newLevelGO.SetActive(true);
+        if (newLevelGO.GetComponent<levelRefresher>() != null)
+            newLevelGO.GetComponent<levelRefresher>().Refresh();
         foreach (Transform child in newLevelGO.transform)
         {
             if (child.name.StartsWith("BackGrounds"))
