@@ -47,9 +47,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private List<float> minRangeList;
     [SerializeField] private List<float> maxRangeList;
 
-    [Header("预览材质")]
+    [Header("材质")]
     [SerializeField] private Material ProjectionWhite;
     [SerializeField] private Material ProjectionRed;
+    [SerializeField] private Material switchMaterial;
 
     [Header("是否允许交换")]
     [SerializeField] private bool IfBanSwitch_SetWhenStart;
@@ -66,10 +67,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     {
         ExpectedSize.x = fields.GetInt("SizeX");
         ExpectedSize.y = fields.GetInt("SizeY");
-        SizeToExpectedSize();
         ExpectedAnchorPos.x = fields.GetInt("PivotX");
         ExpectedAnchorPos.y = fields.GetInt("PivotY");
-        SetAnchorToAnchorPos();
+        SizeToExpectedSize();
     }
 
     private void Start(){
@@ -110,19 +110,30 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     public void SetToGridPos(Vector3 gridPos){
 
         Vector3 recordPos = selfGridPos;
-        if (ifInPreview)
-        {
-            previewObj.transform.position = selfGridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x-1];
-        }
         transform.position = gridPos - anchor.transform.localPosition;
         selfGridPos = gridPos;
         if (ifInPreview)
         {
             previewObj.transform.position = recordPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.SetActive(false);
+            StartCoroutine(WhatCanISay(renderer.material));
+            renderer.material = switchMaterial;
+            renderer.material.SetFloat("_KaiShiShiJian", Time.unscaledTime);
+            renderer.material.SetVector("_MoXingDaXiaoWangGeZuoBiao", (Vector2)ExpectedSize);
+            renderer.material.SetVector("_MaoDianWangGeZuoBiao", ExpectedAnchorPos);
+            renderer.material.SetVector("_MaoDianShiJieZuoBiao", recordPos);
+            renderer.material.SetVector("_MuBiaoMaoDianShiJieZuoBiao", anchor.transform.position);
         }
     }
 
-    
+    IEnumerator WhatCanISay(Material originMaterial)
+    {
+        yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime); 
+        previewObj.SetActive(true);
+        yield return new WaitForSecondsRealtime(renderer.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
+        renderer.material = originMaterial;
+
+    }
 
     public void SetToClosestGridPoint(){
         Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
@@ -309,12 +320,6 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     public void SizeToExpectedSize()
     {
-        if (GridManager.Instance == null)
-        {
-            Debug.LogError("GridManager.Instance is null.");
-            return;
-        }
-
         if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
         {
             Debug.LogError("Size不能是0");
@@ -371,19 +376,22 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
         else
         {
-            Debug.LogError("Only BoxCollider2D is supported.");
+            Debug.LogError("Only Box And Circle Collider2D is supported.");
         }
 
         SetAnchorToAnchorPos();
-
-        
     }
 
     public void SetAnchorToAnchorPos()
     {
         if (anchor != null)
         {
-            float gridSize = GridManager.Instance.gridWidth;
+            if (GridManager.Instance == null)
+            {
+                Debug.LogError("GridManager.Instance is null.");
+            }
+
+            float gridSize = GridManager.Instance ? GridManager.Instance.gridWidth : 1f;
 
             // 1. 计算世界单位下的 ExpectedSize 大小
             Vector3 worldSize = new Vector3(ExpectedSize.x * gridSize, ExpectedSize.y * gridSize, 0f);
@@ -447,7 +455,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
             previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
             previewObj.SetActive(true);
-            ifInPreview = false;
+            ifInPreview = true;
         }
         else
         {

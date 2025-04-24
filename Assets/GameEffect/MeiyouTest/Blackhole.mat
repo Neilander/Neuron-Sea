@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ProjectionRed
-  m_Shader: {fileID: -6465566751694194690, guid: c4bf6ba9d5881844f92db6827e3eda93,
+  m_Name: Blackhole
+  m_Shader: {fileID: -6465566751694194690, guid: 9057e9bc4326c594580902862c6f5ae4,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -54,19 +54,34 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _: 20
+    - _: 2
     - _EnableExternalAlpha: 0
-    - __1: 0.3
-    - __2: 2
-    - __4: 0
-    - __5: 0.8
+    - _KaiShiShiJian: 0
+    - _LiZiMiDu: 36
+    - _PianZhuan: 0.8
+    - _QiangDu: 1
+    - _X: 0
+    - _Y: 0
+    - _ZongShiJian: 0.5
+    - __4: 1
+    - __5: 36
+    - __6: 1
+    - __7: 0
     m_Colors:
+    - _1: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _MaoDianShiJieZuoBiao: {r: 0, g: 0, b: 0, a: 0}
+    - _MaoDianWangGeZuoBiao: {r: 0, g: 0, b: 0, a: 0}
+    - _MoXingDaXiaoWangGeZuoBiao: {r: 3, g: 3, b: 0, a: 0}
+    - _MuBiaoMaoDianShiJieZuoBiao: {r: 0, g: 0, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - __3: {r: 1, g: 0, b: 0, a: 1}
+    - __1: {r: 3, g: 3, b: 0, a: 0}
+    - __2: {r: 0, g: 0, b: 0, a: 0}
+    - __3: {r: 0, g: 0, b: 0, a: 0}
+    - __8: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &7695664925213134575
+--- !u!114 &3236849705755027167
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
