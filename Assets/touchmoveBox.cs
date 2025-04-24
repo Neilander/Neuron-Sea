@@ -1,8 +1,9 @@
+using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class touchmoveBox : MonoBehaviour
+public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
 {
     [Header("移动设置")]
     public Transform target;
@@ -12,12 +13,19 @@ public class touchmoveBox : MonoBehaviour
     public float moveDuration = 1f;
     public float cooldownDuration = 1f;
     public AnimationCurve moveCurve;
+    public bool reverse;//如果为false，起点左下角，终点右上角；如果为true，起点右下角，终点左上角
 
     private bool isMoving = false;
     private bool atA = true; // 当前是否在A点（决定下次去哪）
 
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
+
+    //自动导入关卡设定数据
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        reverse = fields.GetBool("Reverse");
+    }
 
     private void Start()
     {
