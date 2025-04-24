@@ -17,6 +17,9 @@ public class levelManager : MonoBehaviour
 
     private Rect recordRect;
 
+    [Header("是否开启剧情")]
+    public bool ifStartStory;
+
     void Awake()
     {
         if (instance == null)
@@ -86,7 +89,7 @@ public class levelManager : MonoBehaviour
         }
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
-        if(newLevelGO.name=="Level_1"){
+        if(ifStartStory && newLevelGO.name=="Level_1"){
             controller.DisableInput();
         }
         controller.SetMovementBounds(data.levelBound);
