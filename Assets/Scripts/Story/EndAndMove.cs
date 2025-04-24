@@ -83,7 +83,8 @@ public class EndAndMove : MonoBehaviour
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = 3f; // 设置平滑速度
         Camera.main.transform.GetComponent<CameraControl>().target = playerController.transform;
-        
+        FindAnyObjectByType<CompanionController>().canFollow = true;
+        FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
     }
     public void MoveEnd()
     {

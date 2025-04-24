@@ -36,6 +36,7 @@ public class CameraControl : MonoBehaviour
     [Header("y上offset")]
     public float yOffset = 0.5f;
 
+    private Animator ani;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -67,8 +68,8 @@ public class CameraControl : MonoBehaviour
 #endif
     }
 
-    void Start()
-    {
+    void Start(){
+        ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
@@ -85,9 +86,18 @@ public class CameraControl : MonoBehaviour
     }
 
     private IEnumerator BeginningDelay(float time){
-        companionController.GetComponent<Animator>().enabled = false;
-        yield return new WaitForSecondsRealtime(time);
-        companionController.GetComponent<Animator>().enabled = true;
+        ani.Play("robot_move");
+        companionController.CannotMove();
+        // 等待动画状态真正进入 robot_move 状态
+        yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).IsName("robot_move"));
+
+        // 等待动画播放完（normalizedTime >= 1）
+        yield return new WaitUntil(() =>
+            ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
+
+        );
+        companionController.CanMove();
+        // companionController.GetComponent<Animator>().enabled = true;
         companionController.SetTarget(FindAnyObjectByType<PlayerController>().transform);
     }
     void LateUpdate()

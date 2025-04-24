@@ -5,7 +5,7 @@ public class CompanionController : MonoBehaviour
 {
     public CameraSequencePlayer BigCamera;
 
-    private bool canFollow = true;
+    public bool canFollow = true;
 
     [Header("跟随设置")]
     [SerializeField] private Transform target; // 跟随目标（玩家）
@@ -126,15 +126,21 @@ public class CompanionController : MonoBehaviour
         lastPosition = transform.position;
     }
 
+    public void CannotMove(){
+        this.enabled = false;
+    }
+    public void CanMove(){
+        this.enabled = true;
+    }
     private IEnumerator StopStartMode(){
         canFollow = false;
         print("不能跟随了！");
         transform.localScale = new Vector3(-1f, 1f, 1f);
         print("转向了！");
-        GetComponent<Animator>().Play("robot_move");
+        GetComponent<Animator>().Play("robot_scan");
         print("播放动画了！");
         // 等待动画状态真正进入 robot_move 状态
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("robot_move"));
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("robot_scan"));
 
         // 等待动画播放完（normalizedTime >= 1）
         yield return new WaitUntil(() =>
@@ -142,11 +148,12 @@ public class CompanionController : MonoBehaviour
             
         );print("播完了！");
         startMode = false;
-        canFollow = true;
-        transform.localScale = new Vector3(1f, 1f, 1f);
+        // canFollow = true;
+        // transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
         
-        if(BigCamera!=null)BigCamera.PlaySequence();
+        if(BigCamera!=null)
+            BigCamera.PlaySequence();
     }
     // 设置跟随目标
     public void SetTarget(Transform newTarget)
