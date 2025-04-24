@@ -16,12 +16,11 @@ public class CollisionReporter : MonoBehaviour
 
             if (stayTimer >= 0.2f)
             {
+                // 只有触发成功才清零
                 if (box.TriggerMove())
                 {
                     stayTimer = 0f;
-                    playerInside = false; // 防止重复触发
                 }
-                
             }
         }
     }
@@ -34,8 +33,6 @@ public class CollisionReporter : MonoBehaviour
             stayTimer = 0f;
         }
     }
-
-   
 
     private void OnTriggerExit2D(Collider2D collision)
     {
