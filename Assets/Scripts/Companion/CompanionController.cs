@@ -146,7 +146,7 @@ public class CompanionController : MonoBehaviour
         transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
         
-        BigCamera.PlaySequence();
+        if(BigCamera!=null)BigCamera.PlaySequence();
     }
     // 设置跟随目标
     public void SetTarget(Transform newTarget)
