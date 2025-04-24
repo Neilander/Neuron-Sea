@@ -64,7 +64,7 @@ public class levelManager : MonoBehaviour
         // 关闭当前关卡
         if (currentLevelGO != null)
         {
-            Destroy(currentLevelGO);
+            DestroyImmediate(currentLevelGO);
         }
 
         // 启用新关卡
