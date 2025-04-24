@@ -197,6 +197,7 @@ public class StoryManager : MonoBehaviour
             if (playerController.IsGrounded())
             {
                 playerController.DisableMovement();
+                print("剧情模式禁用玩家移动");
             }
             else
             {
@@ -243,6 +244,7 @@ public class StoryManager : MonoBehaviour
         if (playerController != null && currentState == GameState.StoryMode)
         {
             playerController.DisableMovement();
+            print("剧情禁用落地的时候禁止移动");
         }
     }
 

@@ -300,6 +300,7 @@ public class GameIntroController : MonoBehaviour
         if (playerController != null)
         {
             playerController.DisableMovement();
+            print("禁用输入的时候禁止移动");
         }
     }
 

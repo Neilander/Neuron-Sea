@@ -7,6 +7,7 @@ public class CameraControl : MonoBehaviour
 {
     public Transform target;
 
+    public Transform startTarget;
     private Camera cam;
     private float halfWidth;
     private float halfHeight;
@@ -19,7 +20,9 @@ public class CameraControl : MonoBehaviour
     
     private CameraLimitRegion defaultLimit;
 
+    public CompanionController companionController;
 
+    
     // ✅ 新增：平滑移动控制
     private Vector3 smoothTargetPosition;
     public bool isTransitioning = false;
@@ -33,6 +36,7 @@ public class CameraControl : MonoBehaviour
     [Header("y上offset")]
     public float yOffset = 0.5f;
 
+    private Animator ani;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -64,13 +68,14 @@ public class CameraControl : MonoBehaviour
 #endif
     }
 
-    void Start()
-    {
+    void Start(){
+        ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
-
+        companionController.SetTarget(null);
+        StartCoroutine(BeginningDelay(1f));
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;
         float right = defaultOrigin.x + defaultWidth;
@@ -80,10 +85,26 @@ public class CameraControl : MonoBehaviour
         defaultLimit = new CameraLimitRegion(left, right, top, bottom, null);
     }
 
+    private IEnumerator BeginningDelay(float time){
+        ani.Play("robot_move");
+        companionController.CannotMove();
+        // 等待动画状态真正进入 robot_move 状态
+        yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).IsName("robot_move"));
+
+        // 等待动画播放完（normalizedTime >= 1）
+        yield return new WaitUntil(() =>
+            ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
+
+        );
+        companionController.CanMove();
+        // companionController.GetComponent<Animator>().enabled = true;
+        companionController.SetTarget(FindAnyObjectByType<PlayerController>().transform);
+    }
     void LateUpdate()
     {
         if (target == null) return;
 
+        
         // ✅ 每帧更新目标位置
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
 
