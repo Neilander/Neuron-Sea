@@ -338,9 +338,10 @@ public class GridManager : MonoBehaviour
                             //选中已经被选中的物体
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
                             if (switchInfoRecorder.hasFirst)
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
                             if (switchInfoRecorder.hasSecond)
-                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                            switchInfoRecorder.Refresh();
                         }
                         else
                         {

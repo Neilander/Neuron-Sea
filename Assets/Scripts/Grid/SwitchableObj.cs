@@ -441,21 +441,26 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
 
         
-        if (ifLocked && ifLegal && ifPreview)
+        if (ifLocked)
         {
-            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
-            previewObj.GetComponent<SpriteRenderer>().material = ProjectionWhite;
-            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
-            previewObj.SetActive(true);
-            ifInPreview = true;
-        }
-        else if (ifLocked && !ifLegal)
-        {
-            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
-            previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
-            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
-            previewObj.SetActive(true);
-            ifInPreview = true;
+            if (ifLegal && ifPreview)
+            {
+                previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+                previewObj.GetComponent<SpriteRenderer>().material = ProjectionWhite;
+                previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+                previewObj.SetActive(true);
+                ifInPreview = true;
+            }
+            else if(!ifLegal)
+            {
+                previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+                previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
+                previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+                previewObj.SetActive(true);
+                ifInPreview = true;
+            }
+
+           
         }
         else
         {
