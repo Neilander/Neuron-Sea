@@ -196,7 +196,7 @@ public class levelManager : MonoBehaviour
     public void SwitchToNextLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12), false);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 36), false);
         FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
@@ -206,20 +206,20 @@ public class levelManager : MonoBehaviour
     public void SwitchToNextLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 12), true);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 36), true);
     }
 
     public void SwitchToBeforeLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12), false);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 36), false);
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
     }
 
     public void SwitchToBeforeLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12), true);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 36), true);
     }
 
     IEnumerator DelayEffect()

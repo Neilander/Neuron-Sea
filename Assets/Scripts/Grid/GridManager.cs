@@ -296,7 +296,7 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if (Input.GetKeyUp(modeCode))
+                if (!Input.GetKey(modeCode))
                 {
                     StartState(SwitchState.None);
                 }
