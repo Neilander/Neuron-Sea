@@ -38,6 +38,7 @@ public class levelManager : MonoBehaviour
 
             // 重新加载当前关卡（基于 currentLevelIndex）
             LoadLevel(currentLevelIndex, true);
+            AudioManager.Instance.Play(BGMClip.Level1);
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
         }
         else
