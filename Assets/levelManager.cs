@@ -227,7 +227,7 @@ public class levelManager : MonoBehaviour
     public void SwitchToBeforeLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12), false);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 12), true);
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
     }
 
@@ -276,5 +276,12 @@ public class levelManager : MonoBehaviour
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        
+    }
+
+    public void ReloadLevel()
+    {
+        GridManager.Instance.RenewSwitch();
+        recordRect = LoadLevel(currentLevelIndex, false);
     }
 }

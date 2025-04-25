@@ -377,6 +377,10 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         {
             FindAnyObjectByType<levelManager>().SwitchToNextLevel();
         }
+        else if (movementBounds.IsAtLeftEdge())
+        {
+            FindAnyObjectByType<levelManager>().SwitchToBeforeLevel();
+        }
         else if (movementBounds.ShouldDrop() && !dropped)
         {
             dropped = true;

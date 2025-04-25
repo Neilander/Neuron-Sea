@@ -339,11 +339,23 @@ public class GridManager : MonoBehaviour
                         {
                             //选中已经被选中的物体
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                            bool ifChanged = false;
                             if (switchInfoRecorder.hasFirst)
+                            {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                ifChanged = true;
+                            }
+
                             if (switchInfoRecorder.hasSecond)
+                            {
                                 switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                ifChanged = true;
+                            }
                             switchInfoRecorder.Refresh();
+                            SwitchableObj temp1;
+                            SwitchableObj temp2;
+                            if (!ifChanged)
+                                switchInfoRecorder.Record(tryGet, out temp1, out temp2);
                         }
                         else
                         {
