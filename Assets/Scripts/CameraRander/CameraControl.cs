@@ -75,7 +75,9 @@ public class CameraControl : MonoBehaviour
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
         companionController.SetTarget(null);
-        StartCoroutine(BeginningDelay(1f));
+        if (levelManager.instance.ifStartStory) {
+            StartCoroutine(BeginningDelay(1f));
+        }
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;
         float right = defaultOrigin.x + defaultWidth;
