@@ -17,6 +17,11 @@ public class levelManager : MonoBehaviour
 
     private Rect recordRect;
 
+    
+
+    [Header("是否开启剧情")]
+    public bool ifStartStory;
+
     void Awake()
     {
         if (instance == null)
@@ -33,6 +38,7 @@ public class levelManager : MonoBehaviour
 
             // 重新加载当前关卡（基于 currentLevelIndex）
             LoadLevel(currentLevelIndex, true);
+            AudioManager.Instance.Play(BGMClip.Level1);
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
         }
         else
@@ -46,6 +52,7 @@ public class levelManager : MonoBehaviour
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayer)
     {
+        GridManager.Instance.RefreshSelection();
         string newLevelName = $"Level_{newLevelIndex}";
         GameObject newLevelGO = FindInactiveObjectByName($"Level_{newLevelIndex}");
         Debug.Log("加载" + newLevelName);
@@ -58,11 +65,16 @@ public class levelManager : MonoBehaviour
         // 关闭当前关卡
         if (currentLevelGO != null)
         {
-            currentLevelGO.SetActive(false);
+            DestroyImmediate(currentLevelGO);
         }
 
         // 启用新关卡
+        //newLevelGO.SetActive(true);
+        GameObject duplicatedLevel = Instantiate(newLevelGO);
+        newLevelGO = duplicatedLevel;
         newLevelGO.SetActive(true);
+        if (newLevelGO.GetComponent<levelRefresher>() != null)
+            newLevelGO.GetComponent<levelRefresher>().Refresh();
         foreach (Transform child in newLevelGO.transform)
         {
             if (child.name.StartsWith("BackGrounds"))
@@ -86,7 +98,7 @@ public class levelManager : MonoBehaviour
         }
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
-        if(newLevelGO.name=="Level_1"){
+        if(ifStartStory && newLevelGO.name=="Level_1"){
             controller.DisableInput();
         }
         controller.SetMovementBounds(data.levelBound);
