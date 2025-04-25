@@ -556,6 +556,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     {
         Speed = new Vector2(controlInput * moveSpeed, Speed.y);
         animator.SetFloat("Speed", Mathf.Abs(controlInput));
+        AdjustPosition(Speed*Time.deltaTime);
     }
 
     private void RotateInControl()
