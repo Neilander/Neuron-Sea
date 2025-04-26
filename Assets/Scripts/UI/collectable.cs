@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using LDtkUnity;
 
-public class collectable : MonoBehaviour
+public class collectable : MonoBehaviour, ILDtkImportedFields
 {
     [SerializeField]
-    private int restrictedTime = 5;
+    private int restrictedTime;
 
     private bool unlocked = true;
     [SerializeField] private SpriteRenderer renderer;
@@ -19,6 +20,12 @@ public class collectable : MonoBehaviour
     private Vector3 initialLocalPos;
 
     [SerializeField] private TextMeshPro DisplayText;
+
+    //自动导入关卡设定数据
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        restrictedTime = fields.GetInt("SwitchTimeRequire");
+    }
 
     // Start is called before the first frame update
     void Start()

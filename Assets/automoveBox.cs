@@ -1,3 +1,4 @@
+using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +14,16 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
     public float moveDuration = 1f;        // 移动时间 x 秒
     public float waitDuration = 0.5f;      // 停顿时间 y 秒
     public AnimationCurve moveCurve;       // 运动曲线
+    public bool reverse;//如果为false，起点左下角，终点右上角；如果为true，起点右下角，终点左上角
 
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
+
+    //自动导入关卡设定数据
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        reverse = fields.GetBool("Reverse");
+    }
 
     private void Start()
     {

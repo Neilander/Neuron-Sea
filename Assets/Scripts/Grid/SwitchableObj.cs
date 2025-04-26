@@ -51,6 +51,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private Material ProjectionWhite;
     [SerializeField] private Material ProjectionRed;
     [SerializeField] private Material switchMaterial;
+    [SerializeField] private Material lockedMaterial;
+    [SerializeField] private Material defaultMaterial;
 
     [Header("是否允许交换")]
     [SerializeField] private bool IfBanSwitch_SetWhenStart;
@@ -84,8 +86,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
         if (IfBanSwitch_SetWhenStart)
             SwitchEnableSwitchState();
-        
-        
+
+        defaultMaterial = renderer.material;
     }
 
     private void OnEnable()
@@ -460,13 +462,13 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
                 previewObj.SetActive(true);
                 ifInPreview = true;
             }
-
-           
+            renderer.material = lockedMaterial;
         }
         else
         {
             previewObj.SetActive(false);
             ifInPreview = false;
+            renderer.material = defaultMaterial;
         }
         
     }

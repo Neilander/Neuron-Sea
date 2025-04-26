@@ -110,9 +110,18 @@ public class VisualButton
     }
 }
 
-public class BaseGameInput
+public static class GameInput
 {
     public static List<VisualButton> Buttons = new List<VisualButton>();
+
+    public static VisualButton Jump = new VisualButton(KeyCode.Space, Constants.JumpPreInputTime, Constants.JumpMinEffectiveTime);
+    public static VisualButton Up = new VisualButton(KeyCode.W);
+    public static VisualButton Down = new VisualButton(KeyCode.S);
+    public static VisualButton Left = new VisualButton(KeyCode.A);
+    public static VisualButton Right = new VisualButton(KeyCode.D);
+    public static VisualButton Confirm = new VisualButton(KeyCode.Space);
+    public static VisualButton Menu = new VisualButton(KeyCode.Escape);
+    public static VirtualJoystick Aim = new VirtualJoystick();
 
     public static void Update(float deltaTime)
     {
@@ -122,23 +131,11 @@ public class BaseGameInput
         }
     }
 
-    public static void FixedUpdate(float deltaTime) 
+    public static void FixedUpdate(float deltaTime)
     {
         foreach (VisualButton button in Buttons)
         {
             button.FixedUpdate(deltaTime);
         }
     }
-}
-
-public class GameInput : BaseGameInput
-{
-    public static VisualButton Jump = new VisualButton(KeyCode.Space, Constants.JumpPreInputTime, Constants.JumpMinEffectiveTime);
-    public static VisualButton Up = new VisualButton(KeyCode.W);
-    public static VisualButton Down = new VisualButton(KeyCode.S);
-    public static VisualButton Left = new VisualButton(KeyCode.A);
-    public static VisualButton Right = new VisualButton(KeyCode.D);
-    public static VisualButton Confirm = new VisualButton(KeyCode.Space);
-    public static VisualButton Menu = new VisualButton(KeyCode.Escape);
-    public static VirtualJoystick Aim = new VirtualJoystick();
 }
