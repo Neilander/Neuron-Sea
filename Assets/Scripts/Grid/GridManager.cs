@@ -168,27 +168,7 @@ public class GridManager : MonoBehaviour
                 }
 
                 checkIfSwitchableInView(switchInfoRecorder);
-                if (switchInfoRecorder.IfHaveBoth())
-                {
-                    if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
-                    {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
-                        ifLegalMove = true;
-                    }
-                    else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
-                    {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj2.SelfGridPos);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj1.SelfGridPos);
-                        ifLegalMove = false;
-                    }
-
-                    if (ifLegalMove)
-                    {
-                        if (Input.GetKeyDown(switchCode))
-                            ShiftSwitch();
-                    }
-                }
+                RuntimeCheckIfLegal();
 
 
                 /*
@@ -303,31 +283,7 @@ public class GridManager : MonoBehaviour
                 }
                 checkIfSwitchableInView(switchInfoRecorder);
 
-                if (switchInfoRecorder.IfHaveBoth())
-                {
-                    if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
-                    {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
-                        ifLegalMove = true;
-                    }
-                    else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
-                    {
-                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj2.SelfGridPos);
-                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, false, switchInfoRecorder.obj1.SelfGridPos);
-                        ifLegalMove = false;
-                    }
-
-                    if (ifLegalMove)
-                    {
-                        if (Input.GetKeyDown(switchCode))
-                        {
-                            ShiftSwitch();
-
-                        }
-
-                    }
-                }
+                RuntimeCheckIfLegal();
 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -335,38 +291,56 @@ public class GridManager : MonoBehaviour
                     Debug.Log("尝试获取物体");
                     if (TryGetSwitchableUnderMouse(out tryGet))
                     {
+                        //如果选中已经被选中的物体
                         if (switchInfoRecorder.Take(tryGet))
                         {
-                            //选中已经被选中的物体
-                            tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                            //现在take已经取出了一个
+                            //如果还存储了另外一个，可以得知原本的情况是选中了两个，所以两个都要取消，这里先修改表示
+                            //选中在最后取消
                             bool ifChanged = false;
                             if (switchInfoRecorder.hasFirst)
                             {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 ifChanged = true;
                             }
-
                             if (switchInfoRecorder.hasSecond)
                             {
                                 switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 ifChanged = true;
                             }
+                            if (ifChanged)
+                            {
+                                //修改已经取出的tryGet的表现
+                                tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                            }
+                            //统一取消选中
                             switchInfoRecorder.Refresh();
+
+                            //如果之前没有改变，那么说明之前只选择了一个，那么就要保持tryGet的选择
                             SwitchableObj temp1;
                             SwitchableObj temp2;
                             if (!ifChanged)
+                            {
                                 switchInfoRecorder.Record(tryGet, out temp1, out temp2);
+                                tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
+                            }
+                                
                         }
-                        else
+                        else//选中一个新的物体
                         {
+
+                            //首先记录新选择的物体
                             SwitchableObj temp1;
                             SwitchableObj temp2;
                             if (switchInfoRecorder.Record(tryGet, out temp1, out temp2))
                             {
-                                //如果有顶掉的
+                                //如果此前已经记录了两个，就改变另外2个的显示，取消选择
                                 temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                //新选择的物体在后面处理显示
                             }
+
+                            //选择后，如果有两个并且是非法的
                             if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
                             {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj2.SelfGridPos);
@@ -375,19 +349,20 @@ public class GridManager : MonoBehaviour
                             }
                             else
                             {
-
+                                //剩下的状态里只有选择两个并且合法+只选择了一个
                                 if (switchInfoRecorder.IfHaveBoth())
                                 {
+                                    //选择两个必定合法
                                     ifLegalMove = true;
                                     switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
                                     switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
 
-                                    // 在这里可以添加提示UI，显示"按E交换"
-                                    Log("选择了两个可交换物体，按E键交换");
+                                    
                                 }
                                 else
                                 {
-                                    switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                    //只选择了一个
+                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
                                 }
 
                             }
@@ -406,6 +381,33 @@ public class GridManager : MonoBehaviour
     private void StartNoneState()
     {
         StartState(SwitchState.None);
+    }
+
+    private void RuntimeCheckIfLegal()
+    {
+        if (switchInfoRecorder.IfHaveBoth())
+        {
+            if (!ifLegalMove && IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+            {
+                //从非法转变为合法
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+                ifLegalMove = true;
+            }
+            else if (ifLegalMove && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+            {
+                //从合法转变为非法
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj2.SelfGridPos);
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj1.SelfGridPos);
+                ifLegalMove = false;
+            }
+
+            if (ifLegalMove)
+            {
+                if (Input.GetKeyDown(switchCode))
+                    ShiftSwitch();
+            }
+        }
     }
 
     public void StartState(SwitchState state)
@@ -568,10 +570,11 @@ public class GridManager : MonoBehaviour
     {
         if (switchInfoRecorder.Take(obj))
         {
+            //如果有另外一个，就更改显示
             if (switchInfoRecorder.hasFirst)
-                switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
             if (switchInfoRecorder.hasSecond)
-                switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
         }
     }
 
@@ -660,23 +663,26 @@ public class GridManager : MonoBehaviour
         bool ifChangeTwo = !obj.hasSecond;
         if (obj.hasFirst && !obj.obj1.IsSpriteVisibleOnScreen())
         {
-
+            //取消1的选中
             obj.Take(record1);
-            record1.SetLockedToSwitch(false, true, true, Vector3.zero);
+            record1.SetLockedToSwitch(false, true, false, Vector3.zero);
             ifChangeOne = true;
 
         }
 
         if (obj.hasSecond && !obj.obj2.IsSpriteVisibleOnScreen())
         {
+            //取消2的选中
             obj.Take(record2);
-            record2.SetLockedToSwitch(false, true, true, Vector3.zero);
+            record2.SetLockedToSwitch(false, true, false, Vector3.zero);
             ifChangeTwo = true;
         }
+
         if (ifChangeOne ^ ifChangeTwo)
         {
-            if (!ifChangeOne) obj.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
-            else if (!ifChangeTwo) obj.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+            //没有改变one，就说明原来一定有one并且没有更改
+            if (!ifChangeOne) obj.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+            else if (!ifChangeTwo) obj.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
         }
     }
 

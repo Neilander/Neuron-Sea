@@ -438,12 +438,50 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     #region 重构后Switch代码
     private bool ifInPreview = false;
+
+    /// <summary>
+    /// 控制物体的显示，第一个控制锁定，第二个控制预览的合法，第三个控制预览显示
+    /// </summary>
+    /// <param name="ifLocked">控制是否锁定</param><param name="ifLegal">控制Preview是否为红</param><param name="ifPreview">控制是否显示预览</param>
     public void SetLockedToSwitch(bool ifLocked, bool ifLegal, bool ifPreview ,Vector3 gridPos)
     {
+        /*
         lockedStateDisplay.GetComponent<SpriteRenderer>().color = ifLegal ? Color.white : Color.red;
-        if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);
+        if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);*/
 
-        
+
+        if (ifLocked)
+        {
+            renderer.material = lockedMaterial;
+            
+        }
+        else
+        {
+            renderer.material = defaultMaterial;
+        }
+
+        if (ifPreview && ifLocked)
+        {
+            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+            if (ifLegal)
+            {
+                previewObj.GetComponent<SpriteRenderer>().material = ProjectionWhite;
+            }
+            else
+            {
+                previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
+            }
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.SetActive(true);
+            ifInPreview = true;
+        }
+        else
+        {
+            previewObj.SetActive(false);
+            ifInPreview = false;
+        }
+
+        /*
         if (ifLocked)
         {
             if (ifLegal && ifPreview)
@@ -469,8 +507,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             previewObj.SetActive(false);
             ifInPreview = false;
             renderer.material = defaultMaterial;
-        }
-        
+        }*/
+
     }
 
     public bool IsSpriteVisibleOnScreen()
