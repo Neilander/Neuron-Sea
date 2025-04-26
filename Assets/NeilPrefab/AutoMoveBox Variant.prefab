@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8362974489238840098}
     m_Modifications:
+    - target: {fileID: 1416740256525171313, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f4a81c1891d737d44b55fdfb45b96891, type: 2}
     - target: {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Size.x
@@ -345,6 +350,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  reverse: 0
   playerController: {fileID: 0}
   targetCollider: {fileID: 8338202108880255295}
 --- !u!4 &8362974489238840098 stripped
