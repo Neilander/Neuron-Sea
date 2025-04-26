@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
+public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
 {
     [Header("移动设置")]
     public Transform target;
@@ -22,18 +22,36 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
     public BoxCollider2D targetCollider;
 
     //自动导入关卡设定数据
-    public void OnLDtkImportFields(LDtkFields fields)
+    public void OnAfterImport(SwitchableObj father, LDtkFields fields)
     {
         reverse = fields.GetBool("Reverse");
+        Debug.Log(gameObject.name +"获取的reverse是"+reverse);
         float xLength = transform.localScale.x;
         float yLength = transform.localScale.y;
         transform.localScale = Vector3.one;
-        pointA = new Vector3(-0.5f * (xLength * 3 - 3), -0.5f * (yLength * 3 - 3), 0);
-        pointB = new Vector3(0.5f * (xLength * 3 - 3), 0.5f * (yLength * 3 - 3), 0);
+        if (xLength == 1)
+        {
+            pointA = new Vector3(0, -0.5f * (yLength * 3 - 3), 0);
+            pointB = new Vector3(0, 0.5f * (yLength * 3 - 3), 0);
+            father.ChangeExpectedSize(3, Mathf.RoundToInt(yLength * 3));
+            father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
+        }
+        else
+        {
+            pointA = new Vector3(-0.5f * (xLength * 3 - 3), 0, 0);
+            pointB = new Vector3(0.5f * (xLength * 3 - 3), 0, 0);
+            father.ChangeExpectedSize(Mathf.RoundToInt(xLength * 3), 3);
+            father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
+        }
 
         target.localPosition = reverse ? pointA : pointB;
+        atA = reverse;
+        //father.ChangeExpectedSize(Mathf.RoundToInt(xLength*3),Mathf.RoundToInt(yLength*3));
+        father.GetRenderer().enabled = false;
+        father.IfSpecialEdgeChecker = true;
     }
 
+    
     private void Start()
     {
         if (target == null)
@@ -42,8 +60,8 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
             return;
         }
 
-        atA = !reverse;
-
+        atA = reverse;
+        Debug.Log(gameObject.name+"的atA是"+atA);
         playerController = FindObjectOfType<PlayerController>();
     }
 
@@ -61,7 +79,7 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
     private IEnumerator MoveOnce()
     {
         isMoving = true;
-
+        Debug.Log(gameObject.name+"被触发移动，初始的atA状态是"+atA);
         Vector3 from = atA ? pointA : pointB;
         Vector3 to = atA ? pointB : pointA;
 

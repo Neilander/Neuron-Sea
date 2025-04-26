@@ -2,9 +2,8 @@ using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using LDtkUnity;
 
-public class automoveBox : MonoBehaviour, ILDtkImportedFields
+public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 {
     [Header("移动设置")]
     public Transform target;               // 被移动的子物体
@@ -20,7 +19,7 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
     public BoxCollider2D targetCollider;
 
     //自动导入关卡设定数据
-    public void OnLDtkImportFields(LDtkFields fields)
+    public void OnAfterImport(SwitchableObj father, LDtkFields fields)
     {
         reverse = fields.GetBool("Reverse");
         float xLength = transform.localScale.x;
@@ -30,14 +29,23 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
         {
             pointA = new Vector3(0, -0.5f * (yLength*3-3), 0);
             pointB = new Vector3(0, 0.5f * (yLength*3-3), 0);
+            father.ChangeExpectedSize(3, Mathf.RoundToInt(yLength * 3));
+            father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
         }
         else
         {
             pointA = new Vector3(-0.5f*(xLength*3-3), 0, 0);
             pointB = new Vector3(0.5f*(xLength*3-3), 0, 0);
+            father.ChangeExpectedSize(Mathf.RoundToInt(xLength * 3), 3);
+            father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
         }
 
         target.localPosition = reverse ? pointA : pointB;
+        //father.ChangeExpectedSize(Mathf.RoundToInt(xLength*3),Mathf.RoundToInt(yLength*3));
+        father.GetRenderer().enabled = false;
+        father.IfSpecialEdgeChecker = true;
+        
+
     }
 
     private void Start()
@@ -88,4 +96,9 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
         playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
     }
 
+}
+
+public interface INeilLDTkImportCompanion
+{
+    void OnAfterImport(SwitchableObj father, LDtkFields fields);
 }

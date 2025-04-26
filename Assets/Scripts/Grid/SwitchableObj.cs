@@ -57,6 +57,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [Header("是否允许交换")]
     [SerializeField] private bool IfBanSwitch_SetWhenStart;
 
+    [Header("是否启用特殊的边界检测机制")]
+    public bool IfSpecialEdgeChecker;
+    public SpriteRenderer SpecialEdgeChecker;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -72,6 +76,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         ExpectedAnchorPos.x = fields.GetInt("PivotX");
         ExpectedAnchorPos.y = fields.GetInt("PivotY");
         SizeToExpectedSize();
+        foreach(INeilLDTkImportCompanion companion in GetComponents<INeilLDTkImportCompanion>())
+        {
+            companion.OnAfterImport(this, fields);
+        }
     }
 
     private void Start(){
@@ -88,6 +96,11 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             SwitchEnableSwitchState();
 
         defaultMaterial = renderer.material;
+    }
+
+    public SpriteRenderer GetRenderer()
+    {
+        return renderer;
     }
 
     private void OnEnable()
@@ -116,7 +129,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         selfGridPos = gridPos;
         if (ifInPreview)
         {
-            previewObj.transform.position = recordPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.transform.position = recordPos - anchor.transform.localPosition + (ifAdjustY ? Vector3.up * adjustYAmount[ExpectedSize.x - 1] : Vector3.zero);
             previewObj.SetActive(false);
             StartCoroutine(WhatCanISay(renderer.material));
             renderer.material = switchMaterial;
@@ -193,6 +206,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
         for (int i = 0; i < hitCount; i++) {
             if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject&& !results[i].transform.IsChildOf(ignoreObject.transform)) {
+                Debug.Log("阻止我们的是" + results[i].gameObject.name);
                 return false; // 有碰撞，且不是要忽略的物体
             }
         }
@@ -321,6 +335,13 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
     }
 
+    public void ChangeExpectedSize(int x, int y)
+    {
+        ExpectedSize.x = x;
+        ExpectedSize.y = y;
+        SizeToExpectedSize();
+    }
+
     public void SizeToExpectedSize()
     {
         if (ExpectedSize.x == 0 || ExpectedSize.y == 0)
@@ -344,8 +365,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             return;
         }
 
-        if (lightTrans != null) lightTrans.localScale = new Vector3(ExpectedSize.x, ExpectedSize.y, 1);
-        if (EnvironmentLight != null)
+        if (lightTrans != null && lightTrans.gameObject.activeInHierarchy) lightTrans.localScale = new Vector3(ExpectedSize.x, ExpectedSize.y, 1);
+        if (EnvironmentLight != null && EnvironmentLight.gameObject.activeInHierarchy)
         {
             EnvironmentLight.pointLightInnerRadius = minRangeList[ExpectedSize.x-1];
             EnvironmentLight.pointLightOuterRadius = maxRangeList[ExpectedSize.x-1];
@@ -471,7 +492,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             {
                 previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
             }
-            previewObj.transform.position = gridPos - anchor.transform.localPosition + Vector3.up * adjustYAmount[ExpectedSize.x - 1];
+            previewObj.transform.position = gridPos - anchor.transform.localPosition + (ifAdjustY ?Vector3.up * adjustYAmount[ExpectedSize.x - 1]:Vector3.zero);
             previewObj.SetActive(true);
             ifInPreview = true;
         }
@@ -513,7 +534,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     public bool IsSpriteVisibleOnScreen()
     {
-        SpriteRenderer sr = renderer;
+        SpriteRenderer sr = IfSpecialEdgeChecker? SpecialEdgeChecker: renderer;
         Camera cam = Camera.main;
 
         Bounds bounds = sr.bounds;
