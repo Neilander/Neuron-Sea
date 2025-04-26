@@ -24,11 +24,16 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private SpriteRenderer radiusVisualRenderer;
 
     [SerializeField] private GameObject RangeDisplayer;
+
+    public GameObject checker;
     
     //自动导入关卡设定数据
     public void OnLDtkImportFields(LDtkFields fields)
     {
         explosionRadius = fields.GetInt("BoomRadius") * 1.5f;
+        int iX = fields.GetInt("SizeX");
+        int iY = fields.GetInt("SizeY");
+        checker.transform.localScale = new Vector3(iX, iY, 1);
     }
 
     private void Start(){
@@ -65,6 +70,17 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
             StartCoroutine(ExplodeCountDown(waitTime));
         }
     }
+
+    public void StartExplode()
+    {
+        if (!isInCountDown)
+        {
+            Debug.Log("检测到玩家触碰");
+            isInCountDown = true;
+            StartCoroutine(ExplodeCountDown(waitTime));
+        }
+    }
+
 
     private bool isPaused = false;
 
