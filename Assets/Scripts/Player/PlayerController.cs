@@ -377,6 +377,10 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         {
             FindAnyObjectByType<levelManager>().SwitchToNextLevel();
         }
+        else if (movementBounds.IsAtLeftEdge())
+        {
+            FindAnyObjectByType<levelManager>().SwitchToBeforeLevel();
+        }
         else if (movementBounds.ShouldDrop() && !dropped)
         {
             dropped = true;
@@ -556,6 +560,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     {
         Speed = new Vector2(controlInput * moveSpeed, Speed.y);
         animator.SetFloat("Speed", Mathf.Abs(controlInput));
+        AdjustPosition(Speed*Time.deltaTime);
     }
 
     private void RotateInControl()
