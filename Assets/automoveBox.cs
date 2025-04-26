@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LDtkUnity;
 
-public class automoveBox : MonoBehaviour
+public class automoveBox : MonoBehaviour, ILDtkImportedFields
 {
     [Header("移动设置")]
     public Transform target;               // 被移动的子物体
@@ -18,6 +19,7 @@ public class automoveBox : MonoBehaviour
 
     private void Start()
     {
+        
         if (target == null)
         {
             Debug.LogError("请指定要移动的子物体！");
@@ -61,5 +63,25 @@ public class automoveBox : MonoBehaviour
         prevPos = target.localPosition;
         target.localPosition = end;
         playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
+    }
+
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        
+        float xLength = transform.localScale.x;
+        float yLength = transform.localScale.y;
+        transform.localScale = Vector3.one;
+        if (xLength == 1)
+        {
+            pointA = new Vector3(0, -0.5f * (yLength*3-3), 0);
+            pointB = new Vector3(0, 0.5f * (yLength*3-3), 0);
+        }
+        else
+        {
+            pointA = new Vector3(-0.5f*(xLength*3-3), 0, 0);
+            pointB = new Vector3(0.5f*(xLength*3-3), 0, 0);
+        }
+
+        target.localPosition = fields.GetBool("Reverse") ? pointA : pointB;
     }
 }
