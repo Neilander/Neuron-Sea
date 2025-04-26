@@ -16,7 +16,7 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
     public bool reverse;//如果为false，起点左下角，终点右上角；如果为true，起点右下角，终点左上角
 
     private bool isMoving = false;
-    private bool atA = true; // 当前是否在A点（决定下次去哪）
+    private bool atA; // 当前是否在A点（决定下次去哪）
 
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
@@ -25,6 +25,13 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
     public void OnLDtkImportFields(LDtkFields fields)
     {
         reverse = fields.GetBool("Reverse");
+        float xLength = transform.localScale.x;
+        float yLength = transform.localScale.y;
+        transform.localScale = Vector3.one;
+        pointA = new Vector3(-0.5f * (xLength * 3 - 3), -0.5f * (yLength * 3 - 3), 0);
+        pointB = new Vector3(0.5f * (xLength * 3 - 3), 0.5f * (yLength * 3 - 3), 0);
+
+        target.localPosition = reverse ? pointA : pointB;
     }
 
     private void Start()
@@ -35,8 +42,7 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
             return;
         }
 
-        target.localPosition = pointA;
-        atA = true;
+        atA = !reverse;
 
         playerController = FindObjectOfType<PlayerController>();
     }
@@ -68,7 +74,7 @@ public class touchmoveBox : MonoBehaviour, ILDtkImportedFields
             float curvedT = moveCurve.Evaluate(t);
             prevPos = target.localPosition;
             target.localPosition = Vector3.Lerp(from, to, curvedT);
-            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + 0.02f * Vector2.one, targetCollider.size + 0.04f * Vector2.one)))
+            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f - 0.03f * Vector2.one, targetCollider.size + 0.06f * Vector2.one)))
             {
                 playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
             }
