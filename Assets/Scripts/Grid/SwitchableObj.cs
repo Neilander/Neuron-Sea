@@ -410,11 +410,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     {
         if (anchor != null)
         {
+            /*
             if (GridManager.Instance == null)
             {
                 Debug.LogError("GridManager.Instance is null.");
             }
-
+            */
             float gridSize = GridManager.Instance ? GridManager.Instance.gridWidth : 1f;
 
             // 1. 计算世界单位下的 ExpectedSize 大小
