@@ -61,11 +61,13 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         target.localPosition = !reverse ? pointA : pointB;
 
         StartCoroutine(MoveLoop());
+        PlayerDeathEvent.OnDeathTriggered += (GameObject x) => move = false;
     }
 
+    private bool move = true;
     private IEnumerator MoveLoop()
     {
-        while (true)
+        while (move)
         {
             yield return StartCoroutine(MoveFromTo(pointA, pointB));
             yield return new WaitForSeconds(waitDuration);
@@ -111,6 +113,11 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         {
             PlayerDeathEvent.Trigger(gameObject, DeathType.Squish);
         }
+    }
+
+    private void OnDestroy()
+    {
+        PlayerDeathEvent.OnDeathTriggered -= (GameObject x) => move = false;
     }
 }
 
