@@ -105,15 +105,19 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
         flashTimings[3] = time * 0.1333f;
         flashTimings[4] = time * 0.1333f;
 
+        float x = 0;
+
         for (int i = 0; i < totalFlashes; i++) {
             float half = flashTimings[i] / 2f;
 
             // Alpha 0 → 1
             float t = 0f;
             while (t < half) {
-                yield return WaitUnpaused();
+                //yield return WaitUnpaused();
 
                 t += Time.deltaTime;
+                x += Time.deltaTime;
+                //Debug.Log("当前x"+x);
                 float a = Mathf.Lerp(0f, 1f, t / half);
                 SetAlpha(a);
                 yield return null;
@@ -122,9 +126,11 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
             // Alpha 1 → 0
             t = 0f;
             while (t < half) {
-                yield return WaitUnpaused();
+                //yield return WaitUnpaused();
 
                 t += Time.deltaTime;
+                x += Time.deltaTime;
+                //Debug.Log("当前x" + x);
                 float a = Mathf.Lerp(1f, 0f, t / half);
                 SetAlpha(a);
                 yield return null;
@@ -141,7 +147,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
         float expandTimer = 0f;
 
         while (expandTimer < expandDuration) {
-            yield return WaitUnpaused();
+            //yield return WaitUnpaused();
 
             expandTimer += Time.deltaTime;
             float t = Mathf.Clamp01(expandTimer / expandDuration);
