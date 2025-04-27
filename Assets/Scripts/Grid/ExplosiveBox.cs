@@ -89,7 +89,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
             yield return null;
     }
 
-    public void Pause() => isPaused = true;
+    public void Pause() => isPaused = false;//现在停用这个
     public void Resume() => isPaused = false;
 
     IEnumerator ExplodeCountDown(float time){
