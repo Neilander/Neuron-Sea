@@ -17,5 +17,6 @@ public enum DeathType
 {
     Fall,
     Explode,
-    Spike
+    Spike,
+    Squish
 }

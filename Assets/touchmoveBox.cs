@@ -44,8 +44,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
         }
 
-        target.localPosition = reverse ? pointA : pointB;
-        atA = reverse;
+        target.localPosition = !reverse ? pointA : pointB;
+        atA = !reverse;
         //father.ChangeExpectedSize(Mathf.RoundToInt(xLength*3),Mathf.RoundToInt(yLength*3));
         father.GetRenderer().enabled = false;
         father.IfSpecialEdgeChecker = true;
@@ -60,7 +60,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             return;
         }
 
-        atA = reverse;
+        target.localPosition = !reverse ? pointA : pointB;
+        atA = !reverse;
         Debug.Log(gameObject.name+"的atA是"+atA);
         playerController = FindObjectOfType<PlayerController>();
     }
@@ -83,35 +84,46 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         Vector3 start = atA ? pointA : pointB;
         Vector3 end = atA ? pointB : pointA;
         
-        Vector2 prevPos;
         float time = -moveStanbyDuration;
         while (time < moveDuration)
         {
             time += Time.deltaTime;
             float t = Mathf.Clamp01(time / moveDuration);
             float curvedT = moveCurve.Evaluate(t);
-            prevPos = target.localPosition;
-            float CheckOffset = 0.03f;
-            float leftCheckOffset = (end - start).x < 0 ? -CheckOffset : 0;
-            float rightCheckOffset = (end - start).x > 0 ? CheckOffset : 0;
-            float upCheckOffset = CheckOffset;
-            float downCheckOffset = (end - start).y < 0 ? -CheckOffset : 0;
-            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + new Vector2(leftCheckOffset, downCheckOffset), targetCollider.size + new Vector2(rightCheckOffset - leftCheckOffset, upCheckOffset - downCheckOffset))))
-            {
-                playerController.MovePosition(playerController.Position + (Vector2)Vector3.Lerp(start, end, curvedT) - prevPos);
-            }
-            target.localPosition = Vector3.Lerp(start, end, curvedT);
+            
+            MoveStep(Vector3.Lerp(start, end, curvedT) - target.localPosition);
+
             yield return null;
         }
 
-        prevPos = target.localPosition;
-        target.localPosition = end;
-        playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
+        // 确保最终精确到达
+        MoveStep(end - target.localPosition);
 
         atA = !atA;
 
         yield return new WaitForSeconds(cooldownDuration);
 
         isMoving = false;
+    }
+    public void MoveStep(Vector2 step)
+    {
+        float CheckOffset = 0.03f;
+        float leftCheckOffset = step.x < 0 ? -CheckOffset : 0;
+        float rightCheckOffset = step.x > 0 ? CheckOffset : 0;
+        float upCheckOffset = CheckOffset;
+        float downCheckOffset = step.y < 0 ? -CheckOffset : 0;
+        if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size + new Vector2(0, upCheckOffset))) && downCheckOffset != 0)
+        {
+            playerController.MovePosition(playerController.Position + step);
+        }
+        else if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + new Vector2(leftCheckOffset, downCheckOffset), targetCollider.size + new Vector2(rightCheckOffset - leftCheckOffset, upCheckOffset - downCheckOffset))))
+        {
+            playerController.AdjustPosition(step);
+        }
+        target.localPosition += (Vector3)step;
+        if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size)))
+        {
+            PlayerDeathEvent.Trigger(gameObject, DeathType.Squish);
+        }
     }
 }
