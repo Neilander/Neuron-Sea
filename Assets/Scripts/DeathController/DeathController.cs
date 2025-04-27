@@ -762,7 +762,7 @@ public class DeathController : MonoBehaviour
             effectElapsedTime += Time.deltaTime;
             yield return null;
         }*/
-
+        levelManager.instance.ReloadLevel();
         Debug.Log("应该开始移动" + (respawnTarget == null));
         while (effectElapsedTime < effectDuration)
         {

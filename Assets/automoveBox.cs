@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class automoveBox : MonoBehaviour, ILDtkImportedFields
+public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 {
     [Header("移动设置")]
     public Transform target;               // 被移动的子物体
@@ -19,13 +19,38 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
     public BoxCollider2D targetCollider;
 
     //自动导入关卡设定数据
-    public void OnLDtkImportFields(LDtkFields fields)
+    public void OnAfterImport(SwitchableObj father, LDtkFields fields)
     {
         reverse = fields.GetBool("Reverse");
+        float xLength = transform.localScale.x;
+        float yLength = transform.localScale.y;
+        transform.localScale = Vector3.one;
+        if (xLength == 1)
+        {
+            pointA = new Vector3(0, -0.5f * (yLength*3-3), 0);
+            pointB = new Vector3(0, 0.5f * (yLength*3-3), 0);
+            father.ChangeExpectedSize(3, Mathf.RoundToInt(yLength * 3));
+            father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
+        }
+        else
+        {
+            pointA = new Vector3(-0.5f*(xLength*3-3), 0, 0);
+            pointB = new Vector3(0.5f*(xLength*3-3), 0, 0);
+            father.ChangeExpectedSize(Mathf.RoundToInt(xLength * 3), 3);
+            father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
+        }
+
+        target.localPosition = reverse ? pointA : pointB;
+        //father.ChangeExpectedSize(Mathf.RoundToInt(xLength*3),Mathf.RoundToInt(yLength*3));
+        father.GetRenderer().enabled = false;
+        father.IfSpecialEdgeChecker = true;
+        
+
     }
 
     private void Start()
     {
+        
         if (target == null)
         {
             Debug.LogError("请指定要移动的子物体！");
@@ -58,7 +83,7 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
             float curvedT = moveCurve.Evaluate(t);
             prevPos = target.localPosition;
             target.localPosition = Vector3.Lerp(start, end, curvedT);
-            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f - 0.02f * Vector2.one, targetCollider.size + 0.04f * Vector2.one)))
+            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f - 0.03f * Vector2.one, targetCollider.size + 0.06f * Vector2.one)))
             {
                 playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
             }
@@ -70,4 +95,10 @@ public class automoveBox : MonoBehaviour, ILDtkImportedFields
         target.localPosition = end;
         playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
     }
+
+}
+
+public interface INeilLDTkImportCompanion
+{
+    void OnAfterImport(SwitchableObj father, LDtkFields fields);
 }

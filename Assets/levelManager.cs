@@ -16,6 +16,9 @@ public class levelManager : MonoBehaviour
     public GameObject backGround;
 
     private Rect recordRect;
+    [Header("关卡区间")]
+    public int minLevel = 1;
+    public int maxLevel = 12;
 
     
 
@@ -37,7 +40,7 @@ public class levelManager : MonoBehaviour
             }
 
             // 重新加载当前关卡（基于 currentLevelIndex）
-            LoadLevel(currentLevelIndex, true);
+            LoadLevel(Mathf.Clamp(currentLevelIndex,minLevel,maxLevel), true);
             AudioManager.Instance.Play(BGMClip.Level1);
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
         }
@@ -211,7 +214,7 @@ public class levelManager : MonoBehaviour
     public void SwitchToNextLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 36), false);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
         FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
@@ -221,20 +224,20 @@ public class levelManager : MonoBehaviour
     public void SwitchToNextLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, 1, 36), true);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), true);
     }
 
     public void SwitchToBeforeLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 36), false);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
     }
 
     public void SwitchToBeforeLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, 1, 36), true);
+        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
     }
 
     IEnumerator DelayEffect()
@@ -276,5 +279,12 @@ public class levelManager : MonoBehaviour
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        
+    }
+
+    public void ReloadLevel()
+    {
+        GridManager.Instance.RenewSwitch();
+        recordRect = LoadLevel(currentLevelIndex, false);
     }
 }
