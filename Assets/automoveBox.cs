@@ -67,9 +67,9 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     {
         while (true)
         {
-            yield return StartCoroutine(MoveFromTo(pointA, pointB));
+            yield return StartCoroutine(MoveFromTo(!reverse ? pointA : pointB, reverse ? pointA : pointB));
             yield return new WaitForSeconds(waitDuration);
-            yield return StartCoroutine(MoveFromTo(pointB, pointA));
+            yield return StartCoroutine(MoveFromTo(reverse ? pointA : pointB, !reverse ? pointA : pointB));
             yield return new WaitForSeconds(waitDuration);
         }
     }
