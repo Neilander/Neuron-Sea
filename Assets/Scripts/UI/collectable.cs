@@ -75,8 +75,8 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         }
     }
 
-    void GetCollected()
-    {
+    void GetCollected(){
+        levelManager.instance.hasCollectedNum++;
         Destroy(gameObject);
     }
 

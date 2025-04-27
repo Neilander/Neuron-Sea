@@ -27,16 +27,23 @@ public class PauseMenu : MonoBehaviour
     public void ContinueGame(){
         if (isPaused) {
             isPaused = false;
+            Time.timeScale = 1;
+
             pauseMenu.SetActive(false);
         }
         else {
             isPaused = true;
+            Time.timeScale = 0;
             pauseMenu.SetActive(true);
         }
     }
 
     public void SelectGame(){
-        SceneManager.LoadScene(select);
+        transform.Find("LevelSelect").gameObject.SetActive(true);
+    }
+
+    public void ExitSetPanel(){
+        transform.Find("LevelSelect").gameObject.SetActive(false);
     }
 
     public void SettingGame(){

@@ -20,6 +20,7 @@ public class levelManager : MonoBehaviour
     public int minLevel = 1;
     public int maxLevel = 12;
 
+    public int hasCollectedNum=0;
     
 
     [Header("是否开启剧情")]
@@ -268,7 +269,7 @@ public class levelManager : MonoBehaviour
         cameraControl = Camera.main.GetComponent<CameraControl>();
         if (cameraControl == null)
         {
-            Debug.LogError("新场景中主相机缺少 CameraControl！");
+            Debug.LogWarning("新场景中主相机缺少 CameraControl！");
             return;
         }
 

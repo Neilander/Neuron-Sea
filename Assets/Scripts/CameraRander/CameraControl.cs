@@ -1,6 +1,7 @@
 using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class CameraControl : MonoBehaviour
@@ -20,7 +21,7 @@ public class CameraControl : MonoBehaviour
     
     private CameraLimitRegion defaultLimit;
 
-    public CompanionController companionController;
+    [CanBeNull] public CompanionController companionController;
 
     
     // ✅ 新增：平滑移动控制
@@ -69,11 +70,13 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
-        ani = companionController.GetComponent<Animator>();
+        if(ani!=null)
+            ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
+        if(companionController!=null)
         companionController.SetTarget(null);
         if (levelManager.instance.ifStartStory) {
             StartCoroutine(BeginningDelay(1f));
