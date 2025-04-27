@@ -8,9 +8,12 @@ public class CollisionReporter : MonoBehaviour
     private float stayTimer = 0f;
     private bool playerInside = false;
 
+    private bool canBeTrigger = true;
+
+    /*
     private void Update()
     {
-        if (playerInside)
+        if (playerTrigger)
         {
             stayTimer += Time.deltaTime;
 
@@ -19,7 +22,7 @@ public class CollisionReporter : MonoBehaviour
                 // 只有触发成功才清零
                 if (box.TriggerMove())
                 {
-                    stayTimer = 0f;
+                    playerTrigger = false;
                 }
             }
         }
@@ -27,9 +30,10 @@ public class CollisionReporter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<PlayerController>() != null)
+        if (collision.GetComponent<PlayerController>() != null&& canBeTrigger)
         {
-            playerInside = true;
+            canBeTrigger = false;
+            playerTrigger = true;
             stayTimer = 0f;
         }
     }
@@ -38,8 +42,13 @@ public class CollisionReporter : MonoBehaviour
     {
         if (collision.GetComponent<PlayerController>() != null)
         {
-            playerInside = false;
             stayTimer = 0f;
+            canBeTrigger = true;
         }
+    }*/
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        box.TriggerMove();
     }
 }

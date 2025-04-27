@@ -21,6 +21,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
 
+
+    const float waitTime = 0.3f;
     //自动导入关卡设定数据
     public void OnAfterImport(SwitchableObj father, LDtkFields fields)
     {
@@ -64,6 +66,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         atA = !reverse;
         Debug.Log(gameObject.name+"的atA是"+atA);
         playerController = FindObjectOfType<PlayerController>();
+        PlayerDeathEvent.OnDeathTriggered += StopMove;
     }
 
     public bool TriggerMove()
@@ -80,6 +83,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     private IEnumerator MoveOnce()
     {
         isMoving = true;
+        yield return new WaitForSeconds(waitTime);
+        
         Debug.Log(gameObject.name+"被触发移动，初始的atA状态是"+atA);
         Vector3 start = atA ? pointA : pointB;
         Vector3 end = atA ? pointB : pointA;
@@ -126,4 +131,16 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             PlayerDeathEvent.Trigger(gameObject, DeathType.Squish);
         }
     }
+
+    private void OnDestroy()
+    {
+        PlayerDeathEvent.OnDeathTriggered -= StopMove;
+    }
+
+    public void StopMove(GameObject trigger)
+    {
+        StopAllCoroutines();
+    }
+
+
 }
