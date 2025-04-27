@@ -80,9 +80,9 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     {
         isMoving = true;
         Debug.Log(gameObject.name+"被触发移动，初始的atA状态是"+atA);
-        Vector3 from = atA ? pointA : pointB;
-        Vector3 to = atA ? pointB : pointA;
-
+        Vector3 start = atA ? pointA : pointB;
+        Vector3 end = atA ? pointB : pointA;
+        
         Vector2 prevPos;
         float time = -moveStanbyDuration;
         while (time < moveDuration)
@@ -91,16 +91,21 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             float t = Mathf.Clamp01(time / moveDuration);
             float curvedT = moveCurve.Evaluate(t);
             prevPos = target.localPosition;
-            target.localPosition = Vector3.Lerp(from, to, curvedT);
-            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f - 0.03f * Vector2.one, targetCollider.size + 0.06f * Vector2.one)))
+            float CheckOffset = 0.03f;
+            float leftCheckOffset = (end - start).x < 0 ? -CheckOffset : 0;
+            float rightCheckOffset = (end - start).x > 0 ? CheckOffset : 0;
+            float upCheckOffset = CheckOffset;
+            float downCheckOffset = (end - start).y < 0 ? -CheckOffset : 0;
+            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + new Vector2(leftCheckOffset, downCheckOffset), targetCollider.size + new Vector2(rightCheckOffset - leftCheckOffset, upCheckOffset - downCheckOffset))))
             {
-                playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
+                playerController.MovePosition(playerController.Position + (Vector2)Vector3.Lerp(start, end, curvedT) - prevPos);
             }
+            target.localPosition = Vector3.Lerp(start, end, curvedT);
             yield return null;
         }
 
         prevPos = target.localPosition;
-        target.localPosition = to;
+        target.localPosition = end;
         playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
 
         atA = !atA;
