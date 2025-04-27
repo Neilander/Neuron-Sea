@@ -421,6 +421,9 @@ public class GridManager : MonoBehaviour
                 Debug.Log("进入none state");
                 break;
             case SwitchState.Switch:
+                AudioManager.Instance.PauseBGM();
+                AudioManager.Instance.Play(SFXClip.BulletTimeIn);
+                AudioManager.Instance.Play(SFXClip.BulletContinune);
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
                 gridObj.SetActive(true);
@@ -441,6 +444,8 @@ public class GridManager : MonoBehaviour
         switch (lastState)
         {
             case SwitchState.Switch:
+                AudioManager.Instance.Play(SFXClip.BulletTimeOut);
+                AudioManager.Instance.ResumeBGM();
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
                 gridObj.SetActive(false);
@@ -750,6 +755,7 @@ class TwoObjectContainer<Type>
 
     public bool Record(Type n, out Type poopOut, out Type poopOut2)
     {
+        AudioManager.Instance.Play(SFXClip.ObjSelection);
         poopOut = n;
         poopOut2 = n;
         if (hasFirst)

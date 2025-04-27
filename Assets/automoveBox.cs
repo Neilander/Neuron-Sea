@@ -59,11 +59,16 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         playerController = FindObjectOfType<PlayerController>();
 
         StartCoroutine(MoveLoop());
+
+        PlayerDeathEvent.OnDeathTriggered += (GameObject x) => move = false;
     }
 
+
+
+    private bool move = true;
     private IEnumerator MoveLoop()
     {
-        while (true)
+        while (move)
         {
             yield return StartCoroutine(MoveFromTo(pointA, pointB));
             yield return new WaitForSeconds(waitDuration);
@@ -99,6 +104,11 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         prevPos = target.localPosition;
         target.localPosition = end;
         playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
+    }
+
+    private void OnDestroy()
+    {
+        PlayerDeathEvent.OnDeathTriggered -= (GameObject x) => move = false;
     }
 
 }

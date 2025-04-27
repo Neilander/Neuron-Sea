@@ -65,6 +65,7 @@ public class AudioManager : MonoBehaviour
         sfxDict = sfxClips.ToDictionary(e => e.key, e => e); // 保持不动
     }
 
+    private BGMClip curClip;
     public void Play(BGMClip clipKey)
     {
         if (!bgmDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
@@ -76,6 +77,7 @@ public class AudioManager : MonoBehaviour
             Destroy(oldSource);
         }
 
+        curClip = clipKey;
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
         newSource.clip = entry.clip;
         newSource.loop = true;
@@ -172,6 +174,16 @@ public class AudioManager : MonoBehaviour
 
         Destroy(source);
     }
+
+    public void PauseBGM()
+    {
+        Stop(curClip);
+    }
+
+    public void ResumeBGM()
+    {
+        Play(curClip);
+    }
 }
 
 public enum BGMClip
@@ -185,7 +197,7 @@ public enum WhiteNoiseClip
 {
     Scene1,
     Scene2,
-    Scene3
+    Scene3,
 }
 
 public enum SFXClip
@@ -194,5 +206,11 @@ public enum SFXClip
     Jump,
     Drop,
     Switch,
-    IdleBox
+    IdleBox,
+    BulletTimeIn,
+    BulletTimeOut,
+    PickUpCollectable,
+    ObjSelection,
+    BulletContinune,
+    PlayerDeath
 }
