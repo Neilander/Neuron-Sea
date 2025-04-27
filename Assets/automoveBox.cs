@@ -1,6 +1,7 @@
 using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
@@ -40,7 +41,7 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
         }
 
-        target.localPosition = reverse ? pointA : pointB;
+        target.localPosition = !reverse ? pointA : pointB;
         //father.ChangeExpectedSize(Mathf.RoundToInt(xLength*3),Mathf.RoundToInt(yLength*3));
         father.GetRenderer().enabled = false;
         father.IfSpecialEdgeChecker = true;
@@ -57,18 +58,14 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             return;
         }
         playerController = FindObjectOfType<PlayerController>();
+        target.localPosition = !reverse ? pointA : pointB;
 
         StartCoroutine(MoveLoop());
-
-        PlayerDeathEvent.OnDeathTriggered += (GameObject x) => move = false;
     }
 
-
-
-    private bool move = true;
     private IEnumerator MoveLoop()
     {
-        while (move)
+        while (true)
         {
             yield return StartCoroutine(MoveFromTo(pointA, pointB));
             yield return new WaitForSeconds(waitDuration);
@@ -79,39 +76,44 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
     private IEnumerator MoveFromTo(Vector3 start, Vector3 end)
     {
-        Vector2 prevPos;
         float time = -moveStanbyDuration;
         while (time < moveDuration)
         {
             time += Time.deltaTime;
             float t = Mathf.Clamp01(time / moveDuration);
             float curvedT = moveCurve.Evaluate(t);
-            prevPos = target.localPosition;
-            float CheckOffset = 0.03f;
-            float leftCheckOffset = (end - start).x < 0 ? -CheckOffset : 0;
-            float rightCheckOffset = (end - start).x > 0 ? CheckOffset : 0;
-            float upCheckOffset = CheckOffset;
-            float downCheckOffset = (end - start).y < 0 ? -CheckOffset : 0;
-            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + new Vector2(leftCheckOffset, downCheckOffset), targetCollider.size + new Vector2(rightCheckOffset - leftCheckOffset, upCheckOffset - downCheckOffset))))
-            {
-                playerController.MovePosition(playerController.Position + (Vector2)Vector3.Lerp(start, end, curvedT) - prevPos);
-            }
-            target.localPosition = Vector3.Lerp(start, end, curvedT);
+            MoveStep(Vector3.Lerp(start, end, curvedT) - target.localPosition);
+            
             yield return null;
         }
 
         // 确保最终精确到达
-        prevPos = target.localPosition;
-        target.localPosition = end;
-        playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
+        MoveStep(end - target.localPosition);
     }
 
-    private void OnDestroy()
+    public void MoveStep(Vector2 step)
     {
-        PlayerDeathEvent.OnDeathTriggered -= (GameObject x) => move = false;
+        float CheckOffset = 0.03f;
+        float leftCheckOffset = step.x < 0 ? -CheckOffset : 0;
+        float rightCheckOffset = step.x > 0 ? CheckOffset : 0;
+        float upCheckOffset = CheckOffset;
+        float downCheckOffset = step.y < 0 ? -CheckOffset : 0;
+        if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size + new Vector2(0, upCheckOffset))) && downCheckOffset != 0)
+        {
+            playerController.MovePosition(playerController.Position + step);
+        }
+        else if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + new Vector2(leftCheckOffset, downCheckOffset), targetCollider.size + new Vector2(rightCheckOffset - leftCheckOffset, upCheckOffset - downCheckOffset))))
+        {
+            playerController.AdjustPosition(step);
+        }
+        target.localPosition += (Vector3)step;
+        if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size)))
+        {
+            PlayerDeathEvent.Trigger(gameObject, DeathType.Squish);
+        }
     }
-
 }
+
 
 public interface INeilLDTkImportCompanion
 {
