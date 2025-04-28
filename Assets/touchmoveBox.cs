@@ -113,10 +113,10 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public void MoveStep(Vector2 step)
     {
         float CheckOffset = 0.03f;
-        float leftCheckOffset = step.x < 0 ? -CheckOffset : 0;
-        float rightCheckOffset = step.x > 0 ? CheckOffset : 0;
-        float upCheckOffset = CheckOffset;
-        float downCheckOffset = step.y < 0 ? -CheckOffset : 0;
+        float leftCheckOffset = step.x < 0 ? -CheckOffset + step.x * 4f : 0;
+        float rightCheckOffset = step.x > 0 ? CheckOffset + step.x * 4f : 0;
+        float upCheckOffset = step.y > 0 ? CheckOffset + step.y * 4f : CheckOffset;
+        float downCheckOffset = step.y < 0 ? -CheckOffset + step.y * 4f : 0;
         if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size + new Vector2(0, upCheckOffset))) && downCheckOffset != 0)
         {
             playerController.MovePosition(playerController.Position + step);
