@@ -309,7 +309,7 @@
 				},
 				{
 					"__identifier": "Auto3",
-					"__grid": [85,12],
+					"__grid": [84,10],
 					"__pivot": [0.5,0.5],
 					"__tags": [],
 					"__tile": null,
@@ -318,7 +318,7 @@
 					"width": 252,
 					"height": 108,
 					"defUid": 505,
-					"px": [3078,450],
+					"px": [3042,378],
 					"fieldInstances": [
 						{ "__identifier": "SizeX", "__type": "Int", "__value": 3, "__tile": null, "defUid": 506, "realEditorValues": [] },
 						{ "__identifier": "SizeY", "__type": "Int", "__value": 3, "__tile": null, "defUid": 507, "realEditorValues": [] },
@@ -328,8 +328,8 @@
 						{ "__identifier": "TrackLengthY", "__type": "Int", "__value": 3, "__tile": null, "defUid": 511, "realEditorValues": [] },
 						{ "__identifier": "Reverse", "__type": "Bool", "__value": false, "__tile": null, "defUid": 747, "realEditorValues": [null] }
 					],
-					"__worldX": 5490,
-					"__worldY": 4698
+					"__worldX": 5454,
+					"__worldY": 4626
 				},
 				{
 					"__identifier": "Piece",
@@ -2273,6 +2273,31 @@
 			"intGridCsv": [],
 			"autoLayerTiles": [],
 			"seed": 2533838,
+			"overrideTilesetUid": null,
+			"gridTiles": [],
+			"entityInstances": []
+		},
+		{
+			"__identifier": "Decoration1",
+			"__type": "AutoLayer",
+			"__cWid": 97,
+			"__cHei": 36,
+			"__gridSize": 36,
+			"__opacity": 1,
+			"__pxTotalOffsetX": 0,
+			"__pxTotalOffsetY": 0,
+			"__tilesetDefUid": 98,
+			"__tilesetRelPath": "../IMG/Others/场景3局内装饰.png",
+			"iid": "55ca78c1-1030-11f0-9593-03ac6bd85f4a",
+			"levelId": 738,
+			"layerDefUid": 762,
+			"pxOffsetX": 0,
+			"pxOffsetY": 0,
+			"visible": true,
+			"optionalRules": [],
+			"intGridCsv": [],
+			"autoLayerTiles": [],
+			"seed": 2061302,
 			"overrideTilesetUid": null,
 			"gridTiles": [],
 			"entityInstances": []

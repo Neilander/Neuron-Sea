@@ -49,6 +49,9 @@ public class CollisionReporter : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        box.TriggerMove();
+        if (collision.GetComponent<PlayerController>() != null)
+        {
+            box.TriggerMove();
+        }
     }
 }
