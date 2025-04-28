@@ -47,7 +47,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SettingGame(){
-        if (volumeCanvas.Instance != null) volumeCanvas.Instance.OpenCanvas();
+        if (SetPanel.Instance != null) SetPanel.Instance.OpenCanvas();
     }
 
     public void GoToTitle(){

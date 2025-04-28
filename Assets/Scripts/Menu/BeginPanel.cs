@@ -115,7 +115,7 @@ public class BeginPanel : MonoBehaviour
 
     public void Volume()
     {
-        volumeCanvas.Instance.OpenCanvas();
+        SetPanel.Instance.OpenCanvas();
 
         /*
         if(isRed){
