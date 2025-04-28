@@ -21,6 +21,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
 
+
+    const float waitTime = 0.3f;
     //自动导入关卡设定数据
     public void OnAfterImport(SwitchableObj father, LDtkFields fields)
     {
@@ -44,8 +46,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
         }
 
-        target.localPosition = reverse ? pointA : pointB;
-        atA = reverse;
+        target.localPosition = !reverse ? pointA : pointB;
+        atA = !reverse;
         //father.ChangeExpectedSize(Mathf.RoundToInt(xLength*3),Mathf.RoundToInt(yLength*3));
         father.GetRenderer().enabled = false;
         father.IfSpecialEdgeChecker = true;
@@ -60,9 +62,11 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             return;
         }
 
-        atA = reverse;
+        target.localPosition = !reverse ? pointA : pointB;
+        atA = !reverse;
         Debug.Log(gameObject.name+"的atA是"+atA);
         playerController = FindObjectOfType<PlayerController>();
+        PlayerDeathEvent.OnDeathTriggered += StopMove;
     }
 
     public bool TriggerMove()
@@ -79,29 +83,26 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     private IEnumerator MoveOnce()
     {
         isMoving = true;
+        yield return new WaitForSeconds(waitTime);
+        
         Debug.Log(gameObject.name+"被触发移动，初始的atA状态是"+atA);
-        Vector3 from = atA ? pointA : pointB;
-        Vector3 to = atA ? pointB : pointA;
-
-        Vector2 prevPos;
+        Vector3 start = atA ? pointA : pointB;
+        Vector3 end = atA ? pointB : pointA;
+        
         float time = -moveStanbyDuration;
         while (time < moveDuration)
         {
             time += Time.deltaTime;
             float t = Mathf.Clamp01(time / moveDuration);
             float curvedT = moveCurve.Evaluate(t);
-            prevPos = target.localPosition;
-            target.localPosition = Vector3.Lerp(from, to, curvedT);
-            if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f - 0.03f * Vector2.one, targetCollider.size + 0.06f * Vector2.one)))
-            {
-                playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
-            }
+            
+            MoveStep(Vector3.Lerp(start, end, curvedT) - target.localPosition);
+
             yield return null;
         }
 
-        prevPos = target.localPosition;
-        target.localPosition = to;
-        playerController.MovePosition(playerController.Position + (Vector2)target.localPosition - prevPos);
+        // 确保最终精确到达
+        MoveStep(end - target.localPosition);
 
         atA = !atA;
 
@@ -109,4 +110,37 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
         isMoving = false;
     }
+    public void MoveStep(Vector2 step)
+    {
+        float CheckOffset = 0.03f;
+        float leftCheckOffset = step.x < 0 ? -CheckOffset : 0;
+        float rightCheckOffset = step.x > 0 ? CheckOffset : 0;
+        float upCheckOffset = CheckOffset;
+        float downCheckOffset = step.y < 0 ? -CheckOffset : 0;
+        if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size + new Vector2(0, upCheckOffset))) && downCheckOffset != 0)
+        {
+            playerController.MovePosition(playerController.Position + step);
+        }
+        else if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f + new Vector2(leftCheckOffset, downCheckOffset), targetCollider.size + new Vector2(rightCheckOffset - leftCheckOffset, upCheckOffset - downCheckOffset))))
+        {
+            playerController.AdjustPosition(step);
+        }
+        target.localPosition += (Vector3)step;
+        if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size)))
+        {
+            PlayerDeathEvent.Trigger(gameObject, DeathType.Squish);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        PlayerDeathEvent.OnDeathTriggered -= StopMove;
+    }
+
+    public void StopMove(GameObject trigger)
+    {
+        StopAllCoroutines();
+    }
+
+
 }

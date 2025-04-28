@@ -170,7 +170,28 @@ public partial class PlayerController
     {
         Vector2 origin = this.Position + collider.position;
         Vector2 direct = Math.Sign(distX) > 0 ? Vector2.right : Vector2.left;
-        return false;
+        //XÖá·½ÏòµÄCorner Correction
+        {
+            for (int i = 1; i <= Constants.UpwardCornerCorrection * 5; i++)
+            {
+                RaycastHit2D hit = Physics2D.BoxCast(origin + new Vector2(0, -i * 0.02f), collider.size, 0, direct, Mathf.Abs(distX) + DEVIATION, GroundMask);
+                if (!hit)
+                {
+                    this.Position += new Vector2(0, -i * 0.02f);
+                    return true;
+                }
+            }
+            for (int i = 1; i <= Constants.UpwardCornerCorrection * 5; i++)
+            {
+                RaycastHit2D hit = Physics2D.BoxCast(origin + new Vector2(0, i * 0.02f), collider.size, 0, direct, Mathf.Abs(distX) + DEVIATION, GroundMask);
+                if (!hit)
+                {
+                    this.Position += new Vector2(0, i * 0.02f);
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     private bool CorrectY(float distY)

@@ -75,8 +75,9 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         }
     }
 
-    void GetCollected(){
-        levelManager.instance.hasCollectedNum++;
+    void GetCollected()
+    {
+        AudioManager.Instance.Play(SFXClip.PickUpCollectable);
         Destroy(gameObject);
     }
 

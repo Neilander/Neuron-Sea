@@ -176,6 +176,13 @@ public class levelManager : MonoBehaviour
             Debug.LogWarning("未找到 Entities 物体");
         }
 
+        if (backGround == null)
+        {
+            GameObject backgroundObject = GameObject.FindGameObjectWithTag("BackGround");
+
+            backGround = backgroundObject;
+        }
+
         // 1. 查找 Layer-0
         Transform layer0 = backGround.transform.Find("Layer-0");
 

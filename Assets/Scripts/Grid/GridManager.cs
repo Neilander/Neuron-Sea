@@ -53,6 +53,7 @@ public class GridManager : MonoBehaviour
     private bool getBothTarget = false;
     private SwitchableObj tempSwitchableObj;
     private bool ifLegalMove = false;
+    
 
     public int SwitchTime { get; private set; }
 
@@ -300,14 +301,17 @@ public class GridManager : MonoBehaviour
                             bool ifChanged = false;
                             if (switchInfoRecorder.hasFirst)
                             {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
                                 ifChanged = true;
                             }
                             if (switchInfoRecorder.hasSecond)
                             {
-                                switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
                                 ifChanged = true;
                             }
+                            tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+
+                            /*
                             if (ifChanged)
                             {
                                 //修改已经取出的tryGet的表现
@@ -315,15 +319,16 @@ public class GridManager : MonoBehaviour
                             }
                             //统一取消选中
                             switchInfoRecorder.Refresh();
-
+                            */
                             //如果之前没有改变，那么说明之前只选择了一个，那么就要保持tryGet的选择
+                            /*
                             SwitchableObj temp1;
                             SwitchableObj temp2;
                             if (!ifChanged)
                             {
                                 switchInfoRecorder.Record(tryGet, out temp1, out temp2);
                                 tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
-                            }
+                            }*/
                                 
                         }
                         else//选中一个新的物体
@@ -421,6 +426,9 @@ public class GridManager : MonoBehaviour
                 Debug.Log("进入none state");
                 break;
             case SwitchState.Switch:
+                AudioManager.Instance.PauseBGM();
+                AudioManager.Instance.Play(SFXClip.BulletTimeIn);
+                AudioManager.Instance.Play(SFXClip.BulletContinune);
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
                 gridObj.SetActive(true);
@@ -441,6 +449,8 @@ public class GridManager : MonoBehaviour
         switch (lastState)
         {
             case SwitchState.Switch:
+                AudioManager.Instance.Play(SFXClip.BulletTimeOut);
+                AudioManager.Instance.ResumeBGM();
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
                 gridObj.SetActive(false);
@@ -750,6 +760,7 @@ class TwoObjectContainer<Type>
 
     public bool Record(Type n, out Type poopOut, out Type poopOut2)
     {
+        AudioManager.Instance.Play(SFXClip.ObjSelection);
         poopOut = n;
         poopOut2 = n;
         if (hasFirst)
