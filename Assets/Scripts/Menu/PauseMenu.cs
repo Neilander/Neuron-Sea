@@ -39,11 +39,11 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SelectGame(){
-        transform.Find("LevelSelect").gameObject.SetActive(true);
+        transform.Find("LevelSelect2").gameObject.SetActive(true);
     }
 
     public void ExitSetPanel(){
-        transform.Find("LevelSelect").gameObject.SetActive(false);
+        transform.Find("LevelSelect2").gameObject.SetActive(false);
     }
 
     public void SettingGame(){

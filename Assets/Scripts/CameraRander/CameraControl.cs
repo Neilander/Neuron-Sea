@@ -76,9 +76,12 @@ public class CameraControl : MonoBehaviour
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
-        if(companionController!=null)
-        companionController.SetTarget(null);
+        
+        
         if (levelManager.instance.ifStartStory) {
+            if (companionController != null) {
+                companionController.SetTarget(null);
+            }
             StartCoroutine(BeginningDelay(1f));
         }
         // ✅ 构建默认限制区域

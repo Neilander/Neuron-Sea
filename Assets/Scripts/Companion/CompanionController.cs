@@ -88,7 +88,7 @@ public class CompanionController : MonoBehaviour
         if (autoAdjustPosition)
         {
             // 如果玩家朝左（scale.x = -1），跟随物在右上角
-            if (target.localScale.x < 0||startMode)
+            if (target.localScale.x < 0)//TODO：临时移出||startMode
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
                 
@@ -115,7 +115,7 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
-        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped) {
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped&&levelManager.instance.ifStartStory) {
             hasStopped = true;
             print("我到达目的地了！");
             // startMode = true;
