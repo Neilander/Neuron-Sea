@@ -7,6 +7,7 @@ public class CollectPanel : MonoBehaviour
 {
     public static CollectPanel Instance{get; private set;}
 
+    public GameObject OutGameObject;
     [Header("Buttons")] public Button btn1;
 
     public Button btn2;
@@ -43,27 +44,45 @@ public class CollectPanel : MonoBehaviour
                 displayImage.sprite=btn1.transform.GetComponent<Image>().sprite;
                 // 可选：保持原始宽高比例
                 displayImage.preserveAspect = true;
-
+                PuzzleManager.Instance.ResetPuzzle();
                 break;
             case "2":
                 displayImage.sprite = btn2.transform.GetComponent<Image>().sprite;
                 // 可选：保持原始宽高比例
                 displayImage.preserveAspect = true;
+                PuzzleManager.Instance.ResetPuzzle();
                 break;
             case "3":
                 displayImage.sprite = btn3.transform.GetComponent<Image>().sprite;
                 // 可选：保持原始宽高比例
                 displayImage.preserveAspect = true;
+                PuzzleManager.Instance.ResetPuzzle();
                 break;
             case "4":
                 displayImage.sprite = btn4.transform.GetComponent<Image>().sprite;
                 // 可选：保持原始宽高比例
                 displayImage.preserveAspect = true;
+                PuzzleManager.Instance.ResetPuzzle();
                 break;
         }
     }
 
     private void ClosePanel(){
+        
+
+        // 清空当前拼图
+        var initializer = FindObjectOfType<PuzzleInitializer>();
+        if (initializer != null) {
+            initializer.DeleteAllPieces();
+        }
+        ClearChildren(OutGameObject.transform);
+        PuzzleManager.Instance.ResetPuzzle();
         collectPanel.SetActive(false);
+    }
+
+    void ClearChildren(Transform parent){
+        foreach (Transform child in parent) {
+            GameObject.Destroy(child.gameObject);
+        }
     }
 }

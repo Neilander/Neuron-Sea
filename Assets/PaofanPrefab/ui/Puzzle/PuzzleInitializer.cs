@@ -25,7 +25,10 @@ public class PuzzleInitializer : MonoBehaviour
     [SerializeField] Vector2 spacing = new Vector2(10, 10);
 
     // 在脚本启用时自动开始生成拼图
-    void OnEnable() => StartCoroutine(GeneratePuzzle());
+    void OnEnable(){
+        DeleteAllPieces();
+        StartCoroutine(GeneratePuzzle());
+    }
 
     // 在脚本禁用时清除所有拼图块
     void OnDisable() => DeleteAllPieces();
@@ -42,7 +45,7 @@ public class PuzzleInitializer : MonoBehaviour
 
         // 切割原始图片成若干小块
         List<Sprite> pieces = SliceImage(targetImage);
-
+    
         // 创建一个UI容器用于放置所有拼图块
         RectTransform container = CreateLayoutContainer();
 
@@ -70,7 +73,7 @@ public class PuzzleInitializer : MonoBehaviour
         rt.localScale = Vector3.one;
         return rt;
     }
-
+    
     /// <summary>
     /// 创建一个拼图块的UI对象，设置图片和初始位置
     /// </summary>
@@ -95,7 +98,7 @@ public class PuzzleInitializer : MonoBehaviour
         // 添加自定义脚本，记录正确位置
         PuzzlePiece puzzlePiece = piece.AddComponent<PuzzlePiece>();
         puzzlePiece.correctPos = GetOriginalPosition(index);
-
+        PuzzleManager.Instance.allPieces.Add(puzzlePiece);
         // 添加点击事件监听器
         EventTrigger trigger = piece.AddComponent<EventTrigger>();
         AddTriggerEvent(trigger, EventTriggerType.PointerClick, () => 
@@ -184,6 +187,10 @@ public class PuzzleInitializer : MonoBehaviour
                 Destroy(child.gameObject);
                 break;
             }
+        }
+        // 清空PuzzleManager里的缓存列表
+        if (PuzzleManager.Instance != null) {
+            PuzzleManager.Instance.allPieces.Clear();
         }
     }
 }

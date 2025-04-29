@@ -11,6 +11,9 @@ public class PuzzleManager : MonoBehaviour
     // 单例模式，方便全局访问
     public static PuzzleManager Instance;
 
+    private bool isPuzzleComplete = false;
+
+    [SerializeField] private RectTransform contentRect;
     public Transform dragLayer; // 在 Inspector 里手动指定一个空 GameObject，放在 Canvas 下
     // 所有拼图块的列表（需在Inspector中赋值或动态添加）
     public List<PuzzlePiece> allPieces = new List<PuzzlePiece>();
@@ -75,6 +78,9 @@ public class PuzzleManager : MonoBehaviour
         HideCorrectPosition();
     }
 
+    
+
+
     /// <summary>
     /// 显示或隐藏拼图块的高亮效果
     /// </summary>
@@ -125,50 +131,53 @@ public class PuzzleManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 一键完成拼图（UI版）：将所有拼图块吸附到正确的 UI 位置
+    /// </summary>
+    public void SolvePuzzleInstantlyUI(){
+        Debug.Log("一键完成拼图（UI版）");
+        ResetPuzzle();
+        foreach (var piece in allPieces) {
+            RectTransform rt = piece.GetComponent<RectTransform>();
+            rt.anchoredPosition = piece.correctPos;
+            piece.isCorrect = true;
+        }
+
+        CheckWinCondition(); // 检查是否胜利
+    }
+
+    void Update(){
+        if (Input.GetKeyDown(KeyCode.S)) {
+            SolvePuzzleInstantlyUI();
+        }
+    }
+    /// <summary>
     /// 随机打乱所有拼图块的位置（使用 UI 坐标）
     /// </summary>
     public void ShufflePieces(){
         Debug.Log("开始洗牌拼图块位置...");
-
-        if (allPieces == null || allPieces.Count == 0) {
-            Debug.LogWarning("没有拼图块可供洗牌");
-            return;
-        }
-
-        // 获取拼图容器
-        RectTransform container = allPieces[0].transform.parent as RectTransform;
-        if (container == null) {
-            Debug.LogError("拼图块没有有效的父容器 RectTransform");
-            return;
-        }
-
-        Vector2 containerSize = container.rect.size;
-        float xMin = -containerSize.x / 2 + 50;
-        float xMax = containerSize.x / 2 - 50;
-        float yMin = -containerSize.y / 2 + 50;
-        float yMax = containerSize.y / 2 - 50;
-
+        isPuzzleComplete = false;
+        
         foreach (var piece in allPieces) {
             piece.isCorrect = false;
 
-            // 使用 anchoredPosition 在 UI 区域内打乱位置
-            RectTransform rt = piece.GetComponent<RectTransform>();
-            Vector2 randomPos = new Vector2(
-                Random.Range(xMin, xMax),
-                Random.Range(yMin, yMax)
-            );
+            // Content 区域内随机坐标（按 UI 锚点坐标来打乱）
+            float x = Random.Range(-contentRect.rect.width / 2f + 50f, contentRect.rect.width / 2f - 50f);
+            float y = Random.Range(-contentRect.rect.height / 2f + 50f, contentRect.rect.height / 2f - 50f);
+            Vector2 randomPos = new Vector2(x, y);
 
-            rt.anchoredPosition = randomPos;
-            Debug.Log($"拼图块 {piece.name} 洗牌后 UI 坐标：{randomPos}");
+            piece.GetComponent<RectTransform>().anchoredPosition = randomPos;
+
+            Debug.Log($"拼图块 {piece.name} 洗牌后位置：{randomPos}");
         }
     }
+
 
     /// <summary>
     /// 检查某个拼图块是否已正确放置，并尝试吸附到目标位置
     /// </summary>
     public void CheckPiece(PuzzlePiece piece)
     {
-        float distance = Vector2.Distance(piece.transform.position, piece.correctPos);
+        float distance = Vector2.Distance(piece.GetComponent<RectTransform>().anchoredPosition, piece.correctPos);
         Debug.Log($"拼图块 {piece.name} 与目标距离: {distance}");
         // 若与目标位置足够接近，则吸附到位并标记为正确
         if (distance < 0.5f)
@@ -188,30 +197,31 @@ public class PuzzleManager : MonoBehaviour
     /// <summary>
     /// 检查所有拼图块是否都处于正确位置，若是则宣布胜利
     /// </summary>
-    public void CheckWinCondition()
-    {
-        foreach (var piece in allPieces)
-        {
+    public void CheckWinCondition(){
+        if (isPuzzleComplete) return;
+
+        foreach (var piece in allPieces) {
             if (!piece.isCorrect) {
                 Debug.Log($"尚未完成：{piece.name} 未放对。");
                 return;
             }
         }
 
-        // 所有拼图块都正确后执行胜利逻辑
+        isPuzzleComplete = true;
         Debug.Log("所有拼图块都放置正确！游戏胜利！");
-        // 可在此调用 ShowWinUI() 显示胜利界面
     }
+
 
     /// <summary>
     /// 重置拼图状态并重新打乱位置
     /// </summary>
-    public void ResetPuzzle()
-    {
+    public void ResetPuzzle(){
         Debug.Log("重置拼图...");
-        foreach (var piece in allPieces)
-        {
+        isPuzzleComplete = false;
+
+        foreach (var piece in allPieces) {
             piece.isCorrect = false;
+            piece.rectTransform.anchoredPosition = piece.correctPos; // 重置位置
         }
         ShufflePieces();
     }

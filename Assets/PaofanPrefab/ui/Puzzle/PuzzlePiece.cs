@@ -47,7 +47,11 @@ public class PuzzlePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         offset = rectTransform.anchoredPosition - offset;
     }
 
-
+// 添加状态重置方法
+    public void ResetPiece(){
+        isCorrect = false;
+        GetComponent<Image>().color = Color.white;
+    }
     public void OnDrag(PointerEventData eventData)
     {
         if (isCorrect) return;
