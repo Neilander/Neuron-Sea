@@ -123,7 +123,7 @@ public class EndAndMove : MonoBehaviour
         // Transform tansTex = transform.Find("Square");
         // tansTex.gameObject.SetActive(true);
         //TODO:时间停止，玩家交换一次物体，结束时停
-        StartCoroutine(StartSwitchMode());
+        // StartCoroutine(StartSwitchMode());
         
     }
 
@@ -238,7 +238,7 @@ public class EndAndMove : MonoBehaviour
         UIphoto.SetActive(true);
         text = UIphoto.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;
-        StartCoroutine(StartSwitchMode());
+        // StartCoroutine(StartSwitchMode());
         
     }
     // 直接移动摄像机的方法

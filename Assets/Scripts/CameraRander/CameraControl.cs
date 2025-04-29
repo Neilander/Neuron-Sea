@@ -70,8 +70,7 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
-        if(ani!=null)
-            ani = companionController.GetComponent<Animator>();
+        ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;

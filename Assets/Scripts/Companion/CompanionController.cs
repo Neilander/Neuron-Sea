@@ -88,7 +88,7 @@ public class CompanionController : MonoBehaviour
         if (autoAdjustPosition)
         {
             // 如果玩家朝左（scale.x = -1），跟随物在右上角
-            if (target.localScale.x < 0)//TODO：临时移出||startMode
+            if (target.localScale.x < 0 || startMode)//TODO：临时移出||startMode
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
                 
