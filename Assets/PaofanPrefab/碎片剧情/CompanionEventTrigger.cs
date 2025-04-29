@@ -50,15 +50,8 @@ public class CompanionEventTrigger : MonoBehaviour
             Debug.Log("已调用Play");
         }
 
-        // 4. 显示对话框
-        GameObject dialogueObj = null;
-        if (dialoguePrefab != null)
-        {
-            dialogueObj = Instantiate(dialoguePrefab, companion.transform.position + new Vector3(1.5f, 1.5f, 0), Quaternion.identity, GameObject.Find("CanvasOff").transform);
-            dialogueObj.GetComponentInChildren<TMP_Text>().text = dialogueText;
-        }
 
-        // 5. 等待动画播放完
+        // 4. 等待动画播放完
         Animator anim = companion.GetComponent<Animator>();
         if (anim != null)
         {
@@ -69,19 +62,26 @@ public class CompanionEventTrigger : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
         }
-
+        // 5. 显示对话框
+        GameObject dialogueObj = null;
+        if (dialoguePrefab != null)
+        {
+            dialogueObj = Instantiate(dialoguePrefab, companion.transform.position + new Vector3(1.5f, 1.5f, 0), Quaternion.identity, GameObject.Find("CanvasOff").transform);
+            dialogueObj.GetComponentInChildren<TMP_Text>().text = dialogueText;
+        }
+        anim.Play("robot_idle");
         // 6. 返回原位置（带着对话框）
         while (Vector3.Distance(companion.transform.position, originalPos) > 0.05f)
         {
             companion.transform.position = Vector3.MoveTowards(companion.transform.position, originalPos, speed * Time.deltaTime);
             if (dialogueObj != null)
-                dialogueObj.transform.position = companion.transform.position + new Vector3(1.5f, 1.5f, 0);
+                dialogueObj.transform.position = companion.transform.position + new Vector3(0f, 4f, 0);
             yield return null;
         }
 
         // 7. 恢复CompanionController的canFollow
         companion.canFollow = oldCanFollow;
-
+        
         // 8. 3秒后对话框消失
         yield return new WaitForSeconds(3f);
         if (dialogueObj != null)
