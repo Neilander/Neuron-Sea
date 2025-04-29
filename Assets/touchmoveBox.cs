@@ -21,6 +21,10 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
 
+    [Header("生成轨道")]
+    public GameObject trackPrefab;
+    public SpriteMask mask;
+
 
     const float waitTime = 0.3f;
     //自动导入关卡设定数据
@@ -37,6 +41,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             pointB = new Vector3(0, 0.5f * (yLength * 3 - 3), 0);
             father.ChangeExpectedSize(3, Mathf.RoundToInt(yLength * 3));
             father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
+            GenerateTrack(yLength * 3, false);
         }
         else
         {
@@ -44,6 +49,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             pointB = new Vector3(0.5f * (xLength * 3 - 3), 0, 0);
             father.ChangeExpectedSize(Mathf.RoundToInt(xLength * 3), 3);
             father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
+            GenerateTrack(xLength * 3, true);
         }
 
         target.localPosition = !reverse ? pointA : pointB;
@@ -142,5 +148,23 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         StopAllCoroutines();
     }
 
+    void GenerateTrack(float length, bool ifLeftRight)
+    {
+        int toGenerate = Mathf.CeilToInt(length / 3f);
+        int LeftDownSide = toGenerate / 2;
+        float startNum = (LeftDownSide - 1) * -3f - 1.5f - (toGenerate % 2) * 1.5f;
+        for (int i = 0; i < toGenerate; i++)
+        {
+            GameObject gmo = Instantiate(trackPrefab, transform);
+
+
+            gmo.transform.rotation = ifLeftRight ? Quaternion.Euler(0, 0, 90) : Quaternion.identity;
+            gmo.transform.localPosition = new Vector3(ifLeftRight ? startNum + i * 3 : 0, ifLeftRight ? 0 : startNum + i * 3, 0);
+
+
+        }
+        mask.transform.localScale = new Vector3(ifLeftRight ? length : 1, ifLeftRight ? 1 : length, 1);
+
+    }
 
 }
