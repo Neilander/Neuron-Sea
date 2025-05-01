@@ -134,6 +134,7 @@ public class levelManager : MonoBehaviour
         string newLevelName = $"Level_{newLevelIndex}";
         GameObject newLevelGO = FindInactiveObjectByName($"Level_{newLevelIndex}");
         Debug.Log("加载" + newLevelName);
+        
         if (newLevelGO == null)
         {
             Debug.LogError($"未找到名为 {newLevelName} 的关卡对象！");
