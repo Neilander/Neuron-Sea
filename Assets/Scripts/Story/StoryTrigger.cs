@@ -9,6 +9,14 @@ using UnityEngine.Events;
 /// </summary>
 public class StoryTrigger : MonoBehaviour
 {
+
+    [Header("跳过剧情设置")]
+    [Tooltip("跳过剧情的UI按钮")]
+    [SerializeField] private GameObject skipButton; // UI按钮对象
+    private bool isStoryPlaying = false;
+
+
+
     [Header("检测设置")]
     [Tooltip("触发区域大小")]
     [SerializeField] private Vector2 triggerSize = new Vector2(2f, 2f);
@@ -169,7 +177,9 @@ public class StoryTrigger : MonoBehaviour
 
         // 重置等待标志
         isWaitingForStoryEnd = false;
-
+            isStoryPlaying = false;
+    // 隐藏跳过按钮
+    HideSkipButton();
         // 触发退出事件
         onExitSpecificStory?.Invoke();
 
@@ -309,17 +319,67 @@ public class StoryTrigger : MonoBehaviour
         // 如果成功触发
         if (success)
         {
+            isStoryPlaying = true;
             // 标记为已触发
             hasTriggered = true;
 
             // 隐藏提示
             HidePrompt();
+            
+            ShowSkipButton(); // 显示跳过按钮
         }
         else
         {
             isWaitingForStoryEnd = false;
         }
     }
+
+    // 添加显示跳过按钮的方法
+private void ShowSkipButton()
+{
+    if (skipButton != null)
+    {
+        skipButton.SetActive(true);
+    }
+}
+
+// 添加隐藏跳过按钮的方法
+private void HideSkipButton()
+{
+    if (skipButton != null)
+    {
+        skipButton.SetActive(false);
+    }
+}
+
+// 添加给UI按钮调用的公共方法
+public void OnSkipButtonClick()
+{
+    if (!isStoryPlaying) return;
+
+    // 重置状态
+    isStoryPlaying = false;
+    isWaitingForStoryEnd = false;
+
+    // 隐藏跳过按钮
+    HideSkipButton();
+
+    // 如果StoryManager存在，结束当前对话
+    if (StoryManager.Instance != null)
+    {
+        StoryManager.Instance.ExitStoryMode();
+    }
+
+    // 触发退出事件
+    onExitSpecificStory?.Invoke();
+
+    // 如果需要自动触发下一段剧情
+    if (autoTriggerNextStory && nextStoryTrigger != null)
+    {
+        StartCoroutine(TriggerNextStoryAfterDelay());
+    }
+}
+
 
     /// <summary>
     /// 等待玩家落地后触发剧情

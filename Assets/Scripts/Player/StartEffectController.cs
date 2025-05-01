@@ -76,7 +76,7 @@ public class StartEffectController : MonoBehaviour
 
             // 设置玩家位置
             playerController.transform.position = finalPosition;
-
+            
             // 启动控制逻辑
             playerController.StartControl(controlInput, controlDuration);
         }

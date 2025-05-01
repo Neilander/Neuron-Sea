@@ -68,6 +68,7 @@ public class EndAndMove : MonoBehaviour
     }
 
     public void EnablePicture(){
+        // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
         UIphoto.SetActive(true);
         StartCoroutine(DisablePictureAfterDelay(2f));
         

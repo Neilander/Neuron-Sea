@@ -75,6 +75,8 @@ public class StoryManager : MonoBehaviour
         { PortraitPosition.Right, false }
     };
 
+    [SerializeField] private GameObject skipBtn;
+
     private void Awake()
     {
         // 单例模式
@@ -157,6 +159,10 @@ public class StoryManager : MonoBehaviour
         {
             avatarImage.gameObject.SetActive(false);
         }
+        // 初始化跳过按钮
+        // if (skipBtn != null) {
+        //     skipBtn.gameObject.SetActive(false);
+        // }
     }
 
     private void Update()

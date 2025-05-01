@@ -7,7 +7,10 @@ public class levelManager : MonoBehaviour
 {
 
     public static levelManager instance;
-
+    #region 已通关关卡记录
+    // 添加已通关关卡记录
+    private HashSet<int> unlockedLevels = new HashSet<int>();
+    #endregion
     public Transform respawnTarget;
     public int currentLevelIndex = 0;  // 当前关卡编号
 
@@ -20,8 +23,8 @@ public class levelManager : MonoBehaviour
     public int minLevel = 1;
     public int maxLevel = 12;
 
-    public int hasCollectedNum=0;
-    
+    public int hasCollectedNum = 0;
+
 
     [Header("是否开启剧情")]
     public bool ifStartStory;
@@ -41,9 +44,19 @@ public class levelManager : MonoBehaviour
             }
 
             // 重新加载当前关卡（基于 currentLevelIndex）
-            LoadLevel(Mathf.Clamp(currentLevelIndex,minLevel,maxLevel), true);
+            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel), true);
             AudioManager.Instance.Play(BGMClip.Level1);
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
+
+
+
+            #region 初始化已通关关卡记录
+            // 初始化第一关解锁
+            UnlockLevel(1);
+
+            // 从PlayerPrefs加载已解锁关卡
+            LoadUnlockedLevels();
+            #endregion
         }
         else
         {
@@ -52,6 +65,61 @@ public class levelManager : MonoBehaviour
         }
 
 
+    }
+
+    // 保存解锁状态
+    private void SaveUnlockedLevels()
+    {
+        string unlockedLevelsStr = string.Join(",", unlockedLevels);
+        PlayerPrefs.SetString("UnlockedLevels", unlockedLevelsStr);
+        PlayerPrefs.Save();
+    }
+
+    // 加载解锁状态
+    public void LoadUnlockedLevels()
+    {
+        string unlockedLevelsStr = PlayerPrefs.GetString("UnlockedLevels", "1");
+        unlockedLevels.Clear();
+        foreach (string levelStr in unlockedLevelsStr.Split(','))
+        {
+            if (int.TryParse(levelStr, out int level))
+            {
+                unlockedLevels.Add(level);
+            }
+        }
+    }
+
+    // 解锁下一关
+    public void UnlockNextLevel()
+    {
+        UnlockLevel(currentLevelIndex);
+    }
+
+    // 解锁指定关卡
+    public void UnlockLevel(int levelIndex)
+    {
+        if (levelIndex >= minLevel && levelIndex <= maxLevel)
+        {
+            unlockedLevels.Add(levelIndex);
+            SaveUnlockedLevels();
+        }
+    }
+
+    // 检查关卡是否解锁
+    public bool IsLevelUnlocked(int levelIndex)
+    {
+        return unlockedLevels.Contains(levelIndex);
+    }
+
+    // TODO:在通关时调用（需要在适当的地方调用这个方法）
+    public void CompleteCurrentLevel()
+    {
+        UnlockNextLevel();
+        LoadUnlockedLevels();        // 刷新关卡选择界面
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
     }
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayer)
@@ -102,7 +170,8 @@ public class levelManager : MonoBehaviour
         }
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
-        if(ifStartStory && newLevelGO.name=="Level_1"){
+        if (ifStartStory && newLevelGO.name == "Level_1")
+        {
             controller.DisableInput();
         }
         controller.SetMovementBounds(data.levelBound);
@@ -124,7 +193,7 @@ public class levelManager : MonoBehaviour
                     if (deathController != null)
                     {
                         deathController.respawnTarget = respawnTarget;
-                        Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController"+deathController.gameObject.name);
+                        Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
                     }
                     else
                     {
@@ -208,7 +277,7 @@ public class levelManager : MonoBehaviour
             Mathf.Round(newLevelGO.transform.position.y),
             Mathf.Round(newLevelGO.transform.position.z)
         );
-        if(GridManager.Instance!=null)GridManager.Instance.transform.position = intPos;
+        if (GridManager.Instance != null) GridManager.Instance.transform.position = intPos;
         //Vector3 topCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1f, 0f));
 
         return data.levelBound;
@@ -225,6 +294,7 @@ public class levelManager : MonoBehaviour
         recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
         FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
         FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+        // LevelSelectManager.Instance.RefreshButtons();
         //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
         //StartCoroutine(DelayEffect());
     }
@@ -272,7 +342,7 @@ public class levelManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        
+
         cameraControl = Camera.main.GetComponent<CameraControl>();
         if (cameraControl == null)
         {
@@ -287,7 +357,7 @@ public class levelManager : MonoBehaviour
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        
+
     }
 
     public void ReloadLevel()
