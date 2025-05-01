@@ -88,8 +88,8 @@ public class volumeCanvas : MonoBehaviour
     //     blocker.SetActive(true);
     // }
     //TODO:to delete 
-    public void OnApplicationQuit()
-    {
-        PlayerPrefs.DeleteAll();
-    }
+    // public void OnApplicationQuit()
+    // {
+    //     PlayerPrefs.DeleteAll();
+    // }
 }

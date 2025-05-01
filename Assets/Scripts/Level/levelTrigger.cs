@@ -20,7 +20,7 @@ public class levelTrigger : MonoBehaviour
         // 完成当前关卡
         levelManager levelMgr = FindAnyObjectByType<levelManager>();
         levelMgr.CompleteCurrentLevel();
-        
+
 
         // 切换到下一关
         levelMgr.SwitchToNextLevel();

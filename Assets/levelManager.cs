@@ -73,6 +73,7 @@ public class levelManager : MonoBehaviour
         string unlockedLevelsStr = string.Join(",", unlockedLevels);
         PlayerPrefs.SetString("UnlockedLevels", unlockedLevelsStr);
         PlayerPrefs.Save();
+        Debug.Log($"保存解锁状态：{unlockedLevelsStr}");
     }
 
     // 加载解锁状态
@@ -87,12 +88,14 @@ public class levelManager : MonoBehaviour
                 unlockedLevels.Add(level);
             }
         }
+        Debug.Log($"加载解锁状态：{string.Join(",", unlockedLevels)}");
     }
 
     // 解锁下一关
     public void UnlockNextLevel()
     {
-        UnlockLevel(currentLevelIndex);
+        Debug.Log($"解锁下一关：当前关卡 {currentLevelIndex}，解锁关卡 {currentLevelIndex}");
+        UnlockLevel(currentLevelIndex);  // 解锁下一关
     }
 
     // 解锁指定关卡
@@ -101,7 +104,7 @@ public class levelManager : MonoBehaviour
         if (levelIndex >= minLevel && levelIndex <= maxLevel)
         {
             unlockedLevels.Add(levelIndex);
-            SaveUnlockedLevels();
+            // SaveUnlockedLevels();
         }
     }
 
@@ -115,7 +118,10 @@ public class levelManager : MonoBehaviour
     public void CompleteCurrentLevel()
     {
         UnlockNextLevel();
-        LoadUnlockedLevels();        // 刷新关卡选择界面
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        LoadUnlockedLevels();  // 重新加载确保状态一致
+
+        // 刷新关卡选择界面
         if (LevelSelectManager.Instance != null)
         {
             LevelSelectManager.Instance.RefreshButtons();
