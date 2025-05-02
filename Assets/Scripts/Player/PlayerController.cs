@@ -380,6 +380,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             
             levelManager levelMgr = FindAnyObjectByType<levelManager>();
             levelMgr.CompleteCurrentLevel();
+            print("我保存了当前关卡");
             // 确保在切换关卡后刷新UI
             if (LevelSelectManager.Instance != null) {
                 LevelSelectManager.Instance.RefreshButtons();
