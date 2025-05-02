@@ -69,6 +69,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [Header("是否替换preview参考物体")]
     public bool IfSubstituePreview = false;
     public SpriteRenderer substitueRenderer;
+    public Collider2D substitueCollider;
 
     public Vector3 SelfGridPos
     {
@@ -229,13 +230,13 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     public bool CheckIfCanMoveTo(Vector3 gridPos, GameObject ignoreObject){
-        Collider2D col = GetComponent<Collider2D>();
+        Collider2D col = IfSubstituePreview? substitueCollider: GetComponent<Collider2D>();
         if (col == null) {
             Debug.LogWarning("缺少 Collider2D 组件！");
             return false;
         }
 
-        Vector2 checkPosition = gridPos - anchor.transform.localPosition;
+        Vector2 checkPosition = gridPos - anchor.transform.localPosition+ (IfSubstituePreview?substitueCollider.transform.localPosition:Vector3.zero);
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.useTriggers = false;
