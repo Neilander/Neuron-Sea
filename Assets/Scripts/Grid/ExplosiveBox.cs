@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
+public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOverrider
 {
     [SerializeField] private float waitTime;
 
@@ -26,6 +26,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
     [SerializeField] private GameObject RangeDisplayer;
 
     public GameObject checker;
+
+    private List<GameObject> triggered;
     
     //自动导入关卡设定数据
     public void OnLDtkImportFields(LDtkFields fields)
@@ -79,6 +81,14 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
             isInCountDown = true;
             StartCoroutine(ExplodeCountDown(waitTime));
         }
+    }
+
+    public bool DeathAction()
+    {
+        if (isInCountDown)
+            return true;
+        StartExplode();
+        return false;
     }
 
 
@@ -145,7 +155,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
         // 逐渐扩大 radiusVisualRenderer 的 scale
         float expandDuration = explodeDuration;
         float expandTimer = 0f;
-
+        triggered = new List<GameObject>();
         while (expandTimer < expandDuration) {
             //yield return WaitUnpaused();
 
@@ -153,6 +163,22 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
             float t = Mathf.Clamp01(expandTimer / expandDuration);
             float scale = Mathf.Lerp(0f, explosionRadius * 2f, t); // 因为 scale 是直径
             radiusVisualRenderer.transform.localScale = new Vector3(scale, scale, 1f);
+            Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, 2 * Mathf.Lerp(0, explosionRadius, t) * Vector2.one, 0);
+            foreach (var hit in hits)
+            {
+                if (triggered.Contains(hit.gameObject))
+                    continue;
+                if (hit.GetComponent<PlayerController>())
+                {
+                    triggered.Add(hit.gameObject);
+                    PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
+                }
+                else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject)
+                {
+                    triggered.Add(hit.gameObject);
+                    GridManager.Instance.DestroySwitchable(hit.GetComponent<SwitchableObj>());
+                }
+            }
             yield return null;
         }
 
@@ -169,20 +195,13 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
             Color c = radiusVisualRenderer.color;
             c.a = a;
             radiusVisualRenderer.color = c;
+           
             yield return null;
         }
 
 
         // 最终检测玩家
-        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, 2 * explosionRadius * Vector2.one, 0);
-        foreach (var hit in hits) {
-            if (hit.GetComponent<PlayerController>()) {
-                PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
-            }
-            else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject) {
-                GridManager.Instance.DestroySwitchable(hit.GetComponent<SwitchableObj>());
-            }
-        }
+       
         GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
     }
 
@@ -207,4 +226,9 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields
         InAndOutSwitchEvent.OnInSwitchTriggered -= ShowRange;
         InAndOutSwitchEvent.OnOutSwitchTriggered -= HideRange;
     }
+}
+
+public interface IDeathActionOverrider
+{
+    bool DeathAction();
 }

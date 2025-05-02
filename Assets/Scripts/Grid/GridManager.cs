@@ -572,8 +572,16 @@ public class GridManager : MonoBehaviour
     //销毁所有的switchable都要通过这个
     public void DestroySwitchable(SwitchableObj obj)
     {
+        if (obj.GetComponent<IDeathActionOverrider>() != null)
+        {
+            if (!obj.GetComponent<IDeathActionOverrider>().DeathAction())
+            {
+                return;
+            }
+        }
         ReleaseSelection(obj);
         Destroy(obj.gameObject);
+
     }
 
     public void ReleaseSelection(SwitchableObj obj)
