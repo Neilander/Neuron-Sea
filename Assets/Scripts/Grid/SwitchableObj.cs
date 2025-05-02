@@ -202,7 +202,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         selfGridPos = gridPos;
         if (ifInPreview)
         {
-            previewObj.transform.position = recordPos - anchor.transform.localPosition + (ifAdjustY ? Vector3.up * adjustYAmount[ExpectedSize.x - 1] : Vector3.zero);
+            previewObj.transform.position = recordPos - anchor.transform.localPosition +
+                (ifAdjustY ? Vector3.up * adjustYAmount[ExpectedSize.x - 1] : Vector3.zero)+
+                (IfSubstituePreview ? substitueRenderer.transform.parent.localPosition : Vector3.zero);
             previewObj.SetActive(false);
             StartCoroutine(WhatCanISay(renderer.material));
             renderer.material = switchMaterial;
@@ -474,6 +476,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         else
         {
             Debug.LogError("Only Box And Circle Collider2D is supported.");
+        }
+        if (selfAnimator != null)
+        {
+            selfAnimator.SetInteger("Size", (int)ExpectedSize.x);
         }
 
         SetAnchorToAnchorPos();

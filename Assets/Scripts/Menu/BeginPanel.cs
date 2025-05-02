@@ -36,6 +36,7 @@ public class BeginPanel : MonoBehaviour
                 videoCanvas.SetActive(true);
             }
         }
+        Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
     }
 
     // Update is called once per frame

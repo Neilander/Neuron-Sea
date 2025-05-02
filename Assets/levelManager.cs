@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 
 public class levelManager : MonoBehaviour
 {
@@ -19,18 +20,21 @@ public class levelManager : MonoBehaviour
     [Header("关卡区间")]
     public int minLevel = 1;
     public int maxLevel = 12;
-
+    [Header("当前场景index")]
+    public int sceneIndex = 1;
     
 
     [Header("是否开启剧情")]
     public bool ifStartStory;
 
+
+    const int sceneLimit = 2;
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // ⬅️ 不在场景切换中销毁
+            //DontDestroyOnLoad(gameObject); // ⬅️ 不在场景切换中销毁
 
             cameraControl = Camera.main.GetComponent<CameraControl>();
             if (cameraControl == null)
@@ -38,11 +42,16 @@ public class levelManager : MonoBehaviour
                 Debug.LogError("新场景中主相机缺少 CameraControl！");
                 return;
             }
-
             // 重新加载当前关卡（基于 currentLevelIndex）
+            var cameraData = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+            if (cameraData != null)
+            {
+                cameraData.SetRenderer(sceneIndex-1);
+            }
             LoadLevel(Mathf.Clamp(currentLevelIndex,minLevel,maxLevel), true);
             AudioManager.Instance.Play(BGMClip.Level1);
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
+
         }
         else
         {
@@ -55,7 +64,7 @@ public class levelManager : MonoBehaviour
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayer)
     {
-        GridManager.Instance.RefreshSelection();
+        if(GridManager.Instance!=null)GridManager.Instance.RefreshSelection();
         string newLevelName = $"Level_{newLevelIndex}";
         GameObject newLevelGO = FindInactiveObjectByName($"Level_{newLevelIndex}");
         Debug.Log("加载" + newLevelName);
@@ -221,30 +230,60 @@ public class levelManager : MonoBehaviour
     public void SwitchToNextLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
-        FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
-        FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
-        //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
-        //StartCoroutine(DelayEffect());
+        if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
+        {
+            SceneManager.LoadScene(sceneIndex + 1);
+        }
+        else
+        {
+            recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
+            FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
+            FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+            //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
+            //StartCoroutine(DelayEffect());
+        }
     }
 
     public void SwitchToNextLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), true);
+        if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
+        {
+            SceneManager.LoadScene(sceneIndex + 1);
+        }
+        else
+        {
+            recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), true);
+        }
+        
     }
 
     public void SwitchToBeforeLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
-        FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+        if (currentLevelIndex == minLevel && sceneIndex > 1)
+        {
+            SceneManager.LoadScene(sceneIndex - 1);
+        }
+        else
+        {
+            recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
+            FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+        }
+       
     }
 
     public void SwitchToBeforeLevel_Direct()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
+        if (currentLevelIndex == minLevel && sceneIndex > 1)
+        {
+            SceneManager.LoadScene(sceneIndex - 1);
+        }
+        else
+        {
+            recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
+        }
     }
 
     IEnumerator DelayEffect()

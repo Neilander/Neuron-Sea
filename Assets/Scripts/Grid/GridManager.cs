@@ -302,16 +302,16 @@ public class GridManager : MonoBehaviour
                             //bool ifChanged = false;
                             if (switchInfoRecorder.hasFirst)
                             {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 //ifChanged = true;
                             }
                             if (switchInfoRecorder.hasSecond)
                             {
-                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 //ifChanged = true;
                             }
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
-
+                            switchInfoRecorder.Refresh();
                             /*
                             if (ifChanged)
                             {
@@ -330,7 +330,7 @@ public class GridManager : MonoBehaviour
                                 switchInfoRecorder.Record(tryGet, out temp1, out temp2);
                                 tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
                             }*/
-                                
+
                         }
                         else//选中一个新的物体
                         {
@@ -694,6 +694,7 @@ public class GridManager : MonoBehaviour
                 ifChangeOne = true;
                 if(obj.IfHaveBoth())
                     canViewBothSelection = false;
+                Debug.Log("1看不见了！");
 
             }
 
@@ -705,6 +706,7 @@ public class GridManager : MonoBehaviour
                 ifChangeTwo = true;
                 if (obj.IfHaveBoth())
                     canViewBothSelection = false;
+                Debug.Log("2看不见了！");
 
             }
 

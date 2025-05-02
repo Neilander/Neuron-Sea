@@ -80,9 +80,10 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     private bool move = true;
     private IEnumerator MoveLoop()
     {
-        Debug.Log("ifUpDown:"+ifUpDown);
-        if (!reverse&& !ifUpDown)
+        
+        if (ifUpDown == reverse)
         {
+            Debug.Log("对我在这！");
             foreach (Transform trans in trackTrans)
             {
                 Vector3 scale = trans.localScale;
