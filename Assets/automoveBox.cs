@@ -23,6 +23,9 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public GameObject trackPrefab;
     public SpriteMask mask;
 
+    private List<Transform> trackTrans = new List<Transform>();
+
+    public bool ifUpDown = false;
     //自动导入关卡设定数据
     public void OnAfterImport(SwitchableObj father, LDtkFields fields)
     {
@@ -37,6 +40,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.ChangeExpectedSize(3, Mathf.RoundToInt(yLength * 3));
             father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
             GenerateTrack(yLength*3,false);
+            ifUpDown = true;
+            
         }
         else
         {
@@ -65,26 +70,39 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
         playerController = FindObjectOfType<PlayerController>();
         target.localPosition = !reverse ? pointA : pointB;
-
+        trackTrans = FindChildrenStartingWithPath(transform);
         StartCoroutine(MoveLoop());
         PlayerDeathEvent.OnDeathTriggered += (GameObject x) => move = false;
+
+        
     }
 
     private bool move = true;
     private IEnumerator MoveLoop()
     {
+        Debug.Log("ifUpDown:"+ifUpDown);
+        if (!reverse&& !ifUpDown)
+        {
+            foreach (Transform trans in trackTrans)
+            {
+                Vector3 scale = trans.localScale;
+                trans.localScale = new Vector3(scale.x, -scale.y, scale.z);
+            }
+        }
         while (move)
         {
             yield return StartCoroutine(MoveFromTo(!reverse ? pointA : pointB, reverse ? pointA : pointB));
-            yield return new WaitForSeconds(waitDuration);
+            yield return StartCoroutine(FlipTracksFade(waitDuration));
             yield return StartCoroutine(MoveFromTo(reverse ? pointA : pointB, !reverse ? pointA : pointB));
-            yield return new WaitForSeconds(waitDuration);
+            yield return StartCoroutine(FlipTracksFade(waitDuration));
         }
     }
 
     private IEnumerator MoveFromTo(Vector3 start, Vector3 end)
     {
         float time = -moveStanbyDuration;
+        
+        
         while (time < moveDuration)
         {
             time += Time.deltaTime;
@@ -97,6 +115,65 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
         // 确保最终精确到达
         MoveStep(end - target.localPosition);
+    }
+
+    private IEnumerator FlipTracksFade(float duration)
+    {
+        float halfDuration = duration / 2f;
+        float time = 0f;
+
+        List<SpriteRenderer> renderers = new List<SpriteRenderer>();
+
+        foreach (Transform trans in trackTrans)
+        {
+            var sr = trans.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                renderers.Add(sr);
+        }
+
+        // Step 1: 渐隐透明度至 0
+        while (time < halfDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / halfDuration);
+            foreach (var sr in renderers)
+            {
+                Color c = sr.color;
+                c.a = 1f - t;
+                sr.color = c;
+            }
+            yield return null;
+        }
+
+        // Step 2: 执行翻转
+        foreach (Transform trans in trackTrans)
+        {
+            Vector3 scale = trans.localScale;
+            trans.localScale = new Vector3(scale.x, -scale.y, scale.z);
+        }
+
+        // Step 3: 渐显透明度回到 1
+        time = 0f;
+        while (time < halfDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / halfDuration);
+            foreach (var sr in renderers)
+            {
+                Color c = sr.color;
+                c.a = t;
+                sr.color = c;
+            }
+            yield return null;
+        }
+
+        // 最终确保 alpha 为 1
+        foreach (var sr in renderers)
+        {
+            Color c = sr.color;
+            c.a = 1f;
+            sr.color = c;
+        }
     }
 
     public void MoveStep(Vector2 step)
@@ -131,6 +208,7 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         int toGenerate = Mathf.CeilToInt(length / 3f);
         int LeftDownSide = toGenerate / 2;
         float startNum = (LeftDownSide - 1) * -3f - 1.5f - (toGenerate % 2) * 1.5f;
+       
         for (int i = 0; i < toGenerate; i++)
         {
             GameObject gmo = Instantiate(trackPrefab, transform);
@@ -138,11 +216,25 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
             gmo.transform.rotation = ifLeftRight ?  Quaternion.Euler(0, 0, 90): Quaternion.identity;
             gmo.transform.localPosition = new Vector3(ifLeftRight ? startNum + i * 3 : 0, ifLeftRight ? 0 : startNum + i * 3, 0);
-
-
         }
         mask.transform.localScale = new Vector3(ifLeftRight?length:1,ifLeftRight?1:length,1);
         
+    }
+
+    List<Transform> FindChildrenStartingWithPath(Transform parent)
+    {
+        List<Transform> result = new List<Transform>();
+
+        foreach (Transform child in parent)
+        {
+            if (child.name.StartsWith("路径"))
+            {
+                result.Add(child);
+                Debug.Log("添加了" + child.name);
+            }
+        }
+
+        return result;
     }
 }
 

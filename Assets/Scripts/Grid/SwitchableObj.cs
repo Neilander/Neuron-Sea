@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 {
@@ -61,6 +62,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     public bool IfSpecialEdgeChecker;
     public SpriteRenderer SpecialEdgeChecker;
 
+    [Header("场景替换")]
+    public bool IfDoSwitchBasedOnScene = false;
+    public List<GameObject> switchPrefabs;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -82,20 +87,83 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
     }
 
-    private void Start(){
-        SetAnchorToAnchorPos();
-        mover = GetComponent<WorldMover>();
-        Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
-        //renderer = GetComponentInChildren<SpriteRenderer>();
-        selfGridPos = _pos;
-        recordTempPos = renderer.transform.localPosition;
-        anchorSprite.transform.localPosition = anchor.transform.localPosition;
-        anchorSprite.transform.SetParent(renderer.transform);
-        //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
-        if (IfBanSwitch_SetWhenStart)
-            SwitchEnableSwitchState();
+    int GetLastDigitOfSceneName()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
 
-        defaultMaterial = renderer.material;
+        if (sceneName.Length == 0) return -1;
+
+        char lastChar = sceneName[sceneName.Length - 1];
+
+        if (char.IsDigit(lastChar))
+        {
+            return (int)char.GetNumericValue(lastChar);
+        }
+
+        return -1; // 最后一个不是数字
+    }
+
+    public void MimicLDtkImportWithNoCompanion(int x, int y, float anchorX, float anchorY)
+    {
+        ExpectedSize.x = x;
+        ExpectedSize.y = y;
+        ExpectedAnchorPos.x = anchorX;
+        ExpectedAnchorPos.y = anchorY;
+        //Debug.Log("在模仿时出错,xy是"+ ExpectedSize);
+        SizeToExpectedSize();
+        IfDoSwitchBasedOnScene = false;
+    }
+
+    private void Start(){
+        if (IfDoSwitchBasedOnScene)
+        {
+            int sceneIndex = GetLastDigitOfSceneName();
+            if (sceneIndex <= 0 || sceneIndex > switchPrefabs.Count)
+            {
+                Debug.LogWarning("场景编号非法或 prefab 未设置");
+                return;
+            }
+
+            GameObject prefab = switchPrefabs[sceneIndex - 1];
+            if (prefab == null)
+            {
+                Debug.LogWarning("Prefab 丢失: " + (sceneIndex - 1));
+                return;
+            }
+            //Debug.Log(gameObject.name + "的Parent是"+transform.parent.name+ "触发序列1");
+            GameObject gmo = Instantiate(prefab, transform.parent);
+            gmo.transform.position = transform.position;
+            //Debug.Log("gmo parent is: " + gmo.transform.parent?.name);
+
+            var sw = gmo.GetComponent<SwitchableObj>();
+            if (sw == null)
+            {
+                Debug.LogWarning("Prefab 上缺少 SwitchableObj 组件");
+                return;
+            }
+            //Debug.Log(gameObject.name+"当前的大小是"+ExpectedSize);
+            sw.MimicLDtkImportWithNoCompanion(ExpectedSize.x, ExpectedSize.y, ExpectedAnchorPos.x, ExpectedAnchorPos.y);
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            //Debug.Log(gameObject.name + "在"+transform.parent.name);
+            SetAnchorToAnchorPos();
+            mover = GetComponent<WorldMover>();
+            Vector3 _pos = GridManager.Instance.GetClosestGridPoint(anchor.transform.position);
+            //renderer = GetComponentInChildren<SpriteRenderer>();
+            selfGridPos = _pos;
+            recordTempPos = renderer.transform.localPosition;
+            anchorSprite.transform.localPosition = anchor.transform.localPosition;
+            anchorSprite.transform.SetParent(renderer.transform);
+            //previewObj.transform.localScale = renderer.gameObject.transform.localScale;
+            if (IfBanSwitch_SetWhenStart)
+                SwitchEnableSwitchState();
+
+            defaultMaterial = renderer.material;
+        }
+
+        
     }
 
     public SpriteRenderer GetRenderer()

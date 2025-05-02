@@ -25,6 +25,10 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public GameObject trackPrefab;
     public SpriteMask mask;
 
+    private List<Transform> trackTrans = new List<Transform>();
+
+    public bool ifUpDown = false;
+
 
     const float waitTime = 0.3f;
     //自动导入关卡设定数据
@@ -42,6 +46,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.ChangeExpectedSize(3, Mathf.RoundToInt(yLength * 3));
             father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
             GenerateTrack(yLength * 3, false);
+            ifUpDown = true;
         }
         else
         {
@@ -73,6 +78,15 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         Debug.Log(gameObject.name+"的atA是"+atA);
         playerController = FindObjectOfType<PlayerController>();
         PlayerDeathEvent.OnDeathTriggered += StopMove;
+        trackTrans = FindChildrenStartingWithPath(transform);
+        if (!reverse && !ifUpDown)
+        {
+            foreach (Transform trans in trackTrans)
+            {
+                Vector3 scale = trans.localScale;
+                trans.localScale = new Vector3(scale.x, -scale.y, scale.z);
+            }
+        }
     }
 
     public bool TriggerMove()
@@ -112,7 +126,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
         atA = !atA;
 
-        yield return new WaitForSeconds(cooldownDuration);
+        yield return StartCoroutine(FlipTracksFade(cooldownDuration));
 
         isMoving = false;
     }
@@ -135,6 +149,65 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         if (playerController.CollideCheck(new Rect((Vector2)target.transform.position + targetCollider.offset - targetCollider.size * 0.5f, targetCollider.size)))
         {
             PlayerDeathEvent.Trigger(gameObject, DeathType.Squish);
+        }
+    }
+
+    private IEnumerator FlipTracksFade(float duration)
+    {
+        float halfDuration = duration / 2f;
+        float time = 0f;
+
+        List<SpriteRenderer> renderers = new List<SpriteRenderer>();
+
+        foreach (Transform trans in trackTrans)
+        {
+            var sr = trans.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                renderers.Add(sr);
+        }
+
+        // Step 1: 渐隐透明度至 0
+        while (time < halfDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / halfDuration);
+            foreach (var sr in renderers)
+            {
+                Color c = sr.color;
+                c.a = 1f - t;
+                sr.color = c;
+            }
+            yield return null;
+        }
+
+        // Step 2: 执行翻转
+        foreach (Transform trans in trackTrans)
+        {
+            Vector3 scale = trans.localScale;
+            trans.localScale = new Vector3(scale.x, -scale.y, scale.z);
+        }
+
+        // Step 3: 渐显透明度回到 1
+        time = 0f;
+        while (time < halfDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / halfDuration);
+            foreach (var sr in renderers)
+            {
+                Color c = sr.color;
+                c.a = t;
+                sr.color = c;
+            }
+            yield return null;
+        }
+
+        // 最终确保 alpha 为 1
+        foreach (var sr in renderers)
+        {
+            Color c = sr.color;
+            c.a = 1f;
+            sr.color = c;
         }
     }
 
@@ -165,6 +238,22 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
         mask.transform.localScale = new Vector3(ifLeftRight ? length : 1, ifLeftRight ? 1 : length, 1);
 
+    }
+
+    List<Transform> FindChildrenStartingWithPath(Transform parent)
+    {
+        List<Transform> result = new List<Transform>();
+
+        foreach (Transform child in parent)
+        {
+            if (child.name.StartsWith("路径"))
+            {
+                result.Add(child);
+                Debug.Log("添加了" + child.name);
+            }
+        }
+
+        return result;
     }
 
 }

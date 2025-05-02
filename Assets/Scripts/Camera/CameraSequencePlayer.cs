@@ -96,7 +96,7 @@ public class CameraSequencePlayer : MonoBehaviour
 
         if (pixelPerfectCamera == null)
         {
-            Debug.LogError("未找到PixelPerfectCamera组件，无法执行序列！");
+            Debug.LogWarning("未找到PixelPerfectCamera组件，无法执行序列！");
             return;
         }
 
