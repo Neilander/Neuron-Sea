@@ -162,6 +162,7 @@ public class GridManager : MonoBehaviour
                         {
                             SwitchableObj temp1, temp2;
                             switchInfoRecorder.Record(obj, out temp1, out temp2);
+                            Debug.LogError("这里没有更新，现在需要刷新ifBothVisible");
                             obj.SetLockedToSwitch(true, true, false, Vector3.zero);
                             Log("已自动选择鼠标下的物体作为第一个交换对象");
                         }
@@ -298,16 +299,16 @@ public class GridManager : MonoBehaviour
                             //现在take已经取出了一个
                             //如果还存储了另外一个，可以得知原本的情况是选中了两个，所以两个都要取消，这里先修改表示
                             //选中在最后取消
-                            bool ifChanged = false;
+                            //bool ifChanged = false;
                             if (switchInfoRecorder.hasFirst)
                             {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
-                                ifChanged = true;
+                                //ifChanged = true;
                             }
                             if (switchInfoRecorder.hasSecond)
                             {
                                 switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
-                                ifChanged = true;
+                                //ifChanged = true;
                             }
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
 
@@ -343,6 +344,7 @@ public class GridManager : MonoBehaviour
                                 temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 //新选择的物体在后面处理显示
+                                canViewBothSelection = true;
                             }
 
                             //选择后，如果有两个并且是非法的
@@ -351,6 +353,7 @@ public class GridManager : MonoBehaviour
                                 switchInfoRecorder.obj1.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj2.SelfGridPos);
                                 switchInfoRecorder.obj2.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj1.SelfGridPos);
                                 ifLegalMove = false;
+                                canViewBothSelection = true;
                             }
                             else
                             {
@@ -362,7 +365,7 @@ public class GridManager : MonoBehaviour
                                     switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
                                     switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
 
-                                    
+                                    canViewBothSelection = true;
                                 }
                                 else
                                 {
@@ -407,7 +410,7 @@ public class GridManager : MonoBehaviour
                 ifLegalMove = false;
             }
 
-            if (ifLegalMove)
+            if (ifLegalMove&& canViewBothSelection)
             {
                 if (Input.GetKeyDown(switchCode))
                     ShiftSwitch();
@@ -672,36 +675,57 @@ public class GridManager : MonoBehaviour
         StartState(SwitchState.None);
     }
 
+    private bool canViewBothSelection = true;
     void checkIfSwitchableInView(TwoObjectContainer<SwitchableObj> obj)
     {
         SwitchableObj record1 = obj.obj1;
         SwitchableObj record2 = obj.obj2;
-
-        bool ifChangeOne = !obj.hasFirst;
-        bool ifChangeTwo = !obj.hasSecond;
-        if (obj.hasFirst && !obj.obj1.IsSpriteVisibleOnScreen())
+        if (canViewBothSelection)
         {
-            //取消1的选中
-            obj.Take(record1);
-            record1.SetLockedToSwitch(false, true, false, Vector3.zero);
-            ifChangeOne = true;
+            
 
+            bool ifChangeOne = !obj.hasFirst;
+            bool ifChangeTwo = !obj.hasSecond;
+            if (obj.hasFirst && !obj.obj1.IsSpriteVisibleOnScreen())
+            {
+                //取消1的选中显示但是保持选中
+                //obj.Take(record1);
+                record1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                ifChangeOne = true;
+                if(obj.IfHaveBoth())
+                    canViewBothSelection = false;
+
+            }
+
+            if (obj.hasSecond && !obj.obj2.IsSpriteVisibleOnScreen())
+            {
+                //取消2的选中显示但是保持选中
+                //obj.Take(record2);
+                record2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                ifChangeTwo = true;
+                if (obj.IfHaveBoth())
+                    canViewBothSelection = false;
+
+            }
+
+            if (ifChangeOne ^ ifChangeTwo)
+            {
+                //没有改变one，就说明原来一定有one并且没有更改
+                if (!ifChangeOne) obj.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                else if (!ifChangeTwo) obj.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                
+            }
         }
-
-        if (obj.hasSecond && !obj.obj2.IsSpriteVisibleOnScreen())
+        else
         {
-            //取消2的选中
-            obj.Take(record2);
-            record2.SetLockedToSwitch(false, true, false, Vector3.zero);
-            ifChangeTwo = true;
+            if (obj.hasFirst && obj.hasSecond && obj.obj1.IsSpriteVisibleOnScreen() && obj.obj2.IsSpriteVisibleOnScreen())
+            {
+                canViewBothSelection = true;
+                obj.obj1.SetLockedToSwitch(true, true, true, obj.obj2.SelfGridPos);
+                obj.obj2.SetLockedToSwitch(true, true, true, obj.obj1.SelfGridPos);
+            }
         }
-
-        if (ifChangeOne ^ ifChangeTwo)
-        {
-            //没有改变one，就说明原来一定有one并且没有更改
-            if (!ifChangeOne) obj.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
-            else if (!ifChangeTwo) obj.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
-        }
+        
     }
 
     public void RefreshSelection()
