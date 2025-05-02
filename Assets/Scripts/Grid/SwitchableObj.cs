@@ -66,6 +66,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     public bool IfDoSwitchBasedOnScene = false;
     public List<GameObject> switchPrefabs;
 
+    [Header("是否替换preview参考物体")]
+    public bool IfSubstituePreview = false;
+    public SpriteRenderer substitueRenderer;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -552,7 +556,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
         if (ifPreview && ifLocked)
         {
-            previewObj.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
+            previewObj.GetComponent<SpriteRenderer>().sprite = IfSubstituePreview? substitueRenderer.sprite: renderer.sprite;
+
             if (ifLegal)
             {
                 previewObj.GetComponent<SpriteRenderer>().material = ProjectionWhite;
@@ -561,7 +566,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             {
                 previewObj.GetComponent<SpriteRenderer>().material = ProjectionRed;
             }
-            previewObj.transform.position = gridPos - anchor.transform.localPosition + (ifAdjustY ?Vector3.up * adjustYAmount[ExpectedSize.x - 1]:Vector3.zero);
+            previewObj.transform.position = gridPos - anchor.transform.localPosition +
+                (ifAdjustY ?Vector3.up * adjustYAmount[ExpectedSize.x - 1]:Vector3.zero)+
+                (IfSubstituePreview ? substitueRenderer.transform.parent.localPosition :Vector3.zero);
             previewObj.SetActive(true);
             ifInPreview = true;
         }

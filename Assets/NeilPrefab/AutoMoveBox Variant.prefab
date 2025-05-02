@@ -376,6 +376,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27d026be3c3cb4cc2be86da963080eff, type: 3}
+--- !u!1 &1440055408386975169 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8418268330277156733, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7435346994079339196}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2442663594211984621 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5100816044098246225, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7435346994079339196}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5734955347984768444 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2934393342123167488, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7435346994079339196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!61 &8338202108880255295 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff,
@@ -489,6 +507,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
+      propertyPath: previewObj
+      value: 
+      objectReference: {fileID: 5734955347984768444}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
       propertyPath: ExpectedSize.x
       value: 1
       objectReference: {fileID: 0}
@@ -499,9 +522,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
+      propertyPath: substitueRenderer
+      value: 
+      objectReference: {fileID: 2442663594211984621}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: IfSubstituePreview
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
       propertyPath: SpecialEdgeChecker
       value: 
       objectReference: {fileID: 1518015889769422033}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: lockedStateDisplay
+      value: 
+      objectReference: {fileID: 1440055408386975169}
     - target: {fileID: 6667943124777106081, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Name
@@ -612,6 +650,7 @@ MonoBehaviour:
   trackPrefab: {fileID: 6161979032544368671, guid: 37bcef8e908064264996d40689b11a9a,
     type: 3}
   mask: {fileID: 9180044784361205029}
+  ifUpDown: 0
 --- !u!4 &8239702395693073284 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1904767762633376397, guid: 27d026be3c3cb4cc2be86da963080eff,
