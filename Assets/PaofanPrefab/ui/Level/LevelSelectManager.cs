@@ -21,6 +21,23 @@ public class LevelSelectManager : MonoBehaviour
 
     private GameObject[] lockInstances; // 用于存储每个按钮上的锁实例
 
+    #region state
+    [SerializeField] private Sprite[] normalSprites; // 每个按钮的 normal 状态图
+
+    [SerializeField] private Sprite[] graySprites; // 每个按钮的 gray 状态图
+
+    [SerializeField] private Sprite[] finishSprites; // 每个按钮的 finish 状态图
+     #endregion
+
+     #region open
+
+     [SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
+
+     private GameObject[] openLockInstances; // 存储每个按钮的开锁图
+
+     
+
+     #endregion
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -43,7 +60,7 @@ public class LevelSelectManager : MonoBehaviour
     {
         // 初始化锁实例数组
         lockInstances = new GameObject[levelButtons.Length];
-
+        openLockInstances = new GameObject[levelButtons.Length];
         // 为每个按钮创建锁并绑定点击事件
         for (int i = 0; i < levelButtons.Length; i++)
         {
@@ -56,6 +73,11 @@ public class LevelSelectManager : MonoBehaviour
             GameObject lockInstance = Instantiate(lockImagePrefab, levelButtons[i].transform);
             lockInstance.transform.SetAsLastSibling(); // 确保锁显示在最上层
             lockInstances[i] = lockInstance;
+
+            GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
+            openLockInstance.transform.SetAsLastSibling(); // 确保显示在最上层
+            openLockInstance.SetActive(false); // 默认隐藏
+            openLockInstances[i] = openLockInstance;
         }
         InitializeSpecialButtons();
         // 更新所有关卡的锁定状态
@@ -82,12 +104,12 @@ public class LevelSelectManager : MonoBehaviour
             {
                 if (i == 0) // 第一个按钮初始激活
                 {
-                    buttonImage.sprite = normalSprite;
+                    buttonImage.sprite = normalSprites[i];
                     specialButtons[i].interactable = true;
                 }
                 else // 其他按钮初始灰色
                 {
-                    buttonImage.sprite = graySprite;
+                    buttonImage.sprite = graySprites[i];
                     specialButtons[i].interactable = false;
                 }
             }
@@ -140,14 +162,12 @@ public class LevelSelectManager : MonoBehaviour
         Image buttonImage = specialButtons[index].GetComponent<Image>();
         if (buttonImage != null)
         {
-            if (isActive)
-            {
-                buttonImage.sprite = isFinished ? finishSprite : normalSprite;
+            if (isActive) {
+                buttonImage.sprite = isFinished ? finishSprites[index] : normalSprites[index];
                 specialButtons[index].interactable = true;
             }
-            else
-            {
-                buttonImage.sprite = graySprite;
+            else {
+                buttonImage.sprite = graySprites[index];
                 specialButtons[index].interactable = false;
             }
         }
@@ -188,6 +208,11 @@ public class LevelSelectManager : MonoBehaviour
             if (lockInstances != null && i < lockInstances.Length && lockInstances[i] != null)
             {
                 lockInstances[i].SetActive(!isUnlocked);
+            }
+
+
+            if (openLockInstances != null && i < openLockInstances.Length && openLockInstances[i] != null) {
+                openLockInstances[i].SetActive(isUnlocked); // 解锁时显示开锁图标
             }
         }
     }
