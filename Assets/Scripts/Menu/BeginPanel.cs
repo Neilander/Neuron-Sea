@@ -116,7 +116,7 @@ public class BeginPanel : MonoBehaviour
     public void Volume()
     {
         SetPanel.Instance.OpenCanvas();
-
+        FindObjectOfType<ButtonMgr>().SetDefaultState();
         /*
         if(isRed){
             img.color = new Color(255, 255, 255);

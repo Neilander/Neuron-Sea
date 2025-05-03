@@ -46,4 +46,20 @@ public class ButtonMgr : MonoBehaviour
             }
         }
     }
+    public void SetDefaultState()
+    {
+        for (int i = 0; i < buttons.Length; i++) {
+            Image buttonImage = buttons[i].GetComponent<Image>();
+            if (buttonImage != null) {
+                if (buttonSprites != null && buttonSprites.Length > i) {
+                    buttonImage.sprite = (i == 0)
+                        ? buttonSprites[i].normalSprite
+                        : buttonSprites[i].graySprite;
+                }
+                else {
+                    buttonImage.sprite = (i == 0) ? normalSprite : graySprite;
+                }
+            }
+        }
+    }
 }
