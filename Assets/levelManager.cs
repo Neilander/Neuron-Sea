@@ -232,6 +232,7 @@ public class levelManager : MonoBehaviour
         GridManager.Instance.RenewSwitch();
         if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
         {
+            //Destroy(gameObject);
             SceneManager.LoadScene(sceneIndex + 1);
         }
         else
@@ -249,6 +250,7 @@ public class levelManager : MonoBehaviour
         GridManager.Instance.RenewSwitch();
         if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
         {
+            //Destroy(gameObject);
             SceneManager.LoadScene(sceneIndex + 1);
         }
         else
@@ -263,6 +265,7 @@ public class levelManager : MonoBehaviour
         GridManager.Instance.RenewSwitch();
         if (currentLevelIndex == minLevel && sceneIndex > 1)
         {
+            //Destroy(gameObject);
             SceneManager.LoadScene(sceneIndex - 1);
         }
         else
@@ -278,12 +281,19 @@ public class levelManager : MonoBehaviour
         GridManager.Instance.RenewSwitch();
         if (currentLevelIndex == minLevel && sceneIndex > 1)
         {
+            //Destroy(gameObject);
             SceneManager.LoadScene(sceneIndex - 1);
         }
         else
         {
             recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
         }
+    }
+
+    public void RestartLevel()
+    {
+        GridManager.Instance.RenewSwitch();
+        recordRect = LoadLevel(currentLevelIndex, true);
     }
 
     IEnumerator DelayEffect()

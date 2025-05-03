@@ -92,6 +92,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
         Init();
+        
     }
 
     private void Update()
@@ -102,7 +103,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         if (canInput)
         {
             if (Input.GetKeyDown(KeyCode.R))
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                levelManager.instance.RestartLevel();
 
             if (Input.GetKeyDown(KeyCode.J))
             {
