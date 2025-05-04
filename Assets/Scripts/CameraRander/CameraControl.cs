@@ -127,7 +127,7 @@ public class CameraControl : MonoBehaviour
             transform.position = desiredPos;
             return;
         }
-
+        //Debug.Log("相机被限制，使用的是"+(setted?"currentLimit":"defaultLimit"));
         // ✅ 选择使用 currentLimit 或 defaultLimit
         CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
 
