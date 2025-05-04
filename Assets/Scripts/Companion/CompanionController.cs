@@ -121,6 +121,7 @@ public class CompanionController : MonoBehaviour
             // startMode = true;
             oldTrans =this.transform;
             
+
             StartCoroutine(StopStartMode());
         }
         lastPosition = transform.position;
@@ -154,6 +155,7 @@ public class CompanionController : MonoBehaviour
         print("转回去了！");
         
         if(BigCamera!=null)
+            Camera.main.transform.GetComponent<CameraControl>().RestoreHorizontalLimit();
             BigCamera.PlaySequence();
     }
     // 设置跟随目标

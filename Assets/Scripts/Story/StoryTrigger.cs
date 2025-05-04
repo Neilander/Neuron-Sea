@@ -33,7 +33,7 @@ public class StoryTrigger : MonoBehaviour
     
     
     // [Header("事件")]
-    // public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
+    public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
     public UnityEvent onExitSpecificStory; // 退出剧情模式时触发
     // public UnityEvent onSpecificDialogueComplete; // 对话完成时触发
 
@@ -94,66 +94,98 @@ public class StoryTrigger : MonoBehaviour
         {
             StoryManager.Instance.onDialogueComplete+=OnDialogueComplete;
         }// 开始定期检测
-        StartCoroutine(DetectPlayerRoutine());
+        // StartCoroutine(DetectPlayerRoutine());
     }
 
     #region 检测玩家
 
-    /// <summary>
-    /// 定期检测玩家是否在触发区域内
-    /// </summary>
-    private IEnumerator DetectPlayerRoutine(){
-        while (true) {
-            DetectPlayer();
-            yield return new WaitForSeconds(detectionInterval);
-        }
+
+
+
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (!other.CompareTag("Player")) return;
+    playerInTriggerArea = true;
+    playerController = other.GetComponent<PlayerController>();
+
+    if (!requireButtonPress)
+    {
+        TriggerStory();
     }
-
-    /// <summary>
-    /// 检测玩家是否在触发区域内
-    /// </summary>
-    private void DetectPlayer(){
-        // 找到场景中的所有玩家
-        PlayerController[] players = FindObjectsOfType<PlayerController>();
-        bool foundPlayer = false;
-
-        foreach (var player in players) {
-            // 使用刚才添加的方法检查碰撞
-            if (player.IsCollidingWithRect(TriggerWorldPosition, triggerSize)) {
-                // 玩家进入区域
-                if (!playerInTriggerArea) {
-                    Debug.Log("检测到了玩家");
-                    playerInTriggerArea = true;
-                    playerController = player;
-
-                    if (!requireButtonPress) {
-                        TriggerStory();
-                    }
-                    else {
-                        ShowPrompt();
-                    }
-                }
-
-                foundPlayer = true;
-                break;
-            }
-        }
-
-        // 如果未检测到玩家，但之前检测到过
-        if (!foundPlayer && playerInTriggerArea) {
-            playerInTriggerArea = false;
-            HidePrompt();
-        }
+    else
+    {
+        ShowPrompt();
     }
+}
 
-// 绘制触发区域的可视化表示（仅在编辑器中）
-    private void OnDrawGizmos(){
-        Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.3f);
-        Gizmos.DrawCube(TriggerWorldPosition, triggerSize);
+private void OnTriggerExit2D(Collider2D other)
+{
+    if (!other.CompareTag("Player")) return;
+    playerInTriggerArea = false;
+    HidePrompt();
+}
 
-        Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.8f);
-        Gizmos.DrawWireCube(TriggerWorldPosition, triggerSize);
-    }
+
+
+
+
+
+
+    // /// <summary>
+    // /// 定期检测玩家是否在触发区域内
+    // /// </summary>
+    // private IEnumerator DetectPlayerRoutine(){
+    //     while (true) {
+    //         DetectPlayer();
+    //         yield return new WaitForSeconds(detectionInterval);
+    //     }
+    // }
+
+    // /// <summary>
+    // /// 检测玩家是否在触发区域内
+    // /// </summary>
+    // private void DetectPlayer(){
+    //     // 找到场景中的所有玩家
+    //     PlayerController[] players = FindObjectsOfType<PlayerController>();
+    //     bool foundPlayer = false;
+
+    //     foreach (var player in players) {
+    //         // 使用刚才添加的方法检查碰撞
+    //         if (player.IsCollidingWithRect(TriggerWorldPosition, triggerSize)) {
+    //             // 玩家进入区域
+    //             if (!playerInTriggerArea) {
+    //                 Debug.Log("检测到了玩家");
+    //                 playerInTriggerArea = true;
+    //                 playerController = player;
+
+    //                 if (!requireButtonPress) {
+    //                     TriggerStory();
+    //                 }
+    //                 else {
+    //                     ShowPrompt();
+    //                 }
+    //             }
+
+    //             foundPlayer = true;
+    //             break;
+    //         }
+    //     }
+
+    //     // 如果未检测到玩家，但之前检测到过
+    //     if (!foundPlayer && playerInTriggerArea) {
+    //         playerInTriggerArea = false;
+    //         HidePrompt();
+    //     }
+    // }
+
+// // 绘制触发区域的可视化表示（仅在编辑器中）
+//     private void OnDrawGizmos(){
+//         Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.3f);
+//         Gizmos.DrawCube(TriggerWorldPosition, triggerSize);
+
+//         Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.8f);
+//         Gizmos.DrawWireCube(TriggerWorldPosition, triggerSize);
+//     }
     
 
     #endregion
@@ -281,7 +313,7 @@ public class StoryTrigger : MonoBehaviour
         }
 
         // 触发进入事件
-        // onEnterSpecificStory?.Invoke();
+        onEnterSpecificStory?.Invoke();
 
         // 标记正在等待剧情结束
         isWaitingForStoryEnd = true;

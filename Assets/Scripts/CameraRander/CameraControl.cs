@@ -18,9 +18,10 @@ public class CameraControl : MonoBehaviour
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
 
-    
+    // 新增：无视摄像机边界
+    private bool ignoreLimit = false;
     private CameraLimitRegion defaultLimit;
-
+    private bool ignoreHorizontalLimit = false;
     [CanBeNull] public CompanionController companionController;
 
     
@@ -70,6 +71,8 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
+        IgnoreHorizontalLimit();
+        FindObjectOfType<PlayerController>().DisableInput();
         ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
@@ -111,16 +114,26 @@ public class CameraControl : MonoBehaviour
     {
         if (target == null) return;
 
+
+
+
+
         
         // ✅ 每帧更新目标位置
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
+        // 新增：如果ignoreLimit为true，直接跟随目标，不做边界限制
+        if (ignoreLimit)
+        {
+            transform.position = desiredPos;
+            return;
+        }
 
         // ✅ 选择使用 currentLimit 或 defaultLimit
         CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
 
         if (limitToUse != null)
         {
-            if (limitToUse.left.HasValue && limitToUse.right.HasValue)
+            if (!ignoreHorizontalLimit &&limitToUse.left.HasValue && limitToUse.right.HasValue)
             {
                 float leftBound = limitToUse.left.Value + halfWidth;
                 float rightBound = limitToUse.right.Value - halfWidth;
@@ -163,7 +176,21 @@ public class CameraControl : MonoBehaviour
             transform.position = desiredPos;
         }
     }
+    /// <summary>
+/// 忽略左右边界限制（X轴）
+/// </summary>
+public void IgnoreHorizontalLimit()
+{
+    ignoreHorizontalLimit = true;
+}
 
+/// <summary>
+/// 恢复左右边界限制
+/// </summary>
+public void RestoreHorizontalLimit()
+{
+    ignoreHorizontalLimit = false;
+}
     public void SetLimitRegion(CameraLimitRegion newRegion)
     {
         if (setted)
@@ -179,7 +206,21 @@ public class CameraControl : MonoBehaviour
             isTransitioning = true; // ✅ 开启平滑过渡
         }
     }
+/// <summary>
+    /// 调用此方法后摄像机会无视边界限制
+    /// </summary>
+    public void IgnoreCameraLimit()
+    {
+        ignoreLimit = true;
+    }
 
+    /// <summary>
+    /// 恢复摄像机边界限制
+    /// </summary>
+    public void RestoreCameraLimit()
+    {
+        ignoreLimit = false;
+    }
     public void ClearLimitRegion(CameraRegionTrigger sender)
     {
         if (setted && currentLimit != null && currentLimit.setter == sender)
