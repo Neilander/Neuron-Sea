@@ -27,6 +27,8 @@ public class levelManager : MonoBehaviour
     [Header("是否开启剧情")]
     public bool ifStartStory;
 
+    [Header("背景调整")]
+    public float yAdjust = 20;
 
     const int sceneLimit = 2;
     void Awake()
@@ -192,6 +194,7 @@ public class levelManager : MonoBehaviour
         }
 
         // 1. 查找 Layer-0
+        /*
         Transform layer0 = backGround.transform.Find("Layer-0");
 
         if (layer0 != null)
@@ -210,6 +213,11 @@ public class levelManager : MonoBehaviour
         else
         {
             backGround.transform.position = newLevelGO.transform.position;
+        }*/
+        backGround.transform.position = newLevelGO.transform.position+ Vector3.up*yAdjust;
+        foreach (Transform child in backGround.transform)
+        {
+            child.localPosition = Vector3.zero;
         }
         Vector3 intPos = new Vector3(
             Mathf.Round(newLevelGO.transform.position.x),

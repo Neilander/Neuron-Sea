@@ -280,6 +280,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         for (int i = 0; i < hitCount; i++) {
+            Debug.Log("第"+i+"个是"+results[i].gameObject.name);
             if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject&& !results[i].transform.IsChildOf(ignoreObject.transform)) {
                 Debug.Log("阻止我们的是" + results[i].gameObject.name);
                 return false; // 有碰撞，且不是要忽略的物体
