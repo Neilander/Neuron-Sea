@@ -100,9 +100,26 @@ public class CompanionEventTrigger : MonoBehaviour
         // }
 
 
-        if (dialogueObj != null)
-            dialogueObj.transform.position = companion.transform.position + new Vector3(-3f, 3f, 0);
-       
+        if (dialogueObj != null){
+            // dialogueObj.transform.position = companion.transform.position + new Vector3(-3f, 3f, 0);
+            Vector3 worldOffset = new Vector3(0f, 3f, 0f); // 偏移在头顶
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(companion.transform.position + worldOffset);
+            dialogueObj.transform.position = screenPos;}
+
+
+        // float dialogueDuration = 3f;
+        // float timer2 = 0f;
+        //
+        // while (timer2 < dialogueDuration) {
+        //     if (dialogueObj != null) {
+        //         Vector3 worldOffset = new Vector3(0f, 1.5f, 0f); // 偏移在头顶
+        //         Vector3 screenPos = Camera.main.WorldToScreenPoint(companion.transform.position + worldOffset);
+        //         dialogueObj.transform.position = screenPos;
+        //     }
+        //
+        //     timer2 += Time.deltaTime;
+        //     yield return null;
+        // }
         // 7. 恢复CompanionController的canFollow
         companion.canFollow = oldCanFollow;
         
