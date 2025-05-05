@@ -8,6 +8,7 @@ public class EndLevel : MonoBehaviour
 {
     private void OnTriggerExit(Collider other){
         if (!other.CompareTag("Player")) return;
+        CollectableManager.Instance.ResetLevelData();
         SceneManager.LoadScene("场景2剧情");
     }
 }

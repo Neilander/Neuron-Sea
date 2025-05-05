@@ -239,7 +239,7 @@ public class EndAndMove : MonoBehaviour
         // }
         // 等待相机移动完成后返回原位
         StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
-        // playerController.EnableMovement();
+        playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
        
         UIphoto.SetActive(true);
@@ -303,7 +303,7 @@ public class EndAndMove : MonoBehaviour
         
         // // 确保摄像机完全回到原位后恢复相机限制
         yield return new WaitUntil(() => !cam.isTransitioning);
-        playerController.EnableMovement();
+        // playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
 
     }
@@ -336,5 +336,8 @@ public class EndAndMove : MonoBehaviour
 
     public void ForceEnterStory3(){
         storyTriggers[3].ForceStartStory();
+    }
+    public void ForceEnterStory1_1(){
+        storyTriggers[4].ForceStartStory();
     }
 }
