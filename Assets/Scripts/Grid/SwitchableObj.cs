@@ -60,6 +60,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     [Header("是否启用特殊的边界检测机制")]
     public bool IfSpecialEdgeChecker;
+    [Header("这应该是一个collider")]
     public SpriteRenderer SpecialEdgeChecker;
 
     [Header("场景替换")]
@@ -168,7 +169,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             defaultMaterial = renderer.material;
         }
 
-        
+        if (IfSpecialEdgeChecker)
+            Debug.Log("我用特殊检查，我是"+gameObject.name);
     }
 
     public SpriteRenderer GetRenderer()
@@ -618,10 +620,22 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     public bool IsSpriteVisibleOnScreen()
     {
-        SpriteRenderer sr = IfSpecialEdgeChecker? SpecialEdgeChecker: renderer;
         Camera cam = Camera.main;
 
-        Bounds bounds = sr.bounds;
+        // 自动选择使用的碰撞器源（优先 SpecialEdgeChecker）
+        GameObject source = IfSpecialEdgeChecker ? SpecialEdgeChecker.gameObject : gameObject;
+
+        // 尝试获取 BoxCollider2D 或 CircleCollider2D
+        Collider2D col = source.GetComponent<Collider2D>();
+
+        if (col == null)
+        {
+            Debug.LogWarning("No Collider2D found on the source object.");
+            return false;
+        }
+
+
+        Bounds bounds = col.bounds;
 
         // 获取四个角点（世界坐标）
         Vector3[] worldCorners = new Vector3[4];
