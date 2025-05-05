@@ -501,7 +501,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u4F60\u597D\uFF01"
+  m_text: "\u6211\u53EA\u662F\u57FA\u4E8E\u5BF9\u60A8\u7684\u5373\u65F6\u6570\u636E\u7684\u5206\u6790\uFF0C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eb8bacd46357fb4418b3d529965e7b08, type: 2}
   m_sharedMaterial: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
@@ -532,9 +532,9 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -879,6 +879,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5938814184166905583}
+  - component: {fileID: 5828402622273790185}
   m_Layer: 0
   m_Name: "\u5267\u60C5\u9762\u677F\u677F"
   m_TagString: Untagged
@@ -903,6 +904,18 @@ Transform:
   - {fileID: 2346753573831314659}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5828402622273790185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7073502720615622146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d53b1bc04743ce4d99650f9ef362767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7977986025990833341
 GameObject:
   m_ObjectHideFlags: 0

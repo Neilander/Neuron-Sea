@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class CompanionEventTrigger : MonoBehaviour
@@ -11,6 +12,7 @@ public class CompanionEventTrigger : MonoBehaviour
 
     private bool triggered = false;
 
+    public UnityEvent exitConsciousness;
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (triggered) return;
@@ -33,7 +35,7 @@ public class CompanionEventTrigger : MonoBehaviour
         companion.canFollow = false;
 
         // 2. 移动到Trigger位置
-        Vector3 targetPos = transform.position; //+ new Vector3(1f, 0, 0) // 目标点可微调
+        Vector3 targetPos = transform.position + new Vector3(0, 1f, 0); // 目标点可微调
         float speed = 30f;
         while (Vector3.Distance(companion.transform.position, targetPos) > 0.05f)
         {
@@ -53,15 +55,33 @@ public class CompanionEventTrigger : MonoBehaviour
 
         // 4. 等待动画播放完
         Animator anim = companion.GetComponent<Animator>();
-        if (anim != null)
-        {
-            yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName(companionAnimation));
-            yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+        // if (anim != null)
+        // {
+        //     yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName(companionAnimation));
+        //     yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+        // }
+        // else
+        // {
+        //     yield return new WaitForSeconds(1f);
+        // }
+        // //解析时间
+        // yield return new WaitForSeconds(1f);
+
+
+        if (anim != null) {
+            float timer = 0f;
+
+            while (timer < 3f) {
+                anim.Play(companionAnimation, 0, 0f); // 从头播放
+                yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+                timer += anim.GetCurrentAnimatorStateInfo(0).length;
+            }
         }
-        else
-        {
-            yield return new WaitForSeconds(1f);
+        else {
+            yield return new WaitForSeconds(3f);
         }
+        
+        
         // 5. 显示对话框
         GameObject dialogueObj = null;
         if (dialoguePrefab != null)
@@ -70,15 +90,19 @@ public class CompanionEventTrigger : MonoBehaviour
             dialogueObj.GetComponentInChildren<TMP_Text>().text = dialogueText;
         }
         anim.Play("robot_idle");
-        // 6. 返回原位置（带着对话框）
-        while (Vector3.Distance(companion.transform.position, originalPos) > 0.05f)
-        {
-            companion.transform.position = Vector3.MoveTowards(companion.transform.position, originalPos, speed * Time.deltaTime);
-            if (dialogueObj != null)
-                dialogueObj.transform.position = companion.transform.position + new Vector3(0f, 4f, 0);
-            yield return null;
-        }
+        // // 6. 返回原位置（带着对话框）
+        // while (Vector3.Distance(companion.transform.position, originalPos+new Vector3(3f, 0, 0)) > 0.05f)
+        // {
+        //     companion.transform.position = Vector3.MoveTowards(companion.transform.position, originalPos + new Vector3(3f, 0, 0), speed * Time.deltaTime);
+        //     if (dialogueObj != null)
+        //         dialogueObj.transform.position = companion.transform.position + new Vector3(0f, 1f, 0);
+        //     yield return null;
+        // }
 
+
+        if (dialogueObj != null)
+            dialogueObj.transform.position = companion.transform.position + new Vector3(-3f, 3f, 0);
+       
         // 7. 恢复CompanionController的canFollow
         companion.canFollow = oldCanFollow;
         
@@ -86,5 +110,6 @@ public class CompanionEventTrigger : MonoBehaviour
         yield return new WaitForSeconds(3f);
         if (dialogueObj != null)
             Destroy(dialogueObj);
+        exitConsciousness.Invoke();
     }
 }

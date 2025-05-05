@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class levelManager : MonoBehaviour
 {
 
-    public static levelManager instance;
+    public static levelManager instance{get; private set;}
     #region 已通关关卡记录
     // 添加已通关关卡记录
     private HashSet<int> unlockedLevels = new HashSet<int>();
@@ -26,8 +27,8 @@ public class levelManager : MonoBehaviour
     public int hasCollectedNum = 0;
 
 
-    [Header("是否开启剧情")]
-    public bool ifStartStory;
+    [FormerlySerializedAs("ifStartStory")] [Header("是否开启剧情")]
+    public bool isStartStory;
 
     void Awake()
     {
@@ -177,7 +178,7 @@ public class levelManager : MonoBehaviour
         }
 
         PlayerController controller = FindAnyObjectByType<PlayerController>();
-        if (ifStartStory && newLevelGO.name == "Level_1")
+        if (isStartStory && newLevelGO.name == "Level_1")
         {
             controller.DisableInput();
         }

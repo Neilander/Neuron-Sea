@@ -102,28 +102,28 @@ public class StoryTrigger : MonoBehaviour
 
 
 
-private void OnTriggerEnter2D(Collider2D other)
-{
-    if (!other.CompareTag("Player")) return;
-    playerInTriggerArea = true;
-    playerController = other.GetComponent<PlayerController>();
-
-    if (!requireButtonPress)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        TriggerStory();
-    }
-    else
-    {
-        ShowPrompt();
-    }
-}
+        if (!other.CompareTag("Player")) return;
+        playerInTriggerArea = true;
+        playerController = other.GetComponent<PlayerController>();
 
-private void OnTriggerExit2D(Collider2D other)
-{
-    if (!other.CompareTag("Player")) return;
-    playerInTriggerArea = false;
-    HidePrompt();
-}
+        if (!requireButtonPress)
+        {
+            TriggerStory();
+        }
+        else
+        {
+            ShowPrompt();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        playerInTriggerArea = false;
+        HidePrompt();
+    }
 
 
 

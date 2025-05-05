@@ -89,7 +89,7 @@ public class EndAndMove : MonoBehaviour
         // Camera.main.transform.GetComponent<CameraControl>().RestoreCameraLimit();
         FindAnyObjectByType<CompanionController>().canFollow = true;
         FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
-        
+        // playerController.EnableMovement();
     }
     public void MoveEnd()
     {
@@ -239,8 +239,9 @@ public class EndAndMove : MonoBehaviour
         // }
         // 等待相机移动完成后返回原位
         StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
-        playerController.EnableMovement();
+        // playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
+       
         UIphoto.SetActive(true);
         text = UIphoto.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;
@@ -285,8 +286,8 @@ public class EndAndMove : MonoBehaviour
 
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
-            myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
-
+            // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
+            camControl.setted = true;
             // UIphoto.SetActive(false);
         }
         else
@@ -301,11 +302,22 @@ public class EndAndMove : MonoBehaviour
         }
         
         // // 确保摄像机完全回到原位后恢复相机限制
-        // yield return new WaitUntil(() => !cam.isTransitioning);
+        yield return new WaitUntil(() => !cam.isTransitioning);
+        playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
 
     }
 
+    public void FreeCamera(){
+        camControl.setted = false;
+    }
+
+    public void LockCamera(){
+        camControl.setted = true;
+    }
+    
+    
+    
     // 调试日志方法
     private void Log(string message)
     {
@@ -320,5 +332,9 @@ public class EndAndMove : MonoBehaviour
     private void LogError(string message)
     {
         Debug.LogError("[EndAndMove] " + message);
+    }
+
+    public void ForceEnterStory3(){
+        storyTriggers[3].ForceStartStory();
     }
 }

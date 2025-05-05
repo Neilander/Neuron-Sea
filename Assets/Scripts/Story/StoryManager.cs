@@ -83,7 +83,7 @@ public class StoryManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(transform.parent.gameObject);
         }
         else
         {
@@ -104,6 +104,7 @@ public class StoryManager : MonoBehaviour
 
     private void Start()
     {
+        
         // 初始化
         if (playerController == null)
         {
@@ -167,6 +168,21 @@ public class StoryManager : MonoBehaviour
 
     private void Update()
     {
+        //进入场景后重新获取
+        if (playerController == null) {
+            playerController = FindObjectOfType<PlayerController>();
+            if (playerController == null) {
+                Debug.LogWarning("无法找到 PlayerController！部分功能可能无法正常工作。");
+            }
+            else {
+                // 获取玩家的Rigidbody2D组件
+                playerRigidbody = playerController.GetComponent<Rigidbody2D>();
+                if (playerRigidbody == null) {
+                    Debug.LogError("玩家对象上未找到Rigidbody2D组件！");
+                }
+            }
+        }
+        
         // 在剧情模式下，检测点击以继续对话
         if (currentState == GameState.StoryMode && isDialogueActive)
         {

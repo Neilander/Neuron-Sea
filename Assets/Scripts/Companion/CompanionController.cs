@@ -39,10 +39,15 @@ public class CompanionController : MonoBehaviour
     private Vector3 lastPosition;
     private bool isMoving;
 
-    public bool hasStopped;
-    private bool startMode=true;//改成true之后出现报空
+    public bool hasStopped=true;
+    private bool startMode=false;//改成true之后出现报空
     private void Start()
     {
+        if (levelManager.instance.currentLevelIndex == 1) {
+            hasStopped=false;
+            //如果第一次进入在右上角出现
+            startMode=true;
+        }
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
@@ -87,7 +92,7 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
-            // 如果玩家朝左（scale.x = -1），跟随物在右上角
+            // 如果玩家朝左（scale.x = -1）或者是开始情况，跟随物在右上角
             if (target.localScale.x < 0 || startMode)//TODO：临时移出||startMode
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
@@ -115,7 +120,7 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
-        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped&&levelManager.instance.ifStartStory) {
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped&&levelManager.instance.isStartStory&& levelManager.instance.currentLevelIndex == 1) {
             hasStopped = true;
             print("我到达目的地了！");
             // startMode = true;

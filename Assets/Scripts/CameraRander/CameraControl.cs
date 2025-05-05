@@ -13,12 +13,12 @@ public class CameraControl : MonoBehaviour
     private float halfWidth;
     private float halfHeight;
 
-    private bool setted = false;
+    public bool setted = false;
     private bool queued = false;
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
 
-    // 新增：无视摄像机边界
+    // 无视摄像机边界
     private bool ignoreLimit = false;
     private CameraLimitRegion defaultLimit;
     private bool ignoreHorizontalLimit = false;
@@ -71,8 +71,10 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
-        IgnoreHorizontalLimit();
-        FindObjectOfType<PlayerController>().DisableInput();
+        if (levelManager.instance.currentLevelIndex == 1) {
+            IgnoreHorizontalLimit();
+            FindObjectOfType<PlayerController>().DisableInput();
+        }
         ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
@@ -80,7 +82,7 @@ public class CameraControl : MonoBehaviour
         smoothTargetPosition = transform.position;
         
         
-        if (levelManager.instance.ifStartStory) {
+        if (levelManager.instance.isStartStory&& levelManager.instance.currentLevelIndex == 1) {
             if (companionController != null) {
                 companionController.SetTarget(null);
             }
@@ -114,13 +116,9 @@ public class CameraControl : MonoBehaviour
     {
         if (target == null) return;
 
-
-
-
-
-        
         // ✅ 每帧更新目标位置
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
+        
         // 新增：如果ignoreLimit为true，直接跟随目标，不做边界限制
         if (ignoreLimit)
         {
@@ -177,20 +175,20 @@ public class CameraControl : MonoBehaviour
         }
     }
     /// <summary>
-/// 忽略左右边界限制（X轴）
-/// </summary>
-public void IgnoreHorizontalLimit()
-{
-    ignoreHorizontalLimit = true;
-}
+    /// 忽略左右边界限制（X轴）
+    /// </summary>
+    public void IgnoreHorizontalLimit()
+    {
+        ignoreHorizontalLimit = true;
+    }
 
-/// <summary>
-/// 恢复左右边界限制
-/// </summary>
-public void RestoreHorizontalLimit()
-{
-    ignoreHorizontalLimit = false;
-}
+    /// <summary>
+    /// 恢复左右边界限制
+    /// </summary>
+    public void RestoreHorizontalLimit()
+    {
+        ignoreHorizontalLimit = false;
+    }
     public void SetLimitRegion(CameraLimitRegion newRegion)
     {
         if (setted)

@@ -57,7 +57,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -129,7 +129,7 @@ Transform:
   m_GameObject: {fileID: 2166103716189743964}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.211288, y: 6.334778, z: 0.23459947}
+  m_LocalPosition: {x: -0.41, y: -0.44, z: 0.23459947}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,7 +167,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 2.5990143}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -178,7 +178,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 6.1980286}
   m_EdgeRadius: 0
 --- !u!114 &8858044531608045829
 MonoBehaviour:
@@ -315,12 +315,12 @@ PrefabInstance:
     - target: {fileID: 1952703814337124815, guid: 02b1228cee3769347b9c34dc23fc8b23,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -431
+      value: -401
       objectReference: {fileID: 0}
     - target: {fileID: 1952703814337124815, guid: 02b1228cee3769347b9c34dc23fc8b23,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -35
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1952703814337124815, guid: 02b1228cee3769347b9c34dc23fc8b23,
         type: 3}
@@ -336,6 +336,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6389501402961471575, guid: 02b1228cee3769347b9c34dc23fc8b23,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6389501402961471575, guid: 02b1228cee3769347b9c34dc23fc8b23,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 772b52b0cc7217442971f69e2237407e,
+        type: 3}
+    - target: {fileID: 6389501402961471575, guid: 02b1228cee3769347b9c34dc23fc8b23,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8333336579323309596, guid: 02b1228cee3769347b9c34dc23fc8b23,
         type: 3}

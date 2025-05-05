@@ -90,7 +90,7 @@ public class CameraRegionTrigger : MonoBehaviour
             return;
         }
         camControl.ClearLimitRegion(this);
-        this.gameObject.SetActive(false);
+        // this.gameObject.SetActive(false);
         Debug.Log($"[CameraRegionTrigger] 外部调用忽略所有边界: {gameObject.name}");
     }
     //
@@ -105,7 +105,7 @@ public class CameraRegionTrigger : MonoBehaviour
     // // 新增：外部可调用，恢复所有边界
     public void RestoreCameraLimit()
     {
-        this.gameObject.SetActive(true);
+        // this.gameObject.SetActive(true);
         //     ignoreAllLimit = false;
         var camControl = Camera.main.GetComponent<CameraControl>();
         if (camControl == null)
@@ -113,16 +113,17 @@ public class CameraRegionTrigger : MonoBehaviour
             Debug.LogWarning("[CameraRegionTrigger] RestoreCameraLimit 未找到 CameraControl 组件");
             return;
         }
-
-        Bounds bounds = GetComponent<Collider2D>().bounds;
-
-        float? left = useHorizontalLimit ? bounds.min.x : null;
-        float? right = useHorizontalLimit ? bounds.max.x : null;
-        float? top = useVerticalLimit ? bounds.max.y : null;
-        float? bottom = useVerticalLimit ? bounds.min.y : null;
-
-        var region = new CameraLimitRegion(left, right, top, bottom, this);
-        camControl.SetLimitRegion(region);
-        Debug.Log($"[CameraRegionTrigger] 外部调用恢复边界: {gameObject.name}");
+        camControl.RestoreCameraLimit();
+        camControl.RestoreHorizontalLimit();
+    //     Bounds bounds = GetComponent<Collider2D>().bounds;
+    //
+    //     float? left = useHorizontalLimit ? bounds.min.x : null;
+    //     float? right = useHorizontalLimit ? bounds.max.x : null;
+    //     float? top = useVerticalLimit ? bounds.max.y : null;
+    //     float? bottom = useVerticalLimit ? bounds.min.y : null;
+    //
+    //     var region = new CameraLimitRegion(left, right, top, bottom, this);
+    //     camControl.SetLimitRegion(region);
+    //     Debug.Log($"[CameraRegionTrigger] 外部调用恢复边界: {gameObject.name}");
     }
 }
