@@ -47,6 +47,13 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("准备传送");
+            SetClosestPortalAsTarget();
+        }
+        
+
         // 检查是否可以传送
         if (!isActive || isOnCooldown || targetPortal == null || isPlayerBeingTeleported)
             return;
@@ -56,6 +63,26 @@ public class Portal : MonoBehaviour
             Debug.Log("碰到传送门了！准备传送到: " + targetPortal.position);
             TeleportPlayer(other.gameObject);
         }
+    }
+
+    private void SetClosestPortalAsTarget()
+    {
+        float minDistance = float.MaxValue;
+        Transform closest = null;
+
+        foreach (var portal in FindObjectsOfType<Portal>())
+        {
+            if (portal == this) continue; // 不选自己
+
+            float dist = Vector2.Distance(transform.position, portal.transform.position);
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = portal.transform;
+            }
+        }
+
+        targetPortal = closest;
     }
 
     private void TeleportPlayer(GameObject player)

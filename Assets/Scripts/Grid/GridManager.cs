@@ -551,7 +551,7 @@ public class GridManager : MonoBehaviour
         // 3. 遍历命中的所有物体
         foreach (var hit in hits)
         {
-            SwitchableObj switchable = hit.collider.GetComponent<SwitchableObj>();
+            SwitchableObj switchable = hit.collider.GetComponentInParent<SwitchableObj>();
             if (switchable != null && switchable.IfCanSwitch())// && !switchable.inSwitchState 这个留着之后可能用
             {
                 target = switchable;
