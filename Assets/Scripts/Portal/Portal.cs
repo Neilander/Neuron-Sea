@@ -134,10 +134,11 @@ public class Portal : MonoBehaviour
 
         // 原来的位置和目标位置，用于计算偏移量
         Vector2 originalPosition = player.transform.position;
-        Vector2 targetPosition = targetPortal.position - transform.position + (Vector3)originalPosition;
+        Vector2 targetPosition = (Vector2)targetPortal.position - (Vector2)transform.position + originalPosition;
         Vector2 positionDelta = targetPosition - originalPosition;
         // 直接设置玩家位置
-        player.GetComponent<PlayerController>().MovePosition(targetPortal.position);
+        player.GetComponent<PlayerController>().MovePosition((Vector2)targetPortal.position - player.GetComponent<BoxCollider2D>().offset * Mathf.Abs(player.transform.localScale.x));
+        player.GetComponent<PlayerController>().AdjustPosition(targetPosition - (Vector2)player.transform.position);
 
         // 立即同步摄像机位置
         if (updateCameraImmediately)

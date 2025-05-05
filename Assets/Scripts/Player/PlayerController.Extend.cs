@@ -56,8 +56,9 @@ public partial class PlayerController : MonoBehaviour
 
         //this.collider = normalHitbox;
         //this.hurtCollider = normalHurtbox;
-        collider = new Rect(boxCollider.offset * transform.localScale.x, boxCollider.size * transform.localScale.x);
-        hurtCollider = new Rect(boxCollider.offset * transform.localScale.x, boxCollider.size * transform.localScale.x * 0.7f);
+        float scale = Mathf.Abs(transform.localScale.x);
+        collider = new Rect(boxCollider.offset * scale, boxCollider.size * scale);
+        hurtCollider = new Rect(boxCollider.offset * scale, boxCollider.size * scale * 0.7f);
 
         this.level_enter_way = level_enter_way;
         //根据进入的方式,决定初始状态
