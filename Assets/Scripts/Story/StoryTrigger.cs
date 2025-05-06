@@ -9,6 +9,14 @@ using UnityEngine.Events;
 /// </summary>
 public class StoryTrigger : MonoBehaviour
 {
+
+    [Header("跳过剧情设置")]
+    [Tooltip("跳过剧情的UI按钮")]
+    [SerializeField] private GameObject skipButton; // UI按钮对象
+    private bool isStoryPlaying = false;
+
+
+
     [Header("检测设置")]
     [Tooltip("触发区域大小")]
     [SerializeField] private Vector2 triggerSize = new Vector2(2f, 2f);
@@ -25,7 +33,7 @@ public class StoryTrigger : MonoBehaviour
     
     
     // [Header("事件")]
-    // public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
+    public UnityEvent onEnterSpecificStory; // 进入剧情模式时触发
     public UnityEvent onExitSpecificStory; // 退出剧情模式时触发
     // public UnityEvent onSpecificDialogueComplete; // 对话完成时触发
 
@@ -86,66 +94,98 @@ public class StoryTrigger : MonoBehaviour
         {
             StoryManager.Instance.onDialogueComplete+=OnDialogueComplete;
         }// 开始定期检测
-        StartCoroutine(DetectPlayerRoutine());
+        // StartCoroutine(DetectPlayerRoutine());
     }
 
     #region 检测玩家
 
-    /// <summary>
-    /// 定期检测玩家是否在触发区域内
-    /// </summary>
-    private IEnumerator DetectPlayerRoutine(){
-        while (true) {
-            DetectPlayer();
-            yield return new WaitForSeconds(detectionInterval);
+
+
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        playerInTriggerArea = true;
+        playerController = other.GetComponent<PlayerController>();
+
+        if (!requireButtonPress)
+        {
+            TriggerStory();
+        }
+        else
+        {
+            ShowPrompt();
         }
     }
 
-    /// <summary>
-    /// 检测玩家是否在触发区域内
-    /// </summary>
-    private void DetectPlayer(){
-        // 找到场景中的所有玩家
-        PlayerController[] players = FindObjectsOfType<PlayerController>();
-        bool foundPlayer = false;
-
-        foreach (var player in players) {
-            // 使用刚才添加的方法检查碰撞
-            if (player.IsCollidingWithRect(TriggerWorldPosition, triggerSize)) {
-                // 玩家进入区域
-                if (!playerInTriggerArea) {
-                    Debug.Log("检测到了玩家");
-                    playerInTriggerArea = true;
-                    playerController = player;
-
-                    if (!requireButtonPress) {
-                        TriggerStory();
-                    }
-                    else {
-                        ShowPrompt();
-                    }
-                }
-
-                foundPlayer = true;
-                break;
-            }
-        }
-
-        // 如果未检测到玩家，但之前检测到过
-        if (!foundPlayer && playerInTriggerArea) {
-            playerInTriggerArea = false;
-            HidePrompt();
-        }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        playerInTriggerArea = false;
+        HidePrompt();
     }
 
-// 绘制触发区域的可视化表示（仅在编辑器中）
-    private void OnDrawGizmos(){
-        Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.3f);
-        Gizmos.DrawCube(TriggerWorldPosition, triggerSize);
 
-        Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.8f);
-        Gizmos.DrawWireCube(TriggerWorldPosition, triggerSize);
-    }
+
+
+
+
+
+    // /// <summary>
+    // /// 定期检测玩家是否在触发区域内
+    // /// </summary>
+    // private IEnumerator DetectPlayerRoutine(){
+    //     while (true) {
+    //         DetectPlayer();
+    //         yield return new WaitForSeconds(detectionInterval);
+    //     }
+    // }
+
+    // /// <summary>
+    // /// 检测玩家是否在触发区域内
+    // /// </summary>
+    // private void DetectPlayer(){
+    //     // 找到场景中的所有玩家
+    //     PlayerController[] players = FindObjectsOfType<PlayerController>();
+    //     bool foundPlayer = false;
+
+    //     foreach (var player in players) {
+    //         // 使用刚才添加的方法检查碰撞
+    //         if (player.IsCollidingWithRect(TriggerWorldPosition, triggerSize)) {
+    //             // 玩家进入区域
+    //             if (!playerInTriggerArea) {
+    //                 Debug.Log("检测到了玩家");
+    //                 playerInTriggerArea = true;
+    //                 playerController = player;
+
+    //                 if (!requireButtonPress) {
+    //                     TriggerStory();
+    //                 }
+    //                 else {
+    //                     ShowPrompt();
+    //                 }
+    //             }
+
+    //             foundPlayer = true;
+    //             break;
+    //         }
+    //     }
+
+    //     // 如果未检测到玩家，但之前检测到过
+    //     if (!foundPlayer && playerInTriggerArea) {
+    //         playerInTriggerArea = false;
+    //         HidePrompt();
+    //     }
+    // }
+
+// // 绘制触发区域的可视化表示（仅在编辑器中）
+//     private void OnDrawGizmos(){
+//         Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.3f);
+//         Gizmos.DrawCube(TriggerWorldPosition, triggerSize);
+
+//         Gizmos.color = new Color(0.2f, 0.8f, 0.2f, 0.8f);
+//         Gizmos.DrawWireCube(TriggerWorldPosition, triggerSize);
+//     }
     
 
     #endregion
@@ -169,7 +209,9 @@ public class StoryTrigger : MonoBehaviour
 
         // 重置等待标志
         isWaitingForStoryEnd = false;
-
+            isStoryPlaying = false;
+    // 隐藏跳过按钮
+    HideSkipButton();
         // 触发退出事件
         onExitSpecificStory?.Invoke();
 
@@ -194,6 +236,8 @@ public class StoryTrigger : MonoBehaviour
     /// </summary>
     public void ForceStartStory()
     {
+        Debug.Log("[StoryTrigger] ForceStartStory called, this=" + this.name);
+        Debug.Log($"[StoryTrigger] StartStoryInternal called, storySourceType={storySourceType}, storyResourcePath={storyResourcePath}, csvResourcePath={csvResourcePath}");
         StartStoryInternal();
     }
 
@@ -271,7 +315,7 @@ public class StoryTrigger : MonoBehaviour
         }
 
         // 触发进入事件
-        // onEnterSpecificStory?.Invoke();
+        onEnterSpecificStory?.Invoke();
 
         // 标记正在等待剧情结束
         isWaitingForStoryEnd = true;
@@ -309,17 +353,67 @@ public class StoryTrigger : MonoBehaviour
         // 如果成功触发
         if (success)
         {
+            isStoryPlaying = true;
             // 标记为已触发
             hasTriggered = true;
 
             // 隐藏提示
             HidePrompt();
+            
+            ShowSkipButton(); // 显示跳过按钮
         }
         else
         {
             isWaitingForStoryEnd = false;
         }
     }
+
+    // 添加显示跳过按钮的方法
+private void ShowSkipButton()
+{
+    if (skipButton != null)
+    {
+        skipButton.SetActive(true);
+    }
+}
+
+// 添加隐藏跳过按钮的方法
+private void HideSkipButton()
+{
+    if (skipButton != null)
+    {
+        skipButton.SetActive(false);
+    }
+}
+
+// 添加给UI按钮调用的公共方法
+public void OnSkipButtonClick()
+{
+    if (!isStoryPlaying) return;
+
+    // 重置状态
+    isStoryPlaying = false;
+    isWaitingForStoryEnd = false;
+
+    // 隐藏跳过按钮
+    HideSkipButton();
+
+    // 如果StoryManager存在，结束当前对话
+    if (StoryManager.Instance != null)
+    {
+        StoryManager.Instance.ExitStoryMode();
+    }
+
+    // 触发退出事件
+    onExitSpecificStory?.Invoke();
+
+    // 如果需要自动触发下一段剧情
+    if (autoTriggerNextStory && nextStoryTrigger != null)
+    {
+        StartCoroutine(TriggerNextStoryAfterDelay());
+    }
+}
+
 
     /// <summary>
     /// 等待玩家落地后触发剧情

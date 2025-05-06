@@ -16,14 +16,20 @@ public class levelTrigger : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
+        Debug.LogError("我是在leveltrigger切换的");
+        // 完成当前关卡
+        levelManager levelMgr = FindAnyObjectByType<levelManager>();
+        levelMgr.CompleteCurrentLevel();
 
-        FindAnyObjectByType<levelManager>().SwitchToNextLevel();
-        /*
-        if (!hasTriedLoad)
+
+        // 切换到下一关
+        levelMgr.SwitchToNextLevel();
+
+        // 确保在切换关卡后刷新UI
+        if (LevelSelectManager.Instance != null)
         {
-            hasTriedLoad = true;
-            //StartCoroutine(PreloadAndExtract(nextSceneName));
-        }*/
+            LevelSelectManager.Instance.RefreshButtons();
+        }
     }
 
     IEnumerator PreloadAndExtract(string nextName)

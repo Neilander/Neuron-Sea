@@ -75,13 +75,15 @@ public class StoryManager : MonoBehaviour
         { PortraitPosition.Right, false }
     };
 
+    [SerializeField] private GameObject skipBtn;
+
     private void Awake()
     {
         // 单例模式
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(transform.parent.gameObject);
         }
         else
         {
@@ -102,6 +104,7 @@ public class StoryManager : MonoBehaviour
 
     private void Start()
     {
+
         // 初始化
         if (playerController == null)
         {
@@ -157,10 +160,33 @@ public class StoryManager : MonoBehaviour
         {
             avatarImage.gameObject.SetActive(false);
         }
+        // 初始化跳过按钮
+        // if (skipBtn != null) {
+        //     skipBtn.gameObject.SetActive(false);
+        // }
     }
 
     private void Update()
     {
+        //进入场景后重新获取
+        if (playerController == null)
+        {
+            playerController = FindObjectOfType<PlayerController>();
+            if (playerController == null)
+            {
+                Debug.LogWarning("无法找到 PlayerController！部分功能可能无法正常工作。");
+            }
+            else
+            {
+                // 获取玩家的Rigidbody2D组件
+                playerRigidbody = playerController.GetComponent<Rigidbody2D>();
+                if (playerRigidbody == null)
+                {
+                    Debug.LogError("玩家对象上未找到Rigidbody2D组件！");
+                }
+            }
+        }
+
         // 在剧情模式下，检测点击以继续对话
         if (currentState == GameState.StoryMode && isDialogueActive)
         {
@@ -177,6 +203,7 @@ public class StoryManager : MonoBehaviour
     /// <param name="storyData">要播放的剧情数据</param>
     public void EnterStoryMode(StoryData storyData)
     {
+        Debug.Log($"[StoryManager] EnterStoryMode called, storyData={storyData}, dialogues count={storyData?.dialogues?.Count}");
         if (currentState == GameState.StoryMode)
         {
             Debug.LogWarning("已经在剧情模式中！");
@@ -373,6 +400,20 @@ public class StoryManager : MonoBehaviour
     /// </summary>
     private void ContinueDialogue()
     {
+        // 防御：防止currentStoryData或dialogues为null
+        if (currentStoryData == null)
+        {
+            Debug.LogError("[StoryManager] currentStoryData为null，无法继续对话！");
+            ExitStoryMode();
+            return;
+        }
+        if (currentStoryData.dialogues == null)
+        {
+            Debug.LogError("[StoryManager] currentStoryData.dialogues为null，无法继续对话！");
+            ExitStoryMode();
+            return;
+        }
+
         // 如果正在打字，则直接显示全部文本
         if (isTyping)
         {

@@ -1,6 +1,7 @@
 using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class CameraControl : MonoBehaviour
@@ -12,15 +13,16 @@ public class CameraControl : MonoBehaviour
     private float halfWidth;
     private float halfHeight;
 
-    private bool setted = false;
+    public bool setted = false;
     private bool queued = false;
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
 
-    
+    // 无视摄像机边界
+    private bool ignoreLimit = false;
     private CameraLimitRegion defaultLimit;
-
-    public CompanionController companionController;
+    private bool ignoreHorizontalLimit = false;
+    [CanBeNull] public CompanionController companionController;
 
     
     // ✅ 新增：平滑移动控制
@@ -69,13 +71,23 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
+        if (levelManager.instance.currentLevelIndex == 1) {
+            IgnoreHorizontalLimit();
+            FindObjectOfType<PlayerController>().DisableInput();
+        }
         ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
-        companionController.SetTarget(null);
-        StartCoroutine(BeginningDelay(1f));
+        
+        
+        if (levelManager.instance.isStartStory&& levelManager.instance.currentLevelIndex == 1) {
+            if (companionController != null) {
+                companionController.SetTarget(null);
+            }
+            StartCoroutine(BeginningDelay(1f));
+        }
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;
         float right = defaultOrigin.x + defaultWidth;
@@ -104,16 +116,22 @@ public class CameraControl : MonoBehaviour
     {
         if (target == null) return;
 
-        
         // ✅ 每帧更新目标位置
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
-
+        
+        // 新增：如果ignoreLimit为true，直接跟随目标，不做边界限制
+        if (ignoreLimit)
+        {
+            transform.position = desiredPos;
+            return;
+        }
+        //Debug.Log("相机被限制，使用的是"+(setted?"currentLimit":"defaultLimit"));
         // ✅ 选择使用 currentLimit 或 defaultLimit
         CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
 
         if (limitToUse != null)
         {
-            if (limitToUse.left.HasValue && limitToUse.right.HasValue)
+            if (!ignoreHorizontalLimit &&limitToUse.left.HasValue && limitToUse.right.HasValue)
             {
                 float leftBound = limitToUse.left.Value + halfWidth;
                 float rightBound = limitToUse.right.Value - halfWidth;
@@ -156,7 +174,21 @@ public class CameraControl : MonoBehaviour
             transform.position = desiredPos;
         }
     }
+    /// <summary>
+    /// 忽略左右边界限制（X轴）
+    /// </summary>
+    public void IgnoreHorizontalLimit()
+    {
+        ignoreHorizontalLimit = true;
+    }
 
+    /// <summary>
+    /// 恢复左右边界限制
+    /// </summary>
+    public void RestoreHorizontalLimit()
+    {
+        ignoreHorizontalLimit = false;
+    }
     public void SetLimitRegion(CameraLimitRegion newRegion)
     {
         if (setted)
@@ -172,7 +204,21 @@ public class CameraControl : MonoBehaviour
             isTransitioning = true; // ✅ 开启平滑过渡
         }
     }
+/// <summary>
+    /// 调用此方法后摄像机会无视边界限制
+    /// </summary>
+    public void IgnoreCameraLimit()
+    {
+        ignoreLimit = true;
+    }
 
+    /// <summary>
+    /// 恢复摄像机边界限制
+    /// </summary>
+    public void RestoreCameraLimit()
+    {
+        ignoreLimit = false;
+    }
     public void ClearLimitRegion(CameraRegionTrigger sender)
     {
         if (setted && currentLimit != null && currentLimit.setter == sender)

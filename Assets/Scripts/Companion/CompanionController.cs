@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class CompanionController : MonoBehaviour
 {
@@ -39,10 +41,15 @@ public class CompanionController : MonoBehaviour
     private Vector3 lastPosition;
     private bool isMoving;
 
-    public bool hasStopped;
-    private bool startMode=true;//改成true之后出现报空
+    public bool hasStopped=true;
+    private bool startMode=false;//改成true之后出现报空
     private void Start()
     {
+        if (levelManager.instance.currentLevelIndex == 1) {
+            hasStopped=false;
+            //如果第一次进入在右上角出现
+            startMode=true;
+        }
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
@@ -87,8 +94,8 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
-            // 如果玩家朝左（scale.x = -1），跟随物在右上角
-            if (target.localScale.x < 0||startMode)
+            // 如果玩家朝左（scale.x = -1）或者是开始情况，跟随物在右上角
+            if (target.localScale.x < 0 || startMode)//TODO：临时移出||startMode
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
                 
@@ -115,12 +122,13 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
-        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped) {
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped&&levelManager.instance.isStartStory&& levelManager.instance.currentLevelIndex == 1) {
             hasStopped = true;
             print("我到达目的地了！");
             // startMode = true;
             oldTrans =this.transform;
             
+
             StartCoroutine(StopStartMode());
         }
         lastPosition = transform.position;
@@ -148,11 +156,13 @@ public class CompanionController : MonoBehaviour
             
         );print("播完了！");
         startMode = false;
+        transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
         // transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
         
         if(BigCamera!=null)
+            Camera.main.transform.GetComponent<CameraControl>().RestoreHorizontalLimit();
             BigCamera.PlaySequence();
     }
     // 设置跟随目标
@@ -204,5 +214,44 @@ public class CompanionController : MonoBehaviour
     {
         autoAdjustPosition = value;
     }
-    
+
+
+
+    public void StartMoveRightForSeconds(float speed, float duration, GameObject panelToShow){
+        StartCoroutine(MoveRightCoroutine(speed, duration, panelToShow));
+    }
+/// <summary>
+/// 
+/// </summary>
+/// <param name="speed">移动速度</param>
+/// <param name="duration">移动时间</param>
+/// <param name="panelToShow">打开的面板</param>
+/// <returns></returns>
+    private IEnumerator MoveRightCoroutine(float speed, float duration, GameObject panelToShow){
+        float elapsed = 0f;
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+        while (elapsed < duration) {
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.velocity = Vector2.zero;
+
+        // 打开面板
+        if (panelToShow != null) {
+            panelToShow.SetActive(true);
+        }
+        VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        if (videoPlayer != null) {
+            videoPlayer.loopPointReached += OnVideoEnd;
+        }
+    }
+
+    // 视频播放完后回到主菜单
+    private void OnVideoEnd(VideoPlayer vp){
+        // 加载主菜单场景
+        SceneManager.LoadScene("BeginMenu"); // "MainMenu"为主菜单场景的名称
+    }
 }

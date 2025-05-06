@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,11 @@ public class PauseMenu : MonoBehaviour
 
     public bool isPaused;
     public string select,settings,beginSceneName;
+
+    private void Awake(){
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,20 +33,27 @@ public class PauseMenu : MonoBehaviour
     public void ContinueGame(){
         if (isPaused) {
             isPaused = false;
+            Time.timeScale = 1;
+
             pauseMenu.SetActive(false);
         }
         else {
             isPaused = true;
+            Time.timeScale = 0;
             pauseMenu.SetActive(true);
         }
     }
 
     public void SelectGame(){
-        SceneManager.LoadScene(select);
+        transform.Find("LevelSelect2").gameObject.SetActive(true);
+    }
+
+    public void ExitSetPanel(){
+        transform.Find("LevelSelect2").gameObject.SetActive(false);
     }
 
     public void SettingGame(){
-        if (volumeCanvas.Instance != null) volumeCanvas.Instance.OpenCanvas();
+        if (SetPanel.Instance != null) SetPanel.Instance.OpenCanvas();
     }
 
     public void GoToTitle(){

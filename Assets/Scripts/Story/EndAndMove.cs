@@ -24,6 +24,8 @@ public class EndAndMove : MonoBehaviour
 
     [SerializeField] private string ExchangeText="交换";
 
+    [SerializeField] private GameObject myCameraLimit;
+
     void Start()
     {
         // 获取主摄像机
@@ -68,6 +70,7 @@ public class EndAndMove : MonoBehaviour
     }
 
     public void EnablePicture(){
+        // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
         UIphoto.SetActive(true);
         StartCoroutine(DisablePictureAfterDelay(2f));
         
@@ -83,8 +86,10 @@ public class EndAndMove : MonoBehaviour
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = 3f; // 设置平滑速度
         Camera.main.transform.GetComponent<CameraControl>().target = playerController.transform;
+        // Camera.main.transform.GetComponent<CameraControl>().RestoreCameraLimit();
         FindAnyObjectByType<CompanionController>().canFollow = true;
         FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
+        // playerController.EnableMovement();
     }
     public void MoveEnd()
     {
@@ -123,7 +128,7 @@ public class EndAndMove : MonoBehaviour
         // Transform tansTex = transform.Find("Square");
         // tansTex.gameObject.SetActive(true);
         //TODO:时间停止，玩家交换一次物体，结束时停
-        StartCoroutine(StartSwitchMode());
+        // StartCoroutine(StartSwitchMode());
         
     }
 
@@ -235,10 +240,12 @@ public class EndAndMove : MonoBehaviour
         // 等待相机移动完成后返回原位
         StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
         playerController.EnableMovement();
+        // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
+       
         UIphoto.SetActive(true);
         text = UIphoto.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;
-        StartCoroutine(StartSwitchMode());
+        // StartCoroutine(StartSwitchMode());
         
     }
     // 直接移动摄像机的方法
@@ -279,6 +286,8 @@ public class EndAndMove : MonoBehaviour
 
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
+            // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
+            camControl.setted = true;
             // UIphoto.SetActive(false);
         }
         else
@@ -291,8 +300,24 @@ public class EndAndMove : MonoBehaviour
         {
             Destroy(temp);
         }
+        
+        // // 确保摄像机完全回到原位后恢复相机限制
+        yield return new WaitUntil(() => !cam.isTransitioning);
+        // playerController.EnableMovement();
+        // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
+
     }
 
+    public void FreeCamera(){
+        camControl.setted = false;
+    }
+
+    public void LockCamera(){
+        camControl.setted = true;
+    }
+    
+    
+    
     // 调试日志方法
     private void Log(string message)
     {
@@ -307,5 +332,12 @@ public class EndAndMove : MonoBehaviour
     private void LogError(string message)
     {
         Debug.LogError("[EndAndMove] " + message);
+    }
+
+    public void ForceEnterStory3(){
+        storyTriggers[3].ForceStartStory();
+    }
+    public void ForceEnterStory1_1(){
+        storyTriggers[4].ForceStartStory();
     }
 }

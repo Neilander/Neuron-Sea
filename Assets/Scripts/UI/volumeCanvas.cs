@@ -28,8 +28,6 @@ public class volumeCanvas : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-        gameObject.SetActive(false);
     }
 
     void Start()
@@ -78,20 +76,20 @@ public class volumeCanvas : MonoBehaviour
         Debug.Log($"[Volume] SFXVolume = {value}");
     }
 
-    public void CloseCanvas()
-    {
-        ControlCanvas.gameObject.SetActive(false);   
-    }
-
-    public void OpenCanvas()
-    {
-        ControlCanvas.gameObject.SetActive(true);
-        panel.SetActive(true);
-        blocker.SetActive(true);
-    }
-
-    public void OnApplicationQuit()
-    {
-        PlayerPrefs.DeleteAll();
-    }
+    // public void CloseCanvas()
+    // {
+    //     ControlCanvas.gameObject.SetActive(false);   
+    // }
+    //
+    // public void OpenCanvas()
+    // {
+    //     ControlCanvas.gameObject.SetActive(true);
+    //     panel.SetActive(true);
+    //     blocker.SetActive(true);
+    // }
+    //TODO:to delete 
+    // public void OnApplicationQuit()
+    // {
+    //     PlayerPrefs.DeleteAll();
+    // }
 }

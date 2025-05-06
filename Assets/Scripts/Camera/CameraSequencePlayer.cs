@@ -10,6 +10,7 @@ using UnityEngine.Rendering.Universal;
 /// </summary>
 public class CameraSequencePlayer : MonoBehaviour
 {
+    private IEnumerator ie;
     [System.Serializable]
     public class CameraTransition
     {
@@ -102,10 +103,14 @@ public class CameraSequencePlayer : MonoBehaviour
 
         // 确保PPU是起始值
         pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
-
-        currentSequence = StartCoroutine(PlayFullSequence());
+        ie = PlayFullSequence();
+        currentSequence = StartCoroutine(ie);
     }
 
+    // void OnDisable(){
+    //     if (ie != null)
+    //         StopCoroutine(ie);
+    // }
     /// <summary>
     /// 停止当前播放的序列
     /// </summary>

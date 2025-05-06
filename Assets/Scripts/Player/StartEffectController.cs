@@ -68,6 +68,7 @@ public class StartEffectController : MonoBehaviour
                 finalPosition = hit.point - new Vector2(0f, bottomOffset);
 
                 Debug.Log("设置玩家位置：" + finalPosition);
+               
             }
             else
             {
@@ -76,7 +77,7 @@ public class StartEffectController : MonoBehaviour
 
             // 设置玩家位置
             playerController.transform.position = finalPosition;
-
+            
             // 启动控制逻辑
             playerController.StartControl(controlInput, controlDuration);
         }
