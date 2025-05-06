@@ -15,7 +15,22 @@ MonoBehaviour:
   m_Active: 1
   blitMaterial: {fileID: 2100000, guid: 6a6f1f513bd4c443889063b55c52cedb, type: 2}
   flipYPropertyName: _FlipY
---- !u!114 &-5211470535152228582
+--- !u!114 &-4893173975917759724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
+  m_Name: CaptureScreenRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  blitMaterial: {fileID: 2100000, guid: 63e723a66ca584e17b707e45878bf285, type: 2}
+  flipYPropertyName: _FlipY
+--- !u!114 &-3489655768397295664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -35,21 +50,6 @@ MonoBehaviour:
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
---- !u!114 &-4893173975917759724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 614a5044353fb4cee88ec2e2fd2baa65, type: 3}
-  m_Name: CaptureScreenRenderFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  blitMaterial: {fileID: 2100000, guid: 63e723a66ca584e17b707e45878bf285, type: 2}
-  flipYPropertyName: _FlipY
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,8 +71,8 @@ MonoBehaviour:
   - {fileID: 8253623617867631603}
   - {fileID: -4893173975917759724}
   - {fileID: 6814045422367654797}
-  - {fileID: -5211470535152228582}
-  m_RendererFeatureMap: 8b6b12584e6c7faef34bc66cf3c28a7214733cad31f417bc8dc39993355a905e1a27d6ea2823adb7
+  - {fileID: -3489655768397295664}
+  m_RendererFeatureMap: 8b6b12584e6c7faef34bc66cf3c28a7214733cad31f417bc8dc39993355a905ed04f4950914092cf
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
