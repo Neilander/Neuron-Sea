@@ -158,8 +158,8 @@
 						{ "__identifier": "BoomRadius", "__type": "Int", "__value": 2, "__tile": null, "defUid": 200, "realEditorValues": [] },
 						{ "__identifier": "SizeX", "__type": "Int", "__value": 2, "__tile": null, "defUid": 196, "realEditorValues": [] },
 						{ "__identifier": "SizeY", "__type": "Int", "__value": 2, "__tile": null, "defUid": 197, "realEditorValues": [] },
-						{ "__identifier": "PivotX", "__type": "Int", "__value": 0, "__tile": null, "defUid": 198, "realEditorValues": [] },
-						{ "__identifier": "PivotY", "__type": "Int", "__value": 2, "__tile": null, "defUid": 199, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }
+						{ "__identifier": "PivotX", "__type": "Int", "__value": 2, "__tile": null, "defUid": 198, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 199, "realEditorValues": [null] }
 					],
 					"__worldX": 11232,
 					"__worldY": -2808
@@ -180,8 +180,8 @@
 						{ "__identifier": "BoomRadius", "__type": "Int", "__value": 2, "__tile": null, "defUid": 200, "realEditorValues": [] },
 						{ "__identifier": "SizeX", "__type": "Int", "__value": 2, "__tile": null, "defUid": 196, "realEditorValues": [] },
 						{ "__identifier": "SizeY", "__type": "Int", "__value": 2, "__tile": null, "defUid": 197, "realEditorValues": [] },
-						{ "__identifier": "PivotX", "__type": "Int", "__value": 0, "__tile": null, "defUid": 198, "realEditorValues": [] },
-						{ "__identifier": "PivotY", "__type": "Int", "__value": 2, "__tile": null, "defUid": 199, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }
+						{ "__identifier": "PivotX", "__type": "Int", "__value": 2, "__tile": null, "defUid": 198, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+						{ "__identifier": "PivotY", "__type": "Int", "__value": 0, "__tile": null, "defUid": 199, "realEditorValues": [null] }
 					],
 					"__worldX": 11088,
 					"__worldY": -2772
@@ -504,7 +504,7 @@
 				},
 				{
 					"__identifier": "CameraBound",
-					"__grid": [25,15],
+					"__grid": [24,15],
 					"__pivot": [0.5,0.5],
 					"__tags": [],
 					"__tile": null,
@@ -513,9 +513,9 @@
 					"width": 1044,
 					"height": 576,
 					"defUid": 263,
-					"px": [918,558],
+					"px": [882,558],
 					"fieldInstances": [],
-					"__worldX": 11466,
+					"__worldX": 11430,
 					"__worldY": -2826
 				},
 				{

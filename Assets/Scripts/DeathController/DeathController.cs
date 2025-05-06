@@ -159,6 +159,8 @@ public class DeathController : MonoBehaviour
         enableBlackAndWhite = true
     };
 
+    public Material screenDissolve;
+
     private void Start()
     {
         // 获取玩家控制器
@@ -259,6 +261,18 @@ public class DeathController : MonoBehaviour
             // Debug.Log($"检测到玩家({playerController.name})低于死亡线! 当前位置Y: {playerController.transform.position.y}, 死亡线Y: {deathLineY}");
             //HandleDeath(playerController.gameObject);
         }
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            StartCoroutine(RecordFrame());
+        }
+    }
+    IEnumerator RecordFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        Texture2D screenShot = ScreenCapture.CaptureScreenshotAsTexture();
+        screenDissolve.SetTexture("_Capture", screenShot);
+        screenDissolve.SetFloat("_Alpha", 1f);
     }
 
 
