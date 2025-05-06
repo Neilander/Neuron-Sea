@@ -52,7 +52,7 @@ public class CameraSequencePlayer : MonoBehaviour
             pixelPerfectCamera = Camera.main?.GetComponent<PixelPerfectCamera>();
             if (pixelPerfectCamera == null)
             {
-                Debug.LogError("未找到PixelPerfectCamera组件！请确保主相机上有该组件或手动指定。");
+                Debug.LogWarning("未找到PixelPerfectCamera组件！请确保主相机上有该组件或手动指定。");
             }
         }
 
@@ -223,6 +223,31 @@ public class CameraSequencePlayer : MonoBehaviour
         }
     }
 
+    private IEnumerator TransitionSize(float startSize, float targetSize, float duration, AnimationCurve curve){
+        // 确保起始值正确
+        Camera.main.orthographicSize = startSize;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration) {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+
+            // 使用动画曲线平滑过渡
+            float curvedT = curve.Evaluate(t);
+
+            // 计算当前Size值
+            float currentSize = Mathf.Lerp(startSize, targetSize, curvedT);
+
+            // 应用到摄像机
+            Camera.main.orthographicSize = currentSize;
+
+            yield return null;
+        }
+
+        // 确保最终设置为目标值
+        Camera.main.orthographicSize = targetSize;
+    }
     /// <summary>
     /// 设置动画触发器名称
     /// </summary>
