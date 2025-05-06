@@ -110,8 +110,8 @@ public class ControlEffects : MonoBehaviour
         feature = GetRendererFeature<ScanLineJitterFeature>();
         if (feature == null)
         {
-            Debug.LogError("未找到ScanLineJitterFeature！请确保已添加该渲染特性。");
-            Debug.LogError("请检查：Renderer Data中的Renderer Features列表");
+            Debug.LogWarning("未找到ScanLineJitterFeature！请确保已添加该渲染特性。");
+            Debug.LogWarning("请检查：Renderer Data中的Renderer Features列表");
             return;
         }
 
