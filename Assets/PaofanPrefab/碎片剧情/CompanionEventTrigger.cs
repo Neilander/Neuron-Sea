@@ -124,7 +124,7 @@ public class CompanionEventTrigger : MonoBehaviour
         companion.canFollow = oldCanFollow;
         
         // 8. 3秒后对话框消失
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(8f);
         if (dialogueObj != null)
             Destroy(dialogueObj);
         exitConsciousness.Invoke();
