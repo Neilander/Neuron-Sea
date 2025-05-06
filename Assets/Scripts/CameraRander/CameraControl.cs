@@ -71,7 +71,7 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
-        if (levelManager.instance.currentLevelIndex == 1) {
+        if (levelManager.instance.currentLevelIndex == 1 && levelManager.instance.isStartStory) {
             IgnoreHorizontalLimit();
             FindObjectOfType<PlayerController>().DisableInput();
         }

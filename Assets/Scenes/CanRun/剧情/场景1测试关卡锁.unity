@@ -10315,6 +10315,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7773603841889701819, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7773603841889701819, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.5
+      objectReference: {fileID: 0}
     - target: {fileID: -3963943116433552214, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
       propertyPath: m_Mesh
@@ -18128,8 +18138,10 @@ MonoBehaviour:
   backGround: {fileID: 11552950}
   minLevel: 1
   maxLevel: 12
+  sceneIndex: 1
   hasCollectedNum: 0
   isStartStory: 0
+  yAdjust: 20
 --- !u!4 &1982178333
 Transform:
   m_ObjectHideFlags: 0

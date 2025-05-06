@@ -124,10 +124,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     private void Start(){
         if (IfDoSwitchBasedOnScene)
         {
-            int sceneIndex = GetLastDigitOfSceneName();
+            int sceneIndex = levelManager.instance.sceneIndex;
             if (sceneIndex <= 0 || sceneIndex > switchPrefabs.Count)
             {
-                Debug.LogWarning("场景编号非法或 prefab 未设置");
+                Debug.LogWarning(gameObject.name+":场景编号非法或 prefab 未设置");
                 return;
             }
 
@@ -594,6 +594,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             previewObj.transform.position = gridPos - anchor.transform.localPosition +
                 (ifAdjustY ?Vector3.up * adjustYAmount[ExpectedSize.x - 1]:Vector3.zero)+
                 (IfSubstituePreview ? substitueRenderer.transform.parent.localPosition :Vector3.zero);
+            Debug.Log("Preview移动到了"+previewObj.transform.position);
             previewObj.SetActive(true);
             ifInPreview = true;
         }
