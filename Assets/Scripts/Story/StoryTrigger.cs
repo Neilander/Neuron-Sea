@@ -236,6 +236,8 @@ public class StoryTrigger : MonoBehaviour
     /// </summary>
     public void ForceStartStory()
     {
+        Debug.Log("[StoryTrigger] ForceStartStory called, this=" + this.name);
+        Debug.Log($"[StoryTrigger] StartStoryInternal called, storySourceType={storySourceType}, storyResourcePath={storyResourcePath}, csvResourcePath={csvResourcePath}");
         StartStoryInternal();
     }
 

@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class CompanionController : MonoBehaviour
 {
@@ -212,5 +214,44 @@ public class CompanionController : MonoBehaviour
     {
         autoAdjustPosition = value;
     }
-    
+
+
+
+    public void StartMoveRightForSeconds(float speed, float duration, GameObject panelToShow){
+        StartCoroutine(MoveRightCoroutine(speed, duration, panelToShow));
+    }
+/// <summary>
+/// 
+/// </summary>
+/// <param name="speed">移动速度</param>
+/// <param name="duration">移动时间</param>
+/// <param name="panelToShow">打开的面板</param>
+/// <returns></returns>
+    private IEnumerator MoveRightCoroutine(float speed, float duration, GameObject panelToShow){
+        float elapsed = 0f;
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+        while (elapsed < duration) {
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.velocity = Vector2.zero;
+
+        // 打开面板
+        if (panelToShow != null) {
+            panelToShow.SetActive(true);
+        }
+        VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        if (videoPlayer != null) {
+            videoPlayer.loopPointReached += OnVideoEnd;
+        }
+    }
+
+    // 视频播放完后回到主菜单
+    private void OnVideoEnd(VideoPlayer vp){
+        // 加载主菜单场景
+        SceneManager.LoadScene("BeginMenu"); // "MainMenu"为主菜单场景的名称
+    }
 }
