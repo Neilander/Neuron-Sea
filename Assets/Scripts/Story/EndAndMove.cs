@@ -238,15 +238,27 @@ public class EndAndMove : MonoBehaviour
         //
         // }
         // 等待相机移动完成后返回原位
-        StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
+        // StartCoroutine(ResetCameraTarget(camControl, originalTarget, tempTarget, delayBeforeReturn));
+        // playerController.EnableMovement();
+        // // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
+        //
+        // UIphoto.SetActive(true);
+        // text = UIphoto.transform.Find("Text (TMP)");
+        // text.GetComponent<TMP_Text>().text = ExchangeText;
+        // // StartCoroutine(StartSwitchMode());
+        //
+    }
+
+    public void BackCamera(){
+        StartCoroutine(ResetCameraTarget(camControl, FindObjectOfType<PlayerController>().transform, newTarget.gameObject, delayBeforeReturn));
         playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
-       
+
         UIphoto.SetActive(true);
         text = UIphoto.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;
         // StartCoroutine(StartSwitchMode());
-        
+
     }
     // 直接移动摄像机的方法
     private IEnumerator MoveDirectly()
