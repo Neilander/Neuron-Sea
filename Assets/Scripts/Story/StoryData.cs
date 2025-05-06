@@ -25,7 +25,7 @@ public enum PortraitExpression
     Surprised,  // 惊讶
     Custom,      // 自定义表情(使用自定义sprite)
 
-    Thoughtful
+    Thoughtful,
     
 }
 
