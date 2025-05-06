@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.Analytics;
 
 public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 {
@@ -233,6 +234,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         selfGridPos = _pos;
     }
 
+    private Bounds? lastCheckBounds = null;
     public bool CheckIfCanMoveTo(Vector3 gridPos, GameObject ignoreObject){
         Collider2D col = IfSubstituePreview? substitueCollider: GetComponent<Collider2D>();
         if (col == null) {
@@ -250,6 +252,9 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         int hitCount = 0;
 
         if (col is BoxCollider2D box) {
+            Vector2 center = (Vector2)checkPosition + box.offset;
+            Vector2 size = box.size;
+            lastCheckBounds = new Bounds(center, size);
             hitCount = Physics2D.OverlapBox(
                 (Vector2)checkPosition + box.offset,
                 box.size,
@@ -282,7 +287,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         for (int i = 0; i < hitCount; i++) {
-            Debug.Log("第"+i+"个是"+results[i].gameObject.name);
+            //Debug.Log("第"+i+"个是"+results[i].gameObject.name);
             if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject&& !results[i].transform.IsChildOf(ignoreObject.transform)) {
                 Debug.Log("阻止我们的是" + results[i].gameObject.name);
                 return false; // 有碰撞，且不是要忽略的物体
@@ -290,6 +295,16 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         }
 
         return true; // 没有碰撞，可以移动
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (lastCheckBounds.HasValue)
+        {
+            Gizmos.color = Color.cyan;
+            Bounds b = lastCheckBounds.Value;
+            Gizmos.DrawWireCube(b.center, b.size);
+        }
     }
 
     public void IntoSwitchState(){
