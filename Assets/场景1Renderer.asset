@@ -30,6 +30,26 @@ MonoBehaviour:
   m_Active: 1
   blitMaterial: {fileID: 2100000, guid: f995820081e1049ad925a92131a242dd, type: 2}
   flipYPropertyName: _FlipY
+--- !u!114 &-575100949692010135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: FullScreenPassRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 1
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: 7e1721929fbc5e646bf6fbc314a27e9c, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,7 +71,8 @@ MonoBehaviour:
   - {fileID: 9107326194022101261}
   - {fileID: 8253623617867631603}
   - {fileID: -4893173975917759724}
-  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc
+  - {fileID: -575100949692010135}
+  m_RendererFeatureMap: 8b6b12584e6c7fae0d314cb8ebb8637ef34bc66cf3c28a7214733cad31f417bc69319eb7bbd404f8
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
