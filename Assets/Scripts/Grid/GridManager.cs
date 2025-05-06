@@ -59,6 +59,8 @@ public class GridManager : MonoBehaviour
 
     private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
 
+    const float switchCoolDown = 0.5f;
+    private bool switchCoolDownFinished = true;
 
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos()
@@ -410,7 +412,7 @@ public class GridManager : MonoBehaviour
                 ifLegalMove = false;
             }
 
-            if (ifLegalMove&& canViewBothSelection)
+            if (ifLegalMove&& canViewBothSelection&& switchCoolDownFinished)
             {
                 if (Input.GetKeyDown(switchCode))
                     ShiftSwitch();
@@ -516,8 +518,12 @@ public class GridManager : MonoBehaviour
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
         AudioManager.Instance.Play(SFXClip.Switch);
+        switchCoolDownFinished = false;
+        Invoke("ResetCoolDownFinish", switchCoolDown);
         StartState(SwitchState.Move);
     }
+
+    private void ResetCoolDownFinish() => switchCoolDownFinished = true;
 
     public void RenewSwitch()
     {
