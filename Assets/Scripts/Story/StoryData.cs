@@ -26,7 +26,10 @@ public enum PortraitExpression
     Custom,      // 自定义表情(使用自定义sprite)
 
     Thoughtful,
-    
+    Annoyed,
+    New,
+    Proud,
+    Relieved,
 }
 
 /// <summary>
