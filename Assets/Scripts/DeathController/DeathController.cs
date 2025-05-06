@@ -264,15 +264,16 @@ public class DeathController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.F))
         {
-            StartCoroutine(RecordFrame());
+            StartCoroutine(ScreenDissolve());
         }
     }
-    IEnumerator RecordFrame()
+
+    IEnumerator ScreenDissolve()
     {
         yield return new WaitForEndOfFrame();
         Texture2D screenShot = ScreenCapture.CaptureScreenshotAsTexture();
         screenDissolve.SetTexture("_Capture", screenShot);
-        screenDissolve.SetFloat("_Alpha", 1f);
+        screenDissolve.SetFloat("_KaiShiShiJian", Time.unscaledTime);
     }
 
 
@@ -323,6 +324,7 @@ public class DeathController : MonoBehaviour
 
                 // 开始死亡序列
                 StartCoroutine(DeathSequence());
+                StartCoroutine(ScreenDissolve());
             }
             else
             {
