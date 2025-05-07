@@ -351,7 +351,17 @@ public class StoryManager : MonoBehaviour
             c.a = 0;
             centerPortraitImage.color = c;
         }
-
+        foreach (PortraitPosition position in System.Enum.GetValues(typeof(PortraitPosition)))
+        {
+            Image portraitImage = GetPortraitImageByPosition(position);
+            if (portraitImage != null)
+            {
+                portraitImage.gameObject.SetActive(false);
+                Color c = portraitImage.color;
+                c.a = 0;
+                portraitImage.color = c;
+            }
+        }
         if (rightPortraitImage != null)
         {
             rightPortraitImage.gameObject.SetActive(false);
@@ -568,6 +578,20 @@ public class StoryManager : MonoBehaviour
         targetPortraitImage.sprite = dialogue.portrait;
         targetPortraitImage.gameObject.SetActive(true);
 
+         // 设置当前说话角色的立绘为高亮，其他为灰色
+        foreach (PortraitPosition position in System.Enum.GetValues(typeof(PortraitPosition)))
+        {
+            Image portraitImage = GetPortraitImageByPosition(position);
+            if (portraitImage != null && portraitImage.gameObject.activeSelf)
+            {
+                SetPortraitColor(portraitImage, position == dialogue.portraitPosition);
+            }
+        }
+
+
+
+
+
         // 只有第一次显示立绘或切换角色时才有淡入效果
         if (!activePortraits[dialogue.portraitPosition])
         {
@@ -582,6 +606,17 @@ public class StoryManager : MonoBehaviour
 
         // 标记此位置的立绘为活动状态
         activePortraits[dialogue.portraitPosition] = true;
+    }
+
+    /// <summary>
+    /// 设置立绘颜色
+    /// </summary>
+    private void SetPortraitColor(Image portraitImage, bool isSpeaking)
+    {
+        if (portraitImage == null) return;
+        
+        Color targetColor = isSpeaking ? Color.white : new Color(0.5f, 0.5f, 0.5f, 1f); // RGB(127,127,127)
+        portraitImage.color = targetColor;
     }
 
     /// <summary>

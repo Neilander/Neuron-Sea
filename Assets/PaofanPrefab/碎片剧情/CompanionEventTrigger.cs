@@ -86,8 +86,17 @@ public class CompanionEventTrigger : MonoBehaviour
         GameObject dialogueObj = null;
         if (dialoguePrefab != null)
         {
-            dialogueObj = Instantiate(dialoguePrefab, companion.transform.position + new Vector3(1.5f, 1.5f, 0), Quaternion.identity, GameObject.Find("CanvasOff").transform);
-            dialogueObj.GetComponentInChildren<TMP_Text>().text = dialogueText;
+            dialogueObj = Instantiate(dialoguePrefab, this.transform.position + new Vector3(1.5f, 1.5f, 0), Quaternion.identity, GameObject.Find("CanvasOff").transform);
+            TMP_Text tmpText = dialogueObj.GetComponentInChildren<TMP_Text>();
+            StartCoroutine(TypeText(tmpText, dialogueText));
+        }
+
+        IEnumerator TypeText(TMP_Text textComponent, string fullText){
+            textComponent.text = "";
+            foreach (char c in fullText) {
+                textComponent.text += c;
+                yield return new WaitForSeconds(0.05f);
+            }
         }
         anim.Play("robot_idle");
         // // 6. 返回原位置（带着对话框）
@@ -103,8 +112,11 @@ public class CompanionEventTrigger : MonoBehaviour
         if (dialogueObj != null){
             // dialogueObj.transform.position = companion.transform.position + new Vector3(-3f, 3f, 0);
             Vector3 worldOffset = new Vector3(0f, 3f, 0f); // 偏移在头顶
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(companion.transform.position + worldOffset);
-            dialogueObj.transform.position = screenPos;}
+            // Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position + worldOffset);
+            // dialogueObj.transform.position = screenPos;
+            dialogueObj.transform.position = this.transform.position + worldOffset;
+            }
+            
 
 
         // float dialogueDuration = 3f;
