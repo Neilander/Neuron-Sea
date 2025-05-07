@@ -26,6 +26,11 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public GameObject trackPrefab;
     public SpriteMask mask;
 
+    [Header("动画器")]
+    public Animator boxAnim;
+    public Animator previewAnim;
+    public Transform previewTrans;
+
     private List<Transform> trackTrans = new List<Transform>();
 
     public bool ifUpDown = false;
@@ -49,6 +54,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             GenerateTrack(yLength * 3, false);
             ifUpDown = true;
             boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
         }
         else
         {
@@ -58,6 +64,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
             GenerateTrack(xLength * 3, true);
             boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+            previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
         }
 
         target.localPosition = !reverse ? pointA : pointB;
@@ -82,8 +89,12 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         playerController = FindObjectOfType<PlayerController>();
         PlayerDeathEvent.OnDeathTriggered += StopMove;
         trackTrans = FindChildrenStartingWithPath(transform);
-        if (!reverse && !ifUpDown)
+       
+
+
+        if (ifUpDown == reverse)
         {
+            Debug.Log("对我在这！");
             foreach (Transform trans in trackTrans)
             {
                 Vector3 scale = trans.localScale;
@@ -128,9 +139,38 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         MoveStep(end - target.localPosition);
 
         atA = !atA;
-
+        boxAnim.SetTrigger("TurnBack");
+        previewAnim.SetTrigger("TurnBack");
         yield return StartCoroutine(FlipTracksFade(cooldownDuration));
-
+        boxAnim.SetTrigger("TurnBack");
+        previewAnim.SetTrigger("TurnBack");
+        if (reverse == atA)
+        {
+            if (ifUpDown)
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+            }
+            else
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, -90) : new Vector3(0, 0, 90);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, -90) : new Vector3(0, 0, 90);
+            }
+        }
+        else
+        {
+            if (ifUpDown)
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            }
+            else
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+            }
+        }
+        
         isMoving = false;
     }
     public void MoveStep(Vector2 step)
