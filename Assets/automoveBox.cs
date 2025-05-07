@@ -15,6 +15,7 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public float waitDuration = 0.5f;      // 停顿时间 y 秒
     public AnimationCurve moveCurve;       // 运动曲线
     public bool reverse;//如果为false，起点左下角，终点右上角；如果为true，起点右下角，终点左上角
+    public Transform boxSprite;
 
     public PlayerController playerController;
     public BoxCollider2D targetCollider;
@@ -22,6 +23,11 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     [Header("生成轨道")]
     public GameObject trackPrefab;
     public SpriteMask mask;
+
+    [Header("动画器")]
+    public Animator boxAnim;
+    public Animator previewAnim;
+    public Transform previewTrans;
 
     private List<Transform> trackTrans = new List<Transform>();
 
@@ -41,7 +47,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
             GenerateTrack(yLength*3,false);
             ifUpDown = true;
-            
+            boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
         }
         else
         {
@@ -50,6 +57,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.ChangeExpectedSize(Mathf.RoundToInt(xLength * 3), 3);
             father.SpecialEdgeChecker.transform.localScale = new Vector3(Mathf.RoundToInt(xLength * 3), 3, 1);
             GenerateTrack(xLength * 3, true);
+            boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+            previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
         }
 
         target.localPosition = !reverse ? pointA : pointB;
@@ -93,9 +102,37 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         while (move)
         {
             yield return StartCoroutine(MoveFromTo(!reverse ? pointA : pointB, reverse ? pointA : pointB));
+            boxAnim.SetTrigger("TurnBack");
+            previewAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
+            boxAnim.SetTrigger("TurnBack");
+            previewAnim.SetTrigger("TurnBack");
+            if (ifUpDown)
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0,0) : new Vector3(0, 0, 180);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+            }
+            else
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, -90) : new Vector3(0, 0, 90);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, -90) : new Vector3(0, 0, 90);
+            }
             yield return StartCoroutine(MoveFromTo(reverse ? pointA : pointB, !reverse ? pointA : pointB));
+            boxAnim.SetTrigger("TurnBack");
+            previewAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
+            boxAnim.SetTrigger("TurnBack");
+            previewAnim.SetTrigger("TurnBack");
+            if (ifUpDown)
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            }
+            else
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+            }
         }
     }
 

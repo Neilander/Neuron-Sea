@@ -62,6 +62,8 @@ public class GridManager : MonoBehaviour
 
     private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
 
+    const float switchCoolDown = 0.5f;
+    private bool switchCoolDownFinished = true;
 
     //这部分是在编辑器中绘制网格
     private void OnDrawGizmos()
@@ -321,10 +323,27 @@ public class GridManager : MonoBehaviour
                         //如果选中已经被选中的物体
                         if (switchInfoRecorder.Take(tryGet))
                         {
+                            if (switchInfoRecorder.hasFirst)
+                            {
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                //ifChanged = true;
+                            }
+                            if (switchInfoRecorder.hasSecond)
+                            {
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                                //ifChanged = true;
+                            }
+                            tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                            //switchInfoRecorder.Refresh();
+
+
                             //现在take已经取出了一个
                             //如果还存储了另外一个，可以得知原本的情况是选中了两个，所以两个都要取消，这里先修改表示
                             //选中在最后取消
                             //bool ifChanged = false;
+
+                            /*
+                             * 这一部分是取消两个的
                             if (switchInfoRecorder.hasFirst)
                             {
                                 switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
@@ -337,6 +356,7 @@ public class GridManager : MonoBehaviour
                             }
                             tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
                             switchInfoRecorder.Refresh();
+                            */
                             /*
                             if (ifChanged)
                             {
@@ -370,6 +390,12 @@ public class GridManager : MonoBehaviour
                                 temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 //新选择的物体在后面处理显示
                                 canViewBothSelection = true;
+
+                                if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
+                                {
+                                    if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
+                                    else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
+                                }
                             }
 
                             //选择后，如果有两个并且是非法的
@@ -435,7 +461,7 @@ public class GridManager : MonoBehaviour
                 ifLegalMove = false;
             }
 
-            if (ifLegalMove&& canViewBothSelection)
+            if (ifLegalMove&& canViewBothSelection&& switchCoolDownFinished)
             {
                 if (Input.GetKeyDown(switchCode))
                     ShiftSwitch();
@@ -545,8 +571,12 @@ public class GridManager : MonoBehaviour
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
         AudioManager.Instance.Play(SFXClip.Switch);
+        switchCoolDownFinished = false;
+        Invoke("ResetCoolDownFinish", switchCoolDown);
         StartState(SwitchState.Move);
     }
+
+    private void ResetCoolDownFinish() => switchCoolDownFinished = true;
 
     public void RenewSwitch()
     {
