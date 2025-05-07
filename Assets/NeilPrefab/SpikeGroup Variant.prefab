@@ -106,6 +106,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
+      propertyPath: IfDoSwitchBasedOnScene
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: switchPrefabs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
       propertyPath: adjustYAmount.Array.data[1]
       value: 0
       objectReference: {fileID: 0}
@@ -124,6 +134,22 @@ PrefabInstance:
       propertyPath: adjustYAmount.Array.data[4]
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: switchPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 4830477926405216549}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: switchPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 4830477926405216549}
+    - target: {fileID: 5164630573187109762, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: switchPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 8528491025992919706, guid: c272f5510bed04190ab36eff1e58106f,
+        type: 3}
     - target: {fileID: 5518370816751795095, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Color.b
