@@ -9,6 +9,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
 
     [SerializeField] private float explodeDuration;
 
+    [SerializeField] private Animator animator;
+
     // public WaveMunController waveMunController;
 
     private bool isInCountDown = false;
@@ -26,6 +28,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
     [SerializeField] private GameObject RangeDisplayer;
 
     public GameObject checker;
+
+
 
     private List<GameObject> triggered;
     
@@ -69,7 +73,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             // // 进入剧情模式
             // StoryManager.Instance.EnterStoryMode(storyData);
             // if(waveMunController!=null)waveMunController.StartDisappearAnimation();
-            StartCoroutine(ExplodeCountDown(waitTime));
+            //StartCoroutine(ExplodeCountDown(waitTime));
+            StartCoroutine(ExplodeCountDownNewWithAnimation());
         }
     }
 
@@ -79,7 +84,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
-            StartCoroutine(ExplodeCountDown(waitTime));
+            //StartCoroutine(ExplodeCountDown(waitTime));
+            StartCoroutine(ExplodeCountDownNewWithAnimation());
         }
     }
 
@@ -202,6 +208,69 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
 
         // 最终检测玩家
        
+        GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
+    }
+
+    public IEnumerator ExplodeCountDownNewWithAnimation()
+    {
+        triggered = new List<GameObject>();
+        RangeDisplayer.SetActive(true);
+        // Step 1: 播放 "exploding" 动画
+        animator.SetTrigger("exploding");
+        animator.SetBool("SizeFix",true);
+
+        // 等待 warningDuration 秒（动画播放时间）
+        yield return new WaitForSeconds(waitTime);
+
+        // Step 2: 播放 "expand" 动画
+        animator.SetTrigger("expand");
+        //yield return null;
+        animator.speed = 0.2f / explodeDuration;
+        // 获取当前动画状态
+        //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        //float originalDuration = stateInfo.length;
+
+        // 根据目标播放时长设置 Animator 速度
+        /*
+        if (explodeDuration > 0f && originalDuration > 0f)
+        {
+            animator.speed = originalDuration / explodeDuration;
+        }
+        else
+        {
+            animator.speed = 1f; // 保险起见，fallback
+        }*/
+
+        float timer = 0f;
+        while (timer < explodeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = Mathf.Clamp01(timer / explodeDuration);
+            float currentRadius = Mathf.Lerp(0, explosionRadius, t);
+
+            // 持续 OverlapCircle 检测
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, currentRadius);
+            foreach (var hit in hits)
+            {
+                if (triggered.Contains(hit.gameObject)) continue;
+
+                if (hit.GetComponent<PlayerController>())
+                {
+                    triggered.Add(hit.gameObject);
+                    PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
+                }
+                else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject)
+                {
+                    triggered.Add(hit.gameObject);
+                    GridManager.Instance.DestroySwitchable(hit.GetComponent<SwitchableObj>());
+                }
+            }
+
+            yield return null;
+        }
+
+        // Step 3: 可加后续逻辑，比如消失、销毁等
         GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
     }
 

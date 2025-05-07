@@ -426,6 +426,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1130370259288508150}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &2019481815053728903 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1416740256525171313, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 1130370259288508150}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &5289016971354443943 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 5100816044098246225, guid: 27d026be3c3cb4cc2be86da963080eff,
@@ -451,7 +457,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitTime: 2
-  explodeDuration: 0.2
+  explodeDuration: 0.5
+  animator: {fileID: 2019481815053728903}
   shineRenderer: {fileID: 7598316127216924498}
   baseRenderer: {fileID: 5289016971354443943}
   anchorRenderer: {fileID: 9160211471346539343}
