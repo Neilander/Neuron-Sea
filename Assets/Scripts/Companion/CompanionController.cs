@@ -98,12 +98,16 @@ public class CompanionController : MonoBehaviour
             if (target.localScale.x < 0 || startMode)//TODO：临时移出||startMode
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
-                
+                if (!startMode) {
+                    transform.localScale = new Vector3(-1, 1, 1);
+                }
+
             }
             // 如果玩家朝右（scale.x = 1），跟随物在左上角
             else
             {
                 currentOffset = new Vector3(-1.5f,2.18f, 0f);
+                transform.localScale = new Vector3(1, 1, 1);
             }
         }
         else
@@ -158,7 +162,7 @@ public class CompanionController : MonoBehaviour
         startMode = false;
         transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
-        // transform.localScale = new Vector3(1f, 1f, 1f);
+        transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
         
         if(BigCamera!=null)
