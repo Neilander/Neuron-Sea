@@ -372,6 +372,12 @@ public class GridManager : MonoBehaviour
                                 temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
                                 //新选择的物体在后面处理显示
                                 canViewBothSelection = true;
+
+                                if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
+                                {
+                                    if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
+                                    else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
+                                }
                             }
 
                             //选择后，如果有两个并且是非法的
