@@ -104,7 +104,7 @@ public class StoryManager : MonoBehaviour
 
     private void Start()
     {
-
+        StoryManager.Instance.onExitStoryMode += OnStoryModeExit;
         // 初始化
         if (playerController == null)
         {
@@ -125,6 +125,22 @@ public class StoryManager : MonoBehaviour
         }
     }
 
+    void OnDestroy(){
+        // 取消订阅事件
+        if (StoryManager.Instance != null) {
+            StoryManager.Instance.onExitStoryMode -= OnStoryModeExit;
+        }
+    }
+
+
+    // 事件处理函数
+    private void OnStoryModeExit(){
+        GridManager.Instance.LockStates(false);
+    }
+    
+    
+    
+    
     /// <summary>
     /// 初始化立绘相关组件
     /// </summary>
@@ -224,6 +240,7 @@ public class StoryManager : MonoBehaviour
             if (playerController.IsGrounded())
             {
                 playerController.DisableMovement();
+                GridManager.Instance.LockStates(true);
                 print("剧情模式禁用玩家移动");
             }
             else
