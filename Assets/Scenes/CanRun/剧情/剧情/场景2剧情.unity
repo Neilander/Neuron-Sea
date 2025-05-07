@@ -20463,7 +20463,7 @@ PrefabInstance:
     - target: {fileID: -5121231600580587234, guid: 499341b9ab1aa9042a226b8078dbe79a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4769932889130923603, guid: 499341b9ab1aa9042a226b8078dbe79a,
         type: 3}
@@ -59862,6 +59862,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: "\u573A\u666F3\u5267\u60C5"
+  fadeImage: {fileID: 0}
+  fadeDuration: 1
 --- !u!1001 &1808338062
 PrefabInstance:
   m_ObjectHideFlags: 0
