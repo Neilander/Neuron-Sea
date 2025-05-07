@@ -369,10 +369,11 @@ public class levelManager : MonoBehaviour
         }
     }
 
-    // 简化WalkToRespawnPoint协程
+    // 修改WalkToRespawnPoint协程，使用Speed控制但不禁止移动
     private IEnumerator WalkToRespawnPoint(PlayerController controller, Vector3 targetPosition)
     {
         isWalkingToSpawn = true;
+        Debug.Log($"开始特殊出生走路 - 起点:{controller.Position}, 终点:{targetPosition}");
 
         // 设置朝向（面向右边）
         Vector3 scale = controller.transform.localScale;
@@ -386,22 +387,40 @@ public class levelManager : MonoBehaviour
             animator.SetBool("IsWalking", true);
         }
 
-        // 行走速度
-        float walkSpeed = 5f;
+        // 只禁用输入，但允许移动
+        controller.DisableInput();  // 禁用输入，玩家不能控制
+        controller.EnableMovement(); // 允许移动，这样Speed设置会生效
 
-        // 走向重生点
-        while (Vector3.Distance(controller.transform.position, targetPosition) > 0.1f)
+        // 行走速度设置更高一些
+        float walkSpeed = 7f;
+        Vector2 direction = ((Vector2)targetPosition - controller.Position).normalized;
+        Debug.Log($"方向向量: {direction}, 速度大小: {walkSpeed}");
+
+        // 走向重生点 - 强制设置移动参数
+        float progress = 0;
+        while (Mathf.Abs(controller.Position.x - targetPosition.x) > 0.1f)
         {
-            controller.transform.position = Vector3.MoveTowards(
-                controller.transform.position,
-                targetPosition,
-                walkSpeed * Time.deltaTime
-            );
+            progress += Time.deltaTime;
+            Debug.Log($"走路进度: {progress}秒, 当前位置: {controller.Position}, 距离目标: {Vector2.Distance(controller.Position, targetPosition)}");
+
+            // 使用多种方式确保移动生效
+            controller.Speed = new Vector2(walkSpeed, 0); // 直接设置水平速度
+
+            // // 如果完全没有移动，尝试直接设置位置
+            // if (progress > 1 && Vector2.Distance(controller.Position, controller.Position + new Vector2(walkSpeed * Time.deltaTime, 0)) < 0.01f)
+            // {
+            //     Debug.Log("检测到没有移动，尝试直接调整位置");
+            //     Vector2 newPos = Vector2.MoveTowards(controller.Position, targetPosition, walkSpeed * Time.deltaTime);
+            //     controller.MovePosition(newPos);
+            // }
+
             yield return null;
         }
 
-        // 到达重生点
-        controller.transform.position = targetPosition;
+        Debug.Log("到达目标位置");
+
+        // 到达重生点 - 使用MovePosition方法直接设置最终位置
+        controller.MovePosition(targetPosition);
 
         // 停止行走动画
         if (animator != null)
@@ -409,25 +428,47 @@ public class levelManager : MonoBehaviour
             animator.SetBool("IsWalking", false);
         }
 
+        // 设置速度为0
+        controller.Speed = Vector2.zero;
+
         // 等待一小段时间
         yield return new WaitForSeconds(0.5f);
 
-        // 记录恢复控制前的位置
-        Vector3 positionBeforeControl = controller.transform.position;
-
-        // 开启位置锁定
-        isPositionLocked = true;
-        lockedPosition = positionBeforeControl;
-
-        // 启动位置锁定协程
-        StartCoroutine(LockPlayerPosition(controller, positionLockDuration));
-
-        // 恢复玩家控制
+        // 恢复玩家输入控制
         controller.EnableInput();
         isWalkingToSpawn = false;
+        Debug.Log("特殊出生过程完成，已恢复玩家控制");
+
+        // 触发故事
+        StartCoroutine(TriggerStoryAfterDelay(0.2f));
     }
 
-    // 简化位置锁定协程
+    // 添加一个延迟触发故事的协程
+    private IEnumerator TriggerStoryAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // 查找并触发故事
+        GameObject storyObj = GameObject.Find("Story4.1");
+        if (storyObj != null)
+        {
+            StoryTrigger storyTrigger = storyObj.GetComponent<StoryTrigger>();
+            if (storyTrigger != null)
+            {
+                storyTrigger.ForceStartStory();
+            }
+            else
+            {
+                Debug.LogWarning("未找到StoryTrigger组件");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("未找到Story4.1对象");
+        }
+    }
+
+    // 修改位置锁定协程
     private IEnumerator LockPlayerPosition(PlayerController controller, float duration)
     {
         float startTime = Time.time;
@@ -436,9 +477,10 @@ public class levelManager : MonoBehaviour
         while (Time.time - startTime < duration && isPositionLocked)
         {
             // 检查位置是否改变
-            if (Vector3.Distance(controller.transform.position, lockedPosition) > 0.1f)
+            if (Vector2.Distance(controller.Position, lockedPosition) > 0.1f)
             {
-                controller.transform.position = lockedPosition;
+                // 使用MovePosition直接设置位置
+                controller.MovePosition(lockedPosition);
             }
 
             yield return null; // 等待下一帧
