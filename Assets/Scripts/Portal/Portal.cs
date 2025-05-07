@@ -141,10 +141,11 @@ public class Portal : MonoBehaviour
         player.GetComponent<PlayerController>().AdjustPosition(targetPosition - (Vector2)player.transform.position);
 
         // 立即同步摄像机位置
-        if (updateCameraImmediately)
-        {
-            UpdateCameraPosition(positionDelta);
-        }
+        //if (updateCameraImmediately)
+        //{
+        //    UpdateCameraPosition(positionDelta);
+        //}
+        Camera.main.transform.GetComponent<CameraControl>().isTransitioning = true;
 
         // 播放传送特效
         if (portalEffect != null)

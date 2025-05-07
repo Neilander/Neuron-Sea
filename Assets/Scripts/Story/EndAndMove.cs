@@ -260,7 +260,7 @@ public class EndAndMove : MonoBehaviour
         text = UIphoto.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;
         // StartCoroutine(StartSwitchMode());
-
+        StartCoroutine(DisablePictureAfterDelay(3f));
     }
     // 直接移动摄像机的方法
     private IEnumerator MoveDirectly()
