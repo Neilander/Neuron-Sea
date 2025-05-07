@@ -364,6 +364,26 @@ PrefabInstance:
       propertyPath: ExpectedSize.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5518370816751795095, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.019607844
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518370816751795095, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.48235294
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518370816751795095, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518370816751795095, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 6667943124777106081, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Name
@@ -488,6 +508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1284da029ca25486a90ad2e97df034cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  box: {fileID: 0}
 --- !u!212 &9160211471346539343 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8120124336894860729, guid: 27d026be3c3cb4cc2be86da963080eff,

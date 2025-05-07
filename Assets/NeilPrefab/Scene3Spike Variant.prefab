@@ -68,8 +68,44 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scene3Spike Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5986750517915162643, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5986750517915162643, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.19607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 5986750517915162643, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5986750517915162643, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353577151808663558, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+        type: 3}
+      propertyPath: switchPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 8528491025992919706}
+    - target: {fileID: 6433877845167158741, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fb10f6257731c49de97d9191e2c0d955, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0dcc7769c92e943fb852560fe9ded2a2, type: 3}
+--- !u!1 &8528491025992919706 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4830477926405216549, guid: 0dcc7769c92e943fb852560fe9ded2a2,
+    type: 3}
+  m_PrefabInstance: {fileID: 3842141619261649855}
+  m_PrefabAsset: {fileID: 0}
