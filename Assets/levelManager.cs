@@ -369,7 +369,7 @@ public class levelManager : MonoBehaviour
         }
     }
 
-    // 修改WalkToRespawnPoint协程
+    // 修改WalkToRespawnPoint协程，使用Speed控制但不禁止移动
     private IEnumerator WalkToRespawnPoint(PlayerController controller, Vector3 targetPosition)
     {
         isWalkingToSpawn = true;
@@ -387,17 +387,18 @@ public class levelManager : MonoBehaviour
             animator.SetBool("IsWalking", true);
         }
 
+        // 只禁用输入，但允许移动
+        controller.DisableInput();  // 禁用输入，玩家不能控制
+        controller.EnableMovement(); // 允许移动，这样Speed设置会生效
+
         // 行走速度设置更高一些
         float walkSpeed = 7f;
         Vector2 direction = ((Vector2)targetPosition - controller.Position).normalized;
         Debug.Log($"方向向量: {direction}, 速度大小: {walkSpeed}");
 
-        // 确保玩家可以移动
-        controller.EnableMovement();
-
         // 走向重生点 - 强制设置移动参数
         float progress = 0;
-        while (Vector2.Distance(controller.Position, targetPosition) > 0.1f)
+        while (Mathf.Abs(controller.Position.x - targetPosition.x) > 0.1f)
         {
             progress += Time.deltaTime;
             Debug.Log($"走路进度: {progress}秒, 当前位置: {controller.Position}, 距离目标: {Vector2.Distance(controller.Position, targetPosition)}");
@@ -405,13 +406,13 @@ public class levelManager : MonoBehaviour
             // 使用多种方式确保移动生效
             controller.Speed = new Vector2(walkSpeed, 0); // 直接设置水平速度
 
-            // 如果完全没有移动，尝试直接设置位置
-            if (progress > 1 && Vector2.Distance(controller.Position, controller.Position + new Vector2(walkSpeed * Time.deltaTime, 0)) < 0.01f)
-            {
-                Debug.Log("检测到没有移动，尝试直接调整位置");
-                Vector2 newPos = Vector2.MoveTowards(controller.Position, targetPosition, walkSpeed * Time.deltaTime);
-                controller.MovePosition(newPos);
-            }
+            // // 如果完全没有移动，尝试直接设置位置
+            // if (progress > 1 && Vector2.Distance(controller.Position, controller.Position + new Vector2(walkSpeed * Time.deltaTime, 0)) < 0.01f)
+            // {
+            //     Debug.Log("检测到没有移动，尝试直接调整位置");
+            //     Vector2 newPos = Vector2.MoveTowards(controller.Position, targetPosition, walkSpeed * Time.deltaTime);
+            //     controller.MovePosition(newPos);
+            // }
 
             yield return null;
         }
@@ -421,11 +422,11 @@ public class levelManager : MonoBehaviour
         // 到达重生点 - 使用MovePosition方法直接设置最终位置
         controller.MovePosition(targetPosition);
 
-        // // 停止行走动画
-        // if (animator != null)
-        // {
-        //     animator.SetBool("IsWalking", false);
-        // }
+        // 停止行走动画
+        if (animator != null)
+        {
+            animator.SetBool("IsWalking", false);
+        }
 
         // 设置速度为0
         controller.Speed = Vector2.zero;
@@ -433,21 +434,38 @@ public class levelManager : MonoBehaviour
         // 等待一小段时间
         yield return new WaitForSeconds(0.5f);
 
-        // 记录恢复控制前的位置
-        Vector3 positionBeforeControl = controller.Position;
-        Debug.Log($"准备恢复控制 - 位置: {positionBeforeControl}");
-
-        // 开启位置锁定
-        isPositionLocked = true;
-        lockedPosition = positionBeforeControl;
-
-        // 启动位置锁定协程
-        StartCoroutine(LockPlayerPosition(controller, positionLockDuration));
-
-        // 恢复玩家控制
+        // 恢复玩家输入控制
         controller.EnableInput();
         isWalkingToSpawn = false;
         Debug.Log("特殊出生过程完成，已恢复玩家控制");
+
+        // 触发故事
+        StartCoroutine(TriggerStoryAfterDelay(0.2f));
+    }
+
+    // 添加一个延迟触发故事的协程
+    private IEnumerator TriggerStoryAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // 查找并触发故事
+        GameObject storyObj = GameObject.Find("Story4.1");
+        if (storyObj != null)
+        {
+            StoryTrigger storyTrigger = storyObj.GetComponent<StoryTrigger>();
+            if (storyTrigger != null)
+            {
+                storyTrigger.ForceStartStory();
+            }
+            else
+            {
+                Debug.LogWarning("未找到StoryTrigger组件");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("未找到Story4.1对象");
+        }
     }
 
     // 修改位置锁定协程
