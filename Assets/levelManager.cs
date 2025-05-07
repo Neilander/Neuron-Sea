@@ -40,12 +40,10 @@ public class levelManager : MonoBehaviour
 
 
     [Header("Level 13特殊出生")]
-    public bool enableLevel13SpecialSpawn = true; // 新增开关，控制是否启用第13关特殊出生
+    public bool enableLevel13SpecialSpawn = true; // 控制是否启用第13关特殊出生
     public float walkInDistance = 10f; // 从重生点左边多远开始走
     private bool isWalkingToSpawn = false;
-    // 新增：用于区分是否是重启/重生等特殊流程
     private bool isRestarting = false;
-    // 新增：用于锁定玩家位置
     private bool isPositionLocked = false;
     private Vector3 lockedPosition = Vector3.zero;
     private float positionLockDuration = 2f; // 锁定持续时间
@@ -260,24 +258,19 @@ public class levelManager : MonoBehaviour
                     // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
                     if (newLevelIndex == 13 && ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn)
                     {
-                        Debug.Log($"[LevelManager] 进入第13关特殊出生逻辑，当前关卡：{newLevelIndex}，特殊出生开关：{enableLevel13SpecialSpawn}");
-
                         // 禁用玩家输入
                         controller.DisableInput();
-                        Debug.Log("[LevelManager] 玩家输入已禁用");
 
                         // 计算出生点的实际位置（带偏移）
                         Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
 
                         // 设置玩家初始位置（在重生点左边）
                         Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
-                        Debug.Log($"[LevelManager] 玩家初始位置：{startPos}，目标重生点位置：{actualSpawnPosition}");
 
                         // 移动玩家到左侧位置
                         controller.MovePosition(startPos);
 
                         // 开始走路动画 - 走向原始出生点
-                        Debug.Log("[LevelManager] 启动WalkToRespawnPoint协程");
                         StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
                     }
                     else if (ifSetPlayer)
@@ -365,18 +358,7 @@ public class levelManager : MonoBehaviour
 
     private void Update()
     {
-        // 每秒监测一次玩家位置 (限制日志频率)
-        if (positionMonitorTimer <= 0)
-        {
-            MonitorPlayerPosition();
-            positionMonitorTimer = positionMonitorInterval;
-        }
-        else
-        {
-            positionMonitorTimer -= Time.deltaTime;
-        }
-
-        // 如果开启了位置锁定，随时检查并修正位置
+        // 如果开启了位置锁定，检查并修正位置
         if (isPositionLocked)
         {
             PlayerController player = FindAnyObjectByType<PlayerController>();
@@ -387,29 +369,10 @@ public class levelManager : MonoBehaviour
         }
     }
 
-    // 监测玩家位置
-    private void MonitorPlayerPosition()
-    {
-        if (!enablePositionMonitoring) return;
-
-        PlayerController player = FindAnyObjectByType<PlayerController>();
-        if (player == null) return;
-
-        Vector3 currentPosition = player.transform.position;
-
-        // 只有当位置变化超过阈值时才记录
-        if (Vector3.Distance(currentPosition, lastRecordedPosition) > 0.5f)
-        {
-            Debug.Log($"[位置监测] 玩家当前位置: {currentPosition}, 关卡: {currentLevelIndex}, 是否走到重生点中: {isWalkingToSpawn}");
-            lastRecordedPosition = currentPosition;
-        }
-    }
-
-    // 添加走路动画协程
+    // 简化WalkToRespawnPoint协程
     private IEnumerator WalkToRespawnPoint(PlayerController controller, Vector3 targetPosition)
     {
         isWalkingToSpawn = true;
-        Debug.Log($"[位置监测] 开始走向重生点: 起始位置={controller.transform.position}, 目标位置={targetPosition}");
 
         // 设置朝向（面向右边）
         Vector3 scale = controller.transform.localScale;
@@ -427,7 +390,6 @@ public class levelManager : MonoBehaviour
         float walkSpeed = 5f;
 
         // 走向重生点
-        float startTime = Time.time;
         while (Vector3.Distance(controller.transform.position, targetPosition) > 0.1f)
         {
             controller.transform.position = Vector3.MoveTowards(
@@ -435,20 +397,11 @@ public class levelManager : MonoBehaviour
                 targetPosition,
                 walkSpeed * Time.deltaTime
             );
-
-            // 每2秒记录一次位置
-            if (Time.time - startTime > 2f)
-            {
-                Debug.Log($"[位置监测] 走向重生点中: 当前位置={controller.transform.position}, 距离目标={Vector3.Distance(controller.transform.position, targetPosition)}");
-                startTime = Time.time;
-            }
-
             yield return null;
         }
 
         // 到达重生点
         controller.transform.position = targetPosition;
-        Debug.Log($"[位置监测] 到达重生点: 最终位置={controller.transform.position}");
 
         // 停止行走动画
         if (animator != null)
@@ -461,12 +414,10 @@ public class levelManager : MonoBehaviour
 
         // 记录恢复控制前的位置
         Vector3 positionBeforeControl = controller.transform.position;
-        Debug.Log($"[位置监测] 恢复控制前位置: {positionBeforeControl}");
 
         // 开启位置锁定
         isPositionLocked = true;
         lockedPosition = positionBeforeControl;
-        Debug.Log($"[位置监测] 开启位置锁定: {lockedPosition}");
 
         // 启动位置锁定协程
         StartCoroutine(LockPlayerPosition(controller, positionLockDuration));
@@ -474,25 +425,12 @@ public class levelManager : MonoBehaviour
         // 恢复玩家控制
         controller.EnableInput();
         isWalkingToSpawn = false;
-        Debug.Log("[位置监测] 玩家控制已恢复");
-
-        // 监控恢复控制后的位置变化
-        yield return null; // 等待一帧
-
-        if (Vector3.Distance(controller.transform.position, positionBeforeControl) > 0.1f)
-        {
-            Debug.LogWarning($"[位置监测] 警告: 恢复控制后位置立即改变! 从 {positionBeforeControl} 变为 {controller.transform.position}");
-            // 立即修正位置
-            controller.transform.position = positionBeforeControl;
-        }
     }
 
-    // 添加位置锁定协程
+    // 简化位置锁定协程
     private IEnumerator LockPlayerPosition(PlayerController controller, float duration)
     {
         float startTime = Time.time;
-
-        Debug.Log($"[位置监测] 开始位置锁定协程，持续{duration}秒");
 
         // 锁定期间每帧强制玩家位置
         while (Time.time - startTime < duration && isPositionLocked)
@@ -500,7 +438,6 @@ public class levelManager : MonoBehaviour
             // 检查位置是否改变
             if (Vector3.Distance(controller.transform.position, lockedPosition) > 0.1f)
             {
-                Debug.Log($"[位置监测] 检测到位置变化，从 {lockedPosition} 变为 {controller.transform.position}，正在修正");
                 controller.transform.position = lockedPosition;
             }
 
@@ -509,7 +446,6 @@ public class levelManager : MonoBehaviour
 
         // 解除锁定
         isPositionLocked = false;
-        Debug.Log("[位置监测] 位置锁定结束");
     }
 
     // 添加检查方法，用于其他脚本查询是否在走路中
@@ -582,16 +518,10 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        PlayerController player = FindAnyObjectByType<PlayerController>();
-        Debug.Log($"[位置监测] 重启关卡前: 玩家位置={player?.transform.position}, 关卡={currentLevelIndex}");
-
         isRestarting = true;
         GridManager.Instance.RenewSwitch();
         recordRect = LoadLevel(currentLevelIndex, true);
         isRestarting = false;
-
-        player = FindAnyObjectByType<PlayerController>();
-        Debug.Log($"[位置监测] 重启关卡后: 玩家位置={player?.transform.position}, 关卡={currentLevelIndex}");
     }
 
     IEnumerator DelayEffect()
