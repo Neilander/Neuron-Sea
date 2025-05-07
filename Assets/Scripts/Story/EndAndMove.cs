@@ -253,7 +253,7 @@ public class EndAndMove : MonoBehaviour
         StartCoroutine(ResetCameraTarget(camControl, FindObjectOfType<PlayerController>().transform, newTarget.gameObject, delayBeforeReturn));
         playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
-
+        GridManager.Instance.LockStates(false);
         UIphoto.SetActive(true);
         text = UIphoto.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;

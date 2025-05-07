@@ -16,6 +16,9 @@ public enum SwitchState
 [ExecuteInEditMode] // 在编辑器中执行
 public class GridManager : MonoBehaviour
 {
+    [Header("状态控制")]
+    [SerializeField] private bool isStateLocked = false;
+
     public static GridManager Instance;
 
     [Header("格子数据调整")] public int gridWidth = 1;
@@ -124,6 +127,28 @@ public class GridManager : MonoBehaviour
             DestroyImmediate(gameObject);
         }
     }
+
+
+
+    public void LockStates(bool lockState)
+    {
+        isStateLocked = lockState;
+        if (lockState)
+        {
+            // 如果当前在Switch或Move状态，强制退出到None状态
+            if (curState == SwitchState.Switch || curState == SwitchState.Move)
+            {
+                StartState(SwitchState.None);
+            }
+        }
+    }
+
+    
+
+
+
+
+
 
 
     [Header("测试用")][SerializeField] private Vector3 testPosition;
@@ -422,6 +447,10 @@ public class GridManager : MonoBehaviour
 
     public void StartState(SwitchState state)
     {
+        // 如果状态被锁定，只允许进入None状态
+        if (isStateLocked && state != SwitchState.None) {
+            return;
+        }
         EndState(curState);
 
         switch (state)
@@ -854,6 +883,15 @@ class TwoObjectContainer<Type>
         hasFirst = false;
         hasSecond = false;
     }
+
+
+
+
+
+
+
+
+
 }
 
 //用来管理一些零散的开启/关闭Switch函数
