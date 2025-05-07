@@ -24,12 +24,12 @@ public enum PortraitExpression
     Angry,      // 生气
     Surprised,  // 惊讶
     Custom,      // 自定义表情(使用自定义sprite)
-
     Thoughtful,
     Annoyed,
     New,
     Proud,
     Relieved,
+    poweroff
 }
 
 /// <summary>
