@@ -89,11 +89,20 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         }
     }
 
+    public void StartDirectExplode()
+    {
+        if (!isInCountDown)
+        {
+            isInCountDown = true;
+            StartCoroutine(DirectExplode());
+        }
+    }
+
     public bool DeathAction()
     {
         if (isInCountDown)
             return true;
-        StartExplode();
+        StartDirectExplode();
         return false;
     }
 
@@ -247,7 +256,51 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             timer += Time.deltaTime;
 
             float t = Mathf.Clamp01(timer / explodeDuration);
-            float currentRadius = Mathf.Lerp(0, explosionRadius, t);
+            float currentRadius = Mathf.Lerp(0, explosionRadius, Mathf.Clamp((t-0.75f)*4,0,1));
+
+            // 持续 OverlapCircle 检测
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, currentRadius);
+            foreach (var hit in hits)
+            {
+                if (triggered.Contains(hit.gameObject)) continue;
+
+                if (hit.GetComponent<PlayerController>())
+                {
+                    triggered.Add(hit.gameObject);
+                    PlayerDeathEvent.Trigger(gameObject, DeathType.Explode);
+                }
+                else if (hit.GetComponent<SwitchableObj>() && hit.gameObject != gameObject)
+                {
+                    triggered.Add(hit.gameObject);
+                    GridManager.Instance.DestroySwitchable(hit.GetComponent<SwitchableObj>());
+                }
+            }
+
+            yield return null;
+        }
+
+        // Step 3: 可加后续逻辑，比如消失、销毁等
+        GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
+    }
+
+    public IEnumerator DirectExplode()
+    {
+        triggered = new List<GameObject>();
+        RangeDisplayer.SetActive(true);
+        // Step 1: 播放 "exploding" 动画
+        animator.SetTrigger("exploding");
+        animator.SetBool("SizeFix", true);
+        yield return null;
+        animator.SetTrigger("expand");
+        //yield return null;
+        animator.speed = 0.2f / explodeDuration;
+        float timer = 0f;
+        while (timer < explodeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = Mathf.Clamp01(timer / explodeDuration);
+            float currentRadius = Mathf.Lerp(0, explosionRadius, Mathf.Clamp((t - 0.75f) * 4, 0, 1));
 
             // 持续 OverlapCircle 检测
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, currentRadius);
