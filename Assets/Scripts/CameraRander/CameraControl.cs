@@ -6,8 +6,11 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
+    public CameraControl Instance{get; private set;}
     public Transform target;
 
+    private bool hasLoadOnce;
+    
     public Transform startTarget;
     private Camera cam;
     private float halfWidth;
@@ -71,7 +74,9 @@ public class CameraControl : MonoBehaviour
     }
 
     void Start(){
-        if (levelManager.instance.currentLevelIndex == 1 && levelManager.instance.isStartStory) {
+        if (levelManager.instance.currentLevelIndex == 1 && 
+            levelManager.instance.isStartStory&&
+            !hasLoadOnce) {
             GridManager.Instance.LockStates(true);
             IgnoreHorizontalLimit();
             FindObjectOfType<PlayerController>().DisableInput();
@@ -83,7 +88,9 @@ public class CameraControl : MonoBehaviour
         smoothTargetPosition = transform.position;
         
         
-        if (levelManager.instance.isStartStory&& levelManager.instance.currentLevelIndex == 1) {
+        if (levelManager.instance.isStartStory&& 
+            levelManager.instance.currentLevelIndex == 1&&
+            !hasLoadOnce) {
             if (companionController != null) {
                 companionController.SetTarget(null);
             }
