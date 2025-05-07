@@ -76,6 +76,9 @@ public class CameraControl : MonoBehaviour
 
     private void Awake(){
         Instance = this;
+        if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
+            hasLoadOnce = true;
+        }
     }
 
     void Start(){
