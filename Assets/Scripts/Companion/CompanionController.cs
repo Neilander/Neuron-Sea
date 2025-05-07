@@ -41,10 +41,12 @@ public class CompanionController : MonoBehaviour
     private Vector3 lastPosition;
     private bool isMoving;
 
+    private CameraSequencePlayer csp;
+    
     public bool hasStopped=true;
     private bool startMode=false;//改成true之后出现报空
-    private void Start()
-    {
+    private void Start(){
+        csp = FindObjectOfType<CameraSequencePlayer>();
         if (levelManager.instance.currentLevelIndex == 1) {
             hasStopped=false;
             //如果第一次进入在右上角出现
@@ -94,8 +96,23 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
+            if (!CameraControl.Instance.hasLoadOnce) {
+                // if (csp == null) {
+                //     Debug.LogError("没有打开镜头序列");
+                // }
+                // if(csp != null)
+                //     csp.gameObject.SetActive(true);
+                startMode = true;
+            }
+            else {
+                // if (csp != null)
+                //     csp.gameObject.SetActive(false);
+                startMode = false;
+            }
             // 如果玩家朝左（scale.x = -1）或者是开始情况，跟随物在右上角
-            if (target.localScale.x < 0 || startMode)//TODO：临时移出||startMode
+            if (target.localScale.x < 0
+                || startMode
+                )//TODO：临时移出||startMode
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
                 if (!startMode) {
@@ -126,13 +143,18 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
-        if (Vector3.Distance(transform.position, targetPosition) < 0.01f&&!hasStopped&&levelManager.instance.isStartStory&& levelManager.instance.currentLevelIndex == 1) {
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f
+            &&!hasStopped
+            &&levelManager.instance.isStartStory
+            && levelManager.instance.currentLevelIndex == 1
+            && !CameraControl.Instance.hasLoadOnce
+            ) {
             hasStopped = true;
             print("我到达目的地了！");
             // startMode = true;
             oldTrans =this.transform;
             
-
+        
             StartCoroutine(StopStartMode());
         }
         lastPosition = transform.position;

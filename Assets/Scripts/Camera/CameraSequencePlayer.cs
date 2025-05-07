@@ -66,7 +66,7 @@ public class CameraSequencePlayer : MonoBehaviour
         }
 
         // 确保在开始时设置初始PPU值
-        if (pixelPerfectCamera != null)
+        if (pixelPerfectCamera != null &&!CameraControl.Instance.hasLoadOnce)
         {
             pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
         }
