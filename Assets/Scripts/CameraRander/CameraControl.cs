@@ -1,3 +1,4 @@
+using System;
 using LDtkUnity;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,10 +7,10 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    public CameraControl Instance{get; private set;}
+    public static CameraControl Instance{get; private set;}
     public Transform target;
-
-    private bool hasLoadOnce;
+    //已经播过一次，true：播过，false：没播过
+    public bool hasLoadOnce;
     
     public Transform startTarget;
     private Camera cam;
@@ -73,6 +74,10 @@ public class CameraControl : MonoBehaviour
 #endif
     }
 
+    private void Awake(){
+        Instance = this;
+    }
+
     void Start(){
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
@@ -80,6 +85,10 @@ public class CameraControl : MonoBehaviour
             GridManager.Instance.LockStates(true);
             IgnoreHorizontalLimit();
             FindObjectOfType<PlayerController>().DisableInput();
+        }
+        if (hasLoadOnce) {
+            target=FindObjectOfType<PlayerController>().transform;
+            
         }
         ani = companionController.GetComponent<Animator>();
         cam = Camera.main;

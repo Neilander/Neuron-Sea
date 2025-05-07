@@ -88,6 +88,7 @@ public class EndAndMove : MonoBehaviour
         Camera.main.transform.GetComponent<CameraControl>().target = playerController.transform;
         // Camera.main.transform.GetComponent<CameraControl>().RestoreCameraLimit();
         FindAnyObjectByType<CompanionController>().canFollow = true;
+        camControl.hasLoadOnce=true;
         FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
         // playerController.EnableMovement();
     }

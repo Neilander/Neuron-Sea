@@ -18631,6 +18631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1797076128}
+  hasLoadOnce: 1
   startTarget: {fileID: 0}
   setted: 0
   companionController: {fileID: 1375143807}
@@ -19148,6 +19149,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1653510449480269262, guid: 8a1b358adbe008a4594739bf8ee8631a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2719843845035054575, guid: 8a1b358adbe008a4594739bf8ee8631a,
         type: 3}
