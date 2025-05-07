@@ -88,6 +88,12 @@ BoxCollider2D:
     type: 3}
   m_PrefabInstance: {fileID: 6194581853704813872}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2933853137680280833 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9025407726796066865, guid: aea29f072d267444da61560103569605,
+    type: 3}
+  m_PrefabInstance: {fileID: 6194581853704813872}
+  m_PrefabAsset: {fileID: 0}
 --- !u!331 &3067375172540502037 stripped
 SpriteMask:
   m_CorrespondingSourceObject: {fileID: 9180044784361205029, guid: aea29f072d267444da61560103569605,
@@ -149,6 +155,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   reverse: 0
+  boxSprite: {fileID: 2933853137680280833}
   playerController: {fileID: 0}
   targetCollider: {fileID: 2756394028321702927}
   trackPrefab: {fileID: 6161979032544368671, guid: 37bcef8e908064264996d40689b11a9a,
