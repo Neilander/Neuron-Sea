@@ -24,6 +24,9 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public GameObject trackPrefab;
     public SpriteMask mask;
 
+    [Header("动画器")]
+    public Animator boxAnim;
+
     private List<Transform> trackTrans = new List<Transform>();
 
     public bool ifUpDown = false;
@@ -95,9 +98,29 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         while (move)
         {
             yield return StartCoroutine(MoveFromTo(!reverse ? pointA : pointB, reverse ? pointA : pointB));
+            boxAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
+            boxAnim.SetTrigger("TurnBack");
+            if (ifUpDown)
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0,0) : new Vector3(0, 0, 180);
+            }
+            else
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, -90) : new Vector3(0, 0, 90);
+            }
             yield return StartCoroutine(MoveFromTo(reverse ? pointA : pointB, !reverse ? pointA : pointB));
+            boxAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
+            boxAnim.SetTrigger("TurnBack");
+            if (ifUpDown)
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            }
+            else
+            {
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 90) : new Vector3(0, 0, -90);
+            }
         }
     }
 

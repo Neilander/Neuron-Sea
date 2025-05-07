@@ -446,6 +446,12 @@ BoxCollider2D:
     type: 3}
   m_PrefabInstance: {fileID: 7435346994079339196}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &8396659636592421069 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1416740256525171313, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7435346994079339196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8869485231065428119 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2033680214464422443, guid: 27d026be3c3cb4cc2be86da963080eff,
@@ -712,6 +718,7 @@ MonoBehaviour:
   trackPrefab: {fileID: 6161979032544368671, guid: 37bcef8e908064264996d40689b11a9a,
     type: 3}
   mask: {fileID: 9180044784361205029}
+  boxAnim: {fileID: 8396659636592421069}
   ifUpDown: 0
 --- !u!4 &8239702395693073284 stripped
 Transform:
