@@ -364,7 +364,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             mouseWorldPos.z = transform.position.z; // 保持 Z 不变（避免摄像机深度偏移）
             transform.position = mouseWorldPos + dragOffset;
         }*/
+
+        
     }
+
+    
+
 
     public void SetAlpha(float alpha){
         Color c = renderer.color;
@@ -557,6 +562,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     #region 重构后Switch代码
     private bool ifInPreview = false;
+    private SpriteRenderer previewRenderer;
 
     /// <summary>
     /// 控制物体的显示，第一个控制锁定，第二个控制预览的合法，第三个控制预览显示
@@ -581,7 +587,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
         if (ifPreview && ifLocked)
         {
-            previewObj.GetComponent<SpriteRenderer>().sprite = IfSubstituePreview? substitueRenderer.sprite: renderer.sprite;
+            previewRenderer = previewObj.GetComponent<SpriteRenderer>();
+            previewRenderer.sprite = IfSubstituePreview? substitueRenderer.sprite: renderer.sprite;
 
             if (ifLegal)
             {
