@@ -14,6 +14,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
     // public WaveMunController waveMunController;
 
     private bool isInCountDown = false;
+    private bool isInExpand = false;
+    private bool exploded = false;
 
     [SerializeField] private SpriteRenderer shineRenderer;
 
@@ -32,6 +34,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
 
 
     private List<GameObject> triggered;
+
+    private Coroutine countDownCor;
     
     //自动导入关卡设定数据
     public void OnLDtkImportFields(LDtkFields fields)
@@ -74,7 +78,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             // StoryManager.Instance.EnterStoryMode(storyData);
             // if(waveMunController!=null)waveMunController.StartDisappearAnimation();
             //StartCoroutine(ExplodeCountDown(waitTime));
-            StartCoroutine(ExplodeCountDownNewWithAnimation());
+            countDownCor = StartCoroutine(ExplodeCountDownNewWithAnimation());
         }
     }
 
@@ -85,7 +89,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
             //StartCoroutine(ExplodeCountDown(waitTime));
-            StartCoroutine(ExplodeCountDownNewWithAnimation());
+            countDownCor = StartCoroutine(ExplodeCountDownNewWithAnimation());
         }
     }
 
@@ -101,7 +105,23 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
     public bool DeathAction()
     {
         if (isInCountDown)
-            return true;
+        {
+            if (isInExpand)
+            {
+                if (exploded)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                StopCoroutine(countDownCor);
+                isInCountDown = false;
+                StartDirectExplode();
+                return false;
+            }
+        }
+            
         StartDirectExplode();
         return false;
     }
@@ -233,6 +253,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
 
         // Step 2: 播放 "expand" 动画
         animator.SetTrigger("expand");
+        isInExpand = true;
         //yield return null;
         animator.speed = 0.2f / explodeDuration;
         // 获取当前动画状态
@@ -280,6 +301,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         }
 
         // Step 3: 可加后续逻辑，比如消失、销毁等
+        exploded = true;
         GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
     }
 
@@ -292,6 +314,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         animator.SetBool("SizeFix", true);
         yield return null;
         animator.SetTrigger("expand");
+        isInExpand = true;
         //yield return null;
         animator.speed = 0.2f / explodeDuration;
         float timer = 0f;
@@ -324,6 +347,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         }
 
         // Step 3: 可加后续逻辑，比如消失、销毁等
+        exploded = true;
         GridManager.Instance.DestroySwitchable(GetComponent<SwitchableObj>());
     }
 
