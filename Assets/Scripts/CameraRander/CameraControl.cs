@@ -193,6 +193,7 @@ public class CameraControl : MonoBehaviour
         // ✅ 是否平滑移动中
         if (isTransitioning)
         {
+            
             // 每帧更新目标位置
             smoothTargetPosition = desiredPos;
 
