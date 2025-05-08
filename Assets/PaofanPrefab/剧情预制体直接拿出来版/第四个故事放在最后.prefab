@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4245881583801033862}
   - component: {fileID: 4091773228156523999}
   - component: {fileID: 4376044940370143221}
+  - component: {fileID: 2187900348630351319}
   m_Layer: 0
   m_Name: "\u7B2C\u56DB\u4E2A\u6545\u4E8B\u653E\u5728\u6700\u540E"
   m_TagString: Untagged
@@ -51,10 +52,34 @@ MonoBehaviour:
   detectionInterval: 0.1
   onEnterSpecificStory:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2187900348630351319}
+        m_TargetAssemblyTypeName: StoryCameraMover, Assembly-CSharp
+        m_MethodName: MoveCameraTo
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onExitSpecificStory:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2187900348630351319}
+        m_TargetAssemblyTypeName: StoryCameraMover, Assembly-CSharp
+        m_MethodName: MoveCameraTo
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   storySourceType: 1
   storyResourcePath: StoryData/NewStoryData 1
   csvResourcePath: "StoryData/CSV/Dialogue/\u5267\u60C53"
@@ -113,3 +138,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.283371, y: 9.2604065}
   m_EdgeRadius: 0
+--- !u!114 &2187900348630351319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150982644498479116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b48a1d41ce242f3a0a839dd884dc76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  region: {fileID: 0}

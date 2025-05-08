@@ -84,6 +84,8 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
     MovementComparison movementBounds;
 
+    public bool CheckEdge = true;
+
     private bool dropped = false;
     private void Start()
     {
@@ -378,34 +380,39 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
 
-        if (movementBounds.IsAtRightEdge())
+        if (CheckEdge)
         {
+            if (movementBounds.IsAtRightEdge())
+            {
 
-            FindAnyObjectByType<levelManager>().SwitchToNextLevel();
-            
-            levelManager levelMgr = FindAnyObjectByType<levelManager>();
-            levelMgr.CompleteCurrentLevel();
-            print("我保存了当前关卡");
-            // 确保在切换关卡后刷新UI
-            if (LevelSelectManager.Instance != null) {
-                LevelSelectManager.Instance.RefreshButtons();
+                FindAnyObjectByType<levelManager>().SwitchToNextLevel();
+
+                levelManager levelMgr = FindAnyObjectByType<levelManager>();
+                levelMgr.CompleteCurrentLevel();
+                print("我保存了当前关卡");
+                // 确保在切换关卡后刷新UI
+                if (LevelSelectManager.Instance != null)
+                {
+                    LevelSelectManager.Instance.RefreshButtons();
+                }
+
             }
-            
+            else if (movementBounds.IsAtLeftEdge())
+            {
+                FindAnyObjectByType<levelManager>().SwitchToBeforeLevel();
+            }
+            else if (movementBounds.ShouldDrop() && !dropped)
+            {
+                dropped = true;
+                Debug.Log("死亡在这里");
+                PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
+            }
+            else if (dropped && !movementBounds.ShouldDrop())
+            {
+                dropped = false;
+            }
         }
-        else if (movementBounds.IsAtLeftEdge())
-        {
-            FindAnyObjectByType<levelManager>().SwitchToBeforeLevel();
-        }
-        else if (movementBounds.ShouldDrop() && !dropped)
-        {
-            dropped = true;
-            Debug.Log("死亡在这里");
-            PlayerDeathEvent.Trigger(gameObject, DeathType.Fall);
-        }
-        else if (dropped && !movementBounds.ShouldDrop())
-        {
-            dropped = false;
-        }
+        
     }
 
     private float watchExtraJumpAllowTime() { return extraJumpAllowTime; }

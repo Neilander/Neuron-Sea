@@ -104,7 +104,7 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         
         if (ifUpDown == reverse)
         {
-            Debug.Log("对我在这！");
+            //Debug.Log("对我在这！");
             foreach (Transform trans in trackTrans)
             {
                 Vector3 scale = trans.localScale;
@@ -280,7 +280,7 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             if (child.name.StartsWith("路径"))
             {
                 result.Add(child);
-                Debug.Log("添加了" + child.name);
+                //Debug.Log("添加了" + child.name);
             }
         }
 
