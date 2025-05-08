@@ -280,7 +280,7 @@ PrefabInstance:
     - target: {fileID: 1248493911121493490, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1248493911121493490, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
@@ -492,6 +492,12 @@ SpriteRenderer:
 --- !u!1 &5734955347984768444 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2934393342123167488, guid: 27d026be3c3cb4cc2be86da963080eff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7435346994079339196}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5983837664292131555 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3757537095747518559, guid: 27d026be3c3cb4cc2be86da963080eff,
     type: 3}
   m_PrefabInstance: {fileID: 7435346994079339196}
   m_PrefabAsset: {fileID: 0}
@@ -788,6 +794,8 @@ MonoBehaviour:
   boxAnim: {fileID: 8396659636592421069}
   previewAnim: {fileID: 8537736559644667726}
   previewTrans: {fileID: 8083588924168680341}
+  SourceRenderer: {fileID: 2442663594211984621}
+  PreviewRenderer: {fileID: 5983837664292131555}
   ifUpDown: 0
 --- !u!4 &8239702395693073284 stripped
 Transform:

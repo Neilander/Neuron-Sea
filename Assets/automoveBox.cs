@@ -29,6 +29,10 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public Animator previewAnim;
     public Transform previewTrans;
 
+    [Header("同步")]
+    public SpriteRenderer SourceRenderer;
+    public SpriteRenderer PreviewRenderer;
+
     private List<Transform> trackTrans = new List<Transform>();
 
     public bool ifUpDown = false;
@@ -86,6 +90,14 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         
     }
 
+    private void LateUpdate()
+    {
+        if (PreviewRenderer.gameObject.activeInHierarchy)
+        {
+            PreviewRenderer.sprite = SourceRenderer.sprite;
+        }
+    }
+
     private bool move = true;
     private IEnumerator MoveLoop()
     {
@@ -103,10 +115,10 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         {
             yield return StartCoroutine(MoveFromTo(!reverse ? pointA : pointB, reverse ? pointA : pointB));
             boxAnim.SetTrigger("TurnBack");
-            previewAnim.SetTrigger("TurnBack");
+            //previewAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
             boxAnim.SetTrigger("TurnBack");
-            previewAnim.SetTrigger("TurnBack");
+            //previewAnim.SetTrigger("TurnBack");
             if (ifUpDown)
             {
                 boxSprite.localEulerAngles = reverse ? new Vector3(0, 0,0) : new Vector3(0, 0, 180);
@@ -119,10 +131,10 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             }
             yield return StartCoroutine(MoveFromTo(reverse ? pointA : pointB, !reverse ? pointA : pointB));
             boxAnim.SetTrigger("TurnBack");
-            previewAnim.SetTrigger("TurnBack");
+            //previewAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
             boxAnim.SetTrigger("TurnBack");
-            previewAnim.SetTrigger("TurnBack");
+            //previewAnim.SetTrigger("TurnBack");
             if (ifUpDown)
             {
                 boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);

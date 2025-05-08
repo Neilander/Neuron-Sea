@@ -102,6 +102,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4606000606844491273}
   m_SourcePrefab: {fileID: 100100000, guid: aea29f072d267444da61560103569605, type: 3}
+--- !u!212 &503646448640569299 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5983837664292131555, guid: aea29f072d267444da61560103569605,
+    type: 3}
+  m_PrefabInstance: {fileID: 6194581853704813872}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &2409845898119239165 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8396659636592421069, guid: aea29f072d267444da61560103569605,
@@ -202,7 +208,15 @@ MonoBehaviour:
   boxAnim: {fileID: 2409845898119239165}
   previewAnim: {fileID: 2561335747384414846}
   previewTrans: {fileID: 2727279408409530021}
+  SourceRenderer: {fileID: 8363614386823051741}
+  PreviewRenderer: {fileID: 503646448640569299}
   ifUpDown: 0
+--- !u!212 &8363614386823051741 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2442663594211984621, guid: aea29f072d267444da61560103569605,
+    type: 3}
+  m_PrefabInstance: {fileID: 6194581853704813872}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8839211409060821152
 PrefabInstance:
   m_ObjectHideFlags: 0
