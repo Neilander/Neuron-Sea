@@ -218,100 +218,110 @@ public class levelManager : MonoBehaviour
         controller.SetMovementBounds(data.levelBound);
 
         Transform entities = newLevelGO.transform.Find("Entities");
-        if (entities != null)
-        {
+        if (entities != null) {
             Transform respawnTarget = null;
 
-            foreach (Transform child in entities)
-            {
-                if (child.name.StartsWith("Respawn"))
+            foreach (Transform child in entities) {
+                if (cameraControl.hasLoadOnce) {
+                    if (child.name.StartsWith("Respawn")) {
+                        respawnTarget = child;
+                        this.respawnTarget = child;
+
+                        // 找到重生点后，立即设置给DeathController
+                        DeathController deathController = FindAnyObjectByType<DeathController>();
+                        if (deathController != null) {
+                            deathController.respawnTarget = respawnTarget;
+                            Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
+                        }
+                        else {
+                            Debug.LogError("未找到DeathController，无法设置重生点！");
+                        }
+
+                        break;
+                    }
+                }
+                else 
                 {
-                    respawnTarget = child;
-                    this.respawnTarget = child;
+                    if (child.name.StartsWith("Start")) {
+                        respawnTarget = child;
+                        this.respawnTarget = child;
 
-                    // 找到重生点后，立即设置给DeathController
-                    DeathController deathController = FindAnyObjectByType<DeathController>();
-                    if (deathController != null)
-                    {
-                        deathController.respawnTarget = respawnTarget;
-                        Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
-                    }
-                    else
-                    {
-                        Debug.LogError("未找到DeathController，无法设置重生点！");
-                    }
+                        // 找到重生点后，立即设置给DeathController
+                        DeathController deathController = FindAnyObjectByType<DeathController>();
+                        if (deathController != null) {
+                            deathController.respawnTarget = respawnTarget;
+                            Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
+                        }
+                        else {
+                            Debug.LogError("未找到DeathController，无法设置重生点！");
+                        }
 
-                    break;
+                        break;
+                    }
                 }
             }
 
-            if (respawnTarget != null)
-            {
-                StartEffectController effectController = FindAnyObjectByType<StartEffectController>();
-                // PlayerController controller = FindAnyObjectByType<PlayerController>();
+            if (respawnTarget != null) {
+                    StartEffectController effectController = FindAnyObjectByType<StartEffectController>();
+                    // PlayerController controller = FindAnyObjectByType<PlayerController>();
 
-                if (effectController != null)
-                {
-                    // 无论何种情况，始终将开始特效放在原始重生点位置
-                    effectController.transform.position = respawnTarget.position;
+                    if (effectController != null) {
+                        // 无论何种情况，始终将开始特效放在原始重生点位置
+                        effectController.transform.position = respawnTarget.position;
 
-                    // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
-                    if (newLevelIndex == 13 && ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn)
-                    {
-                        // // 禁用玩家输入
-                        // controller.DisableInput();
-                        //
-                        // 计算出生点的实际位置（带偏移）
-                        Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down*0.49f;
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                        // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
+                        if (newLevelIndex == 13 && ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn) {
+                            // // 禁用玩家输入
+                            // controller.DisableInput();
+                            //
+                            // 计算出生点的实际位置（带偏移）
+                            Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
-                        // 设置玩家初始位置（在重生点左边）
-                        Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                            // 设置玩家初始位置（在重生点左边）
+                            Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
-                        // 移动玩家到左侧位置
-                        controller.MovePosition(startPos);
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                            // 移动玩家到左侧位置
+                            controller.MovePosition(startPos);
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
-                        // // 开始走路动画 - 走向原始出生点
-                        // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
-                        effectController.TriggerStartEffect();
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                            // // 开始走路动画 - 走向原始出生点
+                            // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
+                            effectController.TriggerStartEffect();
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
+                        }
+                        else if (ifSetPlayer) {
+                            // 其他情况（包括死亡重生和重新加载）直接放在重生点
+                            controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                        }
                     }
-                    else if (ifSetPlayer)
-                    {
-                        // 其他情况（包括死亡重生和重新加载）直接放在重生点
-                        controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                }
+                else {
+                    // 如果没有找到重生点，创建一个默认的重生点
+                    GameObject defaultRespawnObj = new GameObject("Respawn_Default");
+                    defaultRespawnObj.transform.parent = entities;
+                    defaultRespawnObj.transform.position = new Vector3(data.levelBound.center.x, data.levelBound.center.y, 0);
+
+                    respawnTarget = defaultRespawnObj.transform;
+                    this.respawnTarget = respawnTarget;
+
+                    // 设置给DeathController
+                    DeathController deathController = FindAnyObjectByType<DeathController>();
+                    if (deathController != null) {
+                        deathController.respawnTarget = respawnTarget;
+                        Debug.Log($"已将默认重生点设置给DeathController，位置：{respawnTarget.position}");
                     }
+
+                    Debug.LogWarning($"在关卡 {newLevelName} 中没有找到以 Respawn 开头的物体，已创建默认重生点");
                 }
             }
             else
             {
-                // 如果没有找到重生点，创建一个默认的重生点
-                GameObject defaultRespawnObj = new GameObject("Respawn_Default");
-                defaultRespawnObj.transform.parent = entities;
-                defaultRespawnObj.transform.position = new Vector3(data.levelBound.center.x, data.levelBound.center.y, 0);
-
-                respawnTarget = defaultRespawnObj.transform;
-                this.respawnTarget = respawnTarget;
-
-                // 设置给DeathController
-                DeathController deathController = FindAnyObjectByType<DeathController>();
-                if (deathController != null)
-                {
-                    deathController.respawnTarget = respawnTarget;
-                    Debug.Log($"已将默认重生点设置给DeathController，位置：{respawnTarget.position}");
-                }
-
-                Debug.LogWarning($"在关卡 {newLevelName} 中没有找到以 Respawn 开头的物体，已创建默认重生点");
+                Debug.LogWarning("未找到 Entities 物体");
             }
-        }
-        else
-        {
-            Debug.LogWarning("未找到 Entities 物体");
-        }
-
+        
         if (backGround == null)
         {
             GameObject backgroundObject = GameObject.FindGameObjectWithTag("BackGround");
