@@ -207,6 +207,7 @@ public class StoryTrigger : MonoBehaviour
         // 只处理正在等待结束的剧情
         if (!isWaitingForStoryEnd) return;
 
+        Debug.Log("剧情结束了！");
         // 重置等待标志
         isWaitingForStoryEnd = false;
             isStoryPlaying = false;

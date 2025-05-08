@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LDtkUnity;
 
-public class CameraRegionTrigger : MonoBehaviour
+public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
 {
     public bool useHorizontalLimit = true;
     public bool useVerticalLimit = true;
@@ -10,6 +11,7 @@ public class CameraRegionTrigger : MonoBehaviour
     public bool ignoreAllLimit = false;
     // 新增：进入区域时是否只忽略左右边界
     public bool ignoreHorizontalOnly = false;
+    public float priority = 0;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -125,5 +127,10 @@ public class CameraRegionTrigger : MonoBehaviour
     //     var region = new CameraLimitRegion(left, right, top, bottom, this);
     //     camControl.SetLimitRegion(region);
     //     Debug.Log($"[CameraRegionTrigger] 外部调用恢复边界: {gameObject.name}");
+    }
+
+    public void OnLDtkImportFields(LDtkFields fields)
+    {
+        priority = fields.GetFloat("Priority");
     }
 }

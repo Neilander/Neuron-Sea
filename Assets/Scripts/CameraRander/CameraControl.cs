@@ -250,9 +250,20 @@ public class CameraControl : MonoBehaviour
     {
         if (setted)
         {
-            Debug.Log("设置到 queue");
-            queuedLimit = newRegion;
+            if (currentLimit.setter.priority >= newRegion.setter.priority)
+            {
+                Debug.Log("设置到 queue");
+                queuedLimit = newRegion;
+            }
+            else
+            {
+                queuedLimit = currentLimit;
+
+                currentLimit = newRegion;
+                isTransitioning = true;
+            }
             queued = true;
+
         }
         else
         {
