@@ -19,10 +19,13 @@ public class BeginPanel : MonoBehaviour
 
     private bool isVideoPlaying = false;
 
+    private GameObject blueObject;
     private Image img;
     // Start is called before the first frame update
     void Start()
     {
+        blueObject = GameObject.Find("blue");
+        blueObject.SetActive(false);
         img = volume.GetComponent<Image>();
 
         // 初始化视频播放器设置
@@ -53,8 +56,37 @@ public class BeginPanel : MonoBehaviour
     public void StartGame()
     {
         // 首先禁用当前面板
-        gameObject.SetActive(false);
 
+        // 查找名为 "blue" 的对象
+        if (blueObject != null)
+        {
+            // 激活对象
+            blueObject.SetActive(true);
+            print("激活了");
+            // 获取 Animator 组件
+            Animator animatorComponent = blueObject.GetComponent<Animator>();
+            if (animatorComponent != null)
+            {
+                // 启用组件并播放动画（需指定动画状态名称或哈希）
+                animatorComponent.enabled = true; // 替换为实际动画状态名
+                StartCoroutine(WaitForAnimationAndLoadScene(animatorComponent));
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("未在 blue 对象上找到 Animator 组件！");
+            }
+        }
+        else
+        {
+            Debug.LogError("未找到名为 blue 的对象！");
+        }
+
+        // 检查视频播放器（需提前声明变量）
+        if (videoPlayer != null && videoCanvas != null)
+        {
+            // 播放视频的逻辑
+        }
         // 检查是否需要播放视频
         if (videoPlayer != null && videoCanvas != null)
         {
@@ -67,12 +99,46 @@ public class BeginPanel : MonoBehaviour
 
             Debug.Log("开始播放开场视频");
         }
-        else
+        // else
+        // {
+        //     // 如果没有视频组件，直接加载场景
+        //     Debug.LogWarning("未找到视频播放器组件或视频画布，将直接加载场景");
+        //     LoadGameScene();
+        // }
+    }
+    // 协程：等待动画播放完毕
+
+    private IEnumerator WaitForAnimationAndLoadScene(Animator animator)
+    {
+        // 等待动画开始播放（避免未初始化状态）
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0);
+
+        // 标记是否已经检测到至少一个完整循环
+        bool animationCompletedOnce = false;
+        float previousTime = 0f;
+
+        // 持续检测动画是否播放完毕
+        while (!animationCompletedOnce)
         {
-            // 如果没有视频组件，直接加载场景
-            Debug.LogWarning("未找到视频播放器组件或视频画布，将直接加载场景");
-            LoadGameScene();
+            float currentTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+            // 如果时间从大变小，说明动画循环了一次
+            if (currentTime < previousTime)
+            {
+                animationCompletedOnce = true;
+            }
+            // 或者如果时间超过1，也说明完成了一次
+            else if (currentTime >= 1.0f)
+            {
+                animationCompletedOnce = true;
+            }
+
+            previousTime = currentTime;
+            yield return null; // 每帧等待
         }
+
+        // 动画播放完成后加载场景
+        LoadGameScene();
     }
 
     // 视频播放完成的回调
