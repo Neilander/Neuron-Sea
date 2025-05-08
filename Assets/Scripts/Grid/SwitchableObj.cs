@@ -577,15 +577,17 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         lockedStateDisplay.GetComponent<SpriteRenderer>().color = ifLegal ? Color.white : Color.red;
         if(lockedStateDisplay!=null)lockedStateDisplay.SetActive(ifLocked);*/
 
-
+        SpriteRenderer tempR = IfSubstituePreview ? substitueRenderer : renderer;
         if (ifLocked)
         {
-            renderer.material = lockedMaterial;
+            
+            tempR.material = lockedMaterial;
+            
             
         }
         else
         {
-            renderer.material = defaultMaterial;
+            tempR.material = defaultMaterial;
         }
 
         if (ifPreview && ifLocked)
