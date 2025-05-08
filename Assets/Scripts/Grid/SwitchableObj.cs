@@ -211,22 +211,23 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
                 (ifAdjustY ? Vector3.up * adjustYAmount[ExpectedSize.x - 1] : Vector3.zero)+
                 (IfSubstituePreview ? substitueRenderer.transform.parent.localPosition : Vector3.zero);
             previewObj.GetComponent<SpriteRenderer>().color = c;
-            StartCoroutine(WhatCanISay(renderer.material));
-            renderer.material = switchMaterial;
-            renderer.material.SetFloat("_KaiShiShiJian", Time.unscaledTime);
-            renderer.material.SetVector("_MoXingDaXiaoWangGeZuoBiao", (Vector2)ExpectedSize);
-            renderer.material.SetVector("_MaoDianWangGeZuoBiao", ExpectedAnchorPos);
-            renderer.material.SetVector("_MaoDianShiJieZuoBiao", recordPos);
-            renderer.material.SetVector("_MuBiaoMaoDianShiJieZuoBiao", anchor.transform.position);
+            SpriteRenderer tempR = IfSubstituePreview ? substitueRenderer : renderer;
+            StartCoroutine(WhatCanISay(tempR.material, tempR));
+            tempR.material = switchMaterial;
+            tempR.material.SetFloat("_KaiShiShiJian", Time.unscaledTime);
+            tempR.material.SetVector("_MoXingDaXiaoWangGeZuoBiao", (Vector2)ExpectedSize);
+            tempR.material.SetVector("_MaoDianWangGeZuoBiao", ExpectedAnchorPos);
+            tempR.material.SetVector("_MaoDianShiJieZuoBiao", recordPos);
+            tempR.material.SetVector("_MuBiaoMaoDianShiJieZuoBiao", anchor.transform.position);
         }
     }
 
-    IEnumerator WhatCanISay(Material originMaterial)
+    IEnumerator WhatCanISay(Material originMaterial,SpriteRenderer r)
     {
         yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime);
         previewObj.GetComponent<SpriteRenderer>().color = Color.white;
-        yield return new WaitForSecondsRealtime(renderer.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
-        renderer.material = originMaterial;
+        yield return new WaitForSecondsRealtime(r.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
+        r.material = originMaterial;
 
     }
 
