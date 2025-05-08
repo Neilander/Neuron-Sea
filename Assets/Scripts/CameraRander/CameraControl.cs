@@ -88,7 +88,7 @@ public class CameraControl : MonoBehaviour
             
             setted = true;
             GridManager.Instance.LockStates(true);
-            IgnoreHorizontalLimit();
+            // IgnoreHorizontalLimit();
             FindObjectOfType<PlayerController>().DisableInput();
         }
         if (hasLoadOnce) {
