@@ -92,9 +92,10 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
         Init();
-        
+        // NewCheck(); // 在 Start 中进行初始地面检测
     }
 
+    
     private void Update()
     {
         GameInput.Update(Time.unscaledDeltaTime);
@@ -564,9 +565,29 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     {
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
         ifGetControlledOutside.Refresh(time);
+        // transform.GetComponent<Animator>().SetBool("isGrounded",true);
+        // transform.GetComponent<Animator>().SetFloat("Speed",0.5f);
         this.controlInput = Mathf.Clamp(controlInput, 0, 1);
+        Debug.Log(transform.position);
+
     }
 
+    
+    // public void ForceGroundCheck(){
+    //     // 强制执行地面检测
+    //     bool wasGrounded = OnGround;
+    //     this.onGround = CheckGround();
+    //
+    //     // 更新动画状态
+    //     GetComponent<Animator>().SetBool("isGrounded", OnGround);
+    //
+    //     Debug.Log($"强制地面检测：{OnGround}");
+    //
+    //     // 如果检测到地面，刷新土狼时间
+    //     if (OnGround && !wasGrounded) {
+    //         jumpGraceTimer = Constants.JumpGraceTime;
+    //     }
+    // }
     private void MoveInControl()
     {
         Speed = new Vector2(controlInput * moveSpeed, Speed.y);
