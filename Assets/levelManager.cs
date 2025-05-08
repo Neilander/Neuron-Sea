@@ -44,6 +44,7 @@ public class levelManager : MonoBehaviour
     public float walkInDistance = 10f; // 从重生点左边多远开始走
     private bool isWalkingToSpawn = false;
     private bool isRestarting = false;
+    public float specialStartTime = 1;
     
     private Vector3 lockedPosition = Vector3.zero;
     private float positionLockDuration = 2f; // 锁定持续时间
@@ -225,6 +226,7 @@ public class levelManager : MonoBehaviour
 
             foreach (Transform child in entities) {
                 if (cameraControl.hasLoadOnce) {
+                    Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
@@ -244,6 +246,7 @@ public class levelManager : MonoBehaviour
                 }
                 else 
                 {
+                    Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
@@ -258,6 +261,22 @@ public class levelManager : MonoBehaviour
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
 
+
+                        switch (currentLevelIndex)
+                        {
+                            case 1:
+                                PlayerPrefs.SetInt("hasLoadOnce",1);
+                                break;
+
+                            case 2:
+                                PlayerPrefs.SetInt("hasScene2LoadOnce", 1);
+                                break;
+
+                            case 3:
+                                PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
+                                break;
+                        }
+                        
                         break;
                     }
                 }
@@ -271,13 +290,43 @@ public class levelManager : MonoBehaviour
                         // 无论何种情况，始终将开始特效放在原始重生点位置
                         effectController.transform.position = respawnTarget.position;
 
-                        // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
-                        if (newLevelIndex == 13 && ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn) {
-                            // // 禁用玩家输入
-                            // controller.DisableInput();
-                            //
-                            // 计算出生点的实际位置（带偏移）
-                            Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
+                    // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
+                    if (!ifSetPlayer||(newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce))
+                    {
+                        // // 禁用玩家输入
+                        // controller.DisableInput();
+                        //
+                        // 计算出生点的实际位置（带偏移）
+                        Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                        // 设置玩家初始位置（在重生点左边）
+                        Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                        // 移动玩家到左侧位置
+                        controller.MovePosition(startPos);
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                        // // 开始走路动画 - 走向原始出生点
+                        // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
+                        effectController.TriggerStartEffect(true, specialStartTime);
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                        
+                    }
+                    else
+                    {
+                        controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                    }
+
+                    /*
+                        if (newLevelIndex == 13 && !ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn) {
+                        Debug.Log("不像在这啊");
+                        // // 禁用玩家输入
+                        // controller.DisableInput();
+                        //
+                        // 计算出生点的实际位置（带偏移）
+                        Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
                             Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
                             // 设置玩家初始位置（在重生点左边）
@@ -290,17 +339,19 @@ public class levelManager : MonoBehaviour
 
                             // // 开始走路动画 - 走向原始出生点
                             // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
-                            effectController.TriggerStartEffect(true);
+                            effectController.TriggerStartEffect(true, specialStartTime);
                             Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
                         }
                         else if (ifSetPlayer) {
                             // 其他情况（包括死亡重生和重新加载）直接放在重生点
+                            Debug.Log("冲冲冲");
                             controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
-                        }
+                        }*/
                     }
                 }
-                else {
+            else {
+                Debug.Log("难道在这？");
                     // 如果没有找到重生点，创建一个默认的重生点
                     GameObject defaultRespawnObj = new GameObject("Respawn_Default");
                     defaultRespawnObj.transform.parent = entities;
@@ -323,7 +374,9 @@ public class levelManager : MonoBehaviour
             {
                 Debug.LogWarning("未找到 Entities 物体");
             }
-        
+
+        cameraControl.hasLoadOnce = true;
+
         if (backGround == null)
         {
             GameObject backgroundObject = GameObject.FindGameObjectWithTag("BackGround");
@@ -490,7 +543,7 @@ public class levelManager : MonoBehaviour
         if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
         {
             //Destroy(gameObject);
-            SceneManager.LoadScene(sceneIndex + 1);
+            //SceneManager.LoadScene(sceneIndex + 1);
         }
         else
         {
