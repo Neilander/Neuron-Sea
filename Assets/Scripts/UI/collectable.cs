@@ -83,7 +83,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         AudioManager.Instance.Play(SFXClip.PickUpCollectable);
         Destroy(gameObject);
         DestroyToDo.Invoke();
-        showDialogue(1,1,"*我能看到更多的图景了，这些东西让我觉得熟悉。或许它们并不是崭新的……但我依然抱有期待。");
+        showDialogue(4,1,"*我能看到更多的图景了，这些东西让我觉得熟悉。或许它们并不是崭新的……但我依然抱有期待。");
         showDialogue(8,1,"*我似乎已经能够猜测这份来自于前代首席观测员的礼物是什么了。");
         showDialogue(12,1,"*我不知道她是从什么角度拍摄下了这幅场景，事实上，我从未这样观察过我工作和生活的地方……我相信她爱着这个地方，但是这样的爱能够支撑她的选择吗？");
         showDialogue(4,13,"我没有想到在这个区域也有新的礼物。");

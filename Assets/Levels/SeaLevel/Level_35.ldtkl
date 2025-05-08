@@ -267,7 +267,7 @@
 					"height": 720,
 					"defUid": 263,
 					"px": [1350,522],
-					"fieldInstances": [],
+					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
 					"__worldX": 22698,
 					"__worldY": -3942
 				},
@@ -283,8 +283,24 @@
 					"height": 540,
 					"defUid": 263,
 					"px": [3042,702],
-					"fieldInstances": [],
+					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
 					"__worldX": 24390,
+					"__worldY": -3762
+				},
+				{
+					"__identifier": "CameraBound",
+					"__grid": [14,19],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#43D7C7",
+					"iid": "b9357580-1030-11f0-b8ae-8973278c0188",
+					"width": 960,
+					"height": 540,
+					"defUid": 263,
+					"px": [522,702],
+					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": -1, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] }],
+					"__worldX": 21870,
 					"__worldY": -3762
 				}
 			]
