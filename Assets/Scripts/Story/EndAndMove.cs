@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EndAndMove : MonoBehaviour
 {
-    public GameObject UIphoto;
+    public Sprite teach3sprite;
+    public Image UIphoto;
     private bool isSwitchActive;
     public StoryTrigger[] storyTriggers;
     private bool isSwitchCompleted;
@@ -71,15 +73,15 @@ public class EndAndMove : MonoBehaviour
 
     public void EnablePicture(){
         // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
-        UIphoto.SetActive(true);
+        UIphoto.gameObject.SetActive(true);
         StartCoroutine(DisablePictureAfterDelay(2f));
         
     }
     
     private IEnumerator DisablePictureAfterDelay(float disableTime){
         yield return new WaitForSeconds(disableTime);
-        if(UIphoto.transform.GetChild(0).transform.GetComponent<TMP_Text>().text==ExchangeText)
-        UIphoto.SetActive(false);
+        // if(UIphoto.transform.GetChild(0).transform.GetComponent<TMP_Text>().text==ExchangeText)
+        UIphoto.gameObject.SetActive(false);
     }
 
     public void ReturnCameraToPlayer(){
@@ -198,7 +200,7 @@ public class EndAndMove : MonoBehaviour
         camControl.target = playerController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
-        UIphoto.SetActive(false);
+        UIphoto.gameObject.SetActive(false);
     }
     // 使用目标跟随的方法
     private void UseTargetFollow()
@@ -256,9 +258,8 @@ public class EndAndMove : MonoBehaviour
         playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
         GridManager.Instance.LockStates(false);
-        UIphoto.SetActive(true);
-        text = UIphoto.transform.Find("Text (TMP)");
-        text.GetComponent<TMP_Text>().text = ExchangeText;
+        UIphoto.gameObject.SetActive(true);
+        UIphoto.sprite = teach3sprite;        
         // StartCoroutine(StartSwitchMode());
         StartCoroutine(DisablePictureAfterDelay(3f));
     }
