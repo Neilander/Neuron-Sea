@@ -323,11 +323,11 @@ public class EndAndMove : MonoBehaviour
     }
 
     public void FreeCamera(){
-        camControl.setted = false;
+        //camControl.Setted = false;
     }
 
     public void LockCamera(){
-        camControl.setted = true;
+        //camControl.Setted = true;
     }
     
     

@@ -12,11 +12,12 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
     // 新增：进入区域时是否只忽略左右边界
     public bool ignoreHorizontalOnly = false;
     public float priority = 0;
+    public bool ifStory;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-        Debug.Log($"[CameraRegionTrigger] 玩家进入触发器: {gameObject.name}");
+        //Debug.Log($"[CameraRegionTrigger] 玩家进入触发器: {gameObject.name}");
 
         var camControl = Camera.main.GetComponent<CameraControl>();
         if (camControl == null)
@@ -26,7 +27,7 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
         }
 
         // 调试：显示当前边界设置
-        Debug.Log($"[CameraRegionTrigger] ignoreAllLimit={ignoreAllLimit}, ignoreHorizontalOnly={ignoreHorizontalOnly}, useHorizontalLimit={useHorizontalLimit}, useVerticalLimit={useVerticalLimit}");
+        //Debug.Log($"[CameraRegionTrigger] ignoreAllLimit={ignoreAllLimit}, ignoreHorizontalOnly={ignoreHorizontalOnly}, useHorizontalLimit={useHorizontalLimit}, useVerticalLimit={useVerticalLimit}");
 
         // // 新增逻辑：根据设置调用摄像机的忽略方法
         // if (ignoreAllLimit)
@@ -55,7 +56,7 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
         float? top = useVerticalLimit ? bounds.max.y : null;
         float? bottom = useVerticalLimit ? bounds.min.y : null;
 
-        Debug.Log($"[CameraRegionTrigger] 设置边界: left={left}, right={right}, top={top}, bottom={bottom}");
+        //Debug.Log($"[CameraRegionTrigger] 设置边界: left={left}, right={right}, top={top}, bottom={bottom}");
 
         var region = new CameraLimitRegion(left, right, top, bottom, this);
         camControl.SetLimitRegion(region);
@@ -75,7 +76,7 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
             return;
         }
 
-        Debug.Log($"[CameraRegionTrigger] 玩家离开触发器: {gameObject.name}");
+        //Debug.Log($"[CameraRegionTrigger] 玩家离开触发器: {gameObject.name}");
         // 离开时恢复边界
         camControl.RestoreCameraLimit();
         camControl.RestoreHorizontalLimit();
@@ -93,7 +94,7 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
         }
         camControl.ClearLimitRegion(this);
         // this.gameObject.SetActive(false);
-        Debug.Log($"[CameraRegionTrigger] 外部调用忽略所有边界: {gameObject.name}");
+        //Debug.Log($"[CameraRegionTrigger] 外部调用忽略所有边界: {gameObject.name}");
     }
     //
     // // 新增：外部可调用，忽略左右边界
@@ -132,5 +133,8 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
     public void OnLDtkImportFields(LDtkFields fields)
     {
         priority = fields.GetFloat("Priority");
+        ifStory = fields.GetBool("IsStory");
+        if (ifStory)
+            gameObject.SetActive(false);
     }
 }

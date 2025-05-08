@@ -18,7 +18,20 @@ public class CameraControl : MonoBehaviour
     private float halfWidth;
     private float halfHeight;
 
-    public bool setted = false;
+    private bool _setted = false;
+
+    public bool Setted
+    {
+        get => _setted;
+        set
+        {
+            if (_setted != value)
+            {
+                _setted = value;
+                Debug.Log("setted 被改动了，现在是: " + value);
+            }
+        }
+    }
     private bool queued = false;
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
@@ -152,7 +165,7 @@ public class CameraControl : MonoBehaviour
         }
         //Debug.Log("相机被限制，使用的是"+(setted?"currentLimit":"defaultLimit"));
         // ✅ 选择使用 currentLimit 或 defaultLimit
-        CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
+        CameraLimitRegion limitToUse = Setted ? currentLimit : defaultLimit;
 
         if (limitToUse != null)
         {
@@ -204,7 +217,7 @@ public class CameraControl : MonoBehaviour
     Vector3 calculateDesiredPos()
     {
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
-        CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
+        CameraLimitRegion limitToUse = Setted ? currentLimit : defaultLimit;
 
         if (limitToUse != null)
         {
@@ -248,7 +261,7 @@ public class CameraControl : MonoBehaviour
     }
     public void SetLimitRegion(CameraLimitRegion newRegion)
     {
-        if (setted)
+        if (Setted)
         {
             if (currentLimit.setter.priority >= newRegion.setter.priority)
             {
@@ -257,6 +270,7 @@ public class CameraControl : MonoBehaviour
             }
             else
             {
+                Debug.Log("抢占先机");
                 queuedLimit = currentLimit;
 
                 currentLimit = newRegion;
@@ -267,8 +281,9 @@ public class CameraControl : MonoBehaviour
         }
         else
         {
+            Debug.Log("没有已经设置的，直接来");
             currentLimit = newRegion;
-            setted = true;
+            Setted = true;
             isTransitioning = true; // ✅ 开启平滑过渡
         }
     }
@@ -290,7 +305,7 @@ public class CameraControl : MonoBehaviour
     }
     public void ClearLimitRegion(CameraRegionTrigger sender)
     {
-        if (setted && currentLimit != null && currentLimit.setter == sender)
+        if (Setted && currentLimit != null && currentLimit.setter == sender)
         {
             if (queued)
             {
@@ -304,7 +319,7 @@ public class CameraControl : MonoBehaviour
             {
                 currentLimit = null;
                 Debug.Log("移除了当前");
-                setted = false;
+                Setted = false;
                 isTransitioning = true; // ✅ 清空限制，也平滑
             }
         }

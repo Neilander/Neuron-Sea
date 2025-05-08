@@ -16,7 +16,7 @@ public class levelManager : MonoBehaviour
     public Transform respawnTarget;
     public int currentLevelIndex = 0;  // 当前关卡编号
 
-    private GameObject currentLevelGO;
+    public GameObject currentLevelGO { get; private set; }
     private CameraControl cameraControl;
     public GameObject backGround;
 
@@ -100,6 +100,8 @@ public class levelManager : MonoBehaviour
 
 
     }
+
+    
 
     // 保存解锁状态
     private void SaveUnlockedLevels()
