@@ -301,7 +301,7 @@ public class EndAndMove : MonoBehaviour
 
             cam.isTransitioning = true; // 确保返回时也平滑过渡
             // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
-            camControl.setted = true;
+            LockCamera();
             // UIphoto.SetActive(false);
         }
         else

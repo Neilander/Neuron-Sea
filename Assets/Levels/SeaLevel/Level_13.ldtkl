@@ -210,7 +210,7 @@
 					"height": 540,
 					"defUid": 263,
 					"px": [1764,1134],
-					"fieldInstances": [],
+					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
 					"__worldX": -7488,
 					"__worldY": 6786
 				},
@@ -226,9 +226,41 @@
 					"height": 936,
 					"defUid": 263,
 					"px": [3474,702],
-					"fieldInstances": [],
+					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
 					"__worldX": -5778,
 					"__worldY": 6354
+				},
+				{
+					"__identifier": "Start",
+					"__grid": [7,35],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#FEE761",
+					"iid": "1804c920-1030-11f0-b8ae-d7ca4fe41135",
+					"width": 36,
+					"height": 36,
+					"defUid": 877,
+					"px": [270,1278],
+					"fieldInstances": [],
+					"__worldX": -8982,
+					"__worldY": 6930
+				},
+				{
+					"__identifier": "CameraBound",
+					"__grid": [23,32],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#43D7C7",
+					"iid": "8b014320-1030-11f0-b8ae-d9d57947416a",
+					"width": 1692,
+					"height": 540,
+					"defUid": 263,
+					"px": [846,1170],
+					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": -1, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] }],
+					"__worldX": -8406,
+					"__worldY": 6822
 				}
 			]
 		},

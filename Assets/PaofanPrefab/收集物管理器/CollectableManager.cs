@@ -8,7 +8,7 @@ public class CollectableManager : MonoBehaviour
     public static CollectableManager Instance;
 
     //总收集次数，用于显示拼图
-    private int totalCollected = 0;
+    public int totalCollected = 0;
 
     public HashSet<int> collectedLevels = new HashSet<int>();
 

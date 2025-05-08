@@ -49,7 +49,7 @@ public class StartEffectController : MonoBehaviour
         if (playerController != null && startPosition != null)
         {
             Vector3 finalPosition = startPosition.position;
-
+            Debug.Log(playerController.transform.position);
             // 射线向下检测地面
             RaycastHit2D hit = Physics2D.Raycast(startPosition.position, Vector2.down, raycastDistance, groundLayer);
             if (hit.collider != null)
@@ -58,15 +58,14 @@ public class StartEffectController : MonoBehaviour
                 // 使用 BoxCollider2D 计算底部偏移
                 BoxCollider2D col = playerController.GetComponent<BoxCollider2D>();
                 float bottomOffset = 0.5f; // 默认值
-
-                if (col != null)
-                {
+            
+                if (col != null) {
                     bottomOffset = col.offset.y - col.size.y / 2f;
                 }
-
+            
                 // 设置玩家最终位置在地面上方（抵消底部偏移）
                 finalPosition = hit.point - new Vector2(0f, bottomOffset);
-
+                Debug.Log(playerController.transform.position);
                 Debug.Log("设置玩家位置：" + finalPosition);
                
             }
@@ -77,9 +76,11 @@ public class StartEffectController : MonoBehaviour
 
             // 设置玩家位置
             playerController.transform.position = finalPosition;
-            
+            Debug.Log(playerController.transform.position);
             // 启动控制逻辑
             playerController.StartControl(controlInput, controlDuration);
+            // playerController.ForceGroundCheck();
+            Debug.Log(playerController.transform.position);
         }
         else
         {
