@@ -267,7 +267,10 @@
 					"height": 720,
 					"defUid": 263,
 					"px": [1350,522],
-					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": false, "__tile": null, "defUid": 879, "realEditorValues": [] }
+					],
 					"__worldX": 22698,
 					"__worldY": -3942
 				},
@@ -283,8 +286,30 @@
 					"height": 540,
 					"defUid": 263,
 					"px": [3042,702],
-					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": false, "__tile": null, "defUid": 879, "realEditorValues": [] }
+					],
 					"__worldX": 24390,
+					"__worldY": -3762
+				},
+				{
+					"__identifier": "CameraBound",
+					"__grid": [13,19],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#43D7C7",
+					"iid": "b9357580-1030-11f0-b8ae-8973278c0188",
+					"width": 972,
+					"height": 540,
+					"defUid": 263,
+					"px": [486,702],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": -1, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": false, "__tile": null, "defUid": 879, "realEditorValues": [] }
+					],
+					"__worldX": 21834,
 					"__worldY": -3762
 				},
 				{
@@ -294,12 +319,18 @@
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#43D7C7",
-					"iid": "b9357580-1030-11f0-b8ae-8973278c0188",
+					"iid": "44398130-1030-11f0-b8ae-c519ccb1c377",
 					"width": 960,
 					"height": 540,
 					"defUid": 263,
 					"px": [522,702],
-					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": -1, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] }],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": 10, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": true, "__tile": null, "defUid": 879, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
+					],
 					"__worldX": 21870,
 					"__worldY": -3762
 				}
