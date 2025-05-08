@@ -31,6 +31,10 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     public Animator previewAnim;
     public Transform previewTrans;
 
+    [Header("同步")]
+    public SpriteRenderer SourceRenderer;
+    public SpriteRenderer PreviewRenderer;
+
     private List<Transform> trackTrans = new List<Transform>();
 
     public bool ifUpDown = false;
@@ -103,6 +107,14 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
     }
 
+    private void LateUpdate()
+    {
+        if (PreviewRenderer.gameObject.activeInHierarchy)
+        {
+            PreviewRenderer.sprite = SourceRenderer.sprite;
+        }
+    }
+
     public bool TriggerMove()
     {
         if (!isMoving)
@@ -140,10 +152,10 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
         atA = !atA;
         boxAnim.SetTrigger("TurnBack");
-        previewAnim.SetTrigger("TurnBack");
+        //previewAnim.SetTrigger("TurnBack");
         yield return StartCoroutine(FlipTracksFade(cooldownDuration));
         boxAnim.SetTrigger("TurnBack");
-        previewAnim.SetTrigger("TurnBack");
+        //previewAnim.SetTrigger("TurnBack");
         if (reverse == atA)
         {
             if (ifUpDown)
