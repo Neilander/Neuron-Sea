@@ -561,13 +561,13 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
     #region 限制控制
     private float controlInput;
-    public void StartControl(float controlInput, float time)
+    public void StartControl(float controlInput, float time, bool isRight)
     {
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
         ifGetControlledOutside.Refresh(time);
         // transform.GetComponent<Animator>().SetBool("isGrounded",true);
         // transform.GetComponent<Animator>().SetFloat("Speed",0.5f);
-        this.controlInput = Mathf.Clamp(controlInput, 0, 1);
+        this.controlInput = Mathf.Clamp(controlInput, 0, isRight ? 1 : -1);
         Debug.Log(transform.position);
 
     }

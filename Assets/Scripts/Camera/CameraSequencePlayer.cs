@@ -44,6 +44,8 @@ public class CameraSequencePlayer : MonoBehaviour
     private Coroutine currentSequence;  // 当前正在执行的序列
     private bool isPlaying = false;     // 是否正在播放序列
 
+    private IlerpCompanion lerpCompanion;
+
     private void Awake()
     {
         // 组件检查
@@ -70,6 +72,7 @@ public class CameraSequencePlayer : MonoBehaviour
         {
             pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
         }
+        lerpCompanion = GetComponent<IlerpCompanion>();
     }
 
     private void Start()
@@ -164,7 +167,8 @@ public class CameraSequencePlayer : MonoBehaviour
             cameraTransition.fromPPU,
             cameraTransition.toPPU,
             cameraTransition.transitionDuration,
-            cameraTransition.transitionCurve
+            cameraTransition.transitionCurve,
+            lerpCompanion
         ));
 
         // 触发过渡后事件
@@ -184,7 +188,7 @@ public class CameraSequencePlayer : MonoBehaviour
     /// <summary>
     /// 平滑过渡PPU值的协程
     /// </summary>
-    private IEnumerator TransitionPPU(int startPPU, int targetPPU, float duration, AnimationCurve curve)
+    private IEnumerator TransitionPPU(int startPPU, int targetPPU, float duration, AnimationCurve curve,IlerpCompanion cp)
     {
         // 确保起始值正确
         pixelPerfectCamera.assetsPPU = startPPU;
@@ -193,6 +197,7 @@ public class CameraSequencePlayer : MonoBehaviour
 
         while (elapsedTime < duration)
         {
+            Debug.Log("正在进行pputransition");
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
 
@@ -204,12 +209,13 @@ public class CameraSequencePlayer : MonoBehaviour
 
             // 应用到摄像机
             pixelPerfectCamera.assetsPPU = currentPPU;
-
+            if (cp != null) cp.DoWhenLerp(t);
             yield return null;
         }
 
         // 确保最终设置为目标值
         pixelPerfectCamera.assetsPPU = targetPPU;
+        if (cp != null) cp.DoWhenLerp(1);
     }
 
     /// <summary>
@@ -238,4 +244,10 @@ public class CameraSequencePlayer : MonoBehaviour
     {
         return isPlaying;
     }
+}
+
+public interface IlerpCompanion
+{
+
+    void DoWhenLerp(float t);
 }
