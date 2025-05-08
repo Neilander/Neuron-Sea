@@ -79,7 +79,26 @@ public class levelManager : MonoBehaviour
                 cameraData.SetRenderer(sceneIndex - 1);
             }
             LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel), true);
-            AudioManager.Instance.Play(BGMClip.Level1);
+            for (int i = 0; i < 4; i++)
+            {
+                if(i == sceneIndex)
+                {
+                    AudioManager.Instance.Play((BGMClip)i);
+                }
+                else
+                {
+                    AudioManager.Instance.Stop((BGMClip)i);
+                    AudioManager.Instance.Stop((WhiteNoiseClip)i);
+                }
+            }
+            if (sceneIndex == 1)
+            {
+                AudioManager.Instance.Play(WhiteNoiseClip.Scene1);
+            }
+            else
+            {
+                AudioManager.Instance.Stop(WhiteNoiseClip.Scene1);
+            }
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
 
 

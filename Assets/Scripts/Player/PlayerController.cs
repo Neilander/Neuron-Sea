@@ -315,15 +315,18 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
         //沿用的部分
         animator.SetFloat("Speed", Mathf.Abs(Speed.x));
-        if (!inMoveSound && Mathf.Abs(Speed.x) > 0)
+        if (!inMoveSound && Mathf.Abs(Speed.x) > 0 && OnGround)
         {
             inMoveSound = true;
-            AudioManager.Instance.Play(SFXClip.Walk);
+            AudioManager.Instance.Play((SFXClip)levelManager.instance.sceneIndex + 17);
         }
-        else if (inMoveSound && Mathf.Abs(Speed.x) == 0)
+        else if (inMoveSound && !(Mathf.Abs(Speed.x) > 0 && OnGround))
         {
             inMoveSound = false;
-            AudioManager.Instance.Stop(SFXClip.Walk);
+            for (int i = 18; i < 21; i++)
+            {
+                AudioManager.Instance.Stop((SFXClip)i);
+            }
         }
     }
 
@@ -714,7 +717,12 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     // 新增：单独控制输入的方法
     public void DisableInput()
     {
-        canInput = false;
+        canInput = false; 
+        inMoveSound = false;
+        for (int i = 18; i < 21; i++)
+        {
+            AudioManager.Instance.Stop((SFXClip)i);
+        }
     }
 
     public void EnableInput()
