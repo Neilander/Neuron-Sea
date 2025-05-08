@@ -148,7 +148,10 @@
 					"height": 540,
 					"defUid": 263,
 					"px": [1350,558],
-					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": false, "__tile": null, "defUid": 879, "realEditorValues": [] }
+					],
 					"__worldX": -8946,
 					"__worldY": -9702
 				},
@@ -164,7 +167,10 @@
 					"height": 540,
 					"defUid": 263,
 					"px": [2862,378],
-					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] }],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": 0, "__tile": null, "defUid": 878, "realEditorValues": [] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": false, "__tile": null, "defUid": 879, "realEditorValues": [] }
+					],
 					"__worldX": -7434,
 					"__worldY": -9882
 				},
@@ -228,8 +234,33 @@
 					"height": 540,
 					"defUid": 263,
 					"px": [702,630],
-					"fieldInstances": [{ "__identifier": "Priority", "__type": "Float", "__value": -1, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] }],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": -1, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [-1] }] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": false, "__tile": null, "defUid": 879, "realEditorValues": [] }
+					],
 					"__worldX": -9594,
+					"__worldY": -9630
+				},
+				{
+					"__identifier": "CameraBound",
+					"__grid": [39,17],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": null,
+					"__smartColor": "#43D7C7",
+					"iid": "de495030-1030-11f0-b8ae-61f39f837dac",
+					"width": 960,
+					"height": 540,
+					"defUid": 263,
+					"px": [1422,630],
+					"fieldInstances": [
+						{ "__identifier": "Priority", "__type": "Float", "__value": 10, "__tile": null, "defUid": 878, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+						{ "__identifier": "IsStory", "__type": "Bool", "__value": true, "__tile": null, "defUid": 879, "realEditorValues": [{
+							"id": "V_Bool",
+							"params": [ true ]
+						}] }
+					],
+					"__worldX": -8874,
 					"__worldY": -9630
 				}
 			]
