@@ -205,10 +205,12 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         selfGridPos = gridPos;
         if (ifInPreview)
         {
+            Color c = Color.white;
+            c.a = 0;
             previewObj.transform.position = recordPos - anchor.transform.localPosition +
                 (ifAdjustY ? Vector3.up * adjustYAmount[ExpectedSize.x - 1] : Vector3.zero)+
                 (IfSubstituePreview ? substitueRenderer.transform.parent.localPosition : Vector3.zero);
-            previewObj.SetActive(false);
+            previewObj.GetComponent<SpriteRenderer>().color = c;
             StartCoroutine(WhatCanISay(renderer.material));
             renderer.material = switchMaterial;
             renderer.material.SetFloat("_KaiShiShiJian", Time.unscaledTime);
@@ -221,8 +223,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     IEnumerator WhatCanISay(Material originMaterial)
     {
-        yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime); 
-        previewObj.SetActive(true);
+        yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime);
+        previewObj.GetComponent<SpriteRenderer>().color = Color.white;
         yield return new WaitForSecondsRealtime(renderer.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
         renderer.material = originMaterial;
 
