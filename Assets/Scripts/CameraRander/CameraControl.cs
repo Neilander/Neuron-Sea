@@ -11,6 +11,7 @@ public class CameraControl : MonoBehaviour
     public Transform target;
     //已经播过一次，true：播过，false：没播过
     public bool hasLoadOnce;
+    public bool ifReverTutorialTrigger = false;
     
     public Transform startTarget;
     private Camera cam;
@@ -43,6 +44,7 @@ public class CameraControl : MonoBehaviour
     public float yOffset = 0.5f;
 
     private Animator ani;
+    private float realSmoothSpeed;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -77,8 +79,9 @@ public class CameraControl : MonoBehaviour
     private void Awake(){
         Instance = this;
         if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
-            hasLoadOnce = true;
+            hasLoadOnce = !ifReverTutorialTrigger;
         }
+        realSmoothSpeed = smoothSpeed;
     }
 
     void Start(){
@@ -87,7 +90,8 @@ public class CameraControl : MonoBehaviour
             !hasLoadOnce) {
             // setted = true;
             GridManager.Instance.LockStates(true);
-            IgnoreHorizontalLimit();
+            //IgnoreHorizontalLimit();
+            IgnoreCameraLimit();
             FindObjectOfType<PlayerController>().DisableInput();
         }
         if (hasLoadOnce) {
@@ -180,13 +184,14 @@ public class CameraControl : MonoBehaviour
             smoothTargetPosition = desiredPos;
 
             // 平滑插值移动
-            transform.position = Vector3.Lerp(transform.position, smoothTargetPosition, Time.deltaTime * smoothSpeed);
+            transform.position = Vector3.Lerp(transform.position, smoothTargetPosition, Time.deltaTime * realSmoothSpeed);
 
             // 到达目标，停止平滑
             if (Vector3.Distance(transform.position, smoothTargetPosition) < 0.01f)
             {
                 transform.position = smoothTargetPosition;
                 isTransitioning = false;
+                realSmoothSpeed = smoothSpeed;
             }
         }
         else
@@ -195,6 +200,37 @@ public class CameraControl : MonoBehaviour
             transform.position = desiredPos;
         }
     }
+
+    Vector3 calculateDesiredPos()
+    {
+        Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
+        CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
+
+        if (limitToUse != null)
+        {
+            if (!ignoreHorizontalLimit && limitToUse.left.HasValue && limitToUse.right.HasValue)
+            {
+                float leftBound = limitToUse.left.Value + halfWidth;
+                float rightBound = limitToUse.right.Value - halfWidth;
+                if (leftBound < rightBound)
+                {
+                    desiredPos.x = Mathf.Clamp(desiredPos.x, leftBound, rightBound);
+                }
+            }
+
+            if (limitToUse.top.HasValue || limitToUse.bottom.HasValue)
+            {
+                float topBound = limitToUse.top.HasValue ? limitToUse.top.Value - halfHeight : float.MaxValue;
+                float bottomBound = limitToUse.bottom.HasValue ? limitToUse.bottom.Value + halfHeight : float.MinValue;
+                if (bottomBound < topBound)
+                {
+                    desiredPos.y = Mathf.Clamp(desiredPos.y, bottomBound, topBound);
+                }
+            }
+        }
+        return desiredPos;
+    }
+
     /// <summary>
     /// 忽略左右边界限制（X轴）
     /// </summary>
@@ -236,8 +272,9 @@ public class CameraControl : MonoBehaviour
     /// <summary>
     /// 恢复摄像机边界限制
     /// </summary>
-    public void RestoreCameraLimit()
+    public void RestoreCameraLimit(bool ifChangeSS = false ,float tempSmoothSpeed = 0)
     {
+        if(ifChangeSS)realSmoothSpeed = tempSmoothSpeed;
         ignoreLimit = false;
     }
     public void ClearLimitRegion(CameraRegionTrigger sender)
@@ -259,6 +296,23 @@ public class CameraControl : MonoBehaviour
                 setted = false;
                 isTransitioning = true; // ✅ 清空限制，也平滑
             }
+        }
+        else if (queued && queuedLimit != null && queuedLimit.setter == sender )
+        {
+            queuedLimit = null;
+            queued = false;
+            Debug.Log("替换了当前");
+            isTransitioning = false;
+        }
+    }
+
+    public void DirectSetPos()
+    {
+        if (isTransitioning)
+        {
+            transform.position = calculateDesiredPos();
+            isTransitioning = false;
+            realSmoothSpeed = smoothSpeed;
         }
     }
 
