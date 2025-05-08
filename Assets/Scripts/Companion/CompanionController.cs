@@ -184,7 +184,7 @@ public class CompanionController : MonoBehaviour
         startMode = false;
         transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
-        transform.localScale = new Vector3(1f, 1f, 1f);
+        // transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
         
         if(BigCamera!=null)
