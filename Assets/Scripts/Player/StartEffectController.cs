@@ -43,7 +43,7 @@ public class StartEffectController : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public void TriggerStartEffect()
+    public void TriggerStartEffect(bool isRight)
     {
         playerController = FindFirstObjectByType<PlayerController>();
         if (playerController != null && startPosition != null)
@@ -78,7 +78,7 @@ public class StartEffectController : MonoBehaviour
             playerController.transform.position = finalPosition;
             Debug.Log(playerController.transform.position);
             // 启动控制逻辑
-            playerController.StartControl(controlInput, controlDuration);
+            playerController.StartControl(controlInput, controlDuration, isRight);
             // playerController.ForceGroundCheck();
             Debug.Log(playerController.transform.position);
         }

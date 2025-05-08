@@ -50,7 +50,7 @@ public class levelManager : MonoBehaviour
 
 
 
-    const int sceneLimit = 2;
+    const int sceneLimit = 3;
 
     // 添加位置监测相关变量
     [Header("位置监测")]
@@ -288,7 +288,7 @@ public class levelManager : MonoBehaviour
 
                             // // 开始走路动画 - 走向原始出生点
                             // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
-                            effectController.TriggerStartEffect();
+                            effectController.TriggerStartEffect(true);
                             Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
                         }
@@ -494,7 +494,7 @@ public class levelManager : MonoBehaviour
         {
             recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
             FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
-            FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+            FindAnyObjectByType<StartEffectController>().TriggerStartEffect(true);
             //需要获取到当前关卡的初始为止，把StartEffectController设置到该位置；下面这个是临时的
             //StartCoroutine(DelayEffect());
         }
@@ -525,10 +525,20 @@ public class levelManager : MonoBehaviour
         }
         else
         {
-            recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), true);
-            FindAnyObjectByType<StartEffectController>().TriggerStartEffect();
+            recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), false);
+            FindAnyObjectByType<StartEffectController>().TriggerStartEffect(false);
+            Transform entities = currentLevelGO.transform.Find("Entities");
+            if (entities != null)
+            {
+                foreach (Transform child in entities)
+                {
+                    if (child.name.StartsWith("Piece"))
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                }
+            }
         }
-
     }
 
     public void SwitchToBeforeLevel_Direct()
