@@ -85,10 +85,9 @@ public class CameraControl : MonoBehaviour
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
             !hasLoadOnce) {
-            
-            setted = true;
+            // setted = true;
             GridManager.Instance.LockStates(true);
-            // IgnoreHorizontalLimit();
+            IgnoreHorizontalLimit();
             FindObjectOfType<PlayerController>().DisableInput();
         }
         if (hasLoadOnce) {
