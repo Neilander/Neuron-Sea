@@ -65,8 +65,8 @@ public class StartEffectController : MonoBehaviour
             
                 // 设置玩家最终位置在地面上方（抵消底部偏移）
                 finalPosition = hit.point - new Vector2(0f, bottomOffset);
-                Debug.Log(playerController.transform.position);
-                Debug.Log("设置玩家位置：" + finalPosition);
+                //Debug.Log(playerController.transform.position);
+                //Debug.Log("设置玩家位置：" + finalPosition);
                
             }
             else

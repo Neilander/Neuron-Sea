@@ -99,7 +99,7 @@ public partial class PlayerController : MonoBehaviour
 
     public void MovePosition(Vector2 targetPosition)
     {
-        Debug.Log("我更新了");
+        //Debug.Log("我更新了");
         //TODO : ������Ҫ������ײ���
         Position = targetPosition;
         transform.position = Position;
