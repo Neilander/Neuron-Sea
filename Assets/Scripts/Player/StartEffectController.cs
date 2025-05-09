@@ -43,7 +43,7 @@ public class StartEffectController : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public void TriggerStartEffect(bool isRight)
+    public void TriggerStartEffect(bool isRight, float? specialTime = null)
     {
         playerController = FindFirstObjectByType<PlayerController>();
         if (playerController != null && startPosition != null)
@@ -65,8 +65,8 @@ public class StartEffectController : MonoBehaviour
             
                 // 设置玩家最终位置在地面上方（抵消底部偏移）
                 finalPosition = hit.point - new Vector2(0f, bottomOffset);
-                Debug.Log(playerController.transform.position);
-                Debug.Log("设置玩家位置：" + finalPosition);
+                //Debug.Log(playerController.transform.position);
+                //Debug.Log("设置玩家位置：" + finalPosition);
                
             }
             else
@@ -78,7 +78,7 @@ public class StartEffectController : MonoBehaviour
             playerController.transform.position = finalPosition;
             Debug.Log(playerController.transform.position);
             // 启动控制逻辑
-            playerController.StartControl(controlInput, controlDuration, isRight);
+            playerController.StartControl(controlInput, specialTime == null?controlDuration:(float)specialTime, isRight);
             // playerController.ForceGroundCheck();
             Debug.Log(playerController.transform.position);
         }

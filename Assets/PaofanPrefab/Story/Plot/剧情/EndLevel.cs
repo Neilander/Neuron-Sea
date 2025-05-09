@@ -15,6 +15,7 @@ public class EndLevel : MonoBehaviour
     private bool isFading = false;
     private void OnTriggerEnter2D(Collider2D other){
         if (!other.CompareTag("Player")) return;
+        other.GetComponent<PlayerController>().CheckEdge = true;
         isFading = true;
         StartCoroutine(FadeAndLoadScene());
         

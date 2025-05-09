@@ -53,7 +53,12 @@ PrefabInstance:
     - target: {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484101079240436611, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2033680214464422443, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}
@@ -179,6 +184,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TeleportDoor Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6667943124777106081, guid: 27d026be3c3cb4cc2be86da963080eff,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7971402884392604430, guid: 27d026be3c3cb4cc2be86da963080eff,
         type: 3}

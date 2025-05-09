@@ -10,7 +10,21 @@ public class CameraControl : MonoBehaviour
     public static CameraControl Instance{get; private set;}
     public Transform target;
     //已经播过一次，true：播过，false：没播过
-    public bool hasLoadOnce;
+    //public bool hasLoadOnce;
+    private bool _hasLoadOnce;
+
+    public bool hasLoadOnce
+    {
+        get => _hasLoadOnce;
+        set
+        {
+            if (_hasLoadOnce != value)
+            {
+                _hasLoadOnce = value;
+                Debug.Log("hasLoadOnce 被改动了，现在是: " + value);
+            }
+        }
+    }
     public bool ifReverTutorialTrigger = false;
     
     public Transform startTarget;
@@ -18,7 +32,20 @@ public class CameraControl : MonoBehaviour
     private float halfWidth;
     private float halfHeight;
 
-    public bool setted = false;
+    private bool _setted = false;
+
+    public bool Setted
+    {
+        get => _setted;
+        set
+        {
+            if (_setted != value)
+            {
+                _setted = value;
+                Debug.Log("setted 被改动了，现在是: " + value);
+            }
+        }
+    }
     private bool queued = false;
     private CameraLimitRegion currentLimit = null;
     private CameraLimitRegion queuedLimit = null;
@@ -45,6 +72,7 @@ public class CameraControl : MonoBehaviour
 
     private Animator ani;
     private float realSmoothSpeed;
+    public bool specialStartForScene1 = false;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -78,23 +106,23 @@ public class CameraControl : MonoBehaviour
 
     private void Awake(){
         Instance = this;
-        if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
-            hasLoadOnce = !ifReverTutorialTrigger;
-        }
+        
+        
         realSmoothSpeed = smoothSpeed;
     }
 
     void Start(){
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
-            !hasLoadOnce) {
+            specialStartForScene1) {
             // setted = true;
             GridManager.Instance.LockStates(true);
             //IgnoreHorizontalLimit();
             IgnoreCameraLimit();
             FindObjectOfType<PlayerController>().DisableInput();
+            Debug.Log("正常触发");
         }
-        if (hasLoadOnce) {
+        if (!specialStartForScene1) {
             target=FindObjectOfType<PlayerController>().transform;
             
         }
@@ -107,11 +135,12 @@ public class CameraControl : MonoBehaviour
         
         if (levelManager.instance.isStartStory&& 
             levelManager.instance.currentLevelIndex == 1&&
-            !hasLoadOnce) {
+            specialStartForScene1) {
             if (companionController != null) {
                 companionController.SetTarget(null);
             }
             StartCoroutine(BeginningDelay(1f));
+            Debug.Log("正常触发");
         }
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;
@@ -152,7 +181,7 @@ public class CameraControl : MonoBehaviour
         }
         //Debug.Log("相机被限制，使用的是"+(setted?"currentLimit":"defaultLimit"));
         // ✅ 选择使用 currentLimit 或 defaultLimit
-        CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
+        CameraLimitRegion limitToUse = Setted ? currentLimit : defaultLimit;
 
         if (limitToUse != null)
         {
@@ -180,6 +209,7 @@ public class CameraControl : MonoBehaviour
         // ✅ 是否平滑移动中
         if (isTransitioning)
         {
+            
             // 每帧更新目标位置
             smoothTargetPosition = desiredPos;
 
@@ -204,7 +234,7 @@ public class CameraControl : MonoBehaviour
     Vector3 calculateDesiredPos()
     {
         Vector3 desiredPos = new Vector3(target.position.x, target.position.y + yOffset, transform.position.z);
-        CameraLimitRegion limitToUse = setted ? currentLimit : defaultLimit;
+        CameraLimitRegion limitToUse = Setted ? currentLimit : defaultLimit;
 
         if (limitToUse != null)
         {
@@ -248,16 +278,29 @@ public class CameraControl : MonoBehaviour
     }
     public void SetLimitRegion(CameraLimitRegion newRegion)
     {
-        if (setted)
+        if (Setted)
         {
-            Debug.Log("设置到 queue");
-            queuedLimit = newRegion;
+            if (currentLimit.setter.priority >= newRegion.setter.priority)
+            {
+                Debug.Log("设置到 queue");
+                queuedLimit = newRegion;
+            }
+            else
+            {
+                Debug.Log("抢占先机");
+                queuedLimit = currentLimit;
+
+                currentLimit = newRegion;
+                isTransitioning = true;
+            }
             queued = true;
+
         }
         else
         {
+            Debug.Log("没有已经设置的，直接来");
             currentLimit = newRegion;
-            setted = true;
+            Setted = true;
             isTransitioning = true; // ✅ 开启平滑过渡
         }
     }
@@ -279,7 +322,7 @@ public class CameraControl : MonoBehaviour
     }
     public void ClearLimitRegion(CameraRegionTrigger sender)
     {
-        if (setted && currentLimit != null && currentLimit.setter == sender)
+        if (Setted && currentLimit != null && currentLimit.setter == sender)
         {
             if (queued)
             {
@@ -293,7 +336,7 @@ public class CameraControl : MonoBehaviour
             {
                 currentLimit = null;
                 Debug.Log("移除了当前");
-                setted = false;
+                Setted = false;
                 isTransitioning = true; // ✅ 清空限制，也平滑
             }
         }

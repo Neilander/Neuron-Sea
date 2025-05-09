@@ -157,9 +157,15 @@ public class AudioManager : MonoBehaviour
     {
         if (sfxSourceDict.TryGetValue(key, out var source))
         {
-            source.Stop();
-            Destroy(source);
-            sfxSourceDict.Remove(key);
+            if (source.loop)
+            {
+                source.loop = false;
+            }
+            else
+            {
+                source.Stop();
+            }
+            StartCoroutine(DestroyWhenDone(source, key));
         }
     }
 
@@ -188,9 +194,10 @@ public class AudioManager : MonoBehaviour
 
 public enum BGMClip
 {
-    Title,
-    Level1,
-    BossFight
+    SceneBegin,
+    Scene1,
+    Scene2,
+    Scene3,
 }
 
 public enum WhiteNoiseClip
@@ -202,7 +209,7 @@ public enum WhiteNoiseClip
 
 public enum SFXClip
 {
-    Walk,
+    Teleport,
     Jump,
     Drop,
     Switch,
@@ -212,5 +219,18 @@ public enum SFXClip
     PickUpCollectable,
     ObjSelection,
     BulletContinune,
-    PlayerDeath
+    PlayerDeath,
+    Scene1Spike,
+    MoveBox,
+    BoomIdle,
+    BoomStart,
+    BoomExplosion,
+    BoomEnd,
+    MoveBoxTurnBack,
+    Scene1Walk,
+    Scene2Walk,
+    Scene3Walk,
+    Scene3Spike,
+    TeleportDoor,
+    BoomTouch,
 }

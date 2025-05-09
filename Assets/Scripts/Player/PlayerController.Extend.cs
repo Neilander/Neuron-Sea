@@ -19,7 +19,7 @@ public enum LevelEnterWay
 }
 
 /// <summary>
-/// Íæ¼Ò²Ù×÷¿ØÖÆÆ÷
+/// ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 public partial class PlayerController : MonoBehaviour
 {
@@ -28,8 +28,8 @@ public partial class PlayerController : MonoBehaviour
     int moveX;
 
     private float jumpResponseTimer;
-    private float jumpGraceTimer;                //ÍÁÀÇÊ±¼ä¼ÆÊýÆ÷
-    private float jumpCooldownTimer;                //ÌøÔ¾ÀäÈ´Ê±¼ä¼ÆÊýÆ÷
+    private float jumpGraceTimer;                //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private float jumpCooldownTimer;                //ï¿½ï¿½Ô¾ï¿½ï¿½È´Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     private bool onGround;
 
@@ -61,7 +61,7 @@ public partial class PlayerController : MonoBehaviour
         hurtCollider = new Rect(boxCollider.offset * scale, boxCollider.size * scale * 0.7f);
 
         this.level_enter_way = level_enter_way;
-        //¸ù¾Ý½øÈëµÄ·½Ê½,¾ö¶¨³õÊ¼×´Ì¬
+        //ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½Ä·ï¿½Ê½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼×´Ì¬
         if (level_enter_way == LevelEnterWay.FromRight || level_enter_way == LevelEnterWay.FromDownToLeft)
         {
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
@@ -81,25 +81,26 @@ public partial class PlayerController : MonoBehaviour
         return jumpGraceTimer > 0 && jumpCooldownTimer <= 0;
     }
 
-    //´¦ÀíÌøÔ¾,ÌøÔ¾Ê±ºò£¬»á¸øÌøÔ¾Ç°·½Ò»¸ö¶îÍâµÄËÙ¶È
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾,ï¿½ï¿½Ô¾Ê±ï¿½ò£¬»ï¿½ï¿½ï¿½ï¿½Ô¾Ç°ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
     public void Jump()
     {
         GameInput.Jump.OnTrigger();
 
         jumpCooldownTimer = Constants.JumpCooldown;
-        jumpGraceTimer = 0f;              //ÖØÖÃÍÁÀÇÊ±¼ä
+        jumpGraceTimer = 0f;              //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
         jumpResponseTimer = Constants.JumpResponseTime;
 
         this.Speed = new Vector2(Speed.x + Constants.JumpXBoost * moveX, Constants.JumpSpeed);
 
-        //ÑØÓÃµÄ²¿·Ö
+        //ï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
         animator.SetTrigger("Jump");
         AudioManager.Instance.Play(SFXClip.Jump);
     }
 
     public void MovePosition(Vector2 targetPosition)
     {
-        //TODO : ÕâÀïÐèÒª¿¼ÂÇÅö×²¼ì²â
+        //Debug.Log("æˆ‘æ›´æ–°äº†");
+        //TODO : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½
         Position = targetPosition;
         transform.position = Position;
     }
@@ -107,29 +108,29 @@ public partial class PlayerController : MonoBehaviour
 
 public static class Constants
 {
-    public static float Gravity = 60f; //ÖØÁ¦
+    public static float Gravity = 60f; //ï¿½ï¿½ï¿½ï¿½
 
-    public static float HalfGravThreshold = 4f; //ÖÍ¿ÕÊ±¼äãÐÖµ£¬ÊúÖ±ËÙ¶È¾ø¶ÔÖµÐ¡ÓÚ´ËÊýÊ±ÖØÁ¦¼õ°ë
-    public static float MaxFall = -16f; //ÆÕÍ¨×î´óÏÂÂäËÙ¶È
+    public static float HalfGravThreshold = 4f; //ï¿½Í¿ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ù¶È¾ï¿½ï¿½ï¿½ÖµÐ¡ï¿½Ú´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public static float MaxFall = -16f; //ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 
-    public static float MaxRun = 7f;//×î´óÒÆ¶¯ËÙ¶È
-    //ºáÏò¿ÕÆø×èÁ¦±¶ÂÊ
+    public static float MaxRun = 7f;//ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ù¶ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public static float AirMult = 0.65f;
-    //ÒÆ¶¯¼ÓËÙ¶È
+    //ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
     public static float RunAccel = 100f;
-    //ÊÔÍ¼µÖ¿¹¼õËÙÊ±µÄ¼ÓËÙ¶È
+    //ï¿½ï¿½Í¼ï¿½Ö¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ä¼ï¿½ï¿½Ù¶ï¿½
     public static float RunReduce = 40f;
 
-    //ÌøÔ¾Ïà¹Ø²ÎÊý
-    public static float JumpSpeed = 11.6f;  //×î´óÌøÔ¾ËÙ¶È
-    public static float JumpResponseTime = 0.2f; //ÌøÔ¾ÏìÓ¦Ê±¼ä(ÌøÆðÊ±,»á³ÖÐøÏìÓ¦ÌøÔ¾°´¼ü[JumpResponseTime]Ãë,Ó°ÏìÌøÔ¾µÄ×î¸ß¸ß¶È);
-    public static float JumpXBoost = 2f; //ÆðÌøºáÏò¼ÓËÙ
-    public static float JumpGraceTime = 0.12f;//ÍÁÀÇÊ±¼ä
-    public static float JumpCooldown = .15f;//ÌøÔ¾ÀäÈ´Ê±¼ä
-    public static float JumpPreInputTime = .08f;//ÌøÔ¾Ô¤ÊäÈëÊ±¼ä
-    public static float JumpMinEffectiveTime = .13f;//ÌøÔ¾×î¶Ì³ÖÐøÊ±¼ä
+    //ï¿½ï¿½Ô¾ï¿½ï¿½Ø²ï¿½ï¿½ï¿½
+    public static float JumpSpeed = 11.6f;  //ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾ï¿½Ù¶ï¿½
+    public static float JumpResponseTime = 0.2f; //ï¿½ï¿½Ô¾ï¿½ï¿½Ó¦Ê±ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Ê±,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½[JumpResponseTime]ï¿½ï¿½,Ó°ï¿½ï¿½ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ß¸ß¶ï¿½);
+    public static float JumpXBoost = 2f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public static float JumpGraceTime = 0.12f;//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+    public static float JumpCooldown = .15f;//ï¿½ï¿½Ô¾ï¿½ï¿½È´Ê±ï¿½ï¿½
+    public static float JumpPreInputTime = .08f;//ï¿½ï¿½Ô¾Ô¤ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+    public static float JumpMinEffectiveTime = .13f;//ï¿½ï¿½Ô¾ï¿½ï¿½Ì³ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 
     #region Corner Correct
-    public static int UpwardCornerCorrection = 3; //ÏòÉÏÒÆ¶¯£¬XÖáÉÏ±ßÔµÐ£ÕýµÄ×î´ó¾àÀë
+    public static int UpwardCornerCorrection = 3; //ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½Ï±ï¿½ÔµÐ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     #endregion
 }

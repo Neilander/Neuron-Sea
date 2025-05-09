@@ -37,7 +37,7 @@ public class StoryEnd : MonoBehaviour
         companionController.canFollow=false;
         
         //摄像头跟随伙伴
-        camControl.target = companionController.transform;
+        //camControl.target = companionController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = 5f; // 设置平滑速度
         camControl.IgnoreHorizontalLimit();

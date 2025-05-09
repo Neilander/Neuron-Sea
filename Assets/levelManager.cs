@@ -16,7 +16,7 @@ public class levelManager : MonoBehaviour
     public Transform respawnTarget;
     public int currentLevelIndex = 0;  // 当前关卡编号
 
-    private GameObject currentLevelGO;
+    public GameObject currentLevelGO { get; private set; }
     private CameraControl cameraControl;
     public GameObject backGround;
 
@@ -44,6 +44,7 @@ public class levelManager : MonoBehaviour
     public float walkInDistance = 10f; // 从重生点左边多远开始走
     private bool isWalkingToSpawn = false;
     private bool isRestarting = false;
+    public float specialStartTime = 1;
     
     private Vector3 lockedPosition = Vector3.zero;
     private float positionLockDuration = 2f; // 锁定持续时间
@@ -78,8 +79,57 @@ public class levelManager : MonoBehaviour
             {
                 cameraData.SetRenderer(sceneIndex - 1);
             }
-            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel), true);
-            AudioManager.Instance.Play(BGMClip.Level1);
+            bool ifDirect = true;
+            switch (sceneIndex)
+            {
+                case 1:
+                    Debug.Log("至少在这里");
+                    if (PlayerPrefs.GetInt("hasLoadOnce") == 1)
+                    {
+                        Debug.Log("开始场景");
+                        CameraControl.Instance.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                    }
+                    break;
+
+                case 2:
+                    if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 1)
+                    {
+                        cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                        if (!cameraControl.hasLoadOnce)
+                            ifDirect = false;
+                    }
+                    break;
+
+                case 3:
+                    if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 1)
+                    {
+                        cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                        if (!cameraControl.hasLoadOnce)
+                            ifDirect = false;
+                    }
+                    break;
+            }
+            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
+            for (int i = 0; i < 4; i++)
+            {
+                if(i == sceneIndex)
+                {
+                    AudioManager.Instance.Play((BGMClip)i);
+                }
+                else
+                {
+                    AudioManager.Instance.Stop((BGMClip)i);
+                    AudioManager.Instance.Stop((WhiteNoiseClip)i);
+                }
+            }
+            if (sceneIndex == 1)
+            {
+                AudioManager.Instance.Play(WhiteNoiseClip.Scene1);
+            }
+            else
+            {
+                AudioManager.Instance.Stop(WhiteNoiseClip.Scene1);
+            }
             SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
 
 
@@ -100,6 +150,8 @@ public class levelManager : MonoBehaviour
 
 
     }
+
+    
 
     // 保存解锁状态
     private void SaveUnlockedLevels()
@@ -162,9 +214,17 @@ public class levelManager : MonoBehaviour
         }
     }
 
-    public Rect LoadLevel(int newLevelIndex, bool ifSetPlayer)
+    public void RefreshEdgeCheck()
+    {
+        FindAnyObjectByType<PlayerController>().CheckEdge = true;
+    }
+
+    public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
     {
         if (GridManager.Instance != null) GridManager.Instance.RefreshSelection();
+        PlayerController controller = FindAnyObjectByType<PlayerController>();
+        controller.CheckEdge = false;
+        Invoke("RefreshEdgeCheck",0.1f);
         string newLevelName = $"Level_{newLevelIndex}";
         GameObject newLevelGO = FindInactiveObjectByName($"Level_{newLevelIndex}");
         Debug.Log("加载" + newLevelName);
@@ -203,14 +263,14 @@ public class levelManager : MonoBehaviour
         if (data != null)
         {
             cameraControl.SetDefaultRegionFromRect(data.levelBound);
-            Debug.Log("已经加载level bound");
+            //Debug.Log("已经加载level bound");
         }
         else
         {
             Debug.LogWarning($"关卡 {newLevelName} 上没有找到 LevelData 组件！");
         }
 
-        PlayerController controller = FindAnyObjectByType<PlayerController>();
+        //PlayerController controller = FindAnyObjectByType<PlayerController>();
         if (isStartStory && newLevelGO.name == "Level_1")
         {
             controller.DisableInput();
@@ -223,6 +283,7 @@ public class levelManager : MonoBehaviour
 
             foreach (Transform child in entities) {
                 if (cameraControl.hasLoadOnce) {
+                    //Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
@@ -231,7 +292,7 @@ public class levelManager : MonoBehaviour
                         DeathController deathController = FindAnyObjectByType<DeathController>();
                         if (deathController != null) {
                             deathController.respawnTarget = respawnTarget;
-                            Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
+                            //Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
                         }
                         else {
                             Debug.LogError("未找到DeathController，无法设置重生点！");
@@ -242,6 +303,7 @@ public class levelManager : MonoBehaviour
                 }
                 else 
                 {
+                    Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
@@ -256,6 +318,22 @@ public class levelManager : MonoBehaviour
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
 
+
+                        switch (sceneIndex)
+                        {
+                            case 1:
+                                PlayerPrefs.SetInt("hasLoadOnce",1);
+                                break;
+
+                            case 2:
+                                PlayerPrefs.SetInt("hasScene2LoadOnce", 1);
+                                break;
+
+                            case 3:
+                                PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
+                                break;
+                        }
+                        
                         break;
                     }
                 }
@@ -269,13 +347,76 @@ public class levelManager : MonoBehaviour
                         // 无论何种情况，始终将开始特效放在原始重生点位置
                         effectController.transform.position = respawnTarget.position;
 
-                        // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
-                        if (newLevelIndex == 13 && ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn) {
+                    // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
+                    /*
+                    if (!ifSetPlayerToAndNoMovement||(newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce)|| (newLevelIndex == 25 && !isRestarting&& !cameraControl.hasLoadOnce))
+                    {
+                        // // 禁用玩家输入
+                        // controller.DisableInput();
+                        //
+                        // 计算出生点的实际位置（带偏移）
+                        Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
+                        //Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                        // 设置玩家初始位置（在重生点左边）
+                        Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                        // 移动玩家到左侧位置
+                        controller.MovePosition(startPos);
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                        // // 开始走路动画 - 走向原始出生点
+                        // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
+                        effectController.TriggerStartEffect(true, specialStartTime);
+                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                        
+                    }
+                    else
+                    {
+                        controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                    }*/
+                    Debug.Log("错误检测0");
+                    if (ifSetPlayerToAndNoMovement)
+                    {
+                        controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                    }
+                    else
+                    {
+                        Debug.Log("错误检测1");
+                        if ((newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce) || (newLevelIndex == 25 && !isRestarting && !cameraControl.hasLoadOnce))
+                        {
+                            Debug.Log("错误检测2");
                             // // 禁用玩家输入
                             // controller.DisableInput();
                             //
                             // 计算出生点的实际位置（带偏移）
                             Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
+                            //Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                            // 设置玩家初始位置（在重生点左边）
+                            Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                            // 移动玩家到左侧位置
+                            controller.MovePosition(startPos);
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                            // // 开始走路动画 - 走向原始出生点
+                            // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
+                            effectController.TriggerStartEffect(true, specialStartTime);
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                        }
+                    }
+
+                    /*
+                        if (newLevelIndex == 13 && !ifSetPlayer && !isRestarting && enableLevel13SpecialSpawn) {
+                        Debug.Log("不像在这啊");
+                        // // 禁用玩家输入
+                        // controller.DisableInput();
+                        //
+                        // 计算出生点的实际位置（带偏移）
+                        Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
                             Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
                             // 设置玩家初始位置（在重生点左边）
@@ -288,17 +429,19 @@ public class levelManager : MonoBehaviour
 
                             // // 开始走路动画 - 走向原始出生点
                             // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
-                            effectController.TriggerStartEffect(true);
+                            effectController.TriggerStartEffect(true, specialStartTime);
                             Debug.Log(FindObjectOfType<PlayerController>().transform.position);
 
                         }
                         else if (ifSetPlayer) {
                             // 其他情况（包括死亡重生和重新加载）直接放在重生点
+                            Debug.Log("冲冲冲");
                             controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
-                        }
-                    }
+                        }*/
                 }
-                else {
+                }
+            else {
+                Debug.Log("难道在这？");
                     // 如果没有找到重生点，创建一个默认的重生点
                     GameObject defaultRespawnObj = new GameObject("Respawn_Default");
                     defaultRespawnObj.transform.parent = entities;
@@ -321,7 +464,12 @@ public class levelManager : MonoBehaviour
             {
                 Debug.LogWarning("未找到 Entities 物体");
             }
-        
+        if (!cameraControl.hasLoadOnce && (sceneIndex == 1))
+        {
+            cameraControl.specialStartForScene1 = true;
+        }
+        cameraControl.hasLoadOnce = true;
+
         if (backGround == null)
         {
             GameObject backgroundObject = GameObject.FindGameObjectWithTag("BackGround");
@@ -363,7 +511,7 @@ public class levelManager : MonoBehaviour
         if (GridManager.Instance != null) GridManager.Instance.transform.position = intPos;
         //Vector3 topCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1f, 0f));
 
-        if (ifSetPlayer)
+        if (ifSetPlayerToAndNoMovement)
         {
             PlayerController player = FindAnyObjectByType<PlayerController>();
             Debug.Log($"[位置监测] 设置玩家位置后: 位置={player?.transform.position}, 关卡={newLevelIndex}, 是否重启={isRestarting}");
@@ -488,10 +636,11 @@ public class levelManager : MonoBehaviour
         if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
         {
             //Destroy(gameObject);
-            SceneManager.LoadScene(sceneIndex + 1);
+            //SceneManager.LoadScene(sceneIndex + 1);
         }
         else
         {
+            Debug.Log("我要走入"+ Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel));
             recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
             FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
             FindAnyObjectByType<StartEffectController>().TriggerStartEffect(true);
@@ -525,8 +674,9 @@ public class levelManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("返回时，现在的Level是"+currentLevelIndex);
             recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex - 1, minLevel, maxLevel), false);
-            FindAnyObjectByType<StartEffectController>().TriggerStartEffect(false);
+            //FindAnyObjectByType<StartEffectController>().TriggerStartEffect(false);
             Transform entities = currentLevelGO.transform.Find("Entities");
             if (entities != null)
             {

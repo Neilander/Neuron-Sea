@@ -96,7 +96,7 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
-            if (!CameraControl.Instance.hasLoadOnce) {
+            if (CameraControl.Instance.specialStartForScene1) {
                 // if (csp == null) {
                 //     Debug.LogError("没有打开镜头序列");
                 // }
@@ -147,7 +147,7 @@ public class CompanionController : MonoBehaviour
             &&!hasStopped
             &&levelManager.instance.isStartStory
             && levelManager.instance.currentLevelIndex == 1
-            && !CameraControl.Instance.hasLoadOnce
+            && CameraControl.Instance.specialStartForScene1
             ) {
             hasStopped = true;
             print("我到达目的地了！");
@@ -255,15 +255,16 @@ public class CompanionController : MonoBehaviour
 /// <returns></returns>
     private IEnumerator MoveRightCoroutine(float speed, float duration, GameObject panelToShow){
         float elapsed = 0f;
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        //Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
         while (elapsed < duration) {
-            rb.velocity = new Vector2(speed, rb.velocity.y);
+            //rb.velocity = new Vector2(speed, rb.velocity.y);
+            transform.position += new Vector3(speed, 0, 0)*Time.deltaTime;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        rb.velocity = Vector2.zero;
+        //rb.velocity = Vector2.zero;
 
         // 打开面板
         if (panelToShow != null) {
