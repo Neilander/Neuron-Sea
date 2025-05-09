@@ -31,16 +31,18 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void ContinueGame(){
-        if (isPaused) {
-            isPaused = false;
-            Time.timeScale = 1;
+        if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
+            if (isPaused) {
+                isPaused = false;
+                Time.timeScale = 1;
 
-            pauseMenu.SetActive(false);
-        }
-        else {
-            isPaused = true;
-            Time.timeScale = 0;
-            pauseMenu.SetActive(true);
+                pauseMenu.SetActive(false);
+            }
+            else {
+                isPaused = true;
+                Time.timeScale = 0;
+                pauseMenu.SetActive(true);
+            }
         }
     }
 

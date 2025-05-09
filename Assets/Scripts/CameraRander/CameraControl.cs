@@ -13,6 +13,7 @@ public class CameraControl : MonoBehaviour
     //public bool hasLoadOnce;
     private bool _hasLoadOnce;
 
+    public bool endTeach;
     public bool hasLoadOnce
     {
         get => _hasLoadOnce;

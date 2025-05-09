@@ -9,6 +9,7 @@ public class EndAndMove : MonoBehaviour
     public Image UIphoto;
 
     public Sprite sprite1;
+    public Sprite sprite3;
     private bool isSwitchActive;
     public StoryTrigger[] storyTriggers;
     private bool isSwitchCompleted;
@@ -75,13 +76,13 @@ public class EndAndMove : MonoBehaviour
     public void EnablePicture(){
         // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
         UIphoto.gameObject.SetActive(true);
-        StartCoroutine(DisablePictureAfterDelay(2f));
+        StartCoroutine(DisablePictureAfterDelay(2f,sprite1));
         
     }
     
-    private IEnumerator DisablePictureAfterDelay(float disableTime){
+    private IEnumerator DisablePictureAfterDelay(float disableTime,Sprite sprite){
         yield return new WaitForSeconds(disableTime);
-        if(UIphoto.sprite==sprite1)
+        if(UIphoto.sprite==sprite)
         UIphoto.gameObject.SetActive(false);
     }
 
@@ -167,8 +168,9 @@ public class EndAndMove : MonoBehaviour
             if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
                 // 交换完成
                 isSwitchCompleted = true;
-                StartCoroutine(DisablePictureAfterDelay(1f));
+                StartCoroutine(DisablePictureAfterDelay(1f,sprite3));
                 Log("交换物体完成!");
+                camControl.endTeach = true;
                 // 等待玩家确认（按键）
                 yield return new WaitForSecondsRealtime(0.5f);
                 break;
@@ -177,7 +179,7 @@ public class EndAndMove : MonoBehaviour
             timer += Time.unscaledDeltaTime;
             yield return null;
         }
-
+        
         // 结束交换模式
         // EndSwitchMode();
     }
@@ -260,10 +262,9 @@ public class EndAndMove : MonoBehaviour
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
         GridManager.Instance.LockStates(false);
         UIphoto.gameObject.SetActive(true);
-        text = UIphoto.gameObject.transform.Find("Text (TMP)");
-        text.GetComponent<TMP_Text>().text = ExchangeText;
-        // StartCoroutine(StartSwitchMode());
-        StartCoroutine(DisablePictureAfterDelay(3f));
+        UIphoto.sprite = sprite3;
+        StartCoroutine(StartSwitchMode());
+        // StartCoroutine(DisablePictureAfterDelay(5f,sprite3));
     }
     // 直接移动摄像机的方法
     private IEnumerator MoveDirectly()

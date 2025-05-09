@@ -7,20 +7,20 @@ using UnityEngine.UI;
 
 public class TriggerJUmp : MonoBehaviour
 {
-    public TMP_Text JumpImage;
+    public Image JumpImage;
 
     private bool istriggered;
 
-    [SerializeField] private string JumpText="跳跃";
+    [SerializeField] private Sprite sprite2;
 
     private void OnTriggerEnter2D(Collider2D other){
         if (other.transform.GetComponent<PlayerController>()!= null&&!istriggered) {
             print("Player entered");
             if (JumpImage != null) {
-                if (!JumpImage.transform.parent.gameObject.activeInHierarchy) {
-                    JumpImage.transform.parent.gameObject.SetActive(true);
+                if (!JumpImage.transform.gameObject.activeInHierarchy) {
+                    JumpImage.transform.gameObject.SetActive(true);
                 }
-                JumpImage.text = JumpText;
+                JumpImage.sprite = sprite2;
                 istriggered = true;
                 StartCoroutine(Delay());
             }
@@ -31,6 +31,8 @@ public class TriggerJUmp : MonoBehaviour
 
     private IEnumerator Delay(){
         yield return new WaitForSecondsRealtime(5f);
-        JumpImage.transform.parent.gameObject.SetActive(false);
+        if (JumpImage.sprite == sprite2) {
+            JumpImage.transform.gameObject.SetActive(false);
+        }
     }
 }
