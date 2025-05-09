@@ -10,7 +10,21 @@ public class CameraControl : MonoBehaviour
     public static CameraControl Instance{get; private set;}
     public Transform target;
     //已经播过一次，true：播过，false：没播过
-    public bool hasLoadOnce;
+    //public bool hasLoadOnce;
+    private bool _hasLoadOnce;
+
+    public bool hasLoadOnce
+    {
+        get => _hasLoadOnce;
+        set
+        {
+            if (_hasLoadOnce != value)
+            {
+                _hasLoadOnce = value;
+                Debug.Log("hasLoadOnce 被改动了，现在是: " + value);
+            }
+        }
+    }
     public bool ifReverTutorialTrigger = false;
     
     public Transform startTarget;
@@ -58,6 +72,7 @@ public class CameraControl : MonoBehaviour
 
     private Animator ani;
     private float realSmoothSpeed;
+    public bool specialStartForScene1 = false;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -99,14 +114,15 @@ public class CameraControl : MonoBehaviour
     void Start(){
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
-            !hasLoadOnce) {
+            specialStartForScene1) {
             // setted = true;
             GridManager.Instance.LockStates(true);
             //IgnoreHorizontalLimit();
             IgnoreCameraLimit();
             FindObjectOfType<PlayerController>().DisableInput();
+            Debug.Log("正常触发");
         }
-        if (hasLoadOnce) {
+        if (!specialStartForScene1) {
             target=FindObjectOfType<PlayerController>().transform;
             
         }
@@ -119,11 +135,12 @@ public class CameraControl : MonoBehaviour
         
         if (levelManager.instance.isStartStory&& 
             levelManager.instance.currentLevelIndex == 1&&
-            !hasLoadOnce) {
+            specialStartForScene1) {
             if (companionController != null) {
                 companionController.SetTarget(null);
             }
             StartCoroutine(BeginningDelay(1f));
+            Debug.Log("正常触发");
         }
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;

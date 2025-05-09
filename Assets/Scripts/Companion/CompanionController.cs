@@ -96,7 +96,7 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
-            if (!CameraControl.Instance.hasLoadOnce) {
+            if (CameraControl.Instance.specialStartForScene1) {
                 // if (csp == null) {
                 //     Debug.LogError("没有打开镜头序列");
                 // }
@@ -147,7 +147,7 @@ public class CompanionController : MonoBehaviour
             &&!hasStopped
             &&levelManager.instance.isStartStory
             && levelManager.instance.currentLevelIndex == 1
-            && !CameraControl.Instance.hasLoadOnce
+            && CameraControl.Instance.specialStartForScene1
             ) {
             hasStopped = true;
             print("我到达目的地了！");
