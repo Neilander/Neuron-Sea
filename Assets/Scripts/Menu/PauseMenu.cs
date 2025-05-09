@@ -32,7 +32,8 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void ContinueGame(){
-        if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
+        //不是storyMode才能控制,storyMode就不能控制
+        // if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
             if (isPaused) {
                 isPaused = false;
                 Time.timeScale = 1;
@@ -44,7 +45,7 @@ public class PauseMenu : MonoBehaviour
                 Time.timeScale = 0;
                 pauseMenu.SetActive(true);
             }
-        }
+        // }
     }
 
     public void SelectGame(){
@@ -56,7 +57,13 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SettingGame(){
+        print("我是设置面板,我被电了");
         settingMenu.SetActive(true);
+        print("注意看,开了");
+        Canvas canvas = settingMenu.GetComponent<Canvas>();
+        // if (canvas != null) {
+            canvas.sortingOrder = 100; // 设置一个比其他 UI 更高的值
+        // }
     }
 
     public void GoToTitle(){
