@@ -829,6 +829,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &345757202 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3291989174814360631, guid: 8a1b358adbe008a4594739bf8ee8631a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5001130857715401144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &348019879
 GameObject:
   m_ObjectHideFlags: 0
@@ -16579,6 +16591,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1434813721}
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ForceEnterStory3
+      objectReference: {fileID: 0}
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: EndAndMove, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: -5013209539728589228, guid: 62a88527e1fb96c4ab59c2f6dae09295,
+        type: 3}
+      propertyPath: DestroyToDo.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: -3963943116433552214, guid: 62a88527e1fb96c4ab59c2f6dae09295,
         type: 3}
       propertyPath: m_Mesh
@@ -17369,7 +17416,7 @@ PrefabInstance:
     - target: {fileID: 4245881583801033862, guid: 90d4bb10edb1aa9418452e69c22ff43b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 352.88
+      value: 287
       objectReference: {fileID: 0}
     - target: {fileID: 4245881583801033862, guid: 90d4bb10edb1aa9418452e69c22ff43b,
         type: 3}
@@ -19160,6 +19207,11 @@ PrefabInstance:
       propertyPath: tempSmoothSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6538805494033901421, guid: 8a1b358adbe008a4594739bf8ee8631a,
+        type: 3}
+      propertyPath: UIphoto
+      value: 
+      objectReference: {fileID: 345757202}
     - target: {fileID: 6538805494033901421, guid: 8a1b358adbe008a4594739bf8ee8631a,
         type: 3}
       propertyPath: mainCamera

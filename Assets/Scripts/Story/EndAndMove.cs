@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EndAndMove : MonoBehaviour
 {
-    public GameObject UIphoto;
+    public Image UIphoto;
+
+    public Sprite sprite1;
     private bool isSwitchActive;
     public StoryTrigger[] storyTriggers;
     private bool isSwitchCompleted;
@@ -71,15 +74,15 @@ public class EndAndMove : MonoBehaviour
 
     public void EnablePicture(){
         // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
-        UIphoto.SetActive(true);
+        UIphoto.gameObject.SetActive(true);
         StartCoroutine(DisablePictureAfterDelay(2f));
         
     }
     
     private IEnumerator DisablePictureAfterDelay(float disableTime){
         yield return new WaitForSeconds(disableTime);
-        if(UIphoto.transform.GetChild(0).transform.GetComponent<TMP_Text>().text==ExchangeText)
-        UIphoto.SetActive(false);
+        if(UIphoto.sprite==sprite1)
+        UIphoto.gameObject.SetActive(false);
     }
 
     public void ReturnCameraToPlayer(){
@@ -152,7 +155,7 @@ public class EndAndMove : MonoBehaviour
         //
         //     // 切换到交换状态
         //     GridManager.Instance.StartState(SwitchState.Switch);
-        //     text=UIphoto.transform.Find("Text (TMP)");
+        //     text=UIphoto.gameObject.transform.Find("Text (TMP)");
         //     text.GetComponent<TMP_Text>().text = "交换";
         //     Log("已进入交换状态");
         // }
@@ -198,7 +201,7 @@ public class EndAndMove : MonoBehaviour
         camControl.target = playerController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = smoothSpeed; // 设置平滑速度
-        UIphoto.SetActive(false);
+        UIphoto.gameObject.SetActive(false);
     }
     // 使用目标跟随的方法
     private void UseTargetFollow()
@@ -215,7 +218,7 @@ public class EndAndMove : MonoBehaviour
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = 5f; // 设置平滑速度
         
-        // text = UIphoto.transform.Find("Text (TMP)");
+        // text = UIphoto.gameObject.transform.Find("Text (TMP)");
         // text.GetComponent<TMP_Text>().text = "交换";
         Log("已设置摄像机目标并开启平滑过渡");
         // StoryTrigger tri = transform.GetComponent<StoryTrigger>();
@@ -244,8 +247,8 @@ public class EndAndMove : MonoBehaviour
         // playerController.EnableMovement();
         // // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
         //
-        // UIphoto.SetActive(true);
-        // text = UIphoto.transform.Find("Text (TMP)");
+        // UIphoto.gameObject.SetActive(true);
+        // text = UIphoto.gameObject.transform.Find("Text (TMP)");
         // text.GetComponent<TMP_Text>().text = ExchangeText;
         // // StartCoroutine(StartSwitchMode());
         //
@@ -256,8 +259,8 @@ public class EndAndMove : MonoBehaviour
         playerController.EnableMovement();
         // myCameraLimit.transform.GetComponent<CameraRegionTrigger>().RestoreCameraLimit();
         GridManager.Instance.LockStates(false);
-        UIphoto.SetActive(true);
-        text = UIphoto.transform.Find("Text (TMP)");
+        UIphoto.gameObject.SetActive(true);
+        text = UIphoto.gameObject.transform.Find("Text (TMP)");
         text.GetComponent<TMP_Text>().text = ExchangeText;
         // StartCoroutine(StartSwitchMode());
         StartCoroutine(DisablePictureAfterDelay(3f));
