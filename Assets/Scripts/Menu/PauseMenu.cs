@@ -32,8 +32,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void ContinueGame(){
-        //不是storyMode才能控制,storyMode就不能控制
-        // if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
+        if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
             if (isPaused) {
                 isPaused = false;
                 Time.timeScale = 1;
@@ -45,7 +44,7 @@ public class PauseMenu : MonoBehaviour
                 Time.timeScale = 0;
                 pauseMenu.SetActive(true);
             }
-        // }
+        }
     }
 
     public void SelectGame(){

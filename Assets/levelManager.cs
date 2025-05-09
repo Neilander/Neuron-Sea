@@ -743,7 +743,7 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        if (cameraControl.endTeach&&!(StoryManager.Instance.currentState==GameState.StoryMode)) {
+        if (!(StoryManager.Instance._currentState==GameState.StoryMode)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
             recordRect = LoadLevel(currentLevelIndex, true);
