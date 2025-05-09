@@ -158,6 +158,7 @@ public class StoryManager : MonoBehaviour
     private void OnStoryModeExit(){
         GridManager.Instance.LockStates(false);
         _currentState= GameState.ActionMode;
+        print("我能点了");
     }
     
     

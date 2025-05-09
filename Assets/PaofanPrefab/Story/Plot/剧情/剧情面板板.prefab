@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 624, y: -258}
-  m_SizeDelta: {x: 1337.4911, y: 1534.8611}
+  m_AnchoredPosition: {x: 618.56226, y: -242.7}
+  m_SizeDelta: {x: 1335.1161, y: 1565.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1439149355696543809
 CanvasRenderer:
@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 46, y: -207.19}
-  m_SizeDelta: {x: 617.8974, y: 922.34}
+  m_AnchoredPosition: {x: 85, y: -220.17}
+  m_SizeDelta: {x: 883.0381, y: 1264}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6995641104724789717
 CanvasRenderer:
@@ -385,7 +385,7 @@ RectTransform:
   m_GameObject: {fileID: 1674667645922053039}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
+  m_LocalScale: {x: 0.95, y: 0.95, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7864827262169640073}
@@ -637,7 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2497e5425fe1e846996d845d17f5182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
+  _currentState: 0
   playerController: {fileID: 0}
   dialoguePanel: {fileID: 1674667645922053039}
   dialogueText: {fileID: 8654011049014631196}
@@ -973,7 +973,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -548, y: -220.18}
+  m_AnchoredPosition: {x: -548, y: -159}
   m_SizeDelta: {x: 883.0381, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7329075232099870768

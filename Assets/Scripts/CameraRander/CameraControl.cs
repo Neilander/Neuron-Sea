@@ -110,10 +110,10 @@ public class CameraControl : MonoBehaviour
         
         
         realSmoothSpeed = smoothSpeed;
+
         if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
             target = FindObjectOfType<PlayerController>().transform;
         }
-        
     }
 
     void Start(){
