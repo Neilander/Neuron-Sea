@@ -16,7 +16,7 @@ public class TriggerJUmp : MonoBehaviour
     
 
     private void OnTriggerEnter2D(Collider2D other){
-        if (other.transform.GetComponent<PlayerController>()!= null&&!(PlayerPrefs.GetInt("isTriggered")==1)) {
+        if (other.transform.GetComponent<PlayerController>()!= null) {
             print("Player entered");
             if (JumpImage != null) {
                 if (!JumpImage.transform.gameObject.activeInHierarchy) {
