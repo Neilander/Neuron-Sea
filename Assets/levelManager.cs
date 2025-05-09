@@ -130,7 +130,7 @@ public class levelManager : MonoBehaviour
             {
                 AudioManager.Instance.Stop(WhiteNoiseClip.Scene1);
             }
-            SceneManager.sceneLoaded += OnSceneLoaded; // ⬅️ 注册场景加载回调
+            StartCoroutine(RegisterNextFrame());
 
 
 
@@ -151,7 +151,11 @@ public class levelManager : MonoBehaviour
 
     }
 
-    
+    private IEnumerator RegisterNextFrame()
+    {
+        yield return null; // 等待当前帧结束（也就是本次 sceneLoaded 已经发出）
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
     // 保存解锁状态
     private void SaveUnlockedLevels()
@@ -283,7 +287,7 @@ public class levelManager : MonoBehaviour
 
             foreach (Transform child in entities) {
                 if (cameraControl.hasLoadOnce) {
-                    //Debug.Log("多次触发");
+                    Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
                         this.respawnTarget = child;

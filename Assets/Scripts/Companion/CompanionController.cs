@@ -271,10 +271,11 @@ public class CompanionController : MonoBehaviour
         if (panelToShow != null) {
             panelToShow.SetActive(true);
         }
-        VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        //VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        /*
         if (videoPlayer != null) {
             videoPlayer.loopPointReached += OnVideoEnd;
-        }
+        }*/
     }
 
     // 视频播放完后回到主菜单
