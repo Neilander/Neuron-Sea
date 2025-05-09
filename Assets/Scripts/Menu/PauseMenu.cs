@@ -28,6 +28,7 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) {
             ContinueGame();
         }
+        // LevelSelectManager.Instance.RefreshButtons();
     }
 
     public void ContinueGame(){
