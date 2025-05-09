@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections.Generic;
 
 public class LevelSelectManager : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] private int[] checkpoints = { 1, 2, 3 };  // 检查点关卡
 
     [Header("Button List")] public Button[] levelButtons; // 按钮数组
+    [Header("收集的Transform")]
+    public Transform scene1;
+    public Transform scene2;
+    public Transform scene3;
 
     [Header("Lock Settings")]
     [SerializeField] private GameObject lockImagePrefab; // 锁的图片预制体
@@ -38,6 +43,7 @@ public class LevelSelectManager : MonoBehaviour
      
 
      #endregion
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -58,6 +64,7 @@ public class LevelSelectManager : MonoBehaviour
 
     void Start()
     {
+        CollectActiveButtonsFrom(scene1, scene2, scene3);
         // 初始化锁实例数组
         lockInstances = new GameObject[levelButtons.Length];
         openLockInstances = new GameObject[levelButtons.Length];
@@ -84,7 +91,39 @@ public class LevelSelectManager : MonoBehaviour
         UpdateLevelLockStatus();
         UpdateSpecialButtons();
     }
-   private void InitializeSpecialButtons()
+
+    public void CollectActiveButtonsFrom(Transform t1, Transform t2, Transform t3)
+    {
+        List<Button> allButtons = new List<Button>();
+
+        AddActiveButtons(t1, allButtons);
+        AddActiveButtons(t2, allButtons);
+        AddActiveButtons(t3, allButtons);
+        if (t1.GetComponent<LevelNameSetter>() != null)
+            t1.GetComponent<LevelNameSetter>().ParseAndSetTexts();
+
+        if (t2.GetComponent<LevelNameSetter>() != null)
+            t2.GetComponent<LevelNameSetter>().ParseAndSetTexts();
+
+        if (t3.GetComponent<LevelNameSetter>() != null)
+            t3.GetComponent<LevelNameSetter>().ParseAndSetTexts();
+
+        levelButtons = allButtons.ToArray();
+        Debug.Log($"共收集到 {levelButtons.Length} 个按钮");
+    }
+
+    private void AddActiveButtons(Transform root, List<Button> list)
+    {
+        if (root == null) return;
+
+        Button[] buttons = root.GetComponentsInChildren<Button>(includeInactive: true);
+        foreach (Button btn in buttons)
+        {
+            if (btn.gameObject.activeInHierarchy)
+                list.Add(btn);
+        }
+    }
+    private void InitializeSpecialButtons()
     {
         if (specialButtons == null || specialButtons.Length < 3) 
         {
