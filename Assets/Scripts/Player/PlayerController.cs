@@ -359,24 +359,34 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         {
             Speed = Vector2.zero;
             animator.SetFloat("Speed", 0);
-            return;
+        }
+        else
+        {
+            if (ifGetControlledOutside.Get())
+            {
+                MoveInControl();
+                RotateInControl();
+            }
+            else if (canInput) // 只有在可以输入时才处理移动和旋转
+            {
+                /*修改前
+                Move();
+                Rotate();
+                CheckJump();
+                */
+                //修改后
+                NewMove();
+            }
+        }
+        if (inMoveSound && (Mathf.Abs(Speed.x) == 0 || !OnGround))
+        {
+            inMoveSound = false;
+            for (int i = 18; i < 21; i++)
+            {
+                AudioManager.Instance.Stop((SFXClip)i);
+            }
         }
 
-        if (ifGetControlledOutside.Get())
-        {
-            MoveInControl();
-            RotateInControl();
-        }
-        else if (canInput) // 只有在可以输入时才处理移动和旋转
-        {
-            /*修改前
-            Move();
-            Rotate();
-            CheckJump();
-            */
-            //修改后
-            NewMove();
-        }
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
 
@@ -725,11 +735,6 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     public void DisableInput()
     {
         canInput = false; 
-        inMoveSound = false;
-        for (int i = 18; i < 21; i++)
-        {
-            AudioManager.Instance.Stop((SFXClip)i);
-        }
     }
 
     public void EnableInput()

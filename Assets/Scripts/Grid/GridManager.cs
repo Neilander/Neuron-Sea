@@ -475,7 +475,7 @@ public class GridManager : MonoBehaviour
         if (isStateLocked && state != SwitchState.None) {
             return;
         }
-        EndState(curState);
+        EndState(curState, state);
 
         switch (state)
         {
@@ -485,7 +485,10 @@ public class GridManager : MonoBehaviour
                 break;
             case SwitchState.Switch:
                 AudioManager.Instance.PauseBGM();
-                AudioManager.Instance.Play(SFXClip.BulletTimeIn);
+                if (curState == SwitchState.None)
+                {
+                    AudioManager.Instance.Play(SFXClip.BulletTimeIn);
+                }
                 AudioManager.Instance.Play(SFXClip.BulletContinune);
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
@@ -502,12 +505,15 @@ public class GridManager : MonoBehaviour
         curState = state;
     }
 
-    private void EndState(SwitchState lastState)
+    private void EndState(SwitchState lastState, SwitchState newState)
     {
         switch (lastState)
         {
             case SwitchState.Switch:
-                AudioManager.Instance.Play(SFXClip.BulletTimeOut);
+                if (newState == SwitchState.None)
+                {
+                    AudioManager.Instance.Play(SFXClip.BulletTimeOut);
+                }
                 AudioManager.Instance.ResumeBGM();
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
@@ -731,7 +737,14 @@ public class GridManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(waitTime);
 
         // ✅ 这里写你想触发的事件
-        StartState(SwitchState.None);
+        if (Input.GetKey(modeCode))
+        {
+            StartState(SwitchState.Switch);
+        }
+        else
+        {
+            StartState(SwitchState.None);
+        }
     }
 
     private bool canViewBothSelection = true;
