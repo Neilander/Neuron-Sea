@@ -79,12 +79,14 @@ public class levelManager : MonoBehaviour
             {
                 cameraData.SetRenderer(sceneIndex - 1);
             }
-
-            switch (currentLevelIndex)
+            bool ifDirect = true;
+            switch (sceneIndex)
             {
                 case 1:
+                    Debug.Log("至少在这里");
                     if (PlayerPrefs.GetInt("hasLoadOnce") == 1)
                     {
+                        Debug.Log("开始场景");
                         CameraControl.Instance.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
                     }
                     break;
@@ -93,6 +95,8 @@ public class levelManager : MonoBehaviour
                     if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 1)
                     {
                         cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                        if (!cameraControl.hasLoadOnce)
+                            ifDirect = false;
                     }
                     break;
 
@@ -100,10 +104,12 @@ public class levelManager : MonoBehaviour
                     if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 1)
                     {
                         cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                        if (!cameraControl.hasLoadOnce)
+                            ifDirect = false;
                     }
                     break;
             }
-            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),false);
+            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
             for (int i = 0; i < 4; i++)
             {
                 if(i == sceneIndex)
@@ -313,7 +319,7 @@ public class levelManager : MonoBehaviour
                         }
 
 
-                        switch (currentLevelIndex)
+                        switch (sceneIndex)
                         {
                             case 1:
                                 PlayerPrefs.SetInt("hasLoadOnce",1);
@@ -458,7 +464,10 @@ public class levelManager : MonoBehaviour
             {
                 Debug.LogWarning("未找到 Entities 物体");
             }
-
+        if (!cameraControl.hasLoadOnce && (sceneIndex == 1))
+        {
+            cameraControl.specialStartForScene1 = true;
+        }
         cameraControl.hasLoadOnce = true;
 
         if (backGround == null)
