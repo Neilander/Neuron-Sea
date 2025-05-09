@@ -173,6 +173,7 @@ public class CompanionController : MonoBehaviour
         print("转向了！");
         GetComponent<Animator>().Play("robot_scan");
         print("播放动画了！");
+        AudioManager.Instance.Play(SFXClip.Scan);
         // 等待动画状态真正进入 robot_move 状态
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("robot_scan"));
 

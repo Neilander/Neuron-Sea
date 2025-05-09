@@ -235,4 +235,5 @@ public enum SFXClip
     BoomTouch,
     TouchMoveBox,
     TouchMoveBoxTurnBack,
+    Scan,
 }
