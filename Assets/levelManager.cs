@@ -79,7 +79,31 @@ public class levelManager : MonoBehaviour
             {
                 cameraData.SetRenderer(sceneIndex - 1);
             }
-            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel), true);
+
+            switch (currentLevelIndex)
+            {
+                case 1:
+                    if (PlayerPrefs.GetInt("hasLoadOnce") == 1)
+                    {
+                        CameraControl.Instance.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                    }
+                    break;
+
+                case 2:
+                    if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 1)
+                    {
+                        cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                    }
+                    break;
+
+                case 3:
+                    if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 1)
+                    {
+                        cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
+                    }
+                    break;
+            }
+            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),false);
             for (int i = 0; i < 4; i++)
             {
                 if(i == sceneIndex)
@@ -318,6 +342,7 @@ public class levelManager : MonoBehaviour
                         effectController.transform.position = respawnTarget.position;
 
                     // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
+                    /*
                     if (!ifSetPlayerToAndNoMovement||(newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce)|| (newLevelIndex == 25 && !isRestarting&& !cameraControl.hasLoadOnce))
                     {
                         // // 禁用玩家输入
@@ -344,6 +369,38 @@ public class levelManager : MonoBehaviour
                     else
                     {
                         controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                    }*/
+                    Debug.Log("错误检测0");
+                    if (ifSetPlayerToAndNoMovement)
+                    {
+                        controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                    }
+                    else
+                    {
+                        Debug.Log("错误检测1");
+                        if ((newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce) || (newLevelIndex == 25 && !isRestarting && !cameraControl.hasLoadOnce))
+                        {
+                            Debug.Log("错误检测2");
+                            // // 禁用玩家输入
+                            // controller.DisableInput();
+                            //
+                            // 计算出生点的实际位置（带偏移）
+                            Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
+                            //Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                            // 设置玩家初始位置（在重生点左边）
+                            Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                            // 移动玩家到左侧位置
+                            controller.MovePosition(startPos);
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+
+                            // // 开始走路动画 - 走向原始出生点
+                            // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
+                            effectController.TriggerStartEffect(true, specialStartTime);
+                            Debug.Log(FindObjectOfType<PlayerController>().transform.position);
+                        }
                     }
 
                     /*
@@ -375,7 +432,7 @@ public class levelManager : MonoBehaviour
                             Debug.Log("冲冲冲");
                             controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
                         }*/
-                    }
+                }
                 }
             else {
                 Debug.Log("难道在这？");
