@@ -56,7 +56,7 @@ public class BeginPanel : MonoBehaviour
     public void StartGame()
     {
         // 首先禁用当前面板
-
+        transform.GetChild(0).gameObject.SetActive(false);
         // 查找名为 "blue" 的对象
         if (blueObject != null)
         {
@@ -70,7 +70,10 @@ public class BeginPanel : MonoBehaviour
                 // 启用组件并播放动画（需指定动画状态名称或哈希）
                 animatorComponent.enabled = true; // 替换为实际动画状态名
                 StartCoroutine(WaitForAnimationAndLoadScene(animatorComponent));
-                gameObject.SetActive(false);
+                Debug.Log("11111");
+                
+                Debug.Log("22222");
+
             }
             else
             {
@@ -112,7 +115,7 @@ public class BeginPanel : MonoBehaviour
     {
         // 等待动画开始播放（避免未初始化状态）
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0);
-
+        Debug.Log("开始播放");
         // 标记是否已经检测到至少一个完整循环
         bool animationCompletedOnce = false;
         float previousTime = 0f;
@@ -136,7 +139,8 @@ public class BeginPanel : MonoBehaviour
             previousTime = currentTime;
             yield return null; // 每帧等待
         }
-
+        Debug.Log("播放完毕");
+        
         // 动画播放完成后加载场景
         LoadGameScene();
     }
