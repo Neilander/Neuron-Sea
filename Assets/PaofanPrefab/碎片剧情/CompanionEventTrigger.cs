@@ -48,6 +48,7 @@ public class CompanionEventTrigger : MonoBehaviour
         {
             Debug.Log("准备播放动画");
             companion.GetComponent<Animator>().Play("robot_scan");
+            AudioManager.Instance.Play(SFXClip.Scan);
             yield return null;
             Debug.Log("已调用Play");
         }
@@ -72,6 +73,7 @@ public class CompanionEventTrigger : MonoBehaviour
             float timer = 0f;
 
             while (timer < 3f) {
+                AudioManager.Instance.Play(SFXClip.Scan);
                 anim.Play(companionAnimation, 0, 0f); // 从头播放
                 yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
                 timer += anim.GetCurrentAnimatorStateInfo(0).length;

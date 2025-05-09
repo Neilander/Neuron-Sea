@@ -119,7 +119,6 @@ public class LevelSelectManager : MonoBehaviour
         Button[] buttons = root.GetComponentsInChildren<Button>(includeInactive: true);
         foreach (Button btn in buttons)
         {
-            if (btn.gameObject.activeInHierarchy)
                 list.Add(btn);
         }
     }

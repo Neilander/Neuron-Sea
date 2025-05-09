@@ -151,10 +151,20 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
     private IEnumerator MoveFromTo(Vector3 start, Vector3 end)
     {
         float time = -moveStanbyDuration;
-        
+        bool playSound = false;
+        float dist = 0f;
         
         while (time < moveDuration)
         {
+            if (time < 0 && time + Time.deltaTime >= 0)
+            {
+                dist = 2f - (target.transform.position - playerController.transform.position).magnitude / 10f;
+                if (dist > 0)
+                {
+                    playSound = true;
+                    AudioManager.Instance.Play(SFXClip.AutoMoveBox, Mathf.Clamp01(dist));
+                }
+            }
             time += Time.deltaTime;
             float t = Mathf.Clamp01(time / moveDuration);
             float curvedT = moveCurve.Evaluate(t);
@@ -165,6 +175,11 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
         // 确保最终精确到达
         MoveStep(end - target.localPosition);
+        if (playSound)
+        {
+            AudioManager.Instance.Stop(SFXClip.AutoMoveBox);
+            AudioManager.Instance.Play(SFXClip.AutoMoveBoxTurnBack, Mathf.Clamp01(dist));
+        }
     }
 
     private IEnumerator FlipTracksFade(float duration)

@@ -128,16 +128,29 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
     private IEnumerator MoveOnce()
     {
+        AudioManager.Instance.Play(SFXClip.BoomTouch);
         isMoving = true;
         yield return new WaitForSeconds(waitTime);
         
         Debug.Log(gameObject.name+"被触发移动，初始的atA状态是"+atA);
         Vector3 start = atA ? pointA : pointB;
         Vector3 end = atA ? pointB : pointA;
-        
+
+        bool playSound = false;
+        float dist = 0f;
+
         float time = -moveStanbyDuration;
         while (time < moveDuration)
         {
+            if (time < 0 && time + Time.deltaTime >= 0)
+            {
+                dist = 2f - (target.transform.position - playerController.transform.position).magnitude / 10f;
+                if (dist > 0)
+                {
+                    playSound = true;
+                    AudioManager.Instance.Play(SFXClip.TouchMoveBox, Mathf.Clamp01(dist));
+                }
+            }
             time += Time.deltaTime;
             float t = Mathf.Clamp01(time / moveDuration);
             float curvedT = moveCurve.Evaluate(t);
@@ -148,7 +161,12 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
 
         // 确保最终精确到达
-        MoveStep(end - target.localPosition);
+        MoveStep(end - target.localPosition); 
+        if (playSound)
+        {
+            AudioManager.Instance.Stop(SFXClip.TouchMoveBox);
+            AudioManager.Instance.Play(SFXClip.TouchMoveBoxTurnBack, Mathf.Clamp01(dist));
+        }
 
         atA = !atA;
         boxAnim.SetTrigger("TurnBack");

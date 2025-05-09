@@ -165,6 +165,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
         GameInput.FixedUpdate(deltaTime);
 
+        bool wasOnGround = onGround;
         #region 更新变量状态
         if (Speed.y <= 0)
         {
@@ -175,6 +176,10 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             this.onGround = false;
         }
         #endregion
+        if(!wasOnGround && onGround)
+        {
+            AudioManager.Instance.Play(SFXClip.Drop);
+        }
 
         animator.SetBool("isGrounded", IsGrounded());
 
