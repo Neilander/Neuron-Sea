@@ -110,12 +110,16 @@ public class CameraControl : MonoBehaviour
         
         
         realSmoothSpeed = smoothSpeed;
+        if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
+            target = FindObjectOfType<PlayerController>().transform;
+        }
+        
     }
 
     void Start(){
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
-            specialStartForScene1) {
+            specialStartForScene1&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)) {
             // setted = true;
             GridManager.Instance.LockStates(true);
             //IgnoreHorizontalLimit();
@@ -127,6 +131,7 @@ public class CameraControl : MonoBehaviour
             target=FindObjectOfType<PlayerController>().transform;
             
         }
+        
         ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
@@ -136,7 +141,7 @@ public class CameraControl : MonoBehaviour
         
         if (levelManager.instance.isStartStory&& 
             levelManager.instance.currentLevelIndex == 1&&
-            specialStartForScene1) {
+            specialStartForScene1&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)) {
             if (companionController != null) {
                 companionController.SetTarget(null);
             }

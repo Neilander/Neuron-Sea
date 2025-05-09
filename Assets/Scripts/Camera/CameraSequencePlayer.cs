@@ -68,7 +68,7 @@ public class CameraSequencePlayer : MonoBehaviour
         }
 
         // 确保在开始时设置初始PPU值
-        if (pixelPerfectCamera != null &&!CameraControl.Instance.hasLoadOnce)
+        if (pixelPerfectCamera != null &&!CameraControl.Instance.hasLoadOnce&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1))
         {
             pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
         }
@@ -90,24 +90,23 @@ public class CameraSequencePlayer : MonoBehaviour
     /// <summary>
     /// 播放完整序列：动画 -> 延迟 -> 相机过渡 -> 延迟
     /// </summary>
-    public void PlaySequence()
-    {
-        if (isPlaying)
-        {
-            Debug.LogWarning("已有序列正在播放！");
-            return;
-        }
+    public void PlaySequence(){
+        if (!(PlayerPrefs.GetInt("hasLoadOnce") == 1)){
+            if (isPlaying) {
+                Debug.LogWarning("已有序列正在播放！");
+                return;
+            }
 
-        if (pixelPerfectCamera == null)
-        {
-            Debug.LogWarning("未找到PixelPerfectCamera组件，无法执行序列！");
-            return;
-        }
+            if (pixelPerfectCamera == null) {
+                Debug.LogWarning("未找到PixelPerfectCamera组件，无法执行序列！");
+                return;
+            }
 
-        // 确保PPU是起始值
-        pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
-        ie = PlayFullSequence();
-        currentSequence = StartCoroutine(ie);
+            // 确保PPU是起始值
+            pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
+            ie = PlayFullSequence();
+            currentSequence = StartCoroutine(ie);
+        }
     }
 
     // void OnDisable(){

@@ -317,7 +317,7 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                if (cameraControl.hasLoadOnce) {
+                if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
@@ -336,7 +336,7 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else 
+                else if (PlayerPrefs.GetInt("hasLoadOnce") == 0)
                 {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
@@ -357,7 +357,8 @@ public class levelManager : MonoBehaviour
                         switch (sceneIndex)
                         {
                             case 1:
-                                PlayerPrefs.SetInt("hasLoadOnce",1);
+                                // PlayerPrefs.SetInt("hasLoadOnce",1);
+                                //在结束播放的时候保存了
                                 break;
 
                             case 2:

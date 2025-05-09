@@ -93,7 +93,8 @@ public class EndAndMove : MonoBehaviour
         // Camera.main.transform.GetComponent<CameraControl>().RestoreCameraLimit();
         FindAnyObjectByType<CompanionController>().canFollow = true;
         camControl.hasLoadOnce=true;
-        PlayerPrefs.SetInt("hasLoadOnce",1);
+        // PlayerPrefs.SetInt("hasLoadOnce",1);
+        //结束跳跃面板时设置PlayerPrefs.SetInt("hasLoadOnce",1)
         FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
         // playerController.EnableMovement();
     }
