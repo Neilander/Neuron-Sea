@@ -168,7 +168,7 @@ public class EndAndMove : MonoBehaviour
             if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
                 // 交换完成
                 isSwitchCompleted = true;
-                StartCoroutine(DisablePictureAfterDelay(1f,sprite3));
+                StartCoroutine(DisablePictureAfterDelay(1f, sprite3));
                 Log("交换物体完成!");
                 camControl.endTeach = true;
                 // 等待玩家确认（按键）
@@ -179,7 +179,7 @@ public class EndAndMove : MonoBehaviour
             timer += Time.unscaledDeltaTime;
             yield return null;
         }
-        
+        StartCoroutine(DisablePictureAfterDelay(1f, sprite3));
         // 结束交换模式
         // EndSwitchMode();
     }

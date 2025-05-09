@@ -8,6 +8,7 @@ using UnityEngine.Serialization;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject settingMenu;
 
     public bool isPaused;
     public string select,settings,beginSceneName;
@@ -28,7 +29,6 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) {
             ContinueGame();
         }
-        // LevelSelectManager.Instance.RefreshButtons();
     }
 
     public void ContinueGame(){
@@ -56,10 +56,10 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SettingGame(){
-        if (SetPanel.Instance != null) SetPanel.Instance.OpenCanvas();
+        settingMenu.SetActive(true);
     }
 
     public void GoToTitle(){
-        SceneManager.LoadScene(beginSceneName);
+        SceneManager.LoadScene(0);
     }
 }

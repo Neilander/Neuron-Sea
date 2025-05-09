@@ -72,6 +72,11 @@ public class CompanionController : MonoBehaviour
             }
         }
 
+        if (levelManager.instance.sceneIndex == 3)
+        {
+            animator.Play("robot3");
+        }
+
         lastPosition = transform.position;
     }
 
@@ -173,6 +178,7 @@ public class CompanionController : MonoBehaviour
         print("转向了！");
         GetComponent<Animator>().Play("robot_scan");
         print("播放动画了！");
+        AudioManager.Instance.Play(SFXClip.Scan);
         // 等待动画状态真正进入 robot_move 状态
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("robot_scan"));
 
@@ -271,10 +277,11 @@ public class CompanionController : MonoBehaviour
         if (panelToShow != null) {
             panelToShow.SetActive(true);
         }
-        VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        //VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        /*
         if (videoPlayer != null) {
             videoPlayer.loopPointReached += OnVideoEnd;
-        }
+        }*/
     }
 
     // 视频播放完后回到主菜单

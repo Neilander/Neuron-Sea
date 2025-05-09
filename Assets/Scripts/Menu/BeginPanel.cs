@@ -20,10 +20,15 @@ public class BeginPanel : MonoBehaviour
     private bool isVideoPlaying = false;
 
     private Image img;
+
+    public bool ifStartVid;
+    public GameObject vidObj;
     // Start is called before the first frame update
     void Start()
     {
         img = volume.GetComponent<Image>();
+
+        ifStartVid = PlayerPrefs.GetInt("BeginSceneVid") ==0;
 
         // 初始化视频播放器设置
         if (videoPlayer != null)
@@ -50,12 +55,32 @@ public class BeginPanel : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("BeginSceneVid", 0);
+    }
+
     public void StartGame()
     {
         // 首先禁用当前面板
         gameObject.SetActive(false);
 
+        if (ifStartVid)
+        {
+            if (vidObj != null && ifStartVid)
+            {
+                vidObj.SetActive(true);
+                gameObject.SetActive(false);
+                PlayerPrefs.SetInt("BeginSceneVid", 1);
+            }
+        }
+        else
+        {
+            LoadGameScene();
+        }
+
         // 检查是否需要播放视频
+        /*
         if (videoPlayer != null && videoCanvas != null)
         {
             // 激活视频画布
@@ -72,7 +97,7 @@ public class BeginPanel : MonoBehaviour
             // 如果没有视频组件，直接加载场景
             Debug.LogWarning("未找到视频播放器组件或视频画布，将直接加载场景");
             LoadGameScene();
-        }
+        }*/
     }
 
     // 视频播放完成的回调
@@ -99,7 +124,7 @@ public class BeginPanel : MonoBehaviour
     }
 
     // 加载游戏场景
-    private void LoadGameScene()
+    public void LoadGameScene()
     {
         SceneManager.LoadScene(LevelOneName);
     }

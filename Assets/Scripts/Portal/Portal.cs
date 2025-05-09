@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -131,6 +132,8 @@ public class Portal : MonoBehaviour
             Debug.Log("使用备用方法传送玩家到: " + targetPortal.position);
         }
         */
+
+        AudioManager.Instance.Play(SFXClip.Teleport);
 
         // 原来的位置和目标位置，用于计算偏移量
         Vector2 originalPosition = player.transform.position;
