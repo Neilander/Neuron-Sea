@@ -109,6 +109,12 @@ public class levelManager : MonoBehaviour
                     }
                     break;
             }
+            if (PlayerPrefs.GetInt("carryLevel") != 0)
+            {
+                currentLevelIndex = PlayerPrefs.GetInt("carryLevel");
+                PlayerPrefs.SetInt("carryLevel", 0);
+            }
+                
             LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
             for (int i = 0; i < 4; i++)
             {
@@ -223,8 +229,33 @@ public class levelManager : MonoBehaviour
         FindAnyObjectByType<PlayerController>().CheckEdge = true;
     }
 
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("carryLevel", 0);
+    }
+
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
     {
+        if (newLevelIndex > maxLevel || newLevelIndex < minLevel)
+        {
+            if (newLevelIndex >= 1 && newLevelIndex <= 12)
+            {
+                PlayerPrefs.SetInt("carryLevel", newLevelIndex);
+                SceneManager.LoadScene("场景1剧情");
+            }
+            else if (newLevelIndex >= 13 && newLevelIndex <= 24)
+            {
+                PlayerPrefs.SetInt("carryLevel", newLevelIndex);
+                SceneManager.LoadScene("场景2剧情");
+            } else if (newLevelIndex >= 25 && newLevelIndex <= 36)
+            {
+                PlayerPrefs.SetInt("carryLevel", newLevelIndex);
+                SceneManager.LoadScene("场景3剧情");
+            }
+            return new Rect();
+        }
+
+
         if (GridManager.Instance != null) GridManager.Instance.RefreshSelection();
         PlayerController controller = FindAnyObjectByType<PlayerController>();
         controller.CheckEdge = false;
