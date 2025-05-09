@@ -91,9 +91,30 @@ public class CameraControl : MonoBehaviour
 
     private void Awake(){
         Instance = this;
-        if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
-            hasLoadOnce = !ifReverTutorialTrigger;
+        switch (levelManager.instance.currentLevelIndex)
+        {
+            case 1:
+                if (PlayerPrefs.GetInt("hasLoadOnce") == 1)
+                {
+                    hasLoadOnce = !ifReverTutorialTrigger;
+                }
+                break;
+
+            case 2:
+                if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 1)
+                {
+                    hasLoadOnce = !ifReverTutorialTrigger;
+                }
+                break;
+
+            case 3:
+                if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 1)
+                {
+                    hasLoadOnce = !ifReverTutorialTrigger;
+                }
+                break;
         }
+        
         realSmoothSpeed = smoothSpeed;
     }
 
