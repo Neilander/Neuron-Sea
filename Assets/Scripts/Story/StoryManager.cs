@@ -24,7 +24,7 @@ public class StoryManager : MonoBehaviour
     public static StoryManager Instance { get; private set; }
 
     [Header("游戏状态设置")]
-    [SerializeField] private GameState currentState = GameState.ActionMode;
+    [SerializeField] public GameState currentState = GameState.ActionMode;
     [SerializeField] private PlayerController playerController; // 玩家控制器引用
     private Rigidbody2D playerRigidbody; // 玩家刚体引用
     private Vector2 savedVelocity; // 保存玩家的速度
@@ -83,7 +83,7 @@ public class StoryManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(transform.parent.gameObject);
+            // DontDestroyOnLoad(transform.parent.gameObject);
         }
         else
         {

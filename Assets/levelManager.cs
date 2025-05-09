@@ -707,10 +707,12 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        isRestarting = true;
-        GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(currentLevelIndex, true);
-        isRestarting = false;
+        if (cameraControl.endTeach&&!(StoryManager.Instance.currentState==GameState.StoryMode)) {
+            isRestarting = true;
+            GridManager.Instance.RenewSwitch();
+            recordRect = LoadLevel(currentLevelIndex, true);
+            isRestarting = false;
+        }
     }
 
     IEnumerator DelayEffect()

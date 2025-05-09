@@ -72,6 +72,11 @@ public class CompanionController : MonoBehaviour
             }
         }
 
+        if (levelManager.instance.sceneIndex == 3)
+        {
+            animator.Play("robot3");
+        }
+
         lastPosition = transform.position;
     }
 
@@ -183,6 +188,7 @@ public class CompanionController : MonoBehaviour
             
         );print("播完了！");
         startMode = false;
+        CameraControl.Instance.specialStartForScene1=false;
         transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
         // transform.localScale = new Vector3(1f, 1f, 1f);

@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class TriggerJUmp1 : MonoBehaviour
 {
-    public TMP_Text JumpImage;
-
+    public Image JumpImage;
+    public Sprite sprite2;
     private void OnTriggerEnter2D(Collider2D other){
         if (other.transform.GetComponent<PlayerController>()!= null) {
             print("Player entered");
-            if (JumpImage != null) {
+            if (JumpImage != null&&JumpImage.sprite==sprite2) {
                 StartCoroutine(StopJumpPanel());
 
             }
@@ -21,6 +21,6 @@ public class TriggerJUmp1 : MonoBehaviour
 
     private IEnumerator StopJumpPanel(){
         yield return new WaitForSecondsRealtime(1f);
-        JumpImage.transform.parent.gameObject.SetActive(false);
+        JumpImage.transform.gameObject.SetActive(false);
     }
 }
