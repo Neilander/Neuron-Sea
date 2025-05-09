@@ -88,6 +88,8 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         {
             Debug.Log("检测到玩家触碰");
             isInCountDown = true;
+            AudioManager.Instance.Play(SFXClip.BoomTouch);
+            AudioManager.Instance.Play(SFXClip.BoomStart);
             //StartCoroutine(ExplodeCountDown(waitTime));
             countDownCor = StartCoroutine(ExplodeCountDownNewWithAnimation());
         }
@@ -271,9 +273,13 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             animator.speed = 1f; // 保险起见，fallback
         }*/
 
+        AudioManager.Instance.Play(SFXClip.BoomExplosion);
         float timer = 0f;
         while (timer < explodeDuration)
         {
+            //if (timer < 0.75f && timer + Time.deltaTime >= 0.75f)
+            //{
+            //}
             timer += Time.deltaTime;
 
             float t = Mathf.Clamp01(timer / explodeDuration);

@@ -107,7 +107,7 @@ public class AudioManager : MonoBehaviour
         whiteNoiseSourceDict[clipKey] = newSource;
     }
 
-    public void Play(SFXClip clipKey)
+    public void Play(SFXClip clipKey, float volumeDebuff = 1f)
     {
         if (!sfxDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
         {
@@ -124,7 +124,7 @@ public class AudioManager : MonoBehaviour
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
         newSource.clip = entry.clip;
         newSource.loop = entry.loop;
-        newSource.volume = entry.volume;
+        newSource.volume = entry.volume * Mathf.Clamp01(volumeDebuff);
         newSource.Play();
 
         sfxSourceDict[clipKey] = newSource;
@@ -221,16 +221,18 @@ public enum SFXClip
     BulletContinune,
     PlayerDeath,
     Scene1Spike,
-    MoveBox,
+    AutoMoveBox,
     BoomIdle,
     BoomStart,
     BoomExplosion,
     BoomEnd,
-    MoveBoxTurnBack,
+    AutoMoveBoxTurnBack,
     Scene1Walk,
     Scene2Walk,
     Scene3Walk,
     Scene3Spike,
     TeleportDoor,
     BoomTouch,
+    TouchMoveBox,
+    TouchMoveBoxTurnBack,
 }
