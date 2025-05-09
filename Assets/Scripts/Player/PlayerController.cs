@@ -108,14 +108,14 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             if (Input.GetKeyDown(KeyCode.R))
                 levelManager.instance.RestartLevel();
 
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                levelManager.instance.SwitchToBeforeLevel_Direct();
-            }
-            else if (Input.GetKeyDown(KeyCode.K))
-            {
-                levelManager.instance.SwitchToNextLevel_Direct();
-            }
+            // if (Input.GetKeyDown(KeyCode.J))
+            // {
+            //     levelManager.instance.SwitchToBeforeLevel_Direct();
+            // }
+            // else if (Input.GetKeyDown(KeyCode.K))
+            // {
+            //     levelManager.instance.SwitchToNextLevel_Direct();
+            // }
         }
 
 
