@@ -28,7 +28,7 @@ public class BeginPanel : MonoBehaviour
     {
         img = volume.GetComponent<Image>();
 
-        ifStartVid = PlayerPrefs.GetInt("BeginSceneVid") ==0;
+        //ifStartVid = PlayerPrefs.GetInt("BeginSceneVid") ==0;
 
         // 初始化视频播放器设置
         if (videoPlayer != null)
@@ -67,7 +67,7 @@ public class BeginPanel : MonoBehaviour
 
         if (ifStartVid)
         {
-            if (vidObj != null && ifStartVid)
+            if (vidObj != null) //&& ifStartVid
             {
                 vidObj.SetActive(true);
                 gameObject.SetActive(false);

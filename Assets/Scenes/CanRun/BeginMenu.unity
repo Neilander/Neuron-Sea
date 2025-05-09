@@ -4675,7 +4675,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 3
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -7808,6 +7808,11 @@ PrefabInstance:
       propertyPath: videoPlayer
       value: 
       objectReference: {fileID: 840120806}
+    - target: {fileID: 2966174856918816947, guid: aa94737122470c745b844b6ee5ffa39b,
+        type: 3}
+      propertyPath: skipVideoOnClick
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3121917607314499404, guid: aa94737122470c745b844b6ee5ffa39b,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -7931,6 +7936,11 @@ PrefabInstance:
     - target: {fileID: 5565053123765222541, guid: aa94737122470c745b844b6ee5ffa39b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219983726230717818, guid: aa94737122470c745b844b6ee5ffa39b,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6898314533306407298, guid: aa94737122470c745b844b6ee5ffa39b,
