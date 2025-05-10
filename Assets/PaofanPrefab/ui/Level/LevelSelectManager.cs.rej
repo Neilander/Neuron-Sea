@@ -1,0 +1,9 @@
+diff a/Assets/PaofanPrefab/ui/Level/LevelSelectManager.cs b/Assets/PaofanPrefab/ui/Level/LevelSelectManager.cs	(rejected hunks)
+@@ -68,6 +68,7 @@
+ 
+     void Start()
+     {
++        RefreshButtons();
+         CollectActiveButtonsFrom(scene1, scene2, scene3);
+         // 初始化锁实例数组
+         lockInstances = new GameObject[levelButtons.Length];

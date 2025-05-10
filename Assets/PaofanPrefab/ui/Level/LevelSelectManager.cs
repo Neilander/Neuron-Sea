@@ -53,9 +53,6 @@ public class LevelSelectManager : MonoBehaviour
             return;
         }
         Instance = this;
-        //初始化特殊按钮
-        InitializeSpecialButtons();
-        
     }
 
     void OnDestroy()
@@ -68,7 +65,6 @@ public class LevelSelectManager : MonoBehaviour
 
     void Start()
     {
-        RefreshButtons();
         CollectActiveButtonsFrom(scene1, scene2, scene3);
         // 初始化锁实例数组
         lockInstances = new GameObject[levelButtons.Length];
@@ -91,16 +87,10 @@ public class LevelSelectManager : MonoBehaviour
             openLockInstance.SetActive(false); // 默认隐藏
             openLockInstances[i] = openLockInstance;
         }
-        
-    }
-
-    private void OnEnable(){
+        InitializeSpecialButtons();
         // 更新所有关卡的锁定状态
-        print("加载保存过的关卡");
-        print("锁刷新了吗");
         UpdateLevelLockStatus();
         UpdateSpecialButtons();
-        RefreshButtons();
     }
 
     public void CollectActiveButtonsFrom(Transform t1, Transform t2, Transform t3)
@@ -120,7 +110,7 @@ public class LevelSelectManager : MonoBehaviour
             t3.GetComponent<LevelNameSetter>().ParseAndSetTexts();
 
         levelButtons = allButtons.ToArray();
-        // Debug.Log($"共收集到 {levelButtons.Length} 个按钮");
+        Debug.Log($"共收集到 {levelButtons.Length} 个按钮");
     }
 
     private void AddActiveButtons(Transform root, List<Button> list)
@@ -272,7 +262,6 @@ public class LevelSelectManager : MonoBehaviour
     // 加载对应关卡
     void LoadLevel(int levelIndex)
     {
-        print("点了触发这个");
         // 检查关卡是否解锁
         if (!levelManager.instance.IsLevelUnlocked(levelIndex))
         {
