@@ -78,19 +78,13 @@ public class AudioManager : MonoBehaviour
             if (i == newScene.buildIndex)
             {
                 AudioManager.Instance.Play((BGMClip)i);
+                AudioManager.Instance.Play((WhiteNoiseClip)i);
             }
             else
             {
                 AudioManager.Instance.Stop((BGMClip)i);
+                AudioManager.Instance.Stop((WhiteNoiseClip)i);
             }
-        }
-        if (newScene.buildIndex == 1)
-        {
-            AudioManager.Instance.Play(WhiteNoiseClip.Scene1);
-        }
-        else
-        {
-            AudioManager.Instance.Stop(WhiteNoiseClip.Scene1);
         }
     }
 
@@ -226,7 +220,7 @@ public class AudioManager : MonoBehaviour
 
     public void PauseBGM()
     {
-        Stop(curClip);
+        Pause(curClip);
     }
 
     public void ResumeBGM()
@@ -245,6 +239,7 @@ public enum BGMClip
 
 public enum WhiteNoiseClip
 {
+    SceneBegin,
     Scene1,
     Scene2,
     Scene3,
@@ -287,4 +282,6 @@ public enum SFXClip
     Cilck5,
     Cilck6,
     Cilck7,
+    StartVideo,
+    EnterLevel,
 }

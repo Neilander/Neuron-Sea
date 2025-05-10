@@ -10,4 +10,9 @@ public class SoundTrigger : MonoBehaviour
     {
         AudioManager.Instance.Play((SFXClip)(soundID + 27));
     }
+
+    public void EnterLevelSound()
+    {
+        AudioManager.Instance.Play(SFXClip.EnterLevel);
+    }
 }

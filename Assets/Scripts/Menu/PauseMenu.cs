@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
     public GameObject settingMenu;
+    public GameObject levelSelectPanel;
 
     public bool isPaused;
     public string select,settings,beginSceneName;
@@ -49,11 +50,11 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SelectGame(){
-        transform.Find("LevelSelect2").gameObject.SetActive(true);
+        levelSelectPanel.SetActive(true);
     }
 
     public void ExitSetPanel(){
-        transform.Find("LevelSelect2").gameObject.SetActive(false);
+        levelSelectPanel.SetActive(false);
     }
 
     public void SettingGame(){

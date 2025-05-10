@@ -64,8 +64,17 @@ MonoBehaviour:
     volume: 0.1
   whiteNoiseClips:
   - key: 0
+    clip: {fileID: 8300000, guid: 65941a99d7b2249d9a9eac4d98003041, type: 3}
+    volume: 0.4
+  - key: 1
     clip: {fileID: 8300000, guid: 9599e21d57e6a49c38f448e2754f9737, type: 3}
     volume: 1
+  - key: 2
+    clip: {fileID: 8300000, guid: 96654101add9446258af14b9010fbde3, type: 3}
+    volume: 1
+  - key: 3
+    clip: {fileID: 8300000, guid: d92853b057bcb4a28a3c39b907bbc611, type: 3}
+    volume: 0.7
   sfxClips:
   - key: 0
     clip: {fileID: 8300000, guid: 2bcfca8d739d5cd4180fb8c2c5b1e512, type: 3}
@@ -201,6 +210,14 @@ MonoBehaviour:
     loop: 0
   - key: 34
     clip: {fileID: 8300000, guid: ff2edb1bf47df42e5bf3503266e00bbd, type: 3}
+    volume: 0.2
+    loop: 0
+  - key: 35
+    clip: {fileID: 8300000, guid: b2bf7117024c84ee29c009421c11ced9, type: 3}
+    volume: 0.2
+    loop: 0
+  - key: 36
+    clip: {fileID: 8300000, guid: bcebdeb01476e1548956aa8f43c6203e, type: 3}
     volume: 0.2
     loop: 0
 --- !u!82 &8038404115335531223
