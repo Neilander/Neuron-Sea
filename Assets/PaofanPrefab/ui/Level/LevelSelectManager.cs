@@ -267,6 +267,7 @@ public class LevelSelectManager : MonoBehaviour
 
         string levelName = "Level_" + levelIndex; // 拼接关卡名称
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
+        gameObject.SetActive(false); // 隐藏当前选择界面
     }
 
     // 特殊按钮点击事件处理

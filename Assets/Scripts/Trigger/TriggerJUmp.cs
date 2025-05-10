@@ -16,10 +16,11 @@ public class TriggerJUmp : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other){
         if (other.transform.GetComponent<PlayerController>()!= null&&!istriggered) {
             print("Player entered");
-            if (JumpImage != null) {
+            if (JumpImage != null&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)) {
                 if (!JumpImage.transform.gameObject.activeInHierarchy) {
                     JumpImage.transform.gameObject.SetActive(true);
                 }
+                PlayerPrefs.SetInt("hasLoadOnce",1);
                 JumpImage.sprite = sprite2;
                 istriggered = true;
                 StartCoroutine(Delay());

@@ -116,26 +116,7 @@ public class levelManager : MonoBehaviour
             }
                 
             LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
-            for (int i = 0; i < 4; i++)
-            {
-                if(i == sceneIndex)
-                {
-                    AudioManager.Instance.Play((BGMClip)i);
-                }
-                else
-                {
-                    AudioManager.Instance.Stop((BGMClip)i);
-                    AudioManager.Instance.Stop((WhiteNoiseClip)i);
-                }
-            }
-            if (sceneIndex == 1)
-            {
-                AudioManager.Instance.Play(WhiteNoiseClip.Scene1);
-            }
-            else
-            {
-                AudioManager.Instance.Stop(WhiteNoiseClip.Scene1);
-            }
+            
             StartCoroutine(RegisterNextFrame());
 
 
@@ -317,7 +298,7 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                if (cameraControl.hasLoadOnce) {
+                if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
@@ -336,7 +317,7 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else 
+                else if (PlayerPrefs.GetInt("hasLoadOnce") == 0)
                 {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
@@ -357,7 +338,8 @@ public class levelManager : MonoBehaviour
                         switch (sceneIndex)
                         {
                             case 1:
-                                PlayerPrefs.SetInt("hasLoadOnce",1);
+                                // PlayerPrefs.SetInt("hasLoadOnce",1);
+                                //在结束播放的时候保存了
                                 break;
 
                             case 2:
@@ -742,7 +724,7 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        if (cameraControl.endTeach&&!(StoryManager.Instance.currentState==GameState.StoryMode)) {
+        if (!(StoryManager.Instance._currentState==GameState.StoryMode)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
             recordRect = LoadLevel(currentLevelIndex, true);

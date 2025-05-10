@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -58,11 +59,44 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); 
+        SceneManager.activeSceneChanged += ChangeBGM;
 
         bgmDict = bgmClips.ToDictionary(e => e.key, e => e);
         whiteNoiseDict = whiteNoiseClips.ToDictionary(e => e.key, e => e);
         sfxDict = sfxClips.ToDictionary(e => e.key, e => e); // 保持不动
+    }
+    private void Start()
+    {
+        ChangeBGM(SceneManager.GetActiveScene(), SceneManager.GetActiveScene());
+    }
+
+    void ChangeBGM(Scene oldScene, Scene newScene)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (i == newScene.buildIndex)
+            {
+                AudioManager.Instance.Play((BGMClip)i);
+            }
+            else
+            {
+                AudioManager.Instance.Stop((BGMClip)i);
+            }
+        }
+        if (newScene.buildIndex == 1)
+        {
+            AudioManager.Instance.Play(WhiteNoiseClip.Scene1);
+        }
+        else
+        {
+            AudioManager.Instance.Stop(WhiteNoiseClip.Scene1);
+        }
+    }
+
+    public void ClickSound(int soundID)
+    {
+        AudioManager.Instance.Play((SFXClip)(soundID + 27));
     }
 
     private BGMClip curClip;
@@ -72,19 +106,20 @@ public class AudioManager : MonoBehaviour
             return;
 
         if (bgmSourceDict.TryGetValue(clipKey, out var oldSource))
-        {
-            oldSource.Stop();
-            Destroy(oldSource);
+        { 
+            oldSource.UnPause();
         }
+        else
+        {
+            curClip = clipKey;
+            AudioSource newSource = gameObject.AddComponent<AudioSource>();
+            newSource.clip = entry.clip;
+            newSource.loop = true;
+            newSource.volume = entry.volume;
+            newSource.Play();
 
-        curClip = clipKey;
-        AudioSource newSource = gameObject.AddComponent<AudioSource>();
-        newSource.clip = entry.clip;
-        newSource.loop = true;
-        newSource.volume = entry.volume;
-        newSource.Play();
-
-        bgmSourceDict[clipKey] = newSource;
+            bgmSourceDict[clipKey] = newSource;
+        }
     }
 
     public void Play(WhiteNoiseClip clipKey)
@@ -140,6 +175,14 @@ public class AudioManager : MonoBehaviour
             source.Stop();
             Destroy(source);
             bgmSourceDict.Remove(key);
+        }
+    }
+
+    public void Pause(BGMClip key)
+    {
+        if (bgmSourceDict.TryGetValue(key, out var source))
+        {
+            source.Pause();
         }
     }
 
@@ -236,4 +279,12 @@ public enum SFXClip
     TouchMoveBox,
     TouchMoveBoxTurnBack,
     Scan,
+    Cilck0,
+    Cilck1,
+    Cilck2,
+    Cilck3,
+    Cilck4,
+    Cilck5,
+    Cilck6,
+    Cilck7,
 }

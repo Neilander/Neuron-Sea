@@ -93,7 +93,8 @@ public class EndAndMove : MonoBehaviour
         // Camera.main.transform.GetComponent<CameraControl>().RestoreCameraLimit();
         FindAnyObjectByType<CompanionController>().canFollow = true;
         camControl.hasLoadOnce=true;
-        PlayerPrefs.SetInt("hasLoadOnce",1);
+        // PlayerPrefs.SetInt("hasLoadOnce",1);
+        //结束跳跃面板时设置PlayerPrefs.SetInt("hasLoadOnce",1)
         FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
         // playerController.EnableMovement();
     }
@@ -168,7 +169,7 @@ public class EndAndMove : MonoBehaviour
             if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
                 // 交换完成
                 isSwitchCompleted = true;
-                StartCoroutine(DisablePictureAfterDelay(1f,sprite3));
+                StartCoroutine(DisablePictureAfterDelay(1f, sprite3));
                 Log("交换物体完成!");
                 camControl.endTeach = true;
                 // 等待玩家确认（按键）
@@ -179,7 +180,7 @@ public class EndAndMove : MonoBehaviour
             timer += Time.unscaledDeltaTime;
             yield return null;
         }
-        
+        StartCoroutine(DisablePictureAfterDelay(1f, sprite3));
         // 结束交换模式
         // EndSwitchMode();
     }

@@ -12,7 +12,7 @@ public class StoryEnd : MonoBehaviour
         Debug.Log("[StoryEnd] EndEffectTriggerNext called, storys[0]=" + storys[0]);
     if (storys[0] == null)
     {
-        Debug.LogError("[StoryEnd] storys[0] is null!");
+        Debug.Log("[StoryEnd] storys[0] is null!");
         return;
     }
         //结束特效

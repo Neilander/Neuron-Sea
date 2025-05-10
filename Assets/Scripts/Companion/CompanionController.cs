@@ -44,13 +44,25 @@ public class CompanionController : MonoBehaviour
     private CameraSequencePlayer csp;
     
     public bool hasStopped=true;
-    private bool startMode=false;//改成true之后出现报空
+    private bool _startMode=false;//改成true之后出现报空
+
+    public bool StartMode
+    {
+        get => _startMode;
+        set
+        {
+            if (_startMode != value) {
+                _startMode = value;
+                Debug.Log("startMode 被改动了，现在是: " + value);
+            }
+        }
+    }
     private void Start(){
         csp = FindObjectOfType<CameraSequencePlayer>();
         if (levelManager.instance.currentLevelIndex == 1) {
             hasStopped=false;
             //如果第一次进入在右上角出现
-            startMode=true;
+            _startMode=true;
         }
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
@@ -101,26 +113,27 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
-            if (CameraControl.Instance.specialStartForScene1) {
+            if (CameraControl.Instance.specialStartForScene1&&!(PlayerPrefs.GetInt("hasLoadOnce")==1) ){
                 // if (csp == null) {
                 //     Debug.LogError("没有打开镜头序列");
                 // }
                 // if(csp != null)
                 //     csp.gameObject.SetActive(true);
-                startMode = true;
+                _startMode = true;
+                // print("我是true");
             }
             else {
                 // if (csp != null)
                 //     csp.gameObject.SetActive(false);
-                startMode = false;
+                _startMode = false;
+                // print("我是false");
             }
             // 如果玩家朝左（scale.x = -1）或者是开始情况，跟随物在右上角
-            if (target.localScale.x < 0
-                || startMode
-                )//TODO：临时移出||startMode
+            if (target.localScale.x < 0 || _startMode
+                )
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
-                if (!startMode) {
+                if (!_startMode) {
                     transform.localScale = new Vector3(-1, 1, 1);
                 }
 
@@ -152,7 +165,7 @@ public class CompanionController : MonoBehaviour
             &&!hasStopped
             &&levelManager.instance.isStartStory
             && levelManager.instance.currentLevelIndex == 1
-            && CameraControl.Instance.specialStartForScene1
+            && CameraControl.Instance.specialStartForScene1&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)
             ) {
             hasStopped = true;
             print("我到达目的地了！");
@@ -187,16 +200,17 @@ public class CompanionController : MonoBehaviour
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
             
         );print("播完了！");
-        startMode = false;
+        _startMode = false;
         CameraControl.Instance.specialStartForScene1=false;
         transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
         // transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
-        
-        if(BigCamera!=null)
+
+        if (BigCamera != null) {
             Camera.main.transform.GetComponent<CameraControl>().RestoreHorizontalLimit();
             BigCamera.PlaySequence();
+        }
     }
     // 设置跟随目标
     public void SetTarget(Transform newTarget)
@@ -210,7 +224,7 @@ public class CompanionController : MonoBehaviour
 
     public void SetTargetToPlayer(){
         target = FindAnyObjectByType<PlayerController>().transform;
-        startMode = true;
+        _startMode = true;
         if (target != null) {
             targetSpriteRenderer = target.GetComponent<SpriteRenderer>();
         }
@@ -277,11 +291,11 @@ public class CompanionController : MonoBehaviour
         if (panelToShow != null) {
             panelToShow.SetActive(true);
         }
-        //VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
-        /*
+        VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
+        
         if (videoPlayer != null) {
             videoPlayer.loopPointReached += OnVideoEnd;
-        }*/
+        }
     }
 
     // 视频播放完后回到主菜单

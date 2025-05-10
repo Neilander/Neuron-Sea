@@ -56,7 +56,13 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void SettingGame(){
+        print("我是设置面板,我被电了");
         settingMenu.SetActive(true);
+        print("注意看,开了");
+        Canvas canvas = settingMenu.GetComponent<Canvas>();
+        // if (canvas != null) {
+            canvas.sortingOrder = 100; // 设置一个比其他 UI 更高的值
+        // }
     }
 
     public void GoToTitle(){

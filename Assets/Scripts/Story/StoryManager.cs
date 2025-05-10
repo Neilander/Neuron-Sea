@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -23,8 +24,28 @@ public class StoryManager : MonoBehaviour
 {
     public static StoryManager Instance { get; private set; }
 
+    [FormerlySerializedAs("currentState")]
     [Header("游戏状态设置")]
-    [SerializeField] public GameState currentState = GameState.ActionMode;
+    [SerializeField] public GameState _currentState = GameState.ActionMode;
+
+    public GameState currentState
+    {
+        get { return _currentState; }
+        set
+        {
+            if (_currentState != value) {
+                Debug.Log($"[StoryManager] GameState changed from {_currentState} to {value}");
+                _currentState = value;
+                    
+            }
+            // (Application.isPlaying && !hasAwaken) // 防止Awake中重复打印
+            //     {
+            //     Debug.Log(</span > "[StoryManager] Initial GameState: {_currentState}");
+            //     hasAwaken = true;
+            // }
+        }
+    }
+
     [SerializeField] private PlayerController playerController; // 玩家控制器引用
     private Rigidbody2D playerRigidbody; // 玩家刚体引用
     private Vector2 savedVelocity; // 保存玩家的速度
@@ -136,6 +157,8 @@ public class StoryManager : MonoBehaviour
     // 事件处理函数
     private void OnStoryModeExit(){
         GridManager.Instance.LockStates(false);
+        _currentState= GameState.ActionMode;
+        print("我能点了");
     }
     
     
@@ -204,7 +227,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // 在剧情模式下，检测点击以继续对话
-        if (currentState == GameState.StoryMode && isDialogueActive)
+        if (_currentState == GameState.StoryMode && isDialogueActive)
         {
             if (Input.GetMouseButtonDown(0))// || Input.GetKeyDown(KeyCode.Space)
             {
@@ -220,7 +243,7 @@ public class StoryManager : MonoBehaviour
     public void EnterStoryMode(StoryData storyData)
     {
         Debug.Log($"[StoryManager] EnterStoryMode called, storyData={storyData}, dialogues count={storyData?.dialogues?.Count}");
-        if (currentState == GameState.StoryMode)
+        if (_currentState == GameState.StoryMode)
         {
             Debug.LogWarning("已经在剧情模式中！");
             return;
@@ -231,7 +254,7 @@ public class StoryManager : MonoBehaviour
         currentDialogueIndex = 0;
 
         // 切换到剧情模式
-        currentState = GameState.StoryMode;
+        _currentState = GameState.StoryMode;
 
         // 如果玩家在地面上，立即禁用移动
         // 如果玩家在空中，等待落地后再禁用移动
@@ -285,7 +308,7 @@ public class StoryManager : MonoBehaviour
         // 等待一帧确保完全落地
         yield return null;
 
-        if (playerController != null && currentState == GameState.StoryMode)
+        if (playerController != null && _currentState == GameState.StoryMode)
         {
             playerController.DisableMovement();
             print("剧情禁用落地的时候禁止移动");
@@ -306,7 +329,7 @@ public class StoryManager : MonoBehaviour
     /// </summary>
     public void ExitStoryMode()
     {
-        if (currentState != GameState.StoryMode)
+        if (_currentState != GameState.StoryMode)
         {
             Debug.LogWarning("不在剧情模式中！");
             return;
@@ -316,8 +339,8 @@ public class StoryManager : MonoBehaviour
         EndDialogue();
 
         // 切换到动作模式
-        currentState = GameState.ActionMode;
-
+        _currentState = GameState.ActionMode;
+        print("■切换到动作模式");
         // 启用玩家移动（除非被阻止）
         if (playerController != null && !preventPlayerUnfreeze)
         {
@@ -886,7 +909,7 @@ public class StoryManager : MonoBehaviour
     /// </summary>
     public GameState GetCurrentState()
     {
-        return currentState;
+        return _currentState;
     }
 
     /// <summary>
@@ -1002,7 +1025,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // 如果当前在剧情模式，先退出
-        if (currentState == GameState.StoryMode)
+        if (_currentState == GameState.StoryMode)
         {
             ExitStoryMode();
         }
@@ -1069,7 +1092,7 @@ public class StoryManager : MonoBehaviour
             }
 
             // 如果当前在剧情模式，先退出
-            if (currentState == GameState.StoryMode)
+            if (_currentState == GameState.StoryMode)
             {
                 ExitStoryMode();
             }
