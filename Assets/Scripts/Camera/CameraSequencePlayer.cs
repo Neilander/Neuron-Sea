@@ -68,7 +68,7 @@ public class CameraSequencePlayer : MonoBehaviour
         }
 
         // 确保在开始时设置初始PPU值
-        if (pixelPerfectCamera != null &&!CameraControl.Instance.hasLoadOnce&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1))
+        if (pixelPerfectCamera != null &&!CameraControl.Instance.hasLoadOnce&& !CameraControl.Instance.hasLoadOnce)//这里泡饭改的从注册表获取我改回来了
         {
             pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
         }
@@ -91,7 +91,8 @@ public class CameraSequencePlayer : MonoBehaviour
     /// 播放完整序列：动画 -> 延迟 -> 相机过渡 -> 延迟
     /// </summary>
     public void PlaySequence(){
-        if (!(PlayerPrefs.GetInt("hasLoadOnce") == 1)){
+        if (!CameraControl.Instance.hasLoadOnce)//这里泡饭改的从注册表获取我改回来了
+        {
             if (isPlaying) {
                 Debug.LogWarning("已有序列正在播放！");
                 return;

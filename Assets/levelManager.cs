@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
@@ -93,7 +92,7 @@ public class levelManager : MonoBehaviour
                     break;
 
                 case 2:
-                    if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 0)
+                    if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 1)
                     {
                         cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
                         if (!cameraControl.hasLoadOnce)
@@ -102,7 +101,7 @@ public class levelManager : MonoBehaviour
                     break;
 
                 case 3:
-                    if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 0)
+                    if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 1)
                     {
                         cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
                         if (!cameraControl.hasLoadOnce)
@@ -148,24 +147,6 @@ public class levelManager : MonoBehaviour
     // 保存解锁状态
     private void SaveUnlockedLevels()
     {
-        // 1. 从 PlayerPrefs 加载已保存的关卡数据
-        string existingStr = PlayerPrefs.GetString("UnlockedLevels", "1");
-        List<int> existingLevels = existingStr.Split(',')
-            .Select(s => int.TryParse(s, out int lvl) ? lvl : -1)
-            .Where(lvl => lvl > 0)
-            .ToList();
-
-        // 2. 合并当前列表和已存在的
-        foreach (int lvl in existingLevels) {
-            if (!unlockedLevels.Contains(lvl)) {
-                unlockedLevels.Add(lvl);
-            }
-        }
-
-        // 3. 去重并排序（可选）
-        unlockedLevels = unlockedLevels.Distinct().OrderBy(lvl => lvl).ToHashSet();
-
-        
         string unlockedLevelsStr = string.Join(",", unlockedLevels);
         PlayerPrefs.SetString("UnlockedLevels", unlockedLevelsStr);
         PlayerPrefs.Save();
@@ -242,18 +223,15 @@ public class levelManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 SceneManager.LoadScene("场景1剧情");
-                Time.timeScale = 1;
             }
             else if (newLevelIndex >= 13 && newLevelIndex <= 24)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 SceneManager.LoadScene("场景2剧情");
-                Time.timeScale = 1;
             } else if (newLevelIndex >= 25 && newLevelIndex <= 36)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 SceneManager.LoadScene("场景3剧情");
-                Time.timeScale = 1;
             }
             return new Rect();
         }
@@ -320,28 +298,17 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                bool hasLoaded = false;
-                switch (sceneIndex) {
-                    case 1:
-                        hasLoaded = PlayerPrefs.GetInt("hasLoadOnce") != 0;
-                        break;
-                    case 2:
-                        hasLoaded = PlayerPrefs.GetInt("hasScene2LoadOnce") != 0;
-                        break;
-                    case 3:
-                        hasLoaded = PlayerPrefs.GetInt("hasScene3LoadOnce") != 0;
-                        break;
-                }
-
-                if (hasLoaded) {
+                if (cameraControl.hasLoadOnce) { //这里泡饭改的是从注册表获取我改回来了
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
 
+                        // 找到重生点后，立即设置给DeathController
                         DeathController deathController = FindAnyObjectByType<DeathController>();
                         if (deathController != null) {
                             deathController.respawnTarget = respawnTarget;
+                            //Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
                         }
                         else {
                             Debug.LogError("未找到DeathController，无法设置重生点！");
@@ -350,12 +317,14 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else {
+                else if (!cameraControl.hasLoadOnce)
+                {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
 
+                        // 找到重生点后，立即设置给DeathController
                         DeathController deathController = FindAnyObjectByType<DeathController>();
                         if (deathController != null) {
                             deathController.respawnTarget = respawnTarget;
@@ -365,22 +334,23 @@ public class levelManager : MonoBehaviour
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
 
-                        // 标记当前场景已经初始化过
-                        switch (sceneIndex) {
+
+                        switch (sceneIndex)
+                        {
                             case 1:
-                                // PlayerPrefs.SetInt("hasLoadOnce", 1);
-                                //这会在其他地方初始化（jump教学结束的时候）
+                                // PlayerPrefs.SetInt("hasLoadOnce",1);
+                                //在结束播放的时候保存了
                                 break;
+
                             case 2:
                                 PlayerPrefs.SetInt("hasScene2LoadOnce", 1);
                                 break;
+
                             case 3:
                                 PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
                                 break;
                         }
-
-                        PlayerPrefs.Save(); // 确保立即保存
-
+                        
                         break;
                     }
                 }
@@ -515,7 +485,7 @@ public class levelManager : MonoBehaviour
         {
             cameraControl.specialStartForScene1 = true;
         }
-        cameraControl.hasLoadOnce = true;
+        
 
         if (backGround == null)
         {
@@ -563,7 +533,7 @@ public class levelManager : MonoBehaviour
             PlayerController player = FindAnyObjectByType<PlayerController>();
             Debug.Log($"[位置监测] 设置玩家位置后: 位置={player?.transform.position}, 关卡={newLevelIndex}, 是否重启={isRestarting}");
         }
-        CompleteCurrentLevel();
+
         return data.levelBound;
     }
 
@@ -754,7 +724,6 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        print("我是重开按钮，我被电了");
         if (!(StoryManager.Instance._currentState==GameState.StoryMode)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
