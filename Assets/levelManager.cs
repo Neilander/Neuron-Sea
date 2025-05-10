@@ -60,6 +60,8 @@ public class levelManager : MonoBehaviour
     private float positionMonitorInterval = 1f; // 每秒检查一次
     private Vector3 lastRecordedPosition = Vector3.zero;
 
+
+    bool ifDirectToPos = true;
     void Awake()
     {
         if (instance == null)
@@ -79,7 +81,8 @@ public class levelManager : MonoBehaviour
             {
                 cameraData.SetRenderer(sceneIndex - 1);
             }
-            bool ifDirect = true;
+            //bool ifDirect = true;
+            /* 原本剧情相关
             switch (sceneIndex)
             {
                 case 1:
@@ -108,14 +111,19 @@ public class levelManager : MonoBehaviour
                             ifDirect = false;
                     }
                     break;
-            }
+            }*/
             if (PlayerPrefs.GetInt("carryLevel") != 0)
             {
                 currentLevelIndex = PlayerPrefs.GetInt("carryLevel");
                 PlayerPrefs.SetInt("carryLevel", 0);
             }
-                
-            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
+
+            StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
+            StoryGlobalLoadManager.instance.RegisterGeneralStart(GeneralActionWhenLevel);
+            
+
+            //原本剧情相关
+            //LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
             
             StartCoroutine(RegisterNextFrame());
 
@@ -136,6 +144,35 @@ public class levelManager : MonoBehaviour
         }
 
 
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
+        StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
+    }
+
+    private void Start()
+    {
+        StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
+    }
+
+    public void PrepareForLevelStory(int level)
+    {
+        if (level == 13 || level == 15)
+            ifDirectToPos = false;
+
+        if(level == 1)
+            FindAnyObjectByType<PlayerController>().DisableInput();
+        
+    }
+
+    public void GeneralActionWhenLevel(int level)
+    {
+        
+        LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos);
+        
     }
 
     private IEnumerator RegisterNextFrame()
@@ -287,10 +324,11 @@ public class levelManager : MonoBehaviour
         }
 
         //PlayerController controller = FindAnyObjectByType<PlayerController>();
+        /*原本剧情相关
         if (isStartStory && newLevelGO.name == "Level_1")
         {
             controller.DisableInput();
-        }
+        }*/
         controller.SetMovementBounds(data.levelBound);
 
         Transform entities = newLevelGO.transform.Find("Entities");
@@ -298,7 +336,7 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                if (cameraControl.hasLoadOnce) { //这里泡饭改的是从注册表获取我改回来了
+                if (!StoryGlobalLoadManager.instance.ShouldLoadSceneStory()) { //这里泡饭改的是从注册表获取我改回来了
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
@@ -317,7 +355,7 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else if (!cameraControl.hasLoadOnce)
+                else if (StoryGlobalLoadManager.instance.ShouldLoadSceneStory())
                 {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
@@ -334,7 +372,7 @@ public class levelManager : MonoBehaviour
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
 
-
+                        /*
                         switch (sceneIndex)
                         {
                             case 1:
@@ -350,7 +388,7 @@ public class levelManager : MonoBehaviour
                                 PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
                                 break;
                         }
-                        
+                        */
                         break;
                     }
                 }
@@ -401,7 +439,9 @@ public class levelManager : MonoBehaviour
                     else
                     {
                         Debug.Log("错误检测1");
-                        if ((newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce) || (newLevelIndex == 25 && !isRestarting && !cameraControl.hasLoadOnce))
+                        //if ((newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce) || (newLevelIndex == 25 && !isRestarting && !cameraControl.hasLoadOnce))
+
+                        if(StoryGlobalLoadManager.instance.ShouldLoadSceneStory() && !isRestarting)
                         {
                             Debug.Log("错误检测2");
                             // // 禁用玩家输入
@@ -768,11 +808,6 @@ public class levelManager : MonoBehaviour
         LoadLevel(currentLevelIndex, true);
     }
 
-    void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-
-    }
 
     public void ReloadLevel()
     {
