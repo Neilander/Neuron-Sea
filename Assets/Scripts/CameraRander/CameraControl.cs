@@ -111,15 +111,17 @@ public class CameraControl : MonoBehaviour
         
         realSmoothSpeed = smoothSpeed;
 
-        if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
+        if (hasLoadOnce) { //这里泡饭改的是从注册表获取
             target = FindObjectOfType<PlayerController>().transform;
         }
     }
 
     void Start(){
+        print("我在这里");
+        HelperToolkit.PrintBoolStates(()=> levelManager.instance.isStartStory,()=>specialStartForScene1,()=>hasLoadOnce);
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
-            specialStartForScene1&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)) {
+            specialStartForScene1&& !(hasLoadOnce)) { //这里泡饭改的是从注册表获取
             // setted = true;
             GridManager.Instance.LockStates(true);
             //IgnoreHorizontalLimit();
@@ -141,12 +143,13 @@ public class CameraControl : MonoBehaviour
         
         if (levelManager.instance.isStartStory&& 
             levelManager.instance.currentLevelIndex == 1&&
-            specialStartForScene1&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)) {
+            specialStartForScene1&& !(hasLoadOnce)) { //这里泡饭改的是从注册表获取
             if (companionController != null) {
                 companionController.SetTarget(null);
             }
             StartCoroutine(BeginningDelay(1f));
             Debug.Log("正常触发");
+            
         }
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;

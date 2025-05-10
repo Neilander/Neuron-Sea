@@ -298,7 +298,7 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
+                if (cameraControl.hasLoadOnce) { //这里泡饭改的是从注册表获取我改回来了
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
@@ -317,7 +317,7 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else if (PlayerPrefs.GetInt("hasLoadOnce") == 0)
+                else if (!cameraControl.hasLoadOnce)
                 {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
@@ -485,7 +485,7 @@ public class levelManager : MonoBehaviour
         {
             cameraControl.specialStartForScene1 = true;
         }
-        cameraControl.hasLoadOnce = true;
+        
 
         if (backGround == null)
         {

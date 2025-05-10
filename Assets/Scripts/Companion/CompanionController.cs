@@ -113,7 +113,8 @@ public class CompanionController : MonoBehaviour
         // 根据玩家scale.x自动调整位置
         if (autoAdjustPosition)
         {
-            if (CameraControl.Instance.specialStartForScene1&&!(PlayerPrefs.GetInt("hasLoadOnce")==1) ){
+            //HelperToolkit.PrintBoolStates(()=>CameraControl.Instance.specialStartForScene1, ()=>CameraControl.Instance.hasLoadOnce);
+            if (CameraControl.Instance.specialStartForScene1&&!(CameraControl.Instance.hasLoadOnce) ){ //这里泡饭写的是获取注册表，我改了
                 // if (csp == null) {
                 //     Debug.LogError("没有打开镜头序列");
                 // }
@@ -161,11 +162,12 @@ public class CompanionController : MonoBehaviour
             smoothTime,
             followSpeed
         );
+        //HelperToolkit.PrintBoolStates(() => CameraControl.Instance.hasLoadOnce);
         if (Vector3.Distance(transform.position, targetPosition) < 0.01f
             &&!hasStopped
             &&levelManager.instance.isStartStory
             && levelManager.instance.currentLevelIndex == 1
-            && CameraControl.Instance.specialStartForScene1&& !(PlayerPrefs.GetInt("hasLoadOnce") == 1)
+            && CameraControl.Instance.specialStartForScene1&& !(CameraControl.Instance.hasLoadOnce)//这里泡饭写的是获取注册表，我改了
             ) {
             hasStopped = true;
             print("我到达目的地了！");
