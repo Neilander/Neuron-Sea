@@ -743,6 +743,7 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
+        print("我是重开按钮，我被电了");
         if (!(StoryManager.Instance._currentState==GameState.StoryMode)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
