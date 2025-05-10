@@ -160,7 +160,7 @@ public class levelManager : MonoBehaviour
 
     public void PrepareForLevelStory(int level)
     {
-        if (level == 13 || level == 15)
+        if (level == 13 || level == 25)
             ifDirectToPos = false;
 
         if(level == 1)

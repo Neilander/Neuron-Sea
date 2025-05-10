@@ -117,7 +117,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     public void GeneralActionWhenLevel(int level)
     {
 
-        Invoke("StartSetCheckEdge",2f);
+        Invoke("StartSetCheckEdge",1f);
 
     }
 
@@ -139,10 +139,15 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             if (Input.GetKeyDown(KeyCode.J))
             {
                 levelManager.instance.SwitchToBeforeLevel_Direct();
+                CheckEdgeSetted = false;
+                Invoke("StartSetCheckEdge", 1f);
             }
             else if (Input.GetKeyDown(KeyCode.K))
             {
                 levelManager.instance.SwitchToNextLevel_Direct();
+                CheckEdgeSetted = false;
+                Invoke("StartSetCheckEdge", 1f);
+
             }
         }
 

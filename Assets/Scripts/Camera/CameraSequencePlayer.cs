@@ -108,7 +108,7 @@ public class CameraSequencePlayer : MonoBehaviour
     /// 播放完整序列：动画 -> 延迟 -> 相机过渡 -> 延迟
     /// </summary>
     public void PlaySequence(){
-        if (StoryGlobalLoadManager.instance.ShouldLoadSceneStory())//这里泡饭改的从注册表获取我改回来了
+        if (StoryGlobalLoadManager.instance.IfThisStartHasLevel())//这里泡饭改的从注册表获取我改回来了
         {
             if (isPlaying) {
                 Debug.LogWarning("已有序列正在播放！");

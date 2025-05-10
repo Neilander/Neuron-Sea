@@ -9,9 +9,9 @@ public class StoryGlobalLoadManager : MonoBehaviour
     public GameMode curMode;
 
 
-    private bool ifLoadScene1Story;
-    private bool ifLoadScene2Story;
-    private bool ifLoadScene3Story;
+    private bool ifLoadedScene1Story;
+    private bool ifLoadedScene2Story;
+    private bool ifLoadedScene3Story;
 
     private event Action<int> OnStartWithStory;
     private event Action<int> OnStartWithOutStory;
@@ -30,27 +30,38 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-        ifLoadScene1Story = !(PlayerPrefs.GetInt("SGLM_Scene1Loaded") == 1);
-        ifLoadScene2Story = !(PlayerPrefs.GetInt("SGLM_Scene2Loaded") == 1);
-        ifLoadScene3Story = !(PlayerPrefs.GetInt("SGLM_Scene3Loaded") == 1);
+        ifLoadedScene1Story = (PlayerPrefs.GetInt("SGLM_Scene1Loaded") == 1);
+        ifLoadedScene2Story = (PlayerPrefs.GetInt("SGLM_Scene2Loaded") == 1);
+        ifLoadedScene3Story = (PlayerPrefs.GetInt("SGLM_Scene3Loaded") == 1);
     }
 
     private bool HasLoadedSceneStory(int sceneIndex)
     {
         return sceneIndex switch
         {
-            1 => ifLoadScene1Story,
-            2 => ifLoadScene2Story,
-            3 => ifLoadScene3Story,
+            1 => ifLoadedScene1Story,
+            2 => ifLoadedScene2Story,
+            3 => ifLoadedScene3Story,
             _ => false
         };
     }
 
     public bool ShouldLoadSceneStory()
     {
-        Debug.Log($"在场景{currentScene}关卡{currentLevel}检查是否该触发剧情");
+        //Debug.Log($"在场景{currentScene}关卡{currentLevel}检查是否该触发剧情");
         return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene);
     }
+
+    public bool ShouldLoadSpecificSceneStory(int scene)
+    {
+        return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene) && (currentScene == scene);
+    }
+
+    public bool IfThisStartHasLevel()
+    {
+        return ifThisStartLevelHasStory;
+    }
+
 
     public void RegisterOnStartWithStory(Action<int> callback)
     {
@@ -113,26 +124,28 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     private int currentScene;
     private int currentLevel;
+    private bool ifThisStartLevelHasStory = false;
     public void StartLevel(int scene, int level)
     {
-        
+        ifThisStartLevelHasStory = false;
         if (ShouldLoadSceneStory())
         {
+            ifThisStartLevelHasStory = true;
             OnStartWithStory?.Invoke(level);
             switch (scene)
             {
                 case 1:
-                    ifLoadScene1Story = false;
+                    ifLoadedScene1Story = true;
                     PlayerPrefs.SetInt("SGLM_Scene1Loaded",1);
                     break;
 
                 case 2:
-                    ifLoadScene2Story = false;
+                    ifLoadedScene2Story = true;
                     PlayerPrefs.SetInt("SGLM_Scene2Loaded", 1);
                     break;
 
                 case 3:
-                    ifLoadScene3Story = false;
+                    ifLoadedScene3Story = true;
                     PlayerPrefs.SetInt("SGLM_Scene3Loaded", 1);
                     break;
             }

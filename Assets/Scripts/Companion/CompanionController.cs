@@ -46,6 +46,8 @@ public class CompanionController : MonoBehaviour
     public bool hasStopped=true;
     private bool _startMode=false;//改成true之后出现报空
 
+
+    private bool ignoreStory = true;
     public bool StartMode
     {
         get => _startMode;
@@ -65,6 +67,7 @@ public class CompanionController : MonoBehaviour
             hasStopped = false;
             //如果第一次进入在右上角出现
             _startMode = true;
+            ignoreStory = false;
         }
     }
 
@@ -202,15 +205,15 @@ public class CompanionController : MonoBehaviour
             StartCoroutine(StopStartMode());
         }*/
 
-        if (Vector3.Distance(transform.position, targetPosition) < 0.01f && !hasStopped
-            && StoryGlobalLoadManager.instance.ShouldLoadSceneStory())
+        if (!ignoreStory && Vector3.Distance(transform.position, targetPosition) < 0.01f && !hasStopped
+            && StoryGlobalLoadManager.instance.IfThisStartHasLevel())
         {
             hasStopped = true;
             print("我到达目的地了！");
             // startMode = true;
             oldTrans = this.transform;
 
-
+            ignoreStory = true;
             StartCoroutine(StopStartMode());
         }
         lastPosition = transform.position;
