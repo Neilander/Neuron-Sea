@@ -92,7 +92,7 @@ public class levelManager : MonoBehaviour
                     break;
 
                 case 2:
-                    if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 1)
+                    if (PlayerPrefs.GetInt("hasScene2LoadOnce") == 0)
                     {
                         cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
                         if (!cameraControl.hasLoadOnce)
@@ -101,7 +101,7 @@ public class levelManager : MonoBehaviour
                     break;
 
                 case 3:
-                    if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 1)
+                    if (PlayerPrefs.GetInt("hasScene3LoadOnce") == 0)
                     {
                         cameraControl.hasLoadOnce = !cameraControl.ifReverTutorialTrigger;
                         if (!cameraControl.hasLoadOnce)
@@ -317,17 +317,28 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                if (PlayerPrefs.GetInt("hasLoadOnce") == 1) {
+                bool hasLoaded = false;
+                switch (sceneIndex) {
+                    case 1:
+                        hasLoaded = PlayerPrefs.GetInt("hasLoadOnce") != 0;
+                        break;
+                    case 2:
+                        hasLoaded = PlayerPrefs.GetInt("hasScene2LoadOnce") != 0;
+                        break;
+                    case 3:
+                        hasLoaded = PlayerPrefs.GetInt("hasScene3LoadOnce") != 0;
+                        break;
+                }
+
+                if (hasLoaded) {
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
 
-                        // 找到重生点后，立即设置给DeathController
                         DeathController deathController = FindAnyObjectByType<DeathController>();
                         if (deathController != null) {
                             deathController.respawnTarget = respawnTarget;
-                            //Debug.Log($"已将重生点 {respawnTarget.name} 设置给DeathController" + deathController.gameObject.name);
                         }
                         else {
                             Debug.LogError("未找到DeathController，无法设置重生点！");
@@ -336,14 +347,12 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else if (PlayerPrefs.GetInt("hasLoadOnce") == 0)
-                {
+                else {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
                         respawnTarget = child;
                         this.respawnTarget = child;
 
-                        // 找到重生点后，立即设置给DeathController
                         DeathController deathController = FindAnyObjectByType<DeathController>();
                         if (deathController != null) {
                             deathController.respawnTarget = respawnTarget;
@@ -353,23 +362,22 @@ public class levelManager : MonoBehaviour
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
 
-
-                        switch (sceneIndex)
-                        {
+                        // 标记当前场景已经初始化过
+                        switch (sceneIndex) {
                             case 1:
-                                // PlayerPrefs.SetInt("hasLoadOnce",1);
-                                //在结束播放的时候保存了
+                                // PlayerPrefs.SetInt("hasLoadOnce", 1);
+                                //这会在其他地方初始化（jump教学结束的时候）
                                 break;
-
                             case 2:
                                 PlayerPrefs.SetInt("hasScene2LoadOnce", 1);
                                 break;
-
                             case 3:
                                 PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
                                 break;
                         }
-                        
+
+                        PlayerPrefs.Save(); // 确保立即保存
+
                         break;
                     }
                 }
