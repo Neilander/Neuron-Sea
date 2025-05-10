@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
@@ -166,6 +167,24 @@ public class levelManager : MonoBehaviour
     // 保存解锁状态
     private void SaveUnlockedLevels()
     {
+        // 1. 从 PlayerPrefs 加载已保存的关卡数据
+        string existingStr = PlayerPrefs.GetString("UnlockedLevels", "1");
+        List<int> existingLevels = existingStr.Split(',')
+            .Select(s => int.TryParse(s, out int lvl) ? lvl : -1)
+            .Where(lvl => lvl > 0)
+            .ToList();
+
+        // 2. 合并当前列表和已存在的
+        foreach (int lvl in existingLevels) {
+            if (!unlockedLevels.Contains(lvl)) {
+                unlockedLevels.Add(lvl);
+            }
+        }
+
+        // 3. 去重并排序（可选）
+        unlockedLevels = unlockedLevels.Distinct().OrderBy(lvl => lvl).ToHashSet();
+
+        
         string unlockedLevelsStr = string.Join(",", unlockedLevels);
         PlayerPrefs.SetString("UnlockedLevels", unlockedLevelsStr);
         PlayerPrefs.Save();
@@ -563,7 +582,7 @@ public class levelManager : MonoBehaviour
             PlayerController player = FindAnyObjectByType<PlayerController>();
             Debug.Log($"[位置监测] 设置玩家位置后: 位置={player?.transform.position}, 关卡={newLevelIndex}, 是否重启={isRestarting}");
         }
-
+        CompleteCurrentLevel();
         return data.levelBound;
     }
 
