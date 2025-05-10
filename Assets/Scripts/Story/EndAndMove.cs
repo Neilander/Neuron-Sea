@@ -77,7 +77,8 @@ public class EndAndMove : MonoBehaviour
         // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
         UIphoto.gameObject.SetActive(true);
         StartCoroutine(DisablePictureAfterDelay(2f,sprite1));
-        
+        StoryManager.Instance._currentState = GameState.ActionMode;
+        print("我还不能点，为什么");
     }
     
     private IEnumerator DisablePictureAfterDelay(float disableTime,Sprite sprite){
@@ -97,6 +98,9 @@ public class EndAndMove : MonoBehaviour
         //结束跳跃面板时设置PlayerPrefs.SetInt("hasLoadOnce",1)
         FindAnyObjectByType<CompanionController>().transform.localScale = new Vector3(1f, 1f, 1f);
         // playerController.EnableMovement();
+        StoryManager.Instance._currentState = GameState.ActionMode;
+        print("我能点了吗");
+        print("我不能");
     }
     public void MoveEnd()
     {

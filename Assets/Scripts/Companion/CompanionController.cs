@@ -206,7 +206,7 @@ public class CompanionController : MonoBehaviour
         // canFollow = true;
         // transform.localScale = new Vector3(1f, 1f, 1f);
         print("转回去了！");
-
+        
         if (BigCamera != null) {
             Camera.main.transform.GetComponent<CameraControl>().RestoreHorizontalLimit();
             BigCamera.PlaySequence();

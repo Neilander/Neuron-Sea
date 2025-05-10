@@ -160,10 +160,9 @@ public class StoryManager : MonoBehaviour
         _currentState= GameState.ActionMode;
         print("我能点了");
     }
+
     
-    
-    
-    
+
     /// <summary>
     /// 初始化立绘相关组件
     /// </summary>
@@ -207,6 +206,7 @@ public class StoryManager : MonoBehaviour
 
     private void Update()
     {
+        print(_currentState);
         //进入场景后重新获取
         if (playerController == null)
         {
