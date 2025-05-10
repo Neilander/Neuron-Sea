@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements.Experimental;
 
 public partial class PlayerController : MonoBehaviour, IMovementController
@@ -306,9 +307,11 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         }
         #endregion
 
+        EventSystem.current.SetSelectedGameObject(null);
         #region 跳跃
         if (GameInput.Jump.Pressed())
         {
+            
             //土狼时间范围内,允许跳跃
             if (AllowJump())
             {
