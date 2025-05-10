@@ -144,7 +144,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         {
             if (time < 0 && time + Time.deltaTime >= 0)
             {
-                dist = 2f - (target.transform.position - playerController.transform.position).magnitude / 10f;
+                dist = 2f - (target.transform.position - playerController.transform.position).magnitude / 15f;
                 if (dist > 0)
                 {
                     playSound = true;
