@@ -32,6 +32,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void ContinueGame(){
+        print("我是暂停面板，我被点了");
         if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
             if (isPaused) {
                 isPaused = false;

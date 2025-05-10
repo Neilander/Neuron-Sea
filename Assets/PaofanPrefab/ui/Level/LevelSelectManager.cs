@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -210,6 +211,9 @@ public class LevelSelectManager : MonoBehaviour
             }
         }
     }
+    
+    
+    
     // 公共方法用于刷新按钮状态
     public void RefreshButtons()
     {
@@ -266,8 +270,11 @@ public class LevelSelectManager : MonoBehaviour
         }
 
         string levelName = "Level_" + levelIndex; // 拼接关卡名称
+        if (levelManager.instance.sceneIndex == SceneManager.GetActiveScene().buildIndex) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
-        gameObject.SetActive(false); // 隐藏当前选择界面
+        Time.timeScale = 1;
     }
 
     // 特殊按钮点击事件处理
