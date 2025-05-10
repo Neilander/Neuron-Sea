@@ -126,6 +126,12 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         CheckEdgeSetted = true;
     }
 
+    public void PrepareForTransport()
+    {
+        CheckEdgeSetted = false;
+        Invoke("StartSetCheckEdge", 1f);
+    }
+
     private void Update()
     {
         GameInput.Update(Time.unscaledDeltaTime);
@@ -139,14 +145,12 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             if (Input.GetKeyDown(KeyCode.J))
             {
                 levelManager.instance.SwitchToBeforeLevel_Direct();
-                CheckEdgeSetted = false;
-                Invoke("StartSetCheckEdge", 1f);
+                
             }
             else if (Input.GetKeyDown(KeyCode.K))
             {
                 levelManager.instance.SwitchToNextLevel_Direct();
-                CheckEdgeSetted = false;
-                Invoke("StartSetCheckEdge", 1f);
+                
 
             }
         }

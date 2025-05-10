@@ -254,6 +254,7 @@ public class levelManager : MonoBehaviour
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
     {
+        FindAnyObjectByType<PlayerController>().PrepareForTransport();
         if (newLevelIndex > maxLevel || newLevelIndex < minLevel)
         {
             if (newLevelIndex >= 1 && newLevelIndex <= 12)

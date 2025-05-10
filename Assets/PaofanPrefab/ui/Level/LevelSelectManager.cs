@@ -270,9 +270,10 @@ public class LevelSelectManager : MonoBehaviour
         }
 
         string levelName = "Level_" + levelIndex; // 拼接关卡名称
+        /*
         if (levelManager.instance.sceneIndex == SceneManager.GetActiveScene().buildIndex) {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        }*/
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
         Time.timeScale = 1;
     }
