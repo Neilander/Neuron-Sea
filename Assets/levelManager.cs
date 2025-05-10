@@ -45,11 +45,13 @@ public class levelManager : MonoBehaviour
     private bool isWalkingToSpawn = false;
     private bool isRestarting = false;
     public float specialStartTime = 1;
-    
+
     private Vector3 lockedPosition = Vector3.zero;
     private float positionLockDuration = 2f; // 锁定持续时间
 
 
+    public static readonly int startLevelIndex = 1;
+    public static readonly int endlevelIndex = 36;
 
     const int sceneLimit = 3;
 
@@ -215,9 +217,18 @@ public class levelManager : MonoBehaviour
     // 解锁指定关卡
     public void UnlockLevel(int levelIndex)
     {
-        if (levelIndex >= minLevel && levelIndex <= maxLevel)
+        if (levelIndex >= startLevelIndex && levelIndex <= endlevelIndex)
         {
             unlockedLevels.Add(levelIndex);
+            // SaveUnlockedLevels();
+        }
+    }
+
+    public void LockLevel(int levelIndex)
+    {
+        if (levelIndex >= startLevelIndex && levelIndex <= endlevelIndex)
+        {
+            unlockedLevels.Remove(levelIndex);
             // SaveUnlockedLevels();
         }
     }
@@ -242,6 +253,38 @@ public class levelManager : MonoBehaviour
         }
     }
 
+    public void LockAllLevel()
+    {
+        for (int i = startLevelIndex+1; i <= endlevelIndex; i++)
+        {
+            LockLevel(i);
+        }
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        LoadUnlockedLevels();  // 重新加载确保状态一致
+
+        // 刷新关卡选择界面
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
+    }
+
+    public void UnlockAllLevel()
+    {
+        for (int i = startLevelIndex; i <= endlevelIndex; i++)
+        {
+            UnlockLevel(i);
+        }
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        LoadUnlockedLevels();  // 重新加载确保状态一致
+
+        // 刷新关卡选择界面
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
+    }
+
     public void RefreshEdgeCheck()
     {
         FindAnyObjectByType<PlayerController>().CheckEdge = true;
@@ -250,6 +293,7 @@ public class levelManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         PlayerPrefs.SetInt("carryLevel", 0);
+
     }
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
