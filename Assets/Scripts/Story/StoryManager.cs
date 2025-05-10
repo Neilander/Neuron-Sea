@@ -206,7 +206,7 @@ public class StoryManager : MonoBehaviour
 
     private void Update()
     {
-        print(_currentState);
+        // print(_currentState);
         //进入场景后重新获取
         if (playerController == null)
         {

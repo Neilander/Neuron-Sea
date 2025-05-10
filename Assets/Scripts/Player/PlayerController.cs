@@ -107,15 +107,15 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         {
             if (Input.GetKeyDown(KeyCode.R))
                 levelManager.instance.RestartLevel();
-
-            // if (Input.GetKeyDown(KeyCode.J))
-            // {
-            //     levelManager.instance.SwitchToBeforeLevel_Direct();
-            // }
-            // else if (Input.GetKeyDown(KeyCode.K))
-            // {
-            //     levelManager.instance.SwitchToNextLevel_Direct();
-            // }
+            //这个要注释掉
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                levelManager.instance.SwitchToBeforeLevel_Direct();
+            }
+            else if (Input.GetKeyDown(KeyCode.K))
+            {
+                levelManager.instance.SwitchToNextLevel_Direct();
+            }
         }
 
 
@@ -401,15 +401,15 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             {
 
                 FindAnyObjectByType<levelManager>().SwitchToNextLevel();
-
-                levelManager levelMgr = FindAnyObjectByType<levelManager>();
-                levelMgr.CompleteCurrentLevel();
-                print("我保存了当前关卡");
-                // 确保在切换关卡后刷新UI
-                if (LevelSelectManager.Instance != null)
-                {
-                    LevelSelectManager.Instance.RefreshButtons();
-                }
+                print("不在这保存下一关");
+                // levelManager levelMgr = FindAnyObjectByType<levelManager>();
+                // levelMgr.CompleteCurrentLevel();
+                // print("我保存了当前关卡");
+                // // 确保在切换关卡后刷新UI
+                // if (LevelSelectManager.Instance != null)
+                // {
+                //     LevelSelectManager.Instance.RefreshButtons();
+                // }
 
             }
             else if (movementBounds.IsAtLeftEdge())

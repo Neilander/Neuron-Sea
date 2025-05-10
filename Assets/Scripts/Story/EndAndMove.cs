@@ -168,7 +168,7 @@ public class EndAndMove : MonoBehaviour
 
         // 等待玩家完成交换或超时
         float timer = 0;
-        while (!isSwitchCompleted && timer < switchTimeout) {
+        while (!isSwitchCompleted) { //&& timer < switchTimeout 不计时了，换一次才消失
             // 检查是否交换了物体
             if (GridManager.Instance != null && GridManager.Instance.SwitchTime > 0) {
                 // 交换完成

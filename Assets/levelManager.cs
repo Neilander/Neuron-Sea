@@ -242,15 +242,18 @@ public class levelManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 SceneManager.LoadScene("场景1剧情");
+                Time.timeScale = 1;
             }
             else if (newLevelIndex >= 13 && newLevelIndex <= 24)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 SceneManager.LoadScene("场景2剧情");
+                Time.timeScale = 1;
             } else if (newLevelIndex >= 25 && newLevelIndex <= 36)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 SceneManager.LoadScene("场景3剧情");
+                Time.timeScale = 1;
             }
             return new Rect();
         }
