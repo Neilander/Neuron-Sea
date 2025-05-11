@@ -262,10 +262,6 @@ public class DeathController : MonoBehaviour
             //HandleDeath(playerController.gameObject);
         }
 
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            StartCoroutine(ScreenDissolve());
-        }
     }
 
     IEnumerator ScreenDissolve()
