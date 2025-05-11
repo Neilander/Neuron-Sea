@@ -18525,8 +18525,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIphoto: {fileID: 1729128789937573061}
-  sprite1: {fileID: -2110553124, guid: c068c359882577c46a15f9a77613c729, type: 3}
-  sprite3: {fileID: -264183831, guid: 219847d294b22c74aa822106495ecbc3, type: 3}
+  sprite1: {fileID: 21300000, guid: c068c359882577c46a15f9a77613c729, type: 3}
+  sprite3: {fileID: 21300000, guid: 219847d294b22c74aa822106495ecbc3, type: 3}
   storyTriggers:
   - {fileID: 6439617842338855487}
   - {fileID: 86399808281425414}
@@ -19601,6 +19601,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4140790397760700803, guid: 2b41630c1d91fd34b90e77ba52506776,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 5048868665843223177, guid: 2b41630c1d91fd34b90e77ba52506776,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -19694,7 +19699,7 @@ PrefabInstance:
     - target: {fileID: 8825888826313537043, guid: 2b41630c1d91fd34b90e77ba52506776,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0001239977
+      value: -0.000008942462
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
