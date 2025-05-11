@@ -142,6 +142,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             if (Input.GetKeyDown(KeyCode.R))
                 levelManager.instance.RestartLevel();
             //这个要注释掉
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.J))
             {
                 levelManager.instance.SwitchToBeforeLevel_Direct();
@@ -153,6 +154,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
 
             }
+#endif
         }
 
 
