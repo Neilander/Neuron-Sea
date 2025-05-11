@@ -219,6 +219,12 @@ public class CompanionController : MonoBehaviour
         lastPosition = transform.position;
     }
 
+    public void DirectTo()
+    {
+        if(target != null)
+            transform.position = target.position + offset;
+    }
+
     public void CannotMove(){
         this.enabled = false;
     }
