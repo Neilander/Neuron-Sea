@@ -163,13 +163,17 @@ public class LevelSelectManager : MonoBehaviour
         bool isLevel24Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[1]);
         bool isLevel36Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[2]);
 
+        bool isScene2Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[0] + 1);
+        bool isScene3Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[1] + 1);
+
+
         // 更新第一个按钮
-        UpdateSpecialButton(0, true, isLevel12Unlocked);
+        UpdateSpecialButton(0, true, isScene2Unlocked);
 
         // 更新第二个按钮
-        if (isLevel12Unlocked)
+        if (isScene2Unlocked)
         {
-            UpdateSpecialButton(1, true, isLevel24Unlocked);
+            UpdateSpecialButton(1, true, isScene3Unlocked);
         }
         else
         {
@@ -177,7 +181,7 @@ public class LevelSelectManager : MonoBehaviour
         }
 
         // 更新第三个按钮
-        if (isLevel24Unlocked)
+        if (isScene3Unlocked)
         {
             UpdateSpecialButton(2, true, isLevel36Unlocked);
         }
@@ -220,7 +224,8 @@ public class LevelSelectManager : MonoBehaviour
         levelManager.instance.LoadUnlockedLevels();
         Debug.Log("Refreshing level select buttons");
         UpdateLevelLockStatus();
-        
+        UpdateSpecialButtons();
+
     }
 
     // 更新所有关卡的锁定状态

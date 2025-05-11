@@ -8,20 +8,23 @@ public class levelManagerEditor : Editor
     {
         DrawDefaultInspector(); // 保留原有 Inspector 内容
 
-        GUILayout.Space(10);
-
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Lock All"))
+        if (EditorApplication.isPlaying)
         {
-            ((levelManager)target).LockAllLevel();
-        }
+            GUILayout.Space(10);
 
-        if (GUILayout.Button("Unlock All"))
-        {
-            ((levelManager)target).UnlockAllLevel();
-        }
+            EditorGUILayout.BeginHorizontal();
 
-        EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Lock All"))
+            {
+                ((levelManager)target).LockAllLevel();
+            }
+
+            if (GUILayout.Button("Unlock All"))
+            {
+                ((levelManager)target).UnlockAllLevel();
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
     }
 }

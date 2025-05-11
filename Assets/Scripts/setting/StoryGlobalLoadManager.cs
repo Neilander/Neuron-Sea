@@ -48,7 +48,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     public bool ShouldLoadSceneStory()
     {
-        //Debug.Log($"在场景{currentScene}关卡{currentLevel}检查是否该触发剧情");
+        Debug.Log($"在场景{currentScene}关卡{currentLevel}检查是否该触发剧情");
         return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene);
     }
 
@@ -128,15 +128,26 @@ public class StoryGlobalLoadManager : MonoBehaviour
     public void StartLevel(int scene, int level)
     {
         ifThisStartLevelHasStory = false;
+        currentScene = scene;
+        currentLevel = level;
         if (ShouldLoadSceneStory())
         {
             ifThisStartLevelHasStory = true;
             OnStartWithStory?.Invoke(level);
+            
+        }
+        else
+        {
+            OnStartWithOutStory?.Invoke(level);
+        }
+        OnGeneralStart?.Invoke(level);
+        if (ifThisStartLevelHasStory)
+        {
             switch (scene)
             {
                 case 1:
                     ifLoadedScene1Story = true;
-                    PlayerPrefs.SetInt("SGLM_Scene1Loaded",1);
+                    PlayerPrefs.SetInt("SGLM_Scene1Loaded", 1);
                     break;
 
                 case 2:
@@ -149,14 +160,9 @@ public class StoryGlobalLoadManager : MonoBehaviour
                     PlayerPrefs.SetInt("SGLM_Scene3Loaded", 1);
                     break;
             }
+            PlayerPrefs.Save();
         }
-        else
-        {
-            OnStartWithOutStory?.Invoke(level);
-        }
-        OnGeneralStart?.Invoke(level);
-        currentScene = scene;
-        currentLevel = level;
+        
     }
 
     private void OnApplicationQuit()

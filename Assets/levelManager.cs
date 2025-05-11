@@ -150,6 +150,7 @@ public class levelManager : MonoBehaviour
 
     void OnDestroy()
     {
+        Debug.Log("解绑了");
         SceneManager.sceneLoaded -= OnSceneLoaded;
         StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
         StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
@@ -158,6 +159,7 @@ public class levelManager : MonoBehaviour
     private void Start()
     {
         StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
+        
     }
 
     public void PrepareForLevelStory(int level)
@@ -172,9 +174,22 @@ public class levelManager : MonoBehaviour
 
     public void GeneralActionWhenLevel(int level)
     {
-        
+        Debug.Log("解锁" + level);
+        UnlockLevel(level);
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        Debug.Log("我没触发？");
+        LoadUnlockedLevels();
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
+        else
+        {
+            Debug.Log("为什么没有啊");
+        }
         LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos);
         
+
     }
 
     private IEnumerator RegisterNextFrame()
@@ -210,8 +225,8 @@ public class levelManager : MonoBehaviour
     // 解锁下一关
     public void UnlockNextLevel()
     {
-        Debug.Log($"解锁下一关：当前关卡 {currentLevelIndex}，解锁关卡 {currentLevelIndex}");
-        UnlockLevel(currentLevelIndex);  // 解锁下一关
+        Debug.Log($"解锁下一关：当前关卡 {currentLevelIndex}，解锁关卡 {currentLevelIndex+1},有安全检查不用担心");
+        UnlockLevel(currentLevelIndex+1);  // 解锁下一关
     }
 
     // 解锁指定关卡
@@ -734,6 +749,7 @@ public class levelManager : MonoBehaviour
     }
     public void SwitchToNextLevel()
     {
+        CompleteCurrentLevel();
         GridManager.Instance.RenewSwitch();
         if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
         {
@@ -743,6 +759,7 @@ public class levelManager : MonoBehaviour
         else
         {
             Debug.Log("我要走入"+ Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel));
+           
             recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
             FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
             FindAnyObjectByType<StartEffectController>().TriggerStartEffect(true);

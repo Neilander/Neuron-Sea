@@ -129,7 +129,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     public void PrepareForTransport()
     {
         CheckEdgeSetted = false;
-        Invoke("StartSetCheckEdge", 1f);
+        Invoke("StartSetCheckEdge", 0.1f);
     }
 
     private void Update()
