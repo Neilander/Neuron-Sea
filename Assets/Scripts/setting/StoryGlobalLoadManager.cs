@@ -165,6 +165,11 @@ public class StoryGlobalLoadManager : MonoBehaviour
         
     }
 
+    public void ResetStory()
+    {
+        ifLoadedScene1Story = false; ifLoadedScene2Story = false; ifLoadedScene3Story = false;
+    }
+
     private void OnApplicationQuit()
     {
 #if UNITY_EDITOR

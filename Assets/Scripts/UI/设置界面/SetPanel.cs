@@ -82,6 +82,7 @@ public class SetPanel : MonoBehaviour
         PlayerPrefs.SetInt("SGLM_Scene3Loaded", 0);
         PlayerPrefs.SetInt("BeginSceneVid", 0);
         PlayerPrefs.Save();
+        StoryGlobalLoadManager.instance.ResetStory();
         BeginPanel beginPanel = FindAnyObjectByType<BeginPanel>();
         if (beginPanel != null)
         {
