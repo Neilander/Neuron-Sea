@@ -21,6 +21,8 @@ public class SetPanel : MonoBehaviour
 
     public Animator backgroundAnimator;
 
+    
+
     private void Awake(){
         if (Instance != null && Instance != this) {
             Destroy(gameObject); // 防止重复
@@ -80,10 +82,11 @@ public class SetPanel : MonoBehaviour
         PlayerPrefs.SetInt("SGLM_Scene3Loaded", 0);
         PlayerPrefs.SetInt("BeginSceneVid", 0);
         PlayerPrefs.Save();
-        BeginPanel? beginPanel = GetComponentInParent<BeginPanel>();
+        BeginPanel beginPanel = FindAnyObjectByType<BeginPanel>();
         if (beginPanel != null)
         {
             beginPanel.ifStartVid = true;
+            Debug.Log("可以播放开场剧情了！");
         }
     }
 }

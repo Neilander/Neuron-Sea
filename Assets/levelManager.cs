@@ -187,7 +187,7 @@ public class levelManager : MonoBehaviour
         {
             Debug.Log("为什么没有啊");
         }
-        LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos);
+        LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos, false);
         
 
     }
@@ -314,9 +314,9 @@ public class levelManager : MonoBehaviour
 
     }
 
-    public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
+    public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement,bool ifPlaySound = true)
     {
-        if (ifSetPlayerToAndNoMovement)
+        if (ifSetPlayerToAndNoMovement&& ifPlaySound)
         {
             AudioManager.Instance.Play(SFXClip.EnterLevel);
         }
