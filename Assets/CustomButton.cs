@@ -2,12 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CustomButton : MonoBehaviour
 {
     public Color highlightedColor = Color.red;
     public Color normalColor = Color.white;
+    private RectTransform rectTransform;
+    private bool isMouseOver = false;
+
+    void Start()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+
+    void Update()
+    {
+        // 将鼠标屏幕坐标转换为 UI 本地坐标
+        Vector2 localMousePosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            Input.mousePosition,
+            null, // 如果 Canvas 是 Screen Space - Overlay 模式，此处为 null
+            out localMousePosition
+        );
+
+        // 检查坐标是否在 RectTransform 的矩形范围内
+        isMouseOver = rectTransform.rect.Contains(localMousePosition);
+
+        if (isMouseOver)
+        {
+            HightlightColor();
+        }
+        else
+        {
+            NormalColor();
+        }
+    }
 
     public void HightlightColor()
     {

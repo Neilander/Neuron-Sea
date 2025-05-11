@@ -38,13 +38,14 @@ public class PauseMenu : MonoBehaviour
             if (isPaused) {
                 isPaused = false;
                 Time.timeScale = 1;
-
                 pauseMenu.SetActive(false);
+                AudioManager.Instance.Play(SFXClip.Cilck3);
             }
             else {
                 isPaused = true;
                 Time.timeScale = 0;
                 pauseMenu.SetActive(true);
+                AudioManager.Instance.Play(SFXClip.Cilck4);
             }
         }
     }
@@ -69,5 +70,9 @@ public class PauseMenu : MonoBehaviour
 
     public void GoToTitle(){
         SceneManager.LoadScene(0);
+    }
+
+    public void RestartLevel(){
+        levelManager.instance.RestartLevel();
     }
 }
