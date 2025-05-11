@@ -104,6 +104,7 @@ public class StoryTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        print("碰到我了");
         if (!other.CompareTag("Player")) return;
         playerInTriggerArea = true;
         playerController = other.GetComponent<PlayerController>();
@@ -118,12 +119,12 @@ public class StoryTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player")) return;
-        playerInTriggerArea = false;
-        HidePrompt();
-    }
+    // private void OnTriggerExit2D(Collider2D other)
+    // {
+    //     if (!other.CompareTag("Player")) return;
+    //     playerInTriggerArea = false;
+    //     HidePrompt();
+    // }
 
 
 
