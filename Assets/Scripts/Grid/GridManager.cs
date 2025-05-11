@@ -484,7 +484,7 @@ public class GridManager : MonoBehaviour
                 Debug.Log("进入none state");
                 break;
             case SwitchState.Switch:
-                AudioManager.Instance.PauseBGM();
+                //AudioManager.Instance.PauseBGM();
                 if (curState == SwitchState.None)
                 {
                     AudioManager.Instance.Play(SFXClip.BulletTimeIn);
@@ -514,7 +514,8 @@ public class GridManager : MonoBehaviour
                 {
                     AudioManager.Instance.Play(SFXClip.BulletTimeOut);
                 }
-                AudioManager.Instance.ResumeBGM();
+                AudioManager.Instance.Stop(SFXClip.BulletContinune);
+                //AudioManager.Instance.ResumeBGM();
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
                 gridObj.SetActive(false);
