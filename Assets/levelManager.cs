@@ -308,6 +308,9 @@ public class levelManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         PlayerPrefs.SetInt("carryLevel", 0);
+#if UNITY_EDITOR
+    LockAllLevel();
+#endif
 
     }
 
