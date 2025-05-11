@@ -342,6 +342,7 @@ public class CompanionController : MonoBehaviour
     // 视频播放完后回到主菜单
     private void OnVideoEnd(VideoPlayer vp){
         // 加载主菜单场景
+        ActivityGateCenter.ExitState(ActivityState.Story);
         SceneManager.LoadScene("BeginMenu"); // "MainMenu"为主菜单场景的名称
     }
 }

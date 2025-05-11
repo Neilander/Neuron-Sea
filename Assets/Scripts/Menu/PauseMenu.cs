@@ -38,12 +38,15 @@ public class PauseMenu : MonoBehaviour
 
     public void ContinueGame(){
         print("我是暂停面板，我被点了");
-        if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
+        //if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
+        if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story,ActivityState.StartEffectMove))
+        {
             if (isPaused) {
                 ForceResume();
                 AudioManager.Instance.Play(SFXClip.Cilck3);
             }
             else {
+                ActivityGateCenter.EnterState(ActivityState.Pause);
                 isPaused = true;
                 Time.timeScale = 0;
                 pauseMenu.SetActive(true);
@@ -81,6 +84,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void ForceResume(){
+        ActivityGateCenter.ExitState(ActivityState.Pause);
         isPaused = false;
         Time.timeScale = 1;
         levelSelectPanel.SetActive(false);

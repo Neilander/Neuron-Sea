@@ -833,7 +833,7 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        if (!(StoryManager.Instance._currentState==GameState.StoryMode)) {
+        if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
             recordRect = LoadLevel(currentLevelIndex, true);

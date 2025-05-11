@@ -138,6 +138,7 @@ public class CameraControl : MonoBehaviour
         {
             companionController.SetTarget(null);
         }
+        ActivityGateCenter.EnterState(ActivityState.Story);
         StartCoroutine(BeginningDelay(1f));
         
     }

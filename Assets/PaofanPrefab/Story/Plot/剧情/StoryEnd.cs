@@ -35,8 +35,9 @@ public class StoryEnd : MonoBehaviour
         CompanionController companionController = FindObjectOfType<CompanionController>();
         //不跟随玩家
         companionController.canFollow=false;
-        
+
         //摄像头跟随伙伴
+        ActivityGateCenter.EnterState(ActivityState.Story);
         //camControl.target = companionController.transform;
         camControl.isTransitioning = true; // 开启平滑过渡
         camControl.smoothSpeed = 5f; // 设置平滑速度

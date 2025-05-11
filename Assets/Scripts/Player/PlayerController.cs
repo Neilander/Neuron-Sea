@@ -628,14 +628,14 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
     #region 限制控制
     private float controlInput;
-    public void StartControl(float controlInput, float time, bool isRight)
+    public void StartControl(float controlInput, float time, bool isRight, Action doWhenEnd = null)
     {
         if (ifGetControlledOutside == null) ifGetControlledOutside = new BoolRefresher(1);
-        ifGetControlledOutside.Refresh(time);
+        ifGetControlledOutside.Refresh(time,doWhenEnd);
         // transform.GetComponent<Animator>().SetBool("isGrounded",true);
         // transform.GetComponent<Animator>().SetFloat("Speed",0.5f);
         this.controlInput = Mathf.Clamp(controlInput, 0, isRight ? 1 : -1);
-        Debug.Log(transform.position);
+        //Debug.Log(transform.position);
 
     }
 
@@ -846,6 +846,7 @@ public class BoolRefresher
 
     private Func<float> durationWatcher;
     private float lastWatchedValue;
+    private Action doWhenEnd;
 
     public BoolRefresher(float duration, Func<float> externalDurationGetter = null)
     {
@@ -863,10 +864,11 @@ public class BoolRefresher
         timer = duration;
     }
 
-    public void Refresh(float t)
+    public void Refresh(float t, Action doWhenEnd = null)
     {
         value = true;
         timer = t;
+        this.doWhenEnd = doWhenEnd;
     }
 
     /// <summary>
@@ -890,6 +892,7 @@ public class BoolRefresher
         {
             value = false;
             timer = 0f;
+            doWhenEnd?.Invoke();
         }
     }
 
