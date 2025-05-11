@@ -12,13 +12,8 @@ public class ClickAndExit : MonoBehaviour
         transform.GetComponent<Button>().onClick.AddListener(Exit);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void Exit(){
+    public void Exit(){
+        AudioManager.Instance.Play(SFXClip.Cilck3);
         Panel.SetActive(false);
     }
 }

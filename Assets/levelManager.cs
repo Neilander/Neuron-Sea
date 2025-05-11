@@ -316,7 +316,10 @@ public class levelManager : MonoBehaviour
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
     {
-        AudioManager.Instance.Play(SFXClip.EnterLevel);
+        if (ifSetPlayerToAndNoMovement)
+        {
+            AudioManager.Instance.Play(SFXClip.EnterLevel);
+        }
         FindAnyObjectByType<PlayerController>().PrepareForTransport();
         if (newLevelIndex > maxLevel || newLevelIndex < minLevel)
         {

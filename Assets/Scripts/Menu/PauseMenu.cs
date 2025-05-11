@@ -27,8 +27,12 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            ContinueGame();
+        if (Input.GetKeyDown(KeyCode.Escape)) 
+        {
+            if (!settingMenu.activeSelf && !levelSelectPanel.activeSelf)
+            {
+                ContinueGame();
+            }
         }
     }
 
@@ -36,9 +40,7 @@ public class PauseMenu : MonoBehaviour
         print("我是暂停面板，我被点了");
         if (!(StoryManager.Instance.currentState == GameState.StoryMode)) {
             if (isPaused) {
-                isPaused = false;
-                Time.timeScale = 1;
-                pauseMenu.SetActive(false);
+                ForceResume();
                 AudioManager.Instance.Play(SFXClip.Cilck3);
             }
             else {
@@ -69,10 +71,20 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void GoToTitle(){
+        ForceResume();
         SceneManager.LoadScene(0);
     }
 
     public void RestartLevel(){
+        ForceResume();
         levelManager.instance.RestartLevel();
+    }
+
+    public void ForceResume(){
+        isPaused = false;
+        Time.timeScale = 1;
+        levelSelectPanel.SetActive(false);
+        settingMenu.SetActive(false);
+        pauseMenu.SetActive(false);
     }
 }

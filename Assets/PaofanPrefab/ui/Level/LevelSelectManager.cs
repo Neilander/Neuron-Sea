@@ -45,9 +45,12 @@ public class LevelSelectManager : MonoBehaviour
 
      private GameObject[] openLockInstances; // 存储每个按钮的开锁图
 
-     
 
-     #endregion
+
+    #endregion
+
+
+    public Animator backgroundAnimator;
 
     void Awake()
     {
@@ -100,6 +103,15 @@ public class LevelSelectManager : MonoBehaviour
         // 更新所有关卡的锁定状态
         UpdateLevelLockStatus();
         UpdateSpecialButtons();
+        backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GetComponentInChildren<ClickAndExit>().Exit();
+        }
     }
 
     public void CollectActiveButtonsFrom(Transform t1, Transform t2, Transform t3)
@@ -294,7 +306,7 @@ public class LevelSelectManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }*/
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
-        Time.timeScale = 1;
+        GetComponentInParent<PauseMenu>().ForceResume();
     }
 
     // 特殊按钮点击事件处理

@@ -19,6 +19,8 @@ public class SetPanel : MonoBehaviour
     public Button btn3;
     public Button closeBtn;
 
+    public Animator backgroundAnimator;
+
     private void Awake(){
         if (Instance != null && Instance != this) {
             Destroy(gameObject); // 防止重复
@@ -35,15 +37,18 @@ public class SetPanel : MonoBehaviour
         btn1.onClick.AddListener(() => ShowPanel(panel1));
         btn2.onClick.AddListener(() => ShowPanel(panel2));
         btn3.onClick.AddListener(() => ShowPanel(panel3));
-        closeBtn.onClick.AddListener(()=>CloseAllSet());
         // 默认显示第一个面板
         ShowPanel(panel1);
+        backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GetComponentInChildren<ClickAndExit>().Exit();
+        }
     }
 
     public void OpenCanvas(){
@@ -67,8 +72,4 @@ public class SetPanel : MonoBehaviour
         targetPanel.SetActive(true);
     }
 
-    public void CloseAllSet(){
-        gameObject.SetActive(false);
-    }
-    
 }

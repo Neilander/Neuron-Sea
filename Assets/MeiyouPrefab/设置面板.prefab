@@ -3453,6 +3453,7 @@ GameObject:
   - component: {fileID: 4231524993652139672}
   - component: {fileID: 4462604260527696643}
   - component: {fileID: 3640643334886553517}
+  - component: {fileID: 2499852996256618400}
   m_Layer: 5
   m_Name: "\u5173\u95ED"
   m_TagString: Untagged
@@ -3561,19 +3562,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4462604260527696643}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7378220687090807128}
-        m_TargetAssemblyTypeName: SoundTrigger, Assembly-CSharp
-        m_MethodName: ClickSound
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &2499852996256618400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4850222988225304769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e5c34011663ce4e8943e2ab48d2dd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Panel: {fileID: 5714519491171647121}
 --- !u!1 &4853939230217196167
 GameObject:
   m_ObjectHideFlags: 0
@@ -4004,6 +4006,7 @@ MonoBehaviour:
   btn2: {fileID: 2142188573083189272}
   btn3: {fileID: 869986322208768167}
   closeBtn: {fileID: 3640643334886553517}
+  backgroundAnimator: {fileID: 1166826256801309755}
 --- !u!114 &7378220687090807128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6343,7 +6346,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5673044412596102411}
   m_HandleRect: {fileID: 6675230447027255244}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 1.0000004
   m_Size: 0.7882158
   m_NumberOfSteps: 0
   m_OnValueChanged:
