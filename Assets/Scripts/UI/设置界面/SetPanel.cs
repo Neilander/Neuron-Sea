@@ -72,4 +72,18 @@ public class SetPanel : MonoBehaviour
         targetPanel.SetActive(true);
     }
 
+    public void ResetStory()
+    {
+        Debug.Log("清除剧情加载记录");
+        PlayerPrefs.SetInt("SGLM_Scene1Loaded", 0);
+        PlayerPrefs.SetInt("SGLM_Scene2Loaded", 0);
+        PlayerPrefs.SetInt("SGLM_Scene3Loaded", 0);
+        PlayerPrefs.SetInt("BeginSceneVid", 0);
+        PlayerPrefs.Save();
+        BeginPanel? beginPanel = GetComponentInParent<BeginPanel>();
+        if (beginPanel != null)
+        {
+            beginPanel.ifStartVid = true;
+        }
+    }
 }

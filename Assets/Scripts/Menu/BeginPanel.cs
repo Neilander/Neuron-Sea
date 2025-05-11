@@ -28,7 +28,7 @@ public class BeginPanel : MonoBehaviour
     {
         img = volume.GetComponent<Image>();
 
-        //ifStartVid = PlayerPrefs.GetInt("BeginSceneVid") ==0;
+        ifStartVid = PlayerPrefs.GetInt("BeginSceneVid") == 0;
 
         // 初始化视频播放器设置
         if (videoPlayer != null)
@@ -55,10 +55,10 @@ public class BeginPanel : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetInt("BeginSceneVid", 0);
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    PlayerPrefs.SetInt("BeginSceneVid", 0);
+    //}
 
     public void StartGame()
     {
