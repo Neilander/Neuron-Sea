@@ -62,7 +62,7 @@ public class GridManager : MonoBehaviour
 
     private TwoObjectContainer<SwitchableObj> switchInfoRecorder = new TwoObjectContainer<SwitchableObj>();
 
-    const float switchCoolDown = 0.5f;
+    const float switchCoolDown = 0.41f;
     private bool switchCoolDownFinished = true;
 
     //这部分是在编辑器中绘制网格
