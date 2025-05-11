@@ -68,15 +68,32 @@ public class CameraSequencePlayer : MonoBehaviour
         }
 
         // 确保在开始时设置初始PPU值
+        /* 原来剧情相关
         if (pixelPerfectCamera != null &&!CameraControl.Instance.hasLoadOnce&& !CameraControl.Instance.hasLoadOnce)//这里泡饭改的从注册表获取我改回来了
         {
             pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
-        }
+        }*/
         lerpCompanion = GetComponent<IlerpCompanion>();
+        StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
+    }
+
+    private void OnDestroy()
+    {
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
+    }
+
+    public void PrepareForLevelStory(int level)
+    {
+        if (level == 1 && pixelPerfectCamera != null)
+        {
+            pixelPerfectCamera.assetsPPU = cameraTransition.fromPPU;
+        }
     }
 
     private void Start()
     {
+
+        
         // 自动播放
         if (playOnStart)
         {
@@ -91,7 +108,7 @@ public class CameraSequencePlayer : MonoBehaviour
     /// 播放完整序列：动画 -> 延迟 -> 相机过渡 -> 延迟
     /// </summary>
     public void PlaySequence(){
-        if (!CameraControl.Instance.hasLoadOnce)//这里泡饭改的从注册表获取我改回来了
+        if (StoryGlobalLoadManager.instance.IfThisStartHasLevel())//这里泡饭改的从注册表获取我改回来了
         {
             if (isPlaying) {
                 Debug.LogWarning("已有序列正在播放！");

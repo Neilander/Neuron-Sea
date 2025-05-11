@@ -111,14 +111,41 @@ public class CameraControl : MonoBehaviour
         
         realSmoothSpeed = smoothSpeed;
 
+        /* 原本剧情相关
         if (hasLoadOnce) { //这里泡饭改的是从注册表获取
             target = FindObjectOfType<PlayerController>().transform;
+        }*/
+
+        print("我在这里");
+        StoryGlobalLoadManager.instance.RegisterOnStartWithoutStory(_ => { target = FindObjectOfType<PlayerController>().transform; });
+        StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
+    }
+
+    private void OnDestroy()
+    {
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithoutStory(_ => { target = FindObjectOfType<PlayerController>().transform; });
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
+    }
+
+    public void PrepareForLevelStory(int n)
+    {
+        if (n != 1)
+            return;
+        GridManager.Instance.LockStates(true);
+        IgnoreCameraLimit();
+        FindObjectOfType<PlayerController>().DisableInput();
+        if (companionController != null)
+        {
+            companionController.SetTarget(null);
         }
+        StartCoroutine(BeginningDelay(1f));
+        
     }
 
     void Start(){
-        print("我在这里");
-        HelperToolkit.PrintBoolStates(()=> levelManager.instance.isStartStory,()=>specialStartForScene1,()=>hasLoadOnce);
+        
+        //HelperToolkit.PrintBoolStates(()=> levelManager.instance.isStartStory,()=>specialStartForScene1,()=>hasLoadOnce);
+        /* 原本剧情相关
         if (levelManager.instance.currentLevelIndex == 1 && 
             levelManager.instance.isStartStory&&
             specialStartForScene1&& !(hasLoadOnce)) { //这里泡饭改的是从注册表获取
@@ -132,15 +159,15 @@ public class CameraControl : MonoBehaviour
         if (!specialStartForScene1) {
             target=FindObjectOfType<PlayerController>().transform;
             
-        }
-        
+        }*/
+
         ani = companionController.GetComponent<Animator>();
         cam = Camera.main;
         halfHeight = cam.orthographicSize;
         halfWidth = halfHeight * cam.aspect;
         smoothTargetPosition = transform.position;
         
-        
+        /* 原本剧情相关
         if (levelManager.instance.isStartStory&& 
             levelManager.instance.currentLevelIndex == 1&&
             specialStartForScene1&& !(hasLoadOnce)) { //这里泡饭改的是从注册表获取
@@ -150,7 +177,7 @@ public class CameraControl : MonoBehaviour
             StartCoroutine(BeginningDelay(1f));
             Debug.Log("正常触发");
             
-        }
+        }*/
         // ✅ 构建默认限制区域
         float left = defaultOrigin.x;
         float right = defaultOrigin.x + defaultWidth;

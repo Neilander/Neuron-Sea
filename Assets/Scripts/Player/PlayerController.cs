@@ -88,8 +88,24 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     public bool CheckEdge = true;
 
     private bool dropped = false;
+
+    private bool CheckEdgeSetted = false;
+
+    private void Awake()
+    {
+        CheckEdgeSetted = false;
+        StoryGlobalLoadManager.instance.RegisterGeneralStart(GeneralActionWhenLevel);
+    }
+
+    private void OnDestroy()
+    {
+        StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
+    }
+
+
     private void Start()
     {
+        
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
@@ -98,7 +114,24 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         // NewCheck(); // 在 Start 中进行初始地面检测
     }
 
-    
+    public void GeneralActionWhenLevel(int level)
+    {
+
+        Invoke("StartSetCheckEdge",1f);
+
+    }
+
+    public void StartSetCheckEdge()
+    {
+        CheckEdgeSetted = true;
+    }
+
+    public void PrepareForTransport()
+    {
+        CheckEdgeSetted = false;
+        Invoke("StartSetCheckEdge", 0.1f);
+    }
+
     private void Update()
     {
         GameInput.Update(Time.unscaledDeltaTime);
@@ -112,10 +145,13 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             if (Input.GetKeyDown(KeyCode.J))
             {
                 levelManager.instance.SwitchToBeforeLevel_Direct();
+                
             }
             else if (Input.GetKeyDown(KeyCode.K))
             {
                 levelManager.instance.SwitchToNextLevel_Direct();
+                
+
             }
         }
 
@@ -398,7 +434,8 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         ifGetControlledOutside.Update(Time.deltaTime);
         ifJustGround.Update(Time.deltaTime);
 
-        if (CheckEdge)
+        
+        if (CheckEdge&& CheckEdgeSetted)
         {
             if (movementBounds.IsAtRightEdge())
             {

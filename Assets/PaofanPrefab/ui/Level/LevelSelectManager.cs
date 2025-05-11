@@ -25,7 +25,11 @@ public class LevelSelectManager : MonoBehaviour
     [Header("Lock Settings")]
     [SerializeField] private GameObject lockImagePrefab; // 锁的图片预制体
 
+    [Header("Collect Settings")]
+    [SerializeField] private GameObject IfCollectPrefab;
+
     private GameObject[] lockInstances; // 用于存储每个按钮上的锁实例
+    private GameObject[] CollectInstances; // 用于存储每个按钮上的是否收集实例
 
     #region state
     [SerializeField] private Sprite[] normalSprites; // 每个按钮的 normal 状态图
@@ -68,6 +72,7 @@ public class LevelSelectManager : MonoBehaviour
         CollectActiveButtonsFrom(scene1, scene2, scene3);
         // 初始化锁实例数组
         lockInstances = new GameObject[levelButtons.Length];
+        CollectInstances = new GameObject[levelButtons.Length];
         openLockInstances = new GameObject[levelButtons.Length];
         // 为每个按钮创建锁并绑定点击事件
         for (int i = 0; i < levelButtons.Length; i++)
@@ -79,8 +84,12 @@ public class LevelSelectManager : MonoBehaviour
 
             // 为每个按钮创建锁的实例
             GameObject lockInstance = Instantiate(lockImagePrefab, levelButtons[i].transform);
+            GameObject CollectInstance = Instantiate(IfCollectPrefab, levelButtons[i].transform);
             lockInstance.transform.SetAsLastSibling(); // 确保锁显示在最上层
+            CollectInstance.transform.SetAsLastSibling();
             lockInstances[i] = lockInstance;
+            CollectInstances[i] = CollectInstance;
+            CollectInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(75, -75);
 
             GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
             openLockInstance.transform.SetAsLastSibling(); // 确保显示在最上层
@@ -163,13 +172,17 @@ public class LevelSelectManager : MonoBehaviour
         bool isLevel24Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[1]);
         bool isLevel36Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[2]);
 
+        bool isScene2Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[0] + 1);
+        bool isScene3Unlocked = levelManager.instance.IsLevelUnlocked(checkpoints[1] + 1);
+
+
         // 更新第一个按钮
-        UpdateSpecialButton(0, true, isLevel12Unlocked);
+        UpdateSpecialButton(0, true, isScene2Unlocked);
 
         // 更新第二个按钮
-        if (isLevel12Unlocked)
+        if (isScene2Unlocked)
         {
-            UpdateSpecialButton(1, true, isLevel24Unlocked);
+            UpdateSpecialButton(1, true, isScene3Unlocked);
         }
         else
         {
@@ -177,7 +190,7 @@ public class LevelSelectManager : MonoBehaviour
         }
 
         // 更新第三个按钮
-        if (isLevel24Unlocked)
+        if (isScene3Unlocked)
         {
             UpdateSpecialButton(2, true, isLevel36Unlocked);
         }
@@ -220,7 +233,8 @@ public class LevelSelectManager : MonoBehaviour
         levelManager.instance.LoadUnlockedLevels();
         Debug.Log("Refreshing level select buttons");
         UpdateLevelLockStatus();
-        
+        UpdateSpecialButtons();
+
     }
 
     // 更新所有关卡的锁定状态
@@ -252,6 +266,11 @@ public class LevelSelectManager : MonoBehaviour
                 lockInstances[i].SetActive(!isUnlocked);
             }
 
+            if (CollectInstances != null && i < CollectInstances.Length && CollectInstances[i] != null && CollectableManager.Instance != null)
+            {
+                CollectInstances[i].SetActive(CollectableManager.Instance.HasCollectedLevel(i+1));
+            }
+
 
             if (openLockInstances != null && i < openLockInstances.Length && openLockInstances[i] != null) {
                 openLockInstances[i].SetActive(isUnlocked); // 解锁时显示开锁图标
@@ -270,9 +289,10 @@ public class LevelSelectManager : MonoBehaviour
         }
 
         string levelName = "Level_" + levelIndex; // 拼接关卡名称
+        /*
         if (levelManager.instance.sceneIndex == SceneManager.GetActiveScene().buildIndex) {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        }*/
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
         Time.timeScale = 1;
     }

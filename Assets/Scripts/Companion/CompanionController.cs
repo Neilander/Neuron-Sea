@@ -46,6 +46,8 @@ public class CompanionController : MonoBehaviour
     public bool hasStopped=true;
     private bool _startMode=false;//改成true之后出现报空
 
+
+    private bool ignoreStory = true;
     public bool StartMode
     {
         get => _startMode;
@@ -57,13 +59,37 @@ public class CompanionController : MonoBehaviour
             }
         }
     }
+
+    public void PrepareForLevelStory(int n)
+    {
+        if (n == 1)
+        {
+            hasStopped = false;
+            //如果第一次进入在右上角出现
+            _startMode = true;
+            ignoreStory = false;
+        }
+    }
+
+    private void Awake()
+    {
+        StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
+    }
+
+    private void OnDestroy()
+    {
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
+    }
+
     private void Start(){
         csp = FindObjectOfType<CameraSequencePlayer>();
+        
+        /* 原来剧情相关
         if (levelManager.instance.currentLevelIndex == 1) {
             hasStopped=false;
             //如果第一次进入在右上角出现
             _startMode=true;
-        }
+        }*/
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
@@ -163,6 +189,7 @@ public class CompanionController : MonoBehaviour
             followSpeed
         );
         //HelperToolkit.PrintBoolStates(() => CameraControl.Instance.hasLoadOnce);
+        /*原本剧情相关
         if (Vector3.Distance(transform.position, targetPosition) < 0.01f
             &&!hasStopped
             &&levelManager.instance.isStartStory
@@ -175,6 +202,18 @@ public class CompanionController : MonoBehaviour
             oldTrans =this.transform;
             
         
+            StartCoroutine(StopStartMode());
+        }*/
+
+        if (!ignoreStory && Vector3.Distance(transform.position, targetPosition) < 0.01f && !hasStopped
+            && StoryGlobalLoadManager.instance.IfThisStartHasLevel())
+        {
+            hasStopped = true;
+            print("我到达目的地了！");
+            // startMode = true;
+            oldTrans = this.transform;
+
+            ignoreStory = true;
             StartCoroutine(StopStartMode());
         }
         lastPosition = transform.position;

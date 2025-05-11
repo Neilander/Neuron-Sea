@@ -45,11 +45,13 @@ public class levelManager : MonoBehaviour
     private bool isWalkingToSpawn = false;
     private bool isRestarting = false;
     public float specialStartTime = 1;
-    
+
     private Vector3 lockedPosition = Vector3.zero;
     private float positionLockDuration = 2f; // 锁定持续时间
 
 
+    public static readonly int startLevelIndex = 1;
+    public static readonly int endlevelIndex = 36;
 
     const int sceneLimit = 3;
 
@@ -60,6 +62,8 @@ public class levelManager : MonoBehaviour
     private float positionMonitorInterval = 1f; // 每秒检查一次
     private Vector3 lastRecordedPosition = Vector3.zero;
 
+
+    bool ifDirectToPos = true;
     void Awake()
     {
         if (instance == null)
@@ -79,7 +83,8 @@ public class levelManager : MonoBehaviour
             {
                 cameraData.SetRenderer(sceneIndex - 1);
             }
-            bool ifDirect = true;
+            //bool ifDirect = true;
+            /* 原本剧情相关
             switch (sceneIndex)
             {
                 case 1:
@@ -108,14 +113,19 @@ public class levelManager : MonoBehaviour
                             ifDirect = false;
                     }
                     break;
-            }
+            }*/
             if (PlayerPrefs.GetInt("carryLevel") != 0)
             {
                 currentLevelIndex = PlayerPrefs.GetInt("carryLevel");
                 PlayerPrefs.SetInt("carryLevel", 0);
             }
-                
-            LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
+
+            StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
+            StoryGlobalLoadManager.instance.RegisterGeneralStart(GeneralActionWhenLevel);
+            
+
+            //原本剧情相关
+            //LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
             
             StartCoroutine(RegisterNextFrame());
 
@@ -135,6 +145,50 @@ public class levelManager : MonoBehaviour
             return;
         }
 
+
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("解绑了");
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
+        StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
+    }
+
+    private void Start()
+    {
+        StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
+        
+    }
+
+    public void PrepareForLevelStory(int level)
+    {
+        if (level == 13 || level == 25)
+            ifDirectToPos = false;
+
+        if(level == 1)
+            FindAnyObjectByType<PlayerController>().DisableInput();
+        
+    }
+
+    public void GeneralActionWhenLevel(int level)
+    {
+        Debug.Log("解锁" + level);
+        UnlockLevel(level);
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        Debug.Log("我没触发？");
+        LoadUnlockedLevels();
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
+        else
+        {
+            Debug.Log("为什么没有啊");
+        }
+        LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos);
+        
 
     }
 
@@ -171,16 +225,25 @@ public class levelManager : MonoBehaviour
     // 解锁下一关
     public void UnlockNextLevel()
     {
-        Debug.Log($"解锁下一关：当前关卡 {currentLevelIndex}，解锁关卡 {currentLevelIndex}");
-        UnlockLevel(currentLevelIndex);  // 解锁下一关
+        Debug.Log($"解锁下一关：当前关卡 {currentLevelIndex}，解锁关卡 {currentLevelIndex+1},有安全检查不用担心");
+        UnlockLevel(currentLevelIndex+1);  // 解锁下一关
     }
 
     // 解锁指定关卡
     public void UnlockLevel(int levelIndex)
     {
-        if (levelIndex >= minLevel && levelIndex <= maxLevel)
+        if (levelIndex >= startLevelIndex && levelIndex <= endlevelIndex)
         {
             unlockedLevels.Add(levelIndex);
+            // SaveUnlockedLevels();
+        }
+    }
+
+    public void LockLevel(int levelIndex)
+    {
+        if (levelIndex >= startLevelIndex && levelIndex <= endlevelIndex)
+        {
+            unlockedLevels.Remove(levelIndex);
             // SaveUnlockedLevels();
         }
     }
@@ -205,6 +268,38 @@ public class levelManager : MonoBehaviour
         }
     }
 
+    public void LockAllLevel()
+    {
+        for (int i = startLevelIndex+1; i <= endlevelIndex; i++)
+        {
+            LockLevel(i);
+        }
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        LoadUnlockedLevels();  // 重新加载确保状态一致
+
+        // 刷新关卡选择界面
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
+    }
+
+    public void UnlockAllLevel()
+    {
+        for (int i = startLevelIndex; i <= endlevelIndex; i++)
+        {
+            UnlockLevel(i);
+        }
+        SaveUnlockedLevels();  // 确保立即保存解锁状态
+        LoadUnlockedLevels();  // 重新加载确保状态一致
+
+        // 刷新关卡选择界面
+        if (LevelSelectManager.Instance != null)
+        {
+            LevelSelectManager.Instance.RefreshButtons();
+        }
+    }
+
     public void RefreshEdgeCheck()
     {
         FindAnyObjectByType<PlayerController>().CheckEdge = true;
@@ -213,10 +308,15 @@ public class levelManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         PlayerPrefs.SetInt("carryLevel", 0);
+#if UNITY_EDITOR
+    LockAllLevel();
+#endif
+
     }
 
     public Rect LoadLevel(int newLevelIndex, bool ifSetPlayerToAndNoMovement)
     {
+        FindAnyObjectByType<PlayerController>().PrepareForTransport();
         if (newLevelIndex > maxLevel || newLevelIndex < minLevel)
         {
             if (newLevelIndex >= 1 && newLevelIndex <= 12)
@@ -287,10 +387,11 @@ public class levelManager : MonoBehaviour
         }
 
         //PlayerController controller = FindAnyObjectByType<PlayerController>();
+        /*原本剧情相关
         if (isStartStory && newLevelGO.name == "Level_1")
         {
             controller.DisableInput();
-        }
+        }*/
         controller.SetMovementBounds(data.levelBound);
 
         Transform entities = newLevelGO.transform.Find("Entities");
@@ -298,7 +399,7 @@ public class levelManager : MonoBehaviour
             Transform respawnTarget = null;
 
             foreach (Transform child in entities) {
-                if (cameraControl.hasLoadOnce) { //这里泡饭改的是从注册表获取我改回来了
+                if (!StoryGlobalLoadManager.instance.ShouldLoadSceneStory()) { //这里泡饭改的是从注册表获取我改回来了
                     Debug.Log("多次触发");
                     if (child.name.StartsWith("Respawn")) {
                         respawnTarget = child;
@@ -317,7 +418,7 @@ public class levelManager : MonoBehaviour
                         break;
                     }
                 }
-                else if (!cameraControl.hasLoadOnce)
+                else if (StoryGlobalLoadManager.instance.ShouldLoadSceneStory())
                 {
                     Debug.Log("第一次触发");
                     if (child.name.StartsWith("Start")) {
@@ -334,7 +435,7 @@ public class levelManager : MonoBehaviour
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
 
-
+                        /*
                         switch (sceneIndex)
                         {
                             case 1:
@@ -350,7 +451,7 @@ public class levelManager : MonoBehaviour
                                 PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
                                 break;
                         }
-                        
+                        */
                         break;
                     }
                 }
@@ -401,7 +502,9 @@ public class levelManager : MonoBehaviour
                     else
                     {
                         Debug.Log("错误检测1");
-                        if ((newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce) || (newLevelIndex == 25 && !isRestarting && !cameraControl.hasLoadOnce))
+                        //if ((newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce) || (newLevelIndex == 25 && !isRestarting && !cameraControl.hasLoadOnce))
+
+                        if(StoryGlobalLoadManager.instance.ShouldLoadSceneStory() && !isRestarting)
                         {
                             Debug.Log("错误检测2");
                             // // 禁用玩家输入
@@ -649,6 +752,7 @@ public class levelManager : MonoBehaviour
     }
     public void SwitchToNextLevel()
     {
+        CompleteCurrentLevel();
         GridManager.Instance.RenewSwitch();
         if (currentLevelIndex == maxLevel && sceneIndex < sceneLimit)
         {
@@ -658,6 +762,7 @@ public class levelManager : MonoBehaviour
         else
         {
             Debug.Log("我要走入"+ Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel));
+           
             recordRect = LoadLevel(Mathf.Clamp(currentLevelIndex + 1, minLevel, maxLevel), false);
             FindAnyObjectByType<StartEffectController>().transform.position = FindAnyObjectByType<PlayerController>().transform.position + Vector3.up * 1.6f + Vector3.right * 0.1f;
             FindAnyObjectByType<StartEffectController>().TriggerStartEffect(true);
@@ -768,11 +873,6 @@ public class levelManager : MonoBehaviour
         LoadLevel(currentLevelIndex, true);
     }
 
-    void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-
-    }
 
     public void ReloadLevel()
     {
