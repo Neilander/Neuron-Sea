@@ -190,13 +190,17 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Stop(SFXClip key)
+    public void Stop(SFXClip key, bool forceEndLoop = false)
     {
         if (sfxSourceDict.TryGetValue(key, out var source))
         {
             if (source.loop)
             {
-                source.loop = false;
+                source.loop = false; 
+                if (forceEndLoop)
+                {
+                    source.Stop();
+                }
             }
             else
             {
