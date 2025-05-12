@@ -86,7 +86,7 @@ public class PauseMenu : MonoBehaviour
     public void ForceResume(){
         ActivityGateCenter.ExitState(ActivityState.Pause);
         isPaused = false;
-        Time.timeScale = 1;
+        Time.timeScale = ActivityGateCenter.IsStateActive(ActivityState.BulletTime)?0.2f:1;
         levelSelectPanel.SetActive(false);
         settingMenu.SetActive(false);
         pauseMenu.SetActive(false);
