@@ -259,8 +259,6 @@ public class CompanionController : MonoBehaviour
         print("播完了！");
         StartMode = false;
         CameraControl.Instance.specialStartForScene1=false;
-        
-        PlayerPrefs.Save();
         transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
         // transform.localScale = new Vector3(1f, 1f, 1f);
