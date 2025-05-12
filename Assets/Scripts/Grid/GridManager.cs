@@ -592,7 +592,7 @@ public class GridManager : MonoBehaviour
                 {
                     AudioManager.Instance.Play(SFXClip.BulletTimeOut);
                 }
-                AudioManager.Instance.Stop(SFXClip.BulletContinune);
+                AudioManager.Instance.Stop(SFXClip.BulletContinune, true);
                 //AudioManager.Instance.ResumeBGM();
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
