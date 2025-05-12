@@ -209,7 +209,7 @@ public class GridManager : MonoBehaviour
         {
             case SwitchState.None:
 
-                if (Input.GetKey(modeCode))
+                if (GameInput.TimeStopsHere.Checked())
                 {
                     StartState(SwitchState.Switch);
 
@@ -347,7 +347,7 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if (!Input.GetKey(modeCode))
+                if (!GameInput.TimeStopsHere.Checked())
                 {
                     StartState(SwitchState.None);
                 }
@@ -366,7 +366,7 @@ public class GridManager : MonoBehaviour
 
     private void Selection()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (GameInput.SwitchableSelection.Pressed())
         {
             SwitchableObj tryGet;
             Debug.Log("尝试获取物体");
@@ -562,7 +562,7 @@ public class GridManager : MonoBehaviour
 
             if (ifLegalMove&& canViewBothSelection&& switchCoolDownFinished)
             {
-                if (Input.GetKeyDown(switchCode))
+                if (GameInput.SwitchObjects.Pressed())
                     ShiftSwitch();
             }
         }
@@ -837,7 +837,7 @@ public class GridManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(waitTime);
 
         // ✅ 这里写你想触发的事件
-        if (Input.GetKey(modeCode))
+        if (GameInput.TimeStopsHere.Checked())
         {
             StartState(SwitchState.Switch);
         }

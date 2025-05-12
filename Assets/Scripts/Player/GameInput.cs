@@ -125,6 +125,9 @@ public static class GameInput
     public static VisualButton MoveRight = new VisualButton(KeyCode.D, blockedDuringPause: true);
     public static VisualButton Confirm = new VisualButton(KeyCode.Space);
     public static VisualButton Menu = new VisualButton(KeyCode.Escape);
+    public static VisualButton TimeStopsHere = new VisualButton(KeyCode.Mouse1);
+    public static VisualButton SwitchableSelection = new VisualButton(KeyCode.Mouse0);
+    public static VisualButton SwitchObjects = new VisualButton(KeyCode.E);
     public static VirtualJoystick Aim = new VirtualJoystick();
 
     public static void Update(float deltaTime)
