@@ -163,7 +163,7 @@ public class CompanionController : MonoBehaviour
                 StartMode = false;
                 // print("我是false");
             }
-            print(StartMode);
+            // print(StartMode);
             // 如果玩家朝左（scale.x = -1）或者是开始情况，跟随物在右上角
             if (target.localScale.x < 0 || StartMode
                 )
