@@ -109,7 +109,7 @@ public class CompanionController : MonoBehaviour
                 Debug.LogWarning("未找到Animator组件！");
             }
         }
-        if (levelManager.instance.sceneIndex == 2 && levelManager.instance.currentLevelIndex != 13) {
+        if (levelManager.instance.sceneIndex == 2 && StoryGlobalLoadManager.instance.IsTriggerDisabled("场景2剧情_Story6")) {
             animator.Play("robot2");
         }
         if (levelManager.instance.sceneIndex == 3)
@@ -123,7 +123,7 @@ public class CompanionController : MonoBehaviour
     private void Update()
     {
         if (target == null ||!canFollow) return;
-
+        
         // 检测是否在移动
         float distance = Vector3.Distance(transform.position, lastPosition);
         isMoving = distance > moveThreshold;
@@ -220,7 +220,7 @@ public class CompanionController : MonoBehaviour
         }
         lastPosition = transform.position;
     }
-
+    
     public void DirectTo()
     {
         if(target != null)
