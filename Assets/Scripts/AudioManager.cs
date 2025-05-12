@@ -69,7 +69,7 @@ public class AudioManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        SceneManager.activeSceneChanged += StopAllAudio;
+        SceneManager.activeSceneChanged += StopAllVFX;
         SceneManager.activeSceneChanged += ChangeBGM; 
 
         bgmDict = bgmClips.ToDictionary(e => e.key, e => e);
