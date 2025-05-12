@@ -38,11 +38,22 @@ public class StoryGlobalLoadManager : MonoBehaviour
     #region 是否已经触发过了？
 
     public void DisableTrigger(string id){
-        disabledTriggers.Add(id);
+        if (disabledTriggers.Add(id)) // 如果是第一次添加
+        {
+            PlayerPrefs.SetInt("StoryTrigger_" + id, 1);
+            PlayerPrefs.Save(); // 保存到磁盘
+        }
     }
 
+    public void ResetAll(){
+        disabledTriggers.Clear();
+    }
     public bool IsTriggerDisabled(string id){
-        return disabledTriggers.Contains(id);
+        if (disabledTriggers.Contains(id))
+            return true;
+
+        // 若内存中没有，可以从 PlayerPrefs 检查
+        return PlayerPrefs.GetInt("StoryTrigger_" + id, 0) == 1;
     }
     
 

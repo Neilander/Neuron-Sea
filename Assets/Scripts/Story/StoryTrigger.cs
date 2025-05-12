@@ -92,7 +92,8 @@ public class StoryTrigger : MonoBehaviour
     }
     private void Start()
     {
-        if (StoryGlobalLoadManager.instance.IsTriggerDisabled(triggerID)) {
+        if (!string.IsNullOrEmpty(triggerID) && StoryGlobalLoadManager.instance.IsTriggerDisabled(triggerID)) {
+            // 如果这个ID已经播放过，就禁用Collider
             GetComponent<Collider2D>().enabled = false;
         }
         // 向StoryManager注册剧情完成事件
