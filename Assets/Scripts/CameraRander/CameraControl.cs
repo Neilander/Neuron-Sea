@@ -185,7 +185,7 @@ public class CameraControl : MonoBehaviour
         float bottom = defaultOrigin.y;
         float top = defaultOrigin.y + defaultHeight;
 
-        defaultLimit = new CameraLimitRegion(left, right, top, bottom, null);
+        defaultLimit = new CameraLimitRegion(left, right, top, bottom, null,0);
     }
 
     private IEnumerator BeginningDelay(float time){
@@ -238,7 +238,7 @@ public class CameraControl : MonoBehaviour
                 float bottomBound = limitToUse.bottom.HasValue ? limitToUse.bottom.Value + halfHeight : float.MinValue;
                 if (bottomBound < topBound)
                 {
-                    desiredPos.y = Mathf.Clamp(desiredPos.y, bottomBound, topBound);
+                    desiredPos.y = Mathf.Clamp(desiredPos.y+limitToUse.extraYOffset, bottomBound, topBound);
                 }
             }
         }
@@ -407,7 +407,7 @@ public class CameraControl : MonoBehaviour
         float bottom = defaultOrigin.y;
         float top = defaultOrigin.y + defaultHeight;
 
-        defaultLimit = new CameraLimitRegion(left, right, top, bottom, null);
+        defaultLimit = new CameraLimitRegion(left, right, top, bottom, null,0);
 
         Debug.Log($"[Camera] 设置默认区域：{rect}");
 
@@ -452,15 +452,17 @@ public class CameraLimitRegion
     public float? right;
     public float? top;
     public float? bottom;
+    public float extraYOffset;
 
     public CameraRegionTrigger setter; // 谁设置的
 
-    public CameraLimitRegion(float? left, float? right, float? top, float? bottom, CameraRegionTrigger setter)
+    public CameraLimitRegion(float? left, float? right, float? top, float? bottom, CameraRegionTrigger setter, float extraYOffset)
     {
         this.left = left;
         this.right = right;
         this.top = top;
         this.bottom = bottom;
         this.setter = setter;
+        this.extraYOffset = extraYOffset;
     }
 }
