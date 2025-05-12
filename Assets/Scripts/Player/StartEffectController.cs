@@ -78,7 +78,8 @@ public class StartEffectController : MonoBehaviour
             playerController.transform.position = finalPosition;
             Debug.Log(playerController.transform.position);
             // 启动控制逻辑
-            playerController.StartControl(controlInput, specialTime == null?controlDuration:(float)specialTime, isRight);
+            playerController.StartControl(controlInput, specialTime == null?controlDuration:(float)specialTime, isRight, ()=>ActivityGateCenter.ExitState(ActivityState.StartEffectMove));
+            ActivityGateCenter.EnterState(ActivityState.StartEffectMove);
             // playerController.ForceGroundCheck();
             Debug.Log(playerController.transform.position);
         }

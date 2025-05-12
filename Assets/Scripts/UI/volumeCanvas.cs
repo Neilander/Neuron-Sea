@@ -15,14 +15,11 @@ public class volumeCanvas : MonoBehaviour
     public GameObject panel;
     public GameObject blocker;
 
-    private const string MASTER_KEY = "MasterVolume";
-    private const string MUSIC_KEY = "MusicVolume";
-    private const string SFX_KEY = "SFXVolume";
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
+            Debug.Log($"我是{gameObject.name}，我被删除了，挤占我的是{Instance.gameObject.name}");
             Destroy(gameObject); // 防止重复
             return;
         }
@@ -32,64 +29,23 @@ public class volumeCanvas : MonoBehaviour
 
     void Start()
     {
-        // 初始化 slider 值（读取存储）
-        float masterVolume = PlayerPrefs.GetFloat(MASTER_KEY, 100f);
-        float musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 100f);
-        float sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 100f);
+        // 初始化 slider 值，直接从 AudioManager 获取
+        masterSlider.value = AudioManager.Instance.GetMasterVolume();
+        musicSlider.value = AudioManager.Instance.GetMusicVolume();
+        sfxSlider.value = AudioManager.Instance.GetSFXVolume();
 
-        masterSlider.value = masterVolume;
-        musicSlider.value = musicVolume;
-        sfxSlider.value = sfxVolume;
-
-        // 注册监听
-        masterSlider.onValueChanged.AddListener(SetMasterVolume);
-        musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-
-        // 也可以主动触发一次设置逻辑（可选）
-        SetMasterVolume(masterVolume);
-        SetMusicVolume(musicVolume);
-        SetSFXVolume(sfxVolume);
+        masterSlider.onValueChanged.AddListener(AudioManager.Instance.SetMasterVolume);
+        musicSlider.onValueChanged.AddListener(AudioManager.Instance.SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
     }
 
-    void SetMasterVolume(float value)
+#if UNITY_EDITOR
+    public void OnApplicationQuit()
     {
-        PlayerPrefs.SetFloat(MASTER_KEY, value);
-        // TODO: 未来接入 Wwise
-        // AkSoundEngine.SetRTPCValue("MasterVolume", value);
-        Debug.Log($"[Volume] MasterVolume = {value}");
+        PlayerPrefs.SetFloat("MasterVolume", 1);
+        PlayerPrefs.SetFloat("MusicVolume", 1);
+        PlayerPrefs.SetFloat("SFXVolume", 1);
+        PlayerPrefs.Save();
     }
-
-    void SetMusicVolume(float value)
-    {
-        PlayerPrefs.SetFloat(MUSIC_KEY, value);
-        // TODO: 未来接入 Wwise
-        // AkSoundEngine.SetRTPCValue("MusicVolume", value);
-        Debug.Log($"[Volume] MusicVolume = {value}");
-    }
-
-    void SetSFXVolume(float value)
-    {
-        PlayerPrefs.SetFloat(SFX_KEY, value);
-        // TODO: 未来接入 Wwise
-        // AkSoundEngine.SetRTPCValue("SFXVolume", value);
-        Debug.Log($"[Volume] SFXVolume = {value}");
-    }
-
-    // public void CloseCanvas()
-    // {
-    //     ControlCanvas.gameObject.SetActive(false);   
-    // }
-    //
-    // public void OpenCanvas()
-    // {
-    //     ControlCanvas.gameObject.SetActive(true);
-    //     panel.SetActive(true);
-    //     blocker.SetActive(true);
-    // }
-    //TODO:to delete 
-    // public void OnApplicationQuit()
-    // {
-    //     PlayerPrefs.DeleteAll();
-    // }
+#endif
 }

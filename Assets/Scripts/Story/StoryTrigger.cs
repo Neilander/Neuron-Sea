@@ -229,6 +229,8 @@ public class StoryTrigger : MonoBehaviour
     /// </summary>
     private IEnumerator TriggerNextStoryAfterDelay()
     {
+        //这里因为在Storymanger的退出之后，所以可以延续状态
+        ActivityGateCenter.EnterState(ActivityState.Story);
         yield return new WaitForSeconds(nextStoryDelay);
         nextStoryTrigger.ForceStartStory();
     }

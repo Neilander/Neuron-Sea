@@ -255,6 +255,7 @@ public class StoryManager : MonoBehaviour
 
         // 切换到剧情模式
         _currentState = GameState.StoryMode;
+        ActivityGateCenter.EnterState(ActivityState.Story);
 
         // 如果玩家在地面上，立即禁用移动
         // 如果玩家在空中，等待落地后再禁用移动
@@ -340,6 +341,7 @@ public class StoryManager : MonoBehaviour
 
         // 切换到动作模式
         _currentState = GameState.ActionMode;
+        ActivityGateCenter.ExitState(ActivityState.Story);
         print("■切换到动作模式");
         // 启用玩家移动（除非被阻止）
         if (playerController != null && !preventPlayerUnfreeze)

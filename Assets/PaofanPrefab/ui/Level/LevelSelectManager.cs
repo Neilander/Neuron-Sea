@@ -290,6 +290,7 @@ public class LevelSelectManager : MonoBehaviour
         }
     }
 
+    private CompanionController companion;
     // 加载对应关卡
     void LoadLevel(int levelIndex)
     {
@@ -306,6 +307,9 @@ public class LevelSelectManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }*/
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
+        if (companion == null)
+            companion = FindAnyObjectByType<CompanionController>();
+        if (companion != null) companion.DirectTo();
         GetComponentInParent<PauseMenu>().ForceResume();
     }
 

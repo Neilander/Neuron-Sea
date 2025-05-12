@@ -13,6 +13,7 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
     public bool ignoreHorizontalOnly = false;
     public float priority = 0;
     public bool ifStory;
+    public float extraOffset;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -58,7 +59,7 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
 
         //Debug.Log($"[CameraRegionTrigger] 设置边界: left={left}, right={right}, top={top}, bottom={bottom}");
 
-        var region = new CameraLimitRegion(left, right, top, bottom, this);
+        var region = new CameraLimitRegion(left, right, top, bottom, this, extraOffset);
         camControl.SetLimitRegion(region);
     }
 
@@ -136,5 +137,6 @@ public class CameraRegionTrigger : MonoBehaviour, ILDtkImportedFields
         ifStory = fields.GetBool("IsStory");
         if (ifStory)
             gameObject.SetActive(false);
+        extraOffset = fields.GetFloat("ExtraYOffest");
     }
 }

@@ -114,19 +114,24 @@ public class levelManager : MonoBehaviour
                     }
                     break;
             }*/
+            bool specialStart = false;
             if (PlayerPrefs.GetInt("carryLevel") != 0)
             {
                 currentLevelIndex = PlayerPrefs.GetInt("carryLevel");
                 PlayerPrefs.SetInt("carryLevel", 0);
+                specialStart = true;
+                
             }
 
             StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
             StoryGlobalLoadManager.instance.RegisterGeneralStart(GeneralActionWhenLevel);
-            
+            if(specialStart)
+                StoryGlobalLoadManager.instance.RegisterGeneralStart(SpecialStartWhenChooseLevel);
+
 
             //原本剧情相关
             //LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
-            
+
             StartCoroutine(RegisterNextFrame());
 
 
@@ -189,6 +194,16 @@ public class levelManager : MonoBehaviour
         }
         LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos, false);
         
+
+    }
+
+    private CompanionController companion;
+    public void SpecialStartWhenChooseLevel(int n)
+    {
+        if (companion == null)
+            companion = FindAnyObjectByType<CompanionController>();
+        if (companion != null) companion.DirectTo();
+        StoryGlobalLoadManager.instance.UnregisterGeneralStart(SpecialStartWhenChooseLevel);
 
     }
 
@@ -833,7 +848,7 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        if (!(StoryManager.Instance._currentState==GameState.StoryMode)) {
+        if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
             recordRect = LoadLevel(currentLevelIndex, true);
