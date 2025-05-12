@@ -8,7 +8,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
     public static StoryGlobalLoadManager instance { get; private set; }
     public GameMode curMode;
 
-
+    private HashSet<string> disabledTriggers = new HashSet<string>();
     private bool ifLoadedScene1Story;
     private bool ifLoadedScene2Story;
     private bool ifLoadedScene3Story;
@@ -35,6 +35,30 @@ public class StoryGlobalLoadManager : MonoBehaviour
         ifLoadedScene3Story = (PlayerPrefs.GetInt("SGLM_Scene3Loaded") == 1);
     }
 
+    #region 是否已经触发过了？
+
+    public void DisableTrigger(string id){
+        if (disabledTriggers.Add(id)) // 如果是第一次添加
+        {
+            PlayerPrefs.SetInt("StoryTrigger_" + id, 1);
+            PlayerPrefs.Save(); // 保存到磁盘
+        }
+    }
+
+    public void ResetAll(){
+        disabledTriggers.Clear();
+        //没有实现真正的逻辑
+    }
+    public bool IsTriggerDisabled(string id){
+        // if (disabledTriggers.Contains(id))
+        //     return true;
+
+        // 若内存中没有，可以从 PlayerPrefs 检查
+        return PlayerPrefs.GetInt("StoryTrigger_" + id, 0) == 1;
+    }
+    
+
+    #endregion
     private bool HasLoadedSceneStory(int sceneIndex)
     {
         return sceneIndex switch
@@ -167,7 +191,9 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     public void ResetStory()
     {
-        ifLoadedScene1Story = false; ifLoadedScene2Story = false; ifLoadedScene3Story = false;
+        ifLoadedScene1Story = false; 
+        ifLoadedScene2Story = false; 
+        ifLoadedScene3Story = false;
     }
 
     private void OnApplicationQuit()
@@ -177,6 +203,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
     PlayerPrefs.SetInt("SGLM_Scene1Loaded", 0);
     PlayerPrefs.SetInt("SGLM_Scene2Loaded", 0);
     PlayerPrefs.SetInt("SGLM_Scene3Loaded", 0);
+    PlayerPrefs.DeleteAll();
     PlayerPrefs.Save();
 #endif
     }

@@ -74,6 +74,8 @@ public class CameraControl : MonoBehaviour
     private Animator ani;
     private float realSmoothSpeed;
     public bool specialStartForScene1 = false;
+
+    private Action<int> noStoryAction;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -117,13 +119,14 @@ public class CameraControl : MonoBehaviour
         }*/
 
         print("我在这里");
-        StoryGlobalLoadManager.instance.RegisterOnStartWithoutStory(_ => { target = FindObjectOfType<PlayerController>().transform; });
+        noStoryAction = _ => { target = FindObjectOfType<PlayerController>().transform; };
+        StoryGlobalLoadManager.instance.RegisterOnStartWithoutStory(noStoryAction);
         StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
     }
 
     private void OnDestroy()
     {
-        StoryGlobalLoadManager.instance.UnregisterOnStartWithoutStory(_ => { target = FindObjectOfType<PlayerController>().transform; });
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithoutStory(noStoryAction);//原来那样注销不掉
         StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
     }
 

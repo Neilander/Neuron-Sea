@@ -55,18 +55,24 @@ public class CompanionController : MonoBehaviour
         {
             if (_startMode != value) {
                 _startMode = value;
-                Debug.Log("startMode 被改动了，现在是: " + value);
+                Debug.Log("startMode" + value);
+                Debug.Log($"startMode被改动了，现在是: {_startMode}\n" +
+                          UnityEngine.StackTraceUtility.ExtractStackTrace());
+    
             }
         }
     }
 
+    private void Log(string message){
+        Debug.Log("[<color=red>startMode</color>] " + message);
+    }
     public void PrepareForLevelStory(int n)
     {
         if (n == 1)
         {
             hasStopped = false;
             //如果第一次进入在右上角出现
-            _startMode = true;
+            StartMode = true;
             ignoreStory = false;
         }
     }
@@ -109,7 +115,9 @@ public class CompanionController : MonoBehaviour
                 Debug.LogWarning("未找到Animator组件！");
             }
         }
-
+        if (levelManager.instance.sceneIndex == 2 && StoryGlobalLoadManager.instance.IsTriggerDisabled("场景2剧情_Story6")) {
+            animator.Play("robot2");
+        }
         if (levelManager.instance.sceneIndex == 3)
         {
             animator.Play("robot3");
@@ -121,7 +129,7 @@ public class CompanionController : MonoBehaviour
     private void Update()
     {
         if (target == null ||!canFollow) return;
-
+        
         // 检测是否在移动
         float distance = Vector3.Distance(transform.position, lastPosition);
         isMoving = distance > moveThreshold;
@@ -140,27 +148,28 @@ public class CompanionController : MonoBehaviour
         if (autoAdjustPosition)
         {
             //HelperToolkit.PrintBoolStates(()=>CameraControl.Instance.specialStartForScene1, ()=>CameraControl.Instance.hasLoadOnce);
-            if (CameraControl.Instance.specialStartForScene1&&!(CameraControl.Instance.hasLoadOnce) ){ //这里泡饭写的是获取注册表，我改了
+            if (CameraControl.Instance.specialStartForScene1&&!(CameraControl.Instance.hasLoadOnce) && !(StoryGlobalLoadManager.instance.IsTriggerDisabled("场景1剧情_剧情1只要放在玩家碰不到的地方"))){ //这里泡饭写的是获取注册表，我改了
                 // if (csp == null) {
                 //     Debug.LogError("没有打开镜头序列");
                 // }
                 // if(csp != null)
                 //     csp.gameObject.SetActive(true);
-                _startMode = true;
+                StartMode = true;
                 // print("我是true");
             }
             else {
                 // if (csp != null)
                 //     csp.gameObject.SetActive(false);
-                _startMode = false;
+                StartMode = false;
                 // print("我是false");
             }
+            // print(StartMode);
             // 如果玩家朝左（scale.x = -1）或者是开始情况，跟随物在右上角
-            if (target.localScale.x < 0 || _startMode
+            if (target.localScale.x < 0 || StartMode
                 )
             {
                 currentOffset = new Vector3(1.5f, 2.18f, 0f);
-                if (!_startMode) {
+                if (!StartMode) {
                     transform.localScale = new Vector3(-1, 1, 1);
                 }
 
@@ -218,11 +227,11 @@ public class CompanionController : MonoBehaviour
         }
         lastPosition = transform.position;
     }
-
+    
     public void DirectTo()
     {
         if(target != null)
-            transform.position = target.position + offset;
+            transform.position = target.position + currentOffset;
     }
 
     public void CannotMove(){
@@ -246,8 +255,9 @@ public class CompanionController : MonoBehaviour
         yield return new WaitUntil(() =>
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
             
-        );print("播完了！");
-        _startMode = false;
+        );
+        print("播完了！");
+        StartMode = false;
         CameraControl.Instance.specialStartForScene1=false;
         transform.GetComponent<Animator>().Play("robot_idle");
         // canFollow = true;
@@ -271,7 +281,7 @@ public class CompanionController : MonoBehaviour
 
     public void SetTargetToPlayer(){
         target = FindAnyObjectByType<PlayerController>().transform;
-        _startMode = true;
+        StartMode = true;
         if (target != null) {
             targetSpriteRenderer = target.GetComponent<SpriteRenderer>();
         }
