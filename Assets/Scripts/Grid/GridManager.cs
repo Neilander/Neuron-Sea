@@ -19,6 +19,12 @@ public enum SwitchLogic
     CancelWhenClickAgain
 }
 
+public enum SelectionLogic
+{
+    onlyBulletTime,
+    allTime
+}
+
 [ExecuteInEditMode] // 在编辑器中执行
 public class GridManager : MonoBehaviour
 {
@@ -27,7 +33,8 @@ public class GridManager : MonoBehaviour
 
     public static GridManager Instance;
 
-    public SwitchLogic curLogic;
+    public SwitchLogic curSwitchLogic;
+    public SelectionLogic curSelectionLogic;
 
     [Header("格子数据调整")] public int gridWidth = 1;
 
@@ -220,6 +227,15 @@ public class GridManager : MonoBehaviour
                         }
                     }
                 }
+                else
+                {
+                    switch (curSelectionLogic)
+                    {
+                        case SelectionLogic.allTime:
+                            Selection();
+                            break;
+                    }
+                }
 
                 checkIfSwitchableInView(switchInfoRecorder);
                 RuntimeCheckIfLegal();
@@ -339,179 +355,184 @@ public class GridManager : MonoBehaviour
 
                 RuntimeCheckIfLegal();
 
-                if (Input.GetMouseButtonDown(0))
-                {
-                    SwitchableObj tryGet;
-                    Debug.Log("尝试获取物体");
-                    if (TryGetSwitchableUnderMouse(out tryGet))
-                    {
-                        //如果选中已经被选中的物体
-                        if (switchInfoRecorder.Take(tryGet))
-                        {
-                            SwitchableObj temp1;
-                            SwitchableObj temp2;
-                            switch (curLogic)
-                            {
-                                case SwitchLogic.OrderBasedAndNoCancel:
-                                    if (switchInfoRecorder.hasFirst || switchInfoRecorder.hasSecond)
-                                    {
-                                        //原来选择了两个，现在要刷新顺序
-                                        SwitchableObj onlyObj = GetTheOnlyInSwitchInfoRecorder();
-                                        switchInfoRecorder.Take(onlyObj);
-                                        switchInfoRecorder.Record(onlyObj, out temp1, out temp2);
-                                        switchInfoRecorder.Record(tryGet, out temp1, out temp2);
-                                        bool ifLegal = IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2);
-                                        switchInfoRecorder.obj1.SetLockedToSwitch(true, ifLegal, true, switchInfoRecorder.obj2.SelfGridPos);
-                                        switchInfoRecorder.obj2.SetLockedToSwitch(true, ifLegal, true, switchInfoRecorder.obj1.SelfGridPos);
-                                        ifLegalMove = ifLegal;
-                                        canViewBothSelection = true;
-                                        
-                                    }
-                                    else
-                                    {
-                                        //原来只有一个，现在要保持不变
-                                        switchInfoRecorder.Record(tryGet, out temp1, out temp2);
-                                        tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
-                                    }
-
-                                    break;
-
-                                case SwitchLogic.CancelWhenClickAgain:
-                                    SwitchableObj obj = GetTheOnlyInSwitchInfoRecorder();
-                                    if(obj!=null)
-                                        obj.SetLockedToSwitch(true, true, false, Vector3.zero);
-                                    
-                                    tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                    break;
-                            }
-                            
-                            //switchInfoRecorder.Refresh();
-
-
-                            //现在take已经取出了一个
-                            //如果还存储了另外一个，可以得知原本的情况是选中了两个，所以两个都要取消，这里先修改表示
-                            //选中在最后取消
-                            //bool ifChanged = false;
-
-                            /*
-                             * 这一部分是取消两个的
-                            if (switchInfoRecorder.hasFirst)
-                            {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                //ifChanged = true;
-                            }
-                            if (switchInfoRecorder.hasSecond)
-                            {
-                                switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                //ifChanged = true;
-                            }
-                            tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
-                            switchInfoRecorder.Refresh();
-                            */
-                            /*
-                            if (ifChanged)
-                            {
-                                //修改已经取出的tryGet的表现
-                                tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
-                            }
-                            //统一取消选中
-                            switchInfoRecorder.Refresh();
-                            */
-                            //如果之前没有改变，那么说明之前只选择了一个，那么就要保持tryGet的选择
-                            /*
-                            SwitchableObj temp1;
-                            SwitchableObj temp2;
-                            if (!ifChanged)
-                            {
-                                switchInfoRecorder.Record(tryGet, out temp1, out temp2);
-                                tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
-                            }*/
-
-                        }
-                        else//选中一个新的物体
-                        {
-
-                            //首先记录新选择的物体
-                            SwitchableObj temp1;
-                            SwitchableObj temp2;
-                            if (switchInfoRecorder.Record(tryGet, out temp1, out temp2))
-                            {
-                                switch (curLogic)
-                                {
-                                    case SwitchLogic.OrderBasedAndNoCancel:
-                                        //如果此前已经记录了两个，就改变另外2个的显示，取消选择
-                                        temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                        temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                        //新选择的物体在后面处理显示
-                                        canViewBothSelection = true;
-
-                                        if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
-                                        {
-                                            if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
-                                            else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
-                                        }
-                                        else if(temp1.IsSpriteVisibleOnScreen()&& temp2.IsSpriteVisibleOnScreen())
-                                        {
-                                            switchInfoRecorder.Take(tryGet);
-                                           switchInfoRecorder.Record(temp2, out temp1, out temp2);
-                                            switchInfoRecorder.Record(tryGet, out temp1, out temp2);
-                                        }
-                                        
-                                        break;
-
-                                    case SwitchLogic.CancelWhenClickAgain:
-                                        //如果此前已经记录了两个，就改变另外2个的显示，取消选择
-                                        temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                        temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
-                                        //新选择的物体在后面处理显示
-                                        canViewBothSelection = true;
-
-                                        if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
-                                        {
-                                            if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
-                                            else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
-                                        }
-                                        break;
-                                }
-                                
-                            }
-
-                            //选择后，如果有两个并且是非法的
-                            if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
-                            {
-                                switchInfoRecorder.obj1.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj2.SelfGridPos);
-                                switchInfoRecorder.obj2.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj1.SelfGridPos);
-                                ifLegalMove = false;
-                                canViewBothSelection = true;
-                            }
-                            else
-                            {
-                                //剩下的状态里只有选择两个并且合法+只选择了一个
-                                if (switchInfoRecorder.IfHaveBoth())
-                                {
-                                    //选择两个必定合法
-                                    ifLegalMove = true;
-                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
-                                    switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
-
-                                    canViewBothSelection = true;
-                                }
-                                else
-                                {
-                                    //只选择了一个
-                                    switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
-                                }
-
-                            }
-
-                        }
-                    }
-                }
+                Selection();
 
                 break;
             case SwitchState.Move:
 
                 break;
+        }
+    }
+
+    private void Selection()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            SwitchableObj tryGet;
+            Debug.Log("尝试获取物体");
+            if (TryGetSwitchableUnderMouse(out tryGet))
+            {
+                //如果选中已经被选中的物体
+                if (switchInfoRecorder.Take(tryGet))
+                {
+                    SwitchableObj temp1;
+                    SwitchableObj temp2;
+                    switch (curSwitchLogic)
+                    {
+                        case SwitchLogic.OrderBasedAndNoCancel:
+                            if (switchInfoRecorder.hasFirst || switchInfoRecorder.hasSecond)
+                            {
+                                //原来选择了两个，现在要刷新顺序
+                                SwitchableObj onlyObj = GetTheOnlyInSwitchInfoRecorder();
+                                switchInfoRecorder.Take(onlyObj);
+                                switchInfoRecorder.Record(onlyObj, out temp1, out temp2);
+                                switchInfoRecorder.Record(tryGet, out temp1, out temp2);
+                                bool ifLegal = IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2);
+                                switchInfoRecorder.obj1.SetLockedToSwitch(true, ifLegal, true, switchInfoRecorder.obj2.SelfGridPos);
+                                switchInfoRecorder.obj2.SetLockedToSwitch(true, ifLegal, true, switchInfoRecorder.obj1.SelfGridPos);
+                                ifLegalMove = ifLegal;
+                                canViewBothSelection = true;
+
+                            }
+                            else
+                            {
+                                //原来只有一个，现在要保持不变
+                                switchInfoRecorder.Record(tryGet, out temp1, out temp2);
+                                tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
+                            }
+
+                            break;
+
+                        case SwitchLogic.CancelWhenClickAgain:
+                            SwitchableObj obj = GetTheOnlyInSwitchInfoRecorder();
+                            if (obj != null)
+                                obj.SetLockedToSwitch(true, true, false, Vector3.zero);
+
+                            tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                            break;
+                    }
+
+                    //switchInfoRecorder.Refresh();
+
+
+                    //现在take已经取出了一个
+                    //如果还存储了另外一个，可以得知原本的情况是选中了两个，所以两个都要取消，这里先修改表示
+                    //选中在最后取消
+                    //bool ifChanged = false;
+
+                    /*
+                     * 这一部分是取消两个的
+                    if (switchInfoRecorder.hasFirst)
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                        //ifChanged = true;
+                    }
+                    if (switchInfoRecorder.hasSecond)
+                    {
+                        switchInfoRecorder.obj2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                        //ifChanged = true;
+                    }
+                    tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                    switchInfoRecorder.Refresh();
+                    */
+                    /*
+                    if (ifChanged)
+                    {
+                        //修改已经取出的tryGet的表现
+                        tryGet.SetLockedToSwitch(false, true, false, Vector3.zero);
+                    }
+                    //统一取消选中
+                    switchInfoRecorder.Refresh();
+                    */
+                    //如果之前没有改变，那么说明之前只选择了一个，那么就要保持tryGet的选择
+                    /*
+                    SwitchableObj temp1;
+                    SwitchableObj temp2;
+                    if (!ifChanged)
+                    {
+                        switchInfoRecorder.Record(tryGet, out temp1, out temp2);
+                        tryGet.SetLockedToSwitch(true, true, false, Vector3.zero);
+                    }*/
+
+                }
+                else//选中一个新的物体
+                {
+
+                    //首先记录新选择的物体
+                    SwitchableObj temp1;
+                    SwitchableObj temp2;
+                    if (switchInfoRecorder.Record(tryGet, out temp1, out temp2))
+                    {
+                        switch (curSwitchLogic)
+                        {
+                            case SwitchLogic.OrderBasedAndNoCancel:
+                                //如果此前已经记录了两个，就改变另外2个的显示，取消选择
+                                temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                //新选择的物体在后面处理显示
+                                canViewBothSelection = true;
+
+                                if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
+                                {
+                                    if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
+                                    else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
+                                }
+                                else if (temp1.IsSpriteVisibleOnScreen() && temp2.IsSpriteVisibleOnScreen())
+                                {
+                                    switchInfoRecorder.Take(tryGet);
+                                    switchInfoRecorder.Record(temp2, out temp1, out temp2);
+                                    switchInfoRecorder.Record(tryGet, out temp1, out temp2);
+                                }
+
+                                break;
+
+                            case SwitchLogic.CancelWhenClickAgain:
+                                //如果此前已经记录了两个，就改变另外2个的显示，取消选择
+                                temp1.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                temp2.SetLockedToSwitch(false, true, false, Vector3.zero);
+                                //新选择的物体在后面处理显示
+                                canViewBothSelection = true;
+
+                                if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
+                                {
+                                    if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
+                                    else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
+                                }
+                                break;
+                        }
+
+                    }
+
+                    //选择后，如果有两个并且是非法的
+                    if (switchInfoRecorder.IfHaveBoth() && !IsLegalMoveBetween(switchInfoRecorder.obj1, switchInfoRecorder.obj2))
+                    {
+                        switchInfoRecorder.obj1.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj2.SelfGridPos);
+                        switchInfoRecorder.obj2.SetLockedToSwitch(true, false, true, switchInfoRecorder.obj1.SelfGridPos);
+                        ifLegalMove = false;
+                        canViewBothSelection = true;
+                    }
+                    else
+                    {
+                        //剩下的状态里只有选择两个并且合法+只选择了一个
+                        if (switchInfoRecorder.IfHaveBoth())
+                        {
+                            //选择两个必定合法
+                            ifLegalMove = true;
+                            switchInfoRecorder.obj1.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj2.SelfGridPos);
+                            switchInfoRecorder.obj2.SetLockedToSwitch(true, true, true, switchInfoRecorder.obj1.SelfGridPos);
+
+                            canViewBothSelection = true;
+                        }
+                        else
+                        {
+                            //只选择了一个
+                            switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
+                        }
+
+                    }
+
+                }
+            }
         }
     }
 
