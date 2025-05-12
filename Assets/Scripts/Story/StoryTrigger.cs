@@ -9,7 +9,7 @@ using UnityEngine.Events;
 /// </summary>
 public class StoryTrigger : MonoBehaviour
 {
-
+    private string triggerID;
     [Header("跳过剧情设置")]
     [Tooltip("跳过剧情的UI按钮")]
     [SerializeField] private GameObject skipButton; // UI按钮对象
@@ -87,8 +87,14 @@ public class StoryTrigger : MonoBehaviour
     private PlayerController playerController;
     private bool isWaitingForStoryEnd = false;
 
+    private void Awake(){
+        triggerID = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + "_" + gameObject.name;
+    }
     private void Start()
     {
+        if (StoryGlobalLoadManager.instance.IsTriggerDisabled(triggerID)) {
+            GetComponent<Collider2D>().enabled = false;
+        }
         // 向StoryManager注册剧情完成事件
         if (StoryManager.Instance != null)
         {
@@ -212,11 +218,12 @@ public class StoryTrigger : MonoBehaviour
         // 重置等待标志
         isWaitingForStoryEnd = false;
             isStoryPlaying = false;
-    // 隐藏跳过按钮
-    HideSkipButton();
+        // 隐藏跳过按钮
+        HideSkipButton();
         // 触发退出事件
         onExitSpecificStory?.Invoke();
-
+        transform.GetComponent<BoxCollider2D>().enabled = false;
+        StoryGlobalLoadManager.instance.DisableTrigger(triggerID);
         // 如果需要自动触发下一段剧情
         if (autoTriggerNextStory && nextStoryTrigger != null)
         {

@@ -139,7 +139,6 @@ public class levelManager : MonoBehaviour
             #region 初始化已通关关卡记录
             // 初始化第一关解锁
             UnlockLevel(1);
-
             // 从PlayerPrefs加载已解锁关卡
             LoadUnlockedLevels();
             #endregion

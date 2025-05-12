@@ -109,7 +109,9 @@ public class CompanionController : MonoBehaviour
                 Debug.LogWarning("未找到Animator组件！");
             }
         }
-
+        if (levelManager.instance.sceneIndex == 2 && levelManager.instance.currentLevelIndex != 13) {
+            animator.Play("robot2");
+        }
         if (levelManager.instance.sceneIndex == 3)
         {
             animator.Play("robot3");

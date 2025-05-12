@@ -8,7 +8,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
     public static StoryGlobalLoadManager instance { get; private set; }
     public GameMode curMode;
 
-
+    private HashSet<string> disabledTriggers = new HashSet<string>();
     private bool ifLoadedScene1Story;
     private bool ifLoadedScene2Story;
     private bool ifLoadedScene3Story;
@@ -35,6 +35,18 @@ public class StoryGlobalLoadManager : MonoBehaviour
         ifLoadedScene3Story = (PlayerPrefs.GetInt("SGLM_Scene3Loaded") == 1);
     }
 
+    #region 是否已经触发过了？
+
+    public void DisableTrigger(string id){
+        disabledTriggers.Add(id);
+    }
+
+    public bool IsTriggerDisabled(string id){
+        return disabledTriggers.Contains(id);
+    }
+    
+
+    #endregion
     private bool HasLoadedSceneStory(int sceneIndex)
     {
         return sceneIndex switch
@@ -167,7 +179,9 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     public void ResetStory()
     {
-        ifLoadedScene1Story = false; ifLoadedScene2Story = false; ifLoadedScene3Story = false;
+        ifLoadedScene1Story = false; 
+        ifLoadedScene2Story = false; 
+        ifLoadedScene3Story = false;
     }
 
     private void OnApplicationQuit()
