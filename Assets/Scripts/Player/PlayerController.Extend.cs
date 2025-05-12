@@ -94,7 +94,7 @@ public partial class PlayerController : MonoBehaviour
 
         //���õĲ���
         animator.SetTrigger("Jump");
-        AudioManager.Instance.Play(SFXClip.Jump);
+        AudioManager.Instance.Play(SFXClip.Jump,gameObject.name);
     }
 
     public void MovePosition(Vector2 targetPosition)

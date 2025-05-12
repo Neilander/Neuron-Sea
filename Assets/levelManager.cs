@@ -332,7 +332,7 @@ public class levelManager : MonoBehaviour
     {
         if (ifSetPlayerToAndNoMovement&& ifPlaySound)
         {
-            AudioManager.Instance.Play(SFXClip.EnterLevel);
+            AudioManager.Instance.Play(SFXClip.EnterLevel,gameObject.name);
         }
         FindAnyObjectByType<PlayerController>().PrepareForTransport();
         if (newLevelIndex > maxLevel || newLevelIndex < minLevel)

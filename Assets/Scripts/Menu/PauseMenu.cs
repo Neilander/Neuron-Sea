@@ -43,14 +43,14 @@ public class PauseMenu : MonoBehaviour
         {
             if (isPaused) {
                 ForceResume();
-                AudioManager.Instance.Play(SFXClip.Cilck3);
+                AudioManager.Instance.Play(SFXClip.Cilck3,gameObject.name);
             }
             else {
                 ActivityGateCenter.EnterState(ActivityState.Pause);
                 isPaused = true;
                 Time.timeScale = 0;
                 pauseMenu.SetActive(true);
-                AudioManager.Instance.Play(SFXClip.Cilck4);
+                AudioManager.Instance.Play(SFXClip.Cilck4,gameObject.name);
             }
         }
     }
