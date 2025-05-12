@@ -18,7 +18,7 @@ public class VisualButton
     private float preInputTime;//预输入时间
     private bool fixedGetKeyDown;
     private bool fixedGetKey;
-    private bool getKeyInFrame;
+    private float getKeyTime = -1f;
     private float preInputTimer;
     private float minEffectiveTime;//生效后最短持续时间
     private float minEffectiveTimer;
@@ -72,7 +72,7 @@ public class VisualButton
     {
         if (Input.GetKey(key))
         {
-            getKeyInFrame = true;
+            getKeyTime = Time.unscaledTime;
         }
     }
 
@@ -82,7 +82,7 @@ public class VisualButton
         {
             fixedGetKeyDown = false;
         }
-        if (getKeyInFrame)
+        if (Time.unscaledTime - getKeyTime < deltaTime)
         {
             if (!fixedGetKey)
             {
@@ -94,7 +94,6 @@ public class VisualButton
         {
             fixedGetKey = false;
         }
-        getKeyInFrame = false;
         if (preInputTime > 0)
         {
             this.preInputTimer -= deltaTime;
