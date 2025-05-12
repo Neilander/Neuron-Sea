@@ -50,6 +50,15 @@ public class AudioManager : MonoBehaviour
     private Dictionary<WhiteNoiseClip, AudioSource> whiteNoiseSourceDict = new();
     private Dictionary<SFXClip, AudioSource> sfxSourceDict = new();
 
+
+    private const string MASTER_KEY = "MasterVolume";
+    private const string MUSIC_KEY = "MusicVolume";
+    private const string SFX_KEY = "SFXVolume";
+
+    private float masterVolume;
+    private float musicVolume;
+    private float sfxVolume;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -65,6 +74,10 @@ public class AudioManager : MonoBehaviour
         bgmDict = bgmClips.ToDictionary(e => e.key, e => e);
         whiteNoiseDict = whiteNoiseClips.ToDictionary(e => e.key, e => e);
         sfxDict = sfxClips.ToDictionary(e => e.key, e => e); // 保持不动
+
+        masterVolume = PlayerPrefs.GetFloat(MASTER_KEY, 1f);
+        musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
+        sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 1f);
     }
     private void Start()
     {
@@ -109,7 +122,7 @@ public class AudioManager : MonoBehaviour
             AudioSource newSource = gameObject.AddComponent<AudioSource>();
             newSource.clip = entry.clip;
             newSource.loop = true;
-            newSource.volume = entry.volume;
+            newSource.volume = entry.volume * GetBGMVolumeMultiplier();
             newSource.Play();
 
             bgmSourceDict[clipKey] = newSource;
@@ -130,7 +143,7 @@ public class AudioManager : MonoBehaviour
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
         newSource.clip = entry.clip;
         newSource.loop = true;
-        newSource.volume = entry.volume;
+        newSource.volume = entry.volume*GetBGMVolumeMultiplier(); ;
         newSource.Play();
 
         whiteNoiseSourceDict[clipKey] = newSource;
@@ -153,7 +166,7 @@ public class AudioManager : MonoBehaviour
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
         newSource.clip = entry.clip;
         newSource.loop = entry.loop;
-        newSource.volume = entry.volume * Mathf.Clamp01(volumeDebuff);
+        newSource.volume = entry.volume * Mathf.Clamp01(volumeDebuff)* GetSFXVolumeMultiplier(); ;
         newSource.Play();
 
         sfxSourceDict[clipKey] = newSource;
@@ -227,6 +240,86 @@ public class AudioManager : MonoBehaviour
     {
         Play(curClip);
     }
+
+    public void SetBGMVolume(float masterVolume, float bgmVolume)
+    {
+        foreach (var pair in bgmDict)
+        {
+            if (bgmSourceDict.TryGetValue(pair.Key, out var source))
+            {
+                float baseVolume = pair.Value.volume;
+                source.volume = baseVolume * bgmVolume * masterVolume;
+            }
+        }
+
+        foreach (var pair in whiteNoiseDict)
+        {
+            if (whiteNoiseSourceDict.TryGetValue(pair.Key, out var source))
+            {
+                float baseVolume = pair.Value.volume;
+                source.volume = baseVolume * bgmVolume * masterVolume;
+            }
+        }
+    }
+
+    public void SetSFXVolume(float masterVolume, float sfxVolume)
+    {
+        foreach (var pair in sfxDict)
+        {
+            if (sfxSourceDict.TryGetValue(pair.Key, out var source))
+            {
+                float baseVolume = pair.Value.volume;
+                source.volume = baseVolume * sfxVolume * masterVolume;
+            }
+        }
+    }
+
+    public void SetMasterVolume(float value)
+    {
+        masterVolume = value;
+        PlayerPrefs.SetFloat(MASTER_KEY, value);
+        PlayerPrefs.Save();
+        ApplyVolumes();
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        musicVolume = value;
+        PlayerPrefs.SetFloat(MUSIC_KEY, value);
+        PlayerPrefs.Save();
+        ApplyVolumes();
+    }
+
+    public void SetSFXVolume(float value)
+    {
+        sfxVolume = value;
+        PlayerPrefs.SetFloat(SFX_KEY, value);
+        PlayerPrefs.Save();
+        ApplyVolumes();
+    }
+
+    public float GetBGMVolumeMultiplier()
+    {
+        return Mathf.Clamp01(masterVolume * musicVolume);
+    }
+
+    public float GetSFXVolumeMultiplier()
+    {
+        return Mathf.Clamp01(masterVolume * sfxVolume);
+    }
+
+    private void ApplyVolumes()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetBGMVolume(masterVolume, musicVolume);
+            AudioManager.Instance.SetSFXVolume(masterVolume, sfxVolume);
+        }
+    }
+
+    public float GetMasterVolume() => masterVolume;
+    public float GetMusicVolume() => musicVolume;
+    public float GetSFXVolume() => sfxVolume;
 }
 
 public enum BGMClip
