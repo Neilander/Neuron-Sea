@@ -47,10 +47,11 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     public void ResetAll(){
         disabledTriggers.Clear();
+        //没有实现真正的逻辑
     }
     public bool IsTriggerDisabled(string id){
-        if (disabledTriggers.Contains(id))
-            return true;
+        // if (disabledTriggers.Contains(id))
+        //     return true;
 
         // 若内存中没有，可以从 PlayerPrefs 检查
         return PlayerPrefs.GetInt("StoryTrigger_" + id, 0) == 1;
@@ -202,6 +203,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
     PlayerPrefs.SetInt("SGLM_Scene1Loaded", 0);
     PlayerPrefs.SetInt("SGLM_Scene2Loaded", 0);
     PlayerPrefs.SetInt("SGLM_Scene3Loaded", 0);
+    PlayerPrefs.DeleteAll();
     PlayerPrefs.Save();
 #endif
     }
