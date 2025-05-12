@@ -68,8 +68,9 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); 
-        SceneManager.activeSceneChanged += ChangeBGM;
+        DontDestroyOnLoad(gameObject);
+        SceneManager.activeSceneChanged += StopAllVFX;
+        SceneManager.activeSceneChanged += ChangeBGM; 
 
         bgmDict = bgmClips.ToDictionary(e => e.key, e => e);
         whiteNoiseDict = whiteNoiseClips.ToDictionary(e => e.key, e => e);
@@ -275,6 +276,14 @@ public class AudioManager : MonoBehaviour
                 float baseVolume = pair.Value.volume;
                 source.volume = baseVolume * sfxVolume * masterVolume;
             }
+        }
+    }
+
+    public void StopAllVFX(Scene oldScene, Scene newScene)
+    {
+        foreach (var pair in sfxDict)
+        {
+            Stop(pair.Key, true);
         }
     }
 

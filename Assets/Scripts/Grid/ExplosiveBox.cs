@@ -286,7 +286,11 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             float currentRadius = Mathf.Lerp(0, explosionRadius, Mathf.Clamp((t-0.75f)*4,0,1));
 
             // 持续 OverlapCircle 检测
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, currentRadius);
+            Vector2 boxCenter = transform.position;
+            Vector2 boxSize = new Vector2(currentRadius * 2, currentRadius * 2); // 因为 boxSize 是宽高
+            float boxAngle = 0f; // 如果你不需要旋转
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, boxAngle);
             foreach (var hit in hits)
             {
                 if (triggered.Contains(hit.gameObject)) continue;
@@ -313,6 +317,7 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
 
     public IEnumerator DirectExplode()
     {
+        float realDuration = explodeDuration * 0.5f;
         triggered = new List<GameObject>();
         RangeDisplayer.SetActive(true);
         // Step 1: 播放 "exploding" 动画
@@ -321,18 +326,25 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         yield return null;
         animator.SetTrigger("expand");
         isInExpand = true;
-        //yield return null;
-        animator.speed = 0.2f / explodeDuration;
+        yield return null;
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        animator.Play(state.fullPathHash, 0, 0.5f); // 从中间开始
+        
+        animator.speed = 0.2f /realDuration;
         float timer = 0f;
-        while (timer < explodeDuration)
+        while (timer <realDuration)
         {
             timer += Time.deltaTime;
 
-            float t = Mathf.Clamp01(timer / explodeDuration);
-            float currentRadius = Mathf.Lerp(0, explosionRadius, Mathf.Clamp((t - 0.75f) * 4, 0, 1));
+            float t = Mathf.Clamp01(timer / realDuration);
+            float currentRadius = Mathf.Lerp(0, explosionRadius, Mathf.Clamp((t - 0.5f) * 2, 0, 1));//原本是从后0.25开始，现在时间只有一半，就从一半开始
 
             // 持续 OverlapCircle 检测
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, currentRadius);
+            Vector2 boxCenter = transform.position;
+            Vector2 boxSize = new Vector2(currentRadius * 2, currentRadius * 2); // 因为 boxSize 是宽高
+            float boxAngle = 0f; // 如果你不需要旋转
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, boxAngle);
             foreach (var hit in hits)
             {
                 if (triggered.Contains(hit.gameObject)) continue;
