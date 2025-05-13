@@ -21,6 +21,8 @@ public class SetPanel : MonoBehaviour
 
     public Animator backgroundAnimator;
 
+    public GameObject conceptArt;
+
     
 
     private void Awake(){
@@ -47,7 +49,7 @@ public class SetPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!conceptArt.activeSelf && Input.GetKeyDown(KeyCode.Escape))
         {
             GetComponentInChildren<ClickAndExit>().Exit();
         }

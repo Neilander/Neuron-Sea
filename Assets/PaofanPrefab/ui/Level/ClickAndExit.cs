@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ClickAndExit : MonoBehaviour
 {
+    public bool DontPlaySound = false;
     public GameObject Panel;
     // Start is called before the first frame update
     void Start()
@@ -12,8 +13,12 @@ public class ClickAndExit : MonoBehaviour
         transform.GetComponent<Button>().onClick.AddListener(Exit);
     }
 
-    public void Exit(){
-        AudioManager.Instance.Play(SFXClip.Cilck3, gameObject.name);
+    public void Exit()
+    {
+        if (!DontPlaySound)
+        {
+            AudioManager.Instance.Play(SFXClip.Cilck3, gameObject.name);
+        }
         Panel.SetActive(false);
     }
 }
