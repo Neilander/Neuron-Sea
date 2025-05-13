@@ -8,6 +8,6 @@ public class SoundTrigger : MonoBehaviour
 {
     public void ClickSound(int soundID)
     {
-        AudioManager.Instance.Play((SFXClip)(soundID + 27));
+        AudioManager.Instance.Play((SFXClip)(soundID + 27),"System");
     }
 }

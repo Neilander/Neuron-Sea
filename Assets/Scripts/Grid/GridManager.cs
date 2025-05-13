@@ -209,7 +209,7 @@ public class GridManager : MonoBehaviour
         {
             case SwitchState.None:
 
-                if (Input.GetKey(modeCode))
+                if (GameInput.TimeStopsHere.Checked())
                 {
                     StartState(SwitchState.Switch);
 
@@ -347,7 +347,7 @@ public class GridManager : MonoBehaviour
 
                 */
 
-                if (!Input.GetKey(modeCode))
+                if (!GameInput.TimeStopsHere.Checked())
                 {
                     StartState(SwitchState.None);
                 }
@@ -366,7 +366,7 @@ public class GridManager : MonoBehaviour
 
     private void Selection()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (GameInput.SwitchableSelection.Pressed())//GameInput.SwitchableSelection.Pressed()
         {
             SwitchableObj tryGet;
             Debug.Log("尝试获取物体");
@@ -532,6 +532,8 @@ public class GridManager : MonoBehaviour
                     }
 
                 }
+                Debug.Log("播放选中音效");
+                AudioManager.Instance.Play(SFXClip.ObjSelection, Time.unscaledTime.ToString());
             }
         }
     }
@@ -562,7 +564,7 @@ public class GridManager : MonoBehaviour
 
             if (ifLegalMove&& canViewBothSelection&& switchCoolDownFinished)
             {
-                if (Input.GetKeyDown(switchCode))
+                if (GameInput.SwitchObjects.Pressed())
                     ShiftSwitch();
             }
         }
@@ -586,14 +588,15 @@ public class GridManager : MonoBehaviour
                 //AudioManager.Instance.PauseBGM();
                 if (curState == SwitchState.None)
                 {
-                    AudioManager.Instance.Play(SFXClip.BulletTimeIn);
+                    AudioManager.Instance.Play(SFXClip.BulletTimeIn, "GridManager");
                 }
-                AudioManager.Instance.Play(SFXClip.BulletContinune);
+                AudioManager.Instance.Play(SFXClip.BulletContinune, "GridManager");
                 InAndOutSwitchEvent.InSwitch();
                 PauseEvent.Pause();
                 gridObj.SetActive(true);
                 // // 显示当前自动选择状态
                 // Log("当前自动选择功能" + (autoSelectUnderMouse ? "已开启" : "已关闭") + "，按" + toggleAutoSelectKey + "键切换");
+                ActivityGateCenter.EnterState(ActivityState.BulletTime);
                 break;
             case SwitchState.Move:
                 Time.timeScale = 0;
@@ -611,13 +614,14 @@ public class GridManager : MonoBehaviour
             case SwitchState.Switch:
                 if (newState == SwitchState.None)
                 {
-                    AudioManager.Instance.Play(SFXClip.BulletTimeOut);
+                    AudioManager.Instance.Play(SFXClip.BulletTimeOut,"GridManager");
                 }
-                AudioManager.Instance.Stop(SFXClip.BulletContinune, true);
+                AudioManager.Instance.Stop(SFXClip.BulletContinune, "GridManager" ,true);
                 //AudioManager.Instance.ResumeBGM();
                 InAndOutSwitchEvent.OutSwitch();
                 PauseEvent.Resume();
                 gridObj.SetActive(false);
+                ActivityGateCenter.ExitState(ActivityState.BulletTime);
                 break;
 
             case SwitchState.Move:
@@ -676,7 +680,7 @@ public class GridManager : MonoBehaviour
         Vector3 tempPos = switchInfoRecorder.obj1.SelfGridPos;
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
-        AudioManager.Instance.Play(SFXClip.Switch);
+        AudioManager.Instance.Play(SFXClip.Switch, Time.unscaledTime.ToString());
         switchCoolDownFinished = false;
         Invoke("ResetCoolDownFinish", switchCoolDown);
         StartState(SwitchState.Move);
@@ -837,7 +841,7 @@ public class GridManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(waitTime);
 
         // ✅ 这里写你想触发的事件
-        if (Input.GetKey(modeCode))
+        if (GameInput.TimeStopsHere.Checked())
         {
             StartState(SwitchState.Switch);
         }
@@ -966,7 +970,6 @@ class TwoObjectContainer<Type>
 
     public bool Record(Type n, out Type poopOut, out Type poopOut2)
     {
-        AudioManager.Instance.Play(SFXClip.ObjSelection);
         poopOut = n;
         poopOut2 = n;
         if (hasFirst)

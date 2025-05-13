@@ -128,7 +128,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
     private IEnumerator MoveOnce()
     {
-        AudioManager.Instance.Play(SFXClip.BoomTouch);
+        AudioManager.Instance.Play(SFXClip.BoomTouch,gameObject.name);
         isMoving = true;
         yield return new WaitForSeconds(waitTime);
         
@@ -148,7 +148,7 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
                 if (dist > 0)
                 {
                     playSound = true;
-                    AudioManager.Instance.Play(SFXClip.TouchMoveBox, Mathf.Clamp01(dist));
+                    AudioManager.Instance.Play(SFXClip.TouchMoveBox, gameObject.name, Mathf.Clamp01(dist));
                 }
             }
             time += Time.deltaTime;
@@ -164,8 +164,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         MoveStep(end - target.localPosition); 
         if (playSound)
         {
-            AudioManager.Instance.Stop(SFXClip.TouchMoveBox);
-            AudioManager.Instance.Play(SFXClip.TouchMoveBoxTurnBack, Mathf.Clamp01(dist));
+            AudioManager.Instance.Stop(SFXClip.TouchMoveBox,gameObject.name);
+            AudioManager.Instance.Play(SFXClip.TouchMoveBoxTurnBack, gameObject.name, Mathf.Clamp01(dist));
         }
 
         atA = !atA;

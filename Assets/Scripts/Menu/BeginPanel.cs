@@ -74,7 +74,7 @@ public class BeginPanel : MonoBehaviour
                 PlayerPrefs.SetInt("BeginSceneVid", 1);
                 PlayerPrefs.Save();
                 AudioManager.Instance.Stop(BGMClip.SceneBegin);
-                AudioManager.Instance.Play(SFXClip.StartVideo);
+                AudioManager.Instance.Play(SFXClip.StartVideo,gameObject.name);
             }
         }
         else

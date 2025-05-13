@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public struct VirtualJoystick
 {
-    public Vector2 Value { get => new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) == Vector2.zero ? new Vector2(GameInput.Right.Checked() ? 1 : GameInput.Left.Checked() ? -1 : 0, GameInput.Up.Checked() ? 1 : GameInput.Down.Checked() ? -1 : 0) : new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); }
+    public Vector2 Value { get => new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) == Vector2.zero ? new Vector2(GameInput.MoveRight.Checked() ? 1 : GameInput.MoveLeft.Checked() ? -1 : 0, GameInput.MoveUp.Checked() ? 1 : GameInput.MoveDown.Checked() ? -1 : 0) : new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); }
 }
 
 public class VisualButton
@@ -18,12 +18,13 @@ public class VisualButton
     private float preInputTime;//预输入时间
     private bool fixedGetKeyDown;
     private bool fixedGetKey;
-    private bool getKeyInFrame;
+    private float getKeyTime = -1f;
     private float preInputTimer;
     private float minEffectiveTime;//生效后最短持续时间
     private float minEffectiveTimer;
+    private bool blockedDuringPause;//是否在暂停时被阻止，一般UI类输入为False，游戏内输入为True
 
-    public VisualButton(KeyCode key, float preInputTime = 0f, float minEffectiveTime = 0f)
+    public VisualButton(KeyCode key, float preInputTime = 0f, float minEffectiveTime = 0f, bool blockedDuringPause = false)
     {
         this.key = key;
         this.preInputTime = preInputTime;
@@ -31,10 +32,12 @@ public class VisualButton
         this.minEffectiveTime = minEffectiveTime;
         this.minEffectiveTimer = 0f;
         GameInput.Buttons.Add(this);
+        this.blockedDuringPause = blockedDuringPause;
     }
 
     public bool Pressed(bool fixed_check = true)
     {
+        if (blockedDuringPause && Time.timeScale == 0) return false;
         if (fixed_check)
         {
             return fixedGetKeyDown || this.preInputTimer > 0f;
@@ -47,6 +50,7 @@ public class VisualButton
 
     public bool Checked(bool fixed_check = true)
     {
+        if (blockedDuringPause && Time.timeScale == 0) return false;
         if (fixed_check)
         {
             return fixedGetKey || this.minEffectiveTimer > 0f;
@@ -68,7 +72,7 @@ public class VisualButton
     {
         if (Input.GetKey(key))
         {
-            getKeyInFrame = true;
+            getKeyTime = Time.unscaledTime;
         }
     }
 
@@ -78,7 +82,7 @@ public class VisualButton
         {
             fixedGetKeyDown = false;
         }
-        if (getKeyInFrame)
+        if (Time.unscaledTime - getKeyTime < deltaTime)
         {
             if (!fixedGetKey)
             {
@@ -90,7 +94,6 @@ public class VisualButton
         {
             fixedGetKey = false;
         }
-        getKeyInFrame = false;
         if (preInputTime > 0)
         {
             this.preInputTimer -= deltaTime;
@@ -114,13 +117,16 @@ public static class GameInput
 {
     public static List<VisualButton> Buttons = new List<VisualButton>();
 
-    public static VisualButton Jump = new VisualButton(KeyCode.Space, Constants.JumpPreInputTime, Constants.JumpMinEffectiveTime);
-    public static VisualButton Up = new VisualButton(KeyCode.W);
-    public static VisualButton Down = new VisualButton(KeyCode.S);
-    public static VisualButton Left = new VisualButton(KeyCode.A);
-    public static VisualButton Right = new VisualButton(KeyCode.D);
+    public static VisualButton Jump = new VisualButton(KeyCode.Space, Constants.JumpPreInputTime, Constants.JumpMinEffectiveTime, true);
+    public static VisualButton MoveUp = new VisualButton(KeyCode.W, blockedDuringPause : true);
+    public static VisualButton MoveDown = new VisualButton(KeyCode.S, blockedDuringPause: true);
+    public static VisualButton MoveLeft = new VisualButton(KeyCode.A, blockedDuringPause: true);
+    public static VisualButton MoveRight = new VisualButton(KeyCode.D, blockedDuringPause: true);
     public static VisualButton Confirm = new VisualButton(KeyCode.Space);
     public static VisualButton Menu = new VisualButton(KeyCode.Escape);
+    public static VisualButton TimeStopsHere = new VisualButton(KeyCode.Mouse1);
+    public static VisualButton SwitchableSelection = new VisualButton(KeyCode.Mouse0, blockedDuringPause: true);
+    public static VisualButton SwitchObjects = new VisualButton(KeyCode.E, blockedDuringPause: true);
     public static VirtualJoystick Aim = new VirtualJoystick();
 
     public static void Update(float deltaTime)

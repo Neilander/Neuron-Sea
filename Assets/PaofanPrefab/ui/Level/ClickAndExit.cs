@@ -13,7 +13,7 @@ public class ClickAndExit : MonoBehaviour
     }
 
     public void Exit(){
-        AudioManager.Instance.Play(SFXClip.Cilck3);
+        AudioManager.Instance.Play(SFXClip.Cilck3, gameObject.name);
         Panel.SetActive(false);
     }
 }
