@@ -32,7 +32,6 @@ public class SetPanel : MonoBehaviour
         }
 
         Instance = this;
-        gameObject.SetActive(false);
     }
     // Start is called before the first frame update
     void Start()
