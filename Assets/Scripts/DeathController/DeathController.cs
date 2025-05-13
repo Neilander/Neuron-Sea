@@ -275,7 +275,7 @@ public class DeathController : MonoBehaviour
 
     public void HandleDeath(GameObject obj)
     {
-        AudioManager.Instance.Play(SFXClip.PlayerDeath);
+        AudioManager.Instance.Play(SFXClip.PlayerDeath,gameObject.name);
         print("我死了"+ obj.name);
 
         // 获取玩家组件

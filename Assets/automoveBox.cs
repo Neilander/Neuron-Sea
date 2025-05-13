@@ -162,7 +162,7 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
                 if (dist > 0)
                 {
                     playSound = true;
-                    AudioManager.Instance.Play(SFXClip.AutoMoveBox, Mathf.Clamp01(dist));
+                    AudioManager.Instance.Play(SFXClip.AutoMoveBox,gameObject.name, Mathf.Clamp01(dist));
                 }
             }
             time += Time.deltaTime;
@@ -177,8 +177,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         MoveStep(end - target.localPosition);
         if (playSound)
         {
-            AudioManager.Instance.Stop(SFXClip.AutoMoveBox);
-            AudioManager.Instance.Play(SFXClip.AutoMoveBoxTurnBack, Mathf.Clamp01(dist));
+            AudioManager.Instance.Stop(SFXClip.AutoMoveBox,gameObject.name);
+            AudioManager.Instance.Play(SFXClip.AutoMoveBoxTurnBack, gameObject.name,Mathf.Clamp01(dist));
         }
     }
 

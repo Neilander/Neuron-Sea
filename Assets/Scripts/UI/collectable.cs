@@ -80,7 +80,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
     void GetCollected()
     {
         CollectableManager.Instance.TryAddCollection(levelManager.instance.currentLevelIndex);
-        AudioManager.Instance.Play(SFXClip.PickUpCollectable);
+        AudioManager.Instance.Play(SFXClip.PickUpCollectable,gameObject.name);
         Destroy(gameObject);
         DestroyToDo.Invoke();
         showDialogue(4,1,"*我能看到更多的图景了，这些东西让我觉得熟悉。或许它们并不是崭新的……但我依然抱有期待。");

@@ -48,7 +48,8 @@ public class AudioManager : MonoBehaviour
 
     private Dictionary<BGMClip, AudioSource> bgmSourceDict = new();
     private Dictionary<WhiteNoiseClip, AudioSource> whiteNoiseSourceDict = new();
-    private Dictionary<SFXClip, AudioSource> sfxSourceDict = new();
+    //private Dictionary<SFXClip, AudioSource> sfxSourceDict = new();
+    private Dictionary<SFXClip, Dictionary<string, AudioSource>> sfxSourceDict = new();
 
 
     private const string MASTER_KEY = "MasterVolume";
@@ -104,7 +105,7 @@ public class AudioManager : MonoBehaviour
 
     public void ClickSound(int soundID)
     {
-        AudioManager.Instance.Play((SFXClip)(soundID + 27));
+        AudioManager.Instance.Play((SFXClip)(soundID + 27),"System");
     }
 
     private BGMClip curClip;
@@ -150,7 +151,7 @@ public class AudioManager : MonoBehaviour
         whiteNoiseSourceDict[clipKey] = newSource;
     }
 
-    public void Play(SFXClip clipKey, float volumeDebuff = 1f)
+    public void Play(SFXClip clipKey, string id, float volumeDebuff = 1f)
     {
         if (!sfxDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
         {
@@ -158,11 +159,21 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        if (sfxSourceDict.TryGetValue(clipKey, out var oldSource))
+        if (!sfxSourceDict.TryGetValue(clipKey, out var innerDict))
         {
-            oldSource.Stop();
-            Destroy(oldSource);
+            innerDict = new Dictionary<string, AudioSource>();
+            sfxSourceDict[clipKey] = innerDict;
         }
+
+        if (innerDict.TryGetValue(id, out var existingSource))
+        {
+            existingSource.Stop();
+            Destroy(existingSource);
+            innerDict.Remove(id);
+        }
+
+
+        
 
         AudioSource newSource = gameObject.AddComponent<AudioSource>();
         newSource.clip = entry.clip;
@@ -170,10 +181,10 @@ public class AudioManager : MonoBehaviour
         newSource.volume = entry.volume * Mathf.Clamp01(volumeDebuff)* GetSFXVolumeMultiplier(); ;
         newSource.Play();
 
-        sfxSourceDict[clipKey] = newSource;
+        innerDict[id] = newSource;
 
         if (!entry.loop)
-            StartCoroutine(DestroyWhenDone(newSource, clipKey));
+            StartCoroutine(DestroyWhenDone(newSource, id,clipKey));
     }
 
     public void Stop(BGMClip key)
@@ -204,33 +215,39 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Stop(SFXClip key, bool forceEndLoop = false)
+    public void Stop(SFXClip key, string id, bool forceEndLoop = false)
     {
-        if (sfxSourceDict.TryGetValue(key, out var source))
+        if (!sfxSourceDict.TryGetValue(key, out var innerDict)) return;
+        if (!innerDict.TryGetValue(id, out var source) || source == null) return;
+
+        if (source.loop)
         {
-            if (source.loop)
-            {
-                source.loop = false; 
-                if (forceEndLoop)
-                {
-                    source.Stop();
-                }
-            }
-            else
+            source.loop = false;
+            if (forceEndLoop)
             {
                 source.Stop();
             }
-            StartCoroutine(DestroyWhenDone(source, key));
         }
+        else
+        {
+            source.Stop();
+        }
+
+        StartCoroutine(DestroyWhenDone(source, id, key));
     }
 
-    private IEnumerator DestroyWhenDone(AudioSource source, SFXClip key)
+    private IEnumerator DestroyWhenDone(AudioSource source, string id ,SFXClip key)
     {
         yield return new WaitForSeconds(source.clip.length);
 
-        if (sfxSourceDict.TryGetValue(key, out var currentSource) && currentSource == source)
+        if (sfxSourceDict.TryGetValue(key, out var innerDict)
+            && innerDict.TryGetValue(id, out var currentSource) && currentSource == source)
         {
-            sfxSourceDict.Remove(key);
+            innerDict.Remove(id);
+            if (innerDict.Count == 0)
+            {
+                sfxSourceDict.Remove(key);
+            }
         }
 
         Destroy(source);
@@ -269,11 +286,19 @@ public class AudioManager : MonoBehaviour
 
     public void SetSFXVolume(float masterVolume, float sfxVolume)
     {
-        foreach (var pair in sfxDict)
+        foreach (var clipPair in sfxSourceDict)
         {
-            if (sfxSourceDict.TryGetValue(pair.Key, out var source))
+            var clipKey = clipPair.Key;
+
+            // 获取每个 SFXClip 的基础 volume（配置）
+            if (!sfxDict.TryGetValue(clipKey, out var entry)) continue;
+            float baseVolume = entry.volume;
+
+            foreach (var instancePair in clipPair.Value)
             {
-                float baseVolume = pair.Value.volume;
+                var source = instancePair.Value;
+                if (source == null) continue;
+
                 source.volume = baseVolume * sfxVolume * masterVolume;
             }
         }
@@ -281,9 +306,18 @@ public class AudioManager : MonoBehaviour
 
     public void StopAllVFX(Scene oldScene, Scene newScene)
     {
-        foreach (var pair in sfxDict)
+        // 拷贝所有 key 防止迭代中修改字典
+        var allKeys = sfxSourceDict.Keys.ToList();
+
+        foreach (var clipKey in allKeys)
         {
-            Stop(pair.Key, true);
+            var idDict = sfxSourceDict[clipKey];
+            var allIds = idDict.Keys.ToList();
+
+            foreach (var id in allIds)
+            {
+                Stop(clipKey, id, forceEndLoop: true);
+            }
         }
     }
 

@@ -133,7 +133,7 @@ public class Portal : MonoBehaviour
         }
         */
 
-        AudioManager.Instance.Play(SFXClip.Teleport);
+        AudioManager.Instance.Play(SFXClip.Teleport,gameObject.name);
 
         // 原来的位置和目标位置，用于计算偏移量
         Vector2 originalPosition = player.transform.position;

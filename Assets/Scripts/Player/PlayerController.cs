@@ -217,7 +217,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         #endregion
         if(!wasOnGround && onGround)
         {
-            AudioManager.Instance.Play(SFXClip.Drop);
+            AudioManager.Instance.Play(SFXClip.Drop,gameObject.name);
         }
 
         animator.SetBool("isGrounded", IsGrounded());
@@ -366,14 +366,14 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         if (!inMoveSound && Mathf.Abs(Speed.x) > 0 && OnGround)
         {
             inMoveSound = true;
-            AudioManager.Instance.Play((SFXClip)levelManager.instance.sceneIndex + 17);
+            AudioManager.Instance.Play((SFXClip)levelManager.instance.sceneIndex + 17,gameObject.name);
         }
         else if (inMoveSound && !(Mathf.Abs(Speed.x) > 0 && OnGround))
         {
             inMoveSound = false;
             for (int i = 18; i < 21; i++)
             {
-                AudioManager.Instance.Stop((SFXClip)i);
+                AudioManager.Instance.Stop((SFXClip)i,gameObject.name);
             }
         }
     }
@@ -429,7 +429,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
             inMoveSound = false;
             for (int i = 18; i < 21; i++)
             {
-                AudioManager.Instance.Stop((SFXClip)i);
+                AudioManager.Instance.Stop((SFXClip)i, gameObject.name);
             }
         }
 
