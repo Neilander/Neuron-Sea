@@ -26,18 +26,7 @@ public class BeginPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //尝试修改分辨率
-        int screenWidth = Display.main.systemWidth;
-    int screenHeight = Display.main.systemHeight;
 
-    if (screenWidth == 1920)
-    {
-        Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
-    }
-    else
-    {
-        Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
-    }
         img = volume.GetComponent<Image>();
 
         ifStartVid = PlayerPrefs.GetInt("BeginSceneVid") == 0;
@@ -53,7 +42,6 @@ public class BeginPanel : MonoBehaviour
                 videoCanvas.SetActive(true);
             }
         }
-        Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
     }
 
     // Update is called once per frame
