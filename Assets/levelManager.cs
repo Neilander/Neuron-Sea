@@ -5,10 +5,20 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 
+public enum LevelManagerState
+{
+    inLevel,
+    StartScreen
+}
+
 public class levelManager : MonoBehaviour
 {
 
     public static levelManager instance { get; private set; }
+
+    [Header("关卡控制器状态")]
+    public LevelManagerState curState;
+
     #region 已通关关卡记录
     // 添加已通关关卡记录
     private HashSet<int> unlockedLevels = new HashSet<int>();
@@ -66,23 +76,65 @@ public class levelManager : MonoBehaviour
     bool ifDirectToPos = true;
     void Awake()
     {
+        
         if (instance == null)
         {
+
             instance = this;
             //DontDestroyOnLoad(gameObject); // ⬅️ 不在场景切换中销毁
 
-            cameraControl = Camera.main.GetComponent<CameraControl>();
-            if (cameraControl == null)
+            switch (curState)
             {
-                Debug.LogError("新场景中主相机缺少 CameraControl！");
-                return;
+                case LevelManagerState.inLevel:
+                    cameraControl = Camera.main.GetComponent<CameraControl>();
+                    if (cameraControl == null)
+                    {
+                        Debug.LogError("新场景中主相机缺少 CameraControl！");
+                        return;
+                    }
+                    // 重新加载当前关卡（基于 currentLevelIndex）
+                    var cameraData = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+                    if (cameraData != null)
+                    {
+                        cameraData.SetRenderer(sceneIndex - 1);
+                    }
+
+                    bool specialStart = false;
+                    if (PlayerPrefs.GetInt("carryLevel") != 0)
+                    {
+                        currentLevelIndex = PlayerPrefs.GetInt("carryLevel");
+                        PlayerPrefs.SetInt("carryLevel", 0);
+                        specialStart = true;
+
+                    }
+
+                    StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
+                    StoryGlobalLoadManager.instance.RegisterGeneralStart(GeneralActionWhenLevel);
+                    if (specialStart)
+                        StoryGlobalLoadManager.instance.RegisterGeneralStart(SpecialStartWhenChooseLevel);
+
+
+                    //原本剧情相关
+                    //LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
+
+                    StartCoroutine(RegisterNextFrame());
+
+
+
+                    #region 初始化已通关关卡记录
+                    // 初始化第一关解锁
+                    UnlockLevel(1);
+                    // 从PlayerPrefs加载已解锁关卡
+                    LoadUnlockedLevels();
+                    #endregion
+                    break;
+
+                case LevelManagerState.StartScreen:
+
+                    break;
             }
-            // 重新加载当前关卡（基于 currentLevelIndex）
-            var cameraData = Camera.main.GetComponent<UniversalAdditionalCameraData>();
-            if (cameraData != null)
-            {
-                cameraData.SetRenderer(sceneIndex - 1);
-            }
+
+            
             //bool ifDirect = true;
             /* 原本剧情相关
             switch (sceneIndex)
@@ -114,34 +166,7 @@ public class levelManager : MonoBehaviour
                     }
                     break;
             }*/
-            bool specialStart = false;
-            if (PlayerPrefs.GetInt("carryLevel") != 0)
-            {
-                currentLevelIndex = PlayerPrefs.GetInt("carryLevel");
-                PlayerPrefs.SetInt("carryLevel", 0);
-                specialStart = true;
-                
-            }
-
-            StoryGlobalLoadManager.instance.RegisterOnStartWithStory(PrepareForLevelStory);
-            StoryGlobalLoadManager.instance.RegisterGeneralStart(GeneralActionWhenLevel);
-            if(specialStart)
-                StoryGlobalLoadManager.instance.RegisterGeneralStart(SpecialStartWhenChooseLevel);
-
-
-            //原本剧情相关
-            //LoadLevel(Mathf.Clamp(currentLevelIndex, minLevel, maxLevel),ifDirect);
-
-            StartCoroutine(RegisterNextFrame());
-
-
-
-            #region 初始化已通关关卡记录
-            // 初始化第一关解锁
-            UnlockLevel(1);
-            // 从PlayerPrefs加载已解锁关卡
-            LoadUnlockedLevels();
-            #endregion
+            
         }
         else
         {
@@ -154,15 +179,27 @@ public class levelManager : MonoBehaviour
 
     void OnDestroy()
     {
-        Debug.Log("解绑了");
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
-        StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
+        switch (curState)
+        {
+            case LevelManagerState.inLevel:
+                Debug.Log("解绑了");
+                SceneManager.sceneLoaded -= OnSceneLoaded;
+                StoryGlobalLoadManager.instance.UnregisterOnStartWithStory(PrepareForLevelStory);
+                StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
+                break;
+        }
+        
     }
 
     private void Start()
     {
-        StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
+        switch (curState)
+        {
+            case LevelManagerState.inLevel:
+                StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
+                break;
+        }
+        
         
     }
 
@@ -334,7 +371,9 @@ public class levelManager : MonoBehaviour
         {
             AudioManager.Instance.Play(SFXClip.EnterLevel,gameObject.name);
         }
-        FindAnyObjectByType<PlayerController>().PrepareForTransport();
+        PlayerController player = FindAnyObjectByType<PlayerController>();
+        if(player!=null)
+            player.PrepareForTransport();
         if (newLevelIndex > maxLevel || newLevelIndex < minLevel)
         {
             if (newLevelIndex >= 1 && newLevelIndex <= 12)
@@ -651,7 +690,7 @@ public class levelManager : MonoBehaviour
 
         if (ifSetPlayerToAndNoMovement)
         {
-            PlayerController player = FindAnyObjectByType<PlayerController>();
+            //PlayerController player = FindAnyObjectByType<PlayerController>();
             Debug.Log($"[位置监测] 设置玩家位置后: 位置={player?.transform.position}, 关卡={newLevelIndex}, 是否重启={isRestarting}");
         }
 
