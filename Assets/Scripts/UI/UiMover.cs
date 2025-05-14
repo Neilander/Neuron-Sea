@@ -90,7 +90,7 @@ public class UiMover : MonoBehaviour
         if (!isMoving) return;
 
         // 增加时间
-        elapsedTime += Time.deltaTime;
+        elapsedTime += Time.unscaledDeltaTime;
         float t = Mathf.Clamp01(elapsedTime / moveDuration); // 归一化时间 [0, 1]
 
         // 根据曲线计算插值

@@ -31,10 +31,11 @@ public class FeelMouseOn : MonoBehaviour
         bool hovering = RectTransformUtility.RectangleContainsScreenPoint(rect, mousePos, uiCam);
                         //&& !EventSystem.current.IsPointerOverGameObject(); // 可选：屏蔽被其他 UI 挡住的情况
 
-        float delta = speed * Time.deltaTime;
+        float delta = speed * Time.unscaledDeltaTime;
         if (hovering)
             switcher.progress = Mathf.Clamp01(switcher.progress + delta);
         else
             switcher.progress = Mathf.Clamp01(switcher.progress - delta);
+
     }
 }
