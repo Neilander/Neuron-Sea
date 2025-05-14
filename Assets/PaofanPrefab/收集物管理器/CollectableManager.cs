@@ -23,6 +23,7 @@ public class CollectableManager : MonoBehaviour
         else {
             Destroy(gameObject);
         }
+        LoadCollectedLevels();
     }
 
     public void TryAddCollection(int levelName){
@@ -73,6 +74,7 @@ public class CollectableManager : MonoBehaviour
             }
         }
 
+        ConceptArtUnlockManager.Instance?.UpdateArtLockStatus();
         Debug.Log($"已加载收集状态：{string.Join(",", collectedLevels)}");
     }
 

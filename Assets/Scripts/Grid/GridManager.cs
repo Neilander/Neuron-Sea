@@ -366,7 +366,7 @@ public class GridManager : MonoBehaviour
 
     private void Selection()
     {
-        if (GameInput.SwitchableSelection.Pressed())//GameInput.SwitchableSelection.Pressed()
+        if (GameInput.SwitchableSelection.Pressed(false))//GameInput.SwitchableSelection.Pressed()
         {
             SwitchableObj tryGet;
             Debug.Log("尝试获取物体");
