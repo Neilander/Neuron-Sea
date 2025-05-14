@@ -12,6 +12,7 @@ public class BeginPanel : MonoBehaviour
 
     
     public GameObject volume;
+    public GameObject levelSelect;
 
     [Header("视频设置")]
     public VideoPlayer videoPlayer;  // 视频播放器组件
@@ -64,7 +65,7 @@ public class BeginPanel : MonoBehaviour
     public void StartGame()
     {
         // 首先禁用当前面板
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
 
         if (ifStartVid)
         {
@@ -80,7 +81,8 @@ public class BeginPanel : MonoBehaviour
         }
         else
         {
-            LoadGameScene();
+            levelSelect.SetActive(true);
+            //LoadGameScene();
         }
 
         // 检查是否需要播放视频

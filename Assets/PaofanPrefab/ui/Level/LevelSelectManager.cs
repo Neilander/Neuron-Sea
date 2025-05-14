@@ -49,6 +49,15 @@ public class LevelSelectManager : MonoBehaviour
 
     #endregion
 
+     #region levelOneOrTwo
+
+     [SerializeField] private GameObject levelOnePrefab; // 01图片预制体
+     [SerializeField] private GameObject levelTwoPrefab; // 02图片预制体
+     
+     private GameObject[] levelOneOrTwoInstances; // 存储每个按钮的0102图
+
+    #endregion
+
 
     public Animator backgroundAnimator;
 
@@ -77,6 +86,7 @@ public class LevelSelectManager : MonoBehaviour
         lockInstances = new GameObject[levelButtons.Length];
         CollectInstances = new GameObject[levelButtons.Length];
         openLockInstances = new GameObject[levelButtons.Length];
+        levelOneOrTwoInstances = new GameObject[levelButtons.Length];
         // 为每个按钮创建锁并绑定点击事件
         for (int i = 0; i < levelButtons.Length; i++)
         {
@@ -88,10 +98,13 @@ public class LevelSelectManager : MonoBehaviour
             // 为每个按钮创建锁的实例
             GameObject lockInstance = Instantiate(lockImagePrefab, levelButtons[i].transform);
             GameObject CollectInstance = Instantiate(IfCollectPrefab, levelButtons[i].transform);
+            GameObject levelOneOrTwoInstance = Instantiate(i % 2 == 0 ? levelOnePrefab : levelTwoPrefab, levelButtons[i].transform);
             lockInstance.transform.SetAsLastSibling(); // 确保锁显示在最上层
             CollectInstance.transform.SetAsLastSibling();
+            levelOneOrTwoInstance.transform.SetAsLastSibling();
             lockInstances[i] = lockInstance;
             CollectInstances[i] = CollectInstance;
+            levelOneOrTwoInstances[i] = levelOneOrTwoInstance;
             CollectInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(75, -75);
 
             GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
