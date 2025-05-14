@@ -10,6 +10,7 @@ public class BeginPanel : MonoBehaviour
     public string LevelOneName;
     public string aboutUs;
 
+    
     public GameObject volume;
 
     [Header("视频设置")]
@@ -144,6 +145,7 @@ public class BeginPanel : MonoBehaviour
 
     public void Volume()
     {
+        volume.SetActive(true);
         SetPanel.Instance.OpenCanvas();
         FindObjectOfType<ButtonMgr>().SetDefaultState();
         /*
