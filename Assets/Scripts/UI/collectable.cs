@@ -66,7 +66,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
             unlocked = false;
         }
 
-        DisplayText.text = string.Format("{0}/{1}", curSTime, restrictedTime);
+        DisplayText.text = curSTime <= restrictedTime ? string.Format("{0}/{1}", curSTime, restrictedTime) : string.Format("<color=#E73CA6>{0}</color>/{1}", curSTime, restrictedTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
