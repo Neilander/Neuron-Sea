@@ -223,7 +223,8 @@ public class StoryTrigger : MonoBehaviour
         HideSkipButton();
         // 触发退出事件
         onExitSpecificStory?.Invoke();
-        transform.GetComponent<BoxCollider2D>().enabled = false;
+        if(transform.GetComponent<BoxCollider2D>() != null)
+            transform.GetComponent<BoxCollider2D>().enabled = false;
         StoryGlobalLoadManager.instance.DisableTrigger(triggerID);
         // 如果需要自动触发下一段剧情
         if (autoTriggerNextStory && nextStoryTrigger != null)
@@ -488,5 +489,15 @@ public void OnSkipButtonClick()
         hasTriggered = false;
     }
 
+    public void SetStoryResourcePath(string path) {
+        this.csvResourcePath = path;
+    }
+
+    public void SetTriggerId(string id) {
+        this.triggerID = id;
+    }
     
+    public void SetStorySourceType(StorySourceType sourceType) {
+        this.storySourceType = sourceType;
+    }
 }

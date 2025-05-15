@@ -357,9 +357,9 @@ public class EndAndMove : MonoBehaviour
         Debug.LogError("[EndAndMove] " + message);
     }
 
-    public void ForceEnterStory3(){
-        storyTriggers[3].ForceStartStory();
-    }
+    // public void ForceEnterStory3(){
+    //     storyTriggers[3].ForceStartStory();
+    // }
     public void ForceEnterStory1_1(){
         storyTriggers[4].ForceStartStory();
     }

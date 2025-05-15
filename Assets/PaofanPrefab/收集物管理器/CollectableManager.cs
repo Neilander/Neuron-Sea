@@ -33,6 +33,7 @@ public class CollectableManager : MonoBehaviour
             Debug.Log($"Collected in {levelName}. Total: {totalCollected}");
             SaveCollectedLevels();
             LoadCollectedLevels();
+            CollectableEvents.onCollectableAdded?.Invoke(levelName, totalCollected);
             if (LevelSelectManager.Instance != null)
                 LevelSelectManager.Instance.RefreshButtons();
         }
