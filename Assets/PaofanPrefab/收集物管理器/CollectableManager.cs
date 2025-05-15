@@ -43,7 +43,7 @@ public class CollectableManager : MonoBehaviour
     public int GetTotalCollected(){
         return totalCollected;
     }
-
+    //仅用于剧情计数,仅清空内存数据
     public void ResetLevelData(){
         collectedLevels.Clear();
     }

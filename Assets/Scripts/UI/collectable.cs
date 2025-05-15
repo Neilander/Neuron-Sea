@@ -94,17 +94,29 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         showDialogue(12,25,"你喜欢这份礼物吗？这是她的礼物，同样也是我的。");
         
     }
+    //播过一次不再播放
+    private void showDialogue(int collectNum, int levelGroup, string wordToDisplay){
+        // 生成唯一ID用于记录此对话是否已播放
+        string dialogueId = $"Collectable_Dialogue_{collectNum}_{levelGroup}";
 
-    private void showDialogue(int collectNum,int levelGroup,string wordToDisplay){
+        // 检查是否已播放过此对话
+        if (StoryGlobalLoadManager.instance.IsTriggerDisabled(dialogueId)) {
+            return; // 如果已播放过，直接返回
+        }
+
         if (CollectableManager.Instance.collectedLevels.Count == collectNum &&
             levelManager.instance.currentLevelIndex >= levelGroup &&
-            levelManager.instance.currentLevelIndex <= levelGroup+11) {
-            //玩家头上显示一个面板
+            levelManager.instance.currentLevelIndex <= levelGroup + 11) {
+
+            // 玩家头上显示一个面板
             GameObject player = GameObject.FindWithTag("Player");
             if (player != null) {
                 Head dialogue = player.GetComponentInChildren<Head>();
                 if (dialogue != null) {
                     dialogue.ShowDialogue(wordToDisplay);
+
+                    // 标记此对话已播放
+                    StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
                 }
             }
         }
