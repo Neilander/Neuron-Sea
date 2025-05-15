@@ -130,7 +130,7 @@ public class levelManager : MonoBehaviour
                     break;
 
                 case LevelManagerState.StartScreen:
-
+                    LoadUnlockedLevels();
                     break;
             }
 
