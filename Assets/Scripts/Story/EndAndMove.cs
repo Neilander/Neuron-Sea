@@ -357,9 +357,19 @@ public class EndAndMove : MonoBehaviour
         Debug.LogError("[EndAndMove] " + message);
     }
 
-    // public void ForceEnterStory3(){
-    //     storyTriggers[3].ForceStartStory();
-    // }
+    public void ForceEnterStory3(){
+        //在第一关
+        if (levelManager.instance.currentLevelIndex == 1) {
+            //收集到一个,没播过
+            if (CollectableManager.Instance.totalCollected == 1&& !StoryGlobalLoadManager.instance.IsTriggerDisabled("场景1剧情_第3个故事只要放在玩家碰不到的地方")) {
+                storyTriggers[3].ForceStartStory();
+            }
+            //其他关收集到了,再回第一关
+            else {
+                
+            }
+        }
+    }
     public void ForceEnterStory1_1(){
         storyTriggers[4].ForceStartStory();
     }
