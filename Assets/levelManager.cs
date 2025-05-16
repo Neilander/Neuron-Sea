@@ -426,9 +426,9 @@ public class levelManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
                 if (ProcessLevelLoader.instance != null)
-                    ProcessLevelLoader.instance.LoadSceneWithTransition("场景2剧情");
+                    ProcessLevelLoader.instance.LoadSceneWithTransition("场景3剧情");
                 else
-                    SceneManager.LoadScene("场景2剧情");
+                    SceneManager.LoadScene("场景3剧情");
             }
             return new Rect();
         }
