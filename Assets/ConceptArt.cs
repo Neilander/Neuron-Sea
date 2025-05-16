@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class ConceptArt : MonoBehaviour
 {
+    [SerializeField] private Transform imgParent; // ¸¸ÎïÌå
     public void ShowPic(int index)
     {
         Debug.Log("ShowPic called with index: " + index);
         gameObject.SetActive(true);
         // Hide all images
-        foreach (Transform child in transform)
+        foreach (Transform child in imgParent)
         {
             child.gameObject.SetActive(false);
         }
         // Show the selected image
-        if (index >= 0 && index < transform.childCount)
+        if (index >= 0 && index < imgParent.childCount)
         {
-            transform.GetChild(index).gameObject.SetActive(true);
+            imgParent.GetChild(index).gameObject.SetActive(true);
         }
     }
 
@@ -24,7 +25,7 @@ public class ConceptArt : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            GetComponentInChildren<ClickAndExit>().Exit();
+            GetComponent<ClickAndExit>().Exit();
         }
     }
 }
