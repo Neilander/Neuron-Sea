@@ -73,14 +73,14 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
                 continue;
             }
 
-            bool isUnlocked = CollectableManager.Instance.totalCollected >= (i + 1) * 0;
+            bool isUnlocked = CollectableManager.Instance.totalCollected >= (i + 1) * 9;
 
             // 设置按钮是否可交互
             artButtons[i].interactable = isUnlocked;
 
             // 设置锁的数字
             TextMeshProUGUI lockNumberText = bubbleInstances[i].GetComponentInChildren<TextMeshProUGUI>();
-            lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 0}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 0}"; // 设置锁的数字
+            lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 9}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 9}"; // 设置锁的数字
 
             artButtons[i].GetComponent<Image>().sprite = isUnlocked ? unlockImgs[i] : lockedImgs[i]; // 设置锁的显示状态
         }

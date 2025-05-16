@@ -11,9 +11,9 @@ public class LevelSelectManager : MonoBehaviour
 
     [Header("特殊按钮设置")]
     [SerializeField] private Button[] specialButtons;      // 特殊按钮数组
-    [SerializeField] private Sprite normalSprite;          // 普通激活状态图片
-    [SerializeField] private Sprite graySprite;           // 灰色状态图片
-    [SerializeField] private Sprite finishSprite;         // 完成状态图片
+    //[SerializeField] private Sprite normalSprite;          // 普通激活状态图片
+    //[SerializeField] private Sprite graySprite;           // 灰色状态图片
+    //[SerializeField] private Sprite finishSprite;         // 完成状态图片
     [SerializeField] private int[] checkpoints = { 1, 2, 3 };  // 检查点关卡
 
     [Header("Button List")] public Button[] levelButtons; // 按钮数组
@@ -36,12 +36,12 @@ public class LevelSelectManager : MonoBehaviour
 
     [SerializeField] private Sprite[] graySprites; // 每个按钮的 gray 状态图
 
-    [SerializeField] private Sprite[] finishSprites; // 每个按钮的 finish 状态图
-     #endregion
+    //[SerializeField] private Sprite[] finishSprites; // 每个按钮的 finish 状态图
+    #endregion
 
-     #region open
+    #region open
 
-     [SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
+    [SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
 
      private GameObject[] openLockInstances; // 存储每个按钮的开锁图
 
@@ -240,12 +240,21 @@ public class LevelSelectManager : MonoBehaviour
         if (buttonImage != null)
         {
             if (isActive) {
-                buttonImage.sprite = isFinished ? finishSprites[index] : normalSprites[index];
+                buttonImage.sprite = normalSprites[index];
                 specialButtons[index].interactable = true;
+                if (isFinished)
+                {
+                    buttonImage.transform.GetChild(0).gameObject.SetActive(true);
+                }
+                else
+                {
+                    buttonImage.transform.GetChild(0).gameObject.SetActive(false);
+                }
             }
             else {
                 buttonImage.sprite = graySprites[index];
                 specialButtons[index].interactable = false;
+                buttonImage.transform.GetChild(0).gameObject.SetActive(false);
             }
         }
     }
