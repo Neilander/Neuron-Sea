@@ -43,7 +43,7 @@ public class SwitchLimitInUi : MonoBehaviour
 
     public void SetSwitchTime(int n)
     {
-        text.text = $"{n} / {curTarget}";
+        text.text = n <= curTarget ? string.Format("{0}/{1}", n, curTarget) : string.Format("<color=#E73CA6>{0}</color>/{1}", n, curTarget);
     }
 
     public void ShutDown()
