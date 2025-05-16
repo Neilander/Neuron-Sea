@@ -72,11 +72,14 @@ public class levelManager : MonoBehaviour
     private float positionMonitorInterval = 1f; // 每秒检查一次
     private Vector3 lastRecordedPosition = Vector3.zero;
 
+    [Header("收集物相关变量")]
+    [HideInInspector] public bool isCurrentLevelViewed = false;
+
 
     bool ifDirectToPos = true;
     void Awake()
     {
-        
+
         if (instance == null)
         {
 
@@ -134,7 +137,7 @@ public class levelManager : MonoBehaviour
                     break;
             }
 
-            
+
             //bool ifDirect = true;
             /* 原本剧情相关
             switch (sceneIndex)
@@ -166,7 +169,7 @@ public class levelManager : MonoBehaviour
                     }
                     break;
             }*/
-            
+
         }
         else
         {
@@ -188,7 +191,7 @@ public class levelManager : MonoBehaviour
                 StoryGlobalLoadManager.instance.UnregisterGeneralStart(GeneralActionWhenLevel);
                 break;
         }
-        
+
     }
 
     private void Start()
@@ -199,8 +202,8 @@ public class levelManager : MonoBehaviour
                 StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
                 break;
         }
-        
-        
+
+
     }
 
     public void PrepareForLevelStory(int level)
@@ -208,9 +211,9 @@ public class levelManager : MonoBehaviour
         if (level == 13 || level == 25)
             ifDirectToPos = false;
 
-        if(level == 1)
+        if (level == 1)
             FindAnyObjectByType<PlayerController>().DisableInput();
-        
+
     }
 
     public void GeneralActionWhenLevel(int level)
@@ -229,8 +232,35 @@ public class levelManager : MonoBehaviour
             Debug.Log("为什么没有啊");
         }
         LoadLevel(Mathf.Clamp(level, minLevel, maxLevel), ifDirectToPos, false);
+
+        
         
 
+    }
+
+    public void SetupForViewed()
+    {
+        isCurrentLevelViewed = true;
+        int time = 0;
+        if (SwitchLimitInUi.instance != null)
+        {
+            Transform entities = currentLevelGO.transform.Find("Entities");
+            if (entities != null)
+            {
+
+                foreach (Transform child in entities)
+                {
+                    if (child.name.StartsWith("Piece"))
+                    {
+                        time = child.GetComponent<collectable>().GetTime();
+                    }
+                }
+            }
+
+                SwitchLimitInUi.instance.SetTarget(time);
+            SwitchLimitInUi.instance.SetSwitchTime(GridManager.Instance.SwitchTime);
+        }
+            
     }
 
     private CompanionController companion;
@@ -692,6 +722,15 @@ public class levelManager : MonoBehaviour
         {
             //PlayerController player = FindAnyObjectByType<PlayerController>();
             Debug.Log($"[位置监测] 设置玩家位置后: 位置={player?.transform.position}, 关卡={newLevelIndex}, 是否重启={isRestarting}");
+        }
+
+        if (CollectableManager.Instance.HasCollectedViewedLevel(currentLevelIndex))
+        {
+            SetupForViewed();
+        }
+        else
+        {
+            SwitchLimitInUi.instance.ShutDown();
         }
 
         return data.levelBound;

@@ -11,8 +11,10 @@ public class CollectableManager : MonoBehaviour
     public int totalCollected = 0;
 
     public HashSet<int> collectedLevels = new HashSet<int>();
+    public HashSet<int> collectedViewedLevels = new HashSet<int>();
 
     private const string CollectedKey = "CollectedLevels";
+    private const string CollectedViewedKey = "CollectViewedLevels";
 
 
     private void Awake(){
@@ -24,6 +26,7 @@ public class CollectableManager : MonoBehaviour
             Destroy(gameObject);
         }
         LoadCollectedLevels();
+        LoadCollectViewedLevels();
     }
 
     public void TryAddCollection(int levelName){
@@ -40,6 +43,19 @@ public class CollectableManager : MonoBehaviour
         }
     }
 
+    public void TryAddCollectedViewed(int levelName)
+    {
+        if (!collectedViewedLevels.Contains(levelName))
+        {
+            if (levelManager.instance != null && (levelManager.instance.currentLevelIndex == levelName))
+                levelManager.instance.SetupForViewed();
+            collectedViewedLevels.Add(levelName);
+            Debug.Log($"Collected Viewed in {levelName}. Total: {totalCollected}");
+            SaveCollectedViewedLevels();
+            LoadCollectViewedLevels();
+        }
+    }
+
     public int GetTotalCollected(){
         return totalCollected;
     }
@@ -53,12 +69,25 @@ public class CollectableManager : MonoBehaviour
         return collectedLevels.Contains(levelIndex);
     }
 
+    public bool HasCollectedViewedLevel(int levelIndex)
+    {
+        return collectedViewedLevels.Contains(levelIndex);
+    }
+
     private void SaveCollectedLevels()
     {
         string collectedStr = string.Join(",", collectedLevels);
         PlayerPrefs.SetString(CollectedKey, collectedStr);
         PlayerPrefs.Save();
-        Debug.Log($"📝 已保存收集状态：{collectedStr}");
+        Debug.Log($"已保存收集状态：{collectedStr}");
+    }
+
+    private void SaveCollectedViewedLevels()
+    {
+        string collectedStr = string.Join(",", collectedViewedLevels);
+        PlayerPrefs.SetString(CollectedViewedKey, collectedStr);
+        PlayerPrefs.Save();
+        Debug.Log($"已保存收集看到状态：{collectedStr}");
     }
 
     private void LoadCollectedLevels()
@@ -80,11 +109,31 @@ public class CollectableManager : MonoBehaviour
         Debug.Log($"已加载收集状态：{string.Join(",", collectedLevels)}");
     }
 
+    private void LoadCollectViewedLevels()
+    {
+        string collectedStr = PlayerPrefs.GetString(CollectedViewedKey, "");
+        collectedViewedLevels.Clear();
+
+        foreach (var str in collectedStr.Split(','))
+        {
+            if (int.TryParse(str, out int level))
+            {
+                collectedViewedLevels.Add(level);
+            }
+        }
+
+        //ConceptArtUnlockManager.Instance?.UpdateArtLockStatus();
+        Debug.Log($"已加载收集看到状态：{string.Join(",", collectedViewedLevels)}");
+    }
+
     private void OnApplicationQuit()
     {
         SaveCollectedLevels(); // 防止意外丢失
+        SaveCollectedViewedLevels();
 #if UNITY_EDITOR
         ClearCollectedData();
+        ClearCollectedViewedData();
+        
 #endif
     }
 
@@ -95,5 +144,13 @@ public class CollectableManager : MonoBehaviour
         PlayerPrefs.DeleteKey(CollectedKey);
         PlayerPrefs.Save();
         Debug.Log("所有收集数据已清除");
+    }
+
+    public void ClearCollectedViewedData()
+    {
+        collectedViewedLevels.Clear();
+        PlayerPrefs.DeleteKey(CollectedViewedKey);
+        PlayerPrefs.Save();
+        Debug.Log("所有收集看到数据已清除");
     }
 }
