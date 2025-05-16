@@ -200,9 +200,10 @@ public class levelManager : MonoBehaviour
         {
             case LevelManagerState.inLevel:
                 StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
+                UnlockAllLevel();
                 break;
         }
-
+        
 
     }
 
@@ -409,16 +410,25 @@ public class levelManager : MonoBehaviour
             if (newLevelIndex >= 1 && newLevelIndex <= 12)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
-                SceneManager.LoadScene("场景1剧情");
+                if (ProcessLevelLoader.instance != null)
+                    ProcessLevelLoader.instance.LoadSceneWithTransition("场景1剧情");
+                else
+                    SceneManager.LoadScene("场景1剧情");
             }
             else if (newLevelIndex >= 13 && newLevelIndex <= 24)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
-                SceneManager.LoadScene("场景2剧情");
+                if (ProcessLevelLoader.instance != null)
+                    ProcessLevelLoader.instance.LoadSceneWithTransition("场景2剧情");
+                else
+                    SceneManager.LoadScene("场景2剧情");
             } else if (newLevelIndex >= 25 && newLevelIndex <= 36)
             {
                 PlayerPrefs.SetInt("carryLevel", newLevelIndex);
-                SceneManager.LoadScene("场景3剧情");
+                if (ProcessLevelLoader.instance != null)
+                    ProcessLevelLoader.instance.LoadSceneWithTransition("场景2剧情");
+                else
+                    SceneManager.LoadScene("场景2剧情");
             }
             return new Rect();
         }
