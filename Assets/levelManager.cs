@@ -730,6 +730,7 @@ public class levelManager : MonoBehaviour
         }
         else
         {
+            isCurrentLevelViewed = false;
             SwitchLimitInUi.instance.ShutDown();
         }
 
