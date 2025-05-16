@@ -21,7 +21,7 @@ public class TimeLineStart : MonoBehaviour
             if (StoryGlobalLoadManager.instance.IsTriggerDisabled(triggerId)) {
                 return; // 如果已播放过，直接返回
             }
-            
+            other.GetComponent<PlayerController>().DisableInput();
             director.Play();
             GetComponent<Collider2D>().enabled = false;
             
