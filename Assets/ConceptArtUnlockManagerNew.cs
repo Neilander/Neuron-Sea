@@ -49,6 +49,7 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
             // 为每个按钮创建泡泡的实例
             GameObject bubbleInstance = Instantiate(bubblePrefab, artButtons[i].transform);
             bubbleInstance.transform.SetAsLastSibling(); // 确保泡泡显示在最上层
+            bubbleInstance.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime; // 设置动画更新模式为不受时间缩放影响
             bubbleInstances[i] = bubbleInstance;
         }
         // 更新所有设定图的锁定状态
@@ -72,14 +73,14 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
                 continue;
             }
 
-            bool isUnlocked = CollectableManager.Instance.totalCollected >= (i + 1) * 9;
+            bool isUnlocked = CollectableManager.Instance.totalCollected >= (i + 1) * 0;
 
             // 设置按钮是否可交互
             artButtons[i].interactable = isUnlocked;
 
             // 设置锁的数字
             TextMeshProUGUI lockNumberText = bubbleInstances[i].GetComponentInChildren<TextMeshProUGUI>();
-            lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 9}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 9}"; // 设置锁的数字
+            lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 0}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 0}"; // 设置锁的数字
 
             artButtons[i].GetComponent<Image>().sprite = isUnlocked ? unlockImgs[i] : lockedImgs[i]; // 设置锁的显示状态
         }
