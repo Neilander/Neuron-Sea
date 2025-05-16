@@ -200,7 +200,7 @@ public class levelManager : MonoBehaviour
         {
             case LevelManagerState.inLevel:
                 StoryGlobalLoadManager.instance.StartLevel(sceneIndex, currentLevelIndex);
-                UnlockAllLevel();
+                //UnlockAllLevel();
                 break;
         }
         
