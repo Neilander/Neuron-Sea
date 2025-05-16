@@ -358,6 +358,8 @@ public class EndAndMove : MonoBehaviour
     }
 
     public void ForceEnterCollectStory(){
+        //禁用移动,剧情结束后自动启用移动
+        playerController.DisableMovement();
         //在第一关
         if (levelManager.instance.currentLevelIndex == 1) {
             //收集成功,没播过
