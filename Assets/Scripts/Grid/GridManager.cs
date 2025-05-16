@@ -677,6 +677,8 @@ public class GridManager : MonoBehaviour
     private void ShiftSwitch()
     {
         SwitchTime += 1;
+        if (SwitchLimitInUi.instance != null)
+            SwitchLimitInUi.instance.SetSwitchTime(SwitchTime);
         Vector3 tempPos = switchInfoRecorder.obj1.SelfGridPos;
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
