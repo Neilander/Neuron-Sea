@@ -118,7 +118,7 @@ public class LevelSelectManager : MonoBehaviour
             //lockInstances[i] = lockInstance;
             CollectInstances[i] = CollectInstance;
             //levelOneOrTwoInstances[i] = levelOneOrTwoInstance;
-            CollectInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(75, -75);
+            //CollectInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(75, 75);
 
             //GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
             //openLockInstance.transform.SetAsLastSibling(); // 确保显示在最上层
