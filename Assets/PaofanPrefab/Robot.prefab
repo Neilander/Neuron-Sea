@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 653625391113148262}
   - component: {fileID: 5988493297353311504}
   - component: {fileID: 7539565987023721348}
+  - component: {fileID: 3820984925272086777}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 1733594897
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d5fad44e8724257418ed26336aaa3666, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7048374391bc354fb0c095d0eddf4e6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -137,6 +138,31 @@ MonoBehaviour:
   - {x: 0, y: 1.5, z: 0}
   - {x: 1, y: 0.5, z: 0}
   hasStopped: 0
+--- !u!320 &3820984925272086777
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 819985541449477461}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 37c4d788150f3fd43bb44fa471440771, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -1188547125551376451, guid: 37c4d788150f3fd43bb44fa471440771, type: 2}
+    value: {fileID: 5988493297353311504}
+  - key: {fileID: 3184974947620893992, guid: 37c4d788150f3fd43bb44fa471440771, type: 2}
+    value: {fileID: 5988493297353311504}
+  - key: {fileID: 9164654808786090945, guid: 37c4d788150f3fd43bb44fa471440771, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -1760840499788565076, guid: 37c4d788150f3fd43bb44fa471440771, type: 2}
+    value: {fileID: 0}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &7059343950737936136
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +188,7 @@ Transform:
   m_GameObject: {fileID: 7059343950737936136}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
