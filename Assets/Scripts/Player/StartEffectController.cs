@@ -38,6 +38,25 @@ public class StartEffectController : MonoBehaviour
         PlayerDeathEvent.OnDeathTriggered -= StopEffect;
     }
 
+    private void Awake()
+    {
+        StoryGlobalLoadManager.instance.RegisterOnStartWithoutStory(DoFade);
+    }
+
+    public void DoFade(int level)
+    {
+        if (fadeImage != null)
+        {
+            StartCoroutine(FadeInImage());
+        }
+    }
+
+    private void OnDestroy()
+    {
+        StoryGlobalLoadManager.instance.UnregisterOnStartWithoutStory(DoFade
+        );
+    }
+
     public void StopEffect(GameObject obj)
     {
         StopAllCoroutines();
