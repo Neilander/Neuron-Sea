@@ -20,6 +20,7 @@ public class SetPanel : MonoBehaviour
     public Button closeBtn;
 
     public Animator backgroundAnimator;
+    public Animator backgroundAnimator2;
 
     public GameObject conceptArt;
 
@@ -43,6 +44,7 @@ public class SetPanel : MonoBehaviour
         // 默认显示第一个面板
         ShowPanel(panel1);
         if(backgroundAnimator) backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        if(backgroundAnimator2) backgroundAnimator2.updateMode = AnimatorUpdateMode.UnscaledTime;
     }
 
     // Update is called once per frame

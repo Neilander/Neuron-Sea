@@ -72,6 +72,7 @@ public class LevelSelectManager : MonoBehaviour
 
 
     public Animator backgroundAnimator;
+    public Animator backgroundAnimator2;
 
     void Awake()
     {
@@ -129,6 +130,7 @@ public class LevelSelectManager : MonoBehaviour
         UpdateLevelLockStatus();
         UpdateSpecialButtons();
         backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        backgroundAnimator2.updateMode = AnimatorUpdateMode.UnscaledTime;
     }
 
     private void Update()
