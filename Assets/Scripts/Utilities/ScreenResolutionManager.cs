@@ -7,8 +7,8 @@ public class ScreenResolutionManager : MonoBehaviour
     [Header("分辨率设置")]
     public int fullscreenWidth = 1920;
     public int fullscreenHeight = 1080;
-    public int windowedWidth = 1280;
-    public int windowedHeight = 720;
+    public int windowedWidth = 1920;
+    public int windowedHeight = 1080;
 
 
     public bool isFullscreen { get; private set; }
@@ -38,7 +38,7 @@ public class ScreenResolutionManager : MonoBehaviour
     {
         int screenWidth = Display.main.systemWidth;
         
-        if (screenWidth >= fullscreenWidth)
+        if (screenWidth == fullscreenWidth)
         {
             SetFullscreenMode();
         }

@@ -47,7 +47,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     public void ResetAll(){
         disabledTriggers.Clear();
-        //没有实现真正的逻辑
+        //没有真正删除playerpref里的内容,已经保存过的就没用了
     }
     public bool IsTriggerDisabled(string id){
         // if (disabledTriggers.Contains(id))
@@ -194,6 +194,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
         ifLoadedScene1Story = false; 
         ifLoadedScene2Story = false; 
         ifLoadedScene3Story = false;
+        ResetAll();
     }
 
     private void OnApplicationQuit()
