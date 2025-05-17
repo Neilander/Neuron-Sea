@@ -4,26 +4,68 @@ using UnityEngine;
 
 public class FolderControl : MonoBehaviour
 {
-
-
-    public GameObject levels; // Reference to the Levels GameObject
-
-    public GameObject[] otherLevels;
-    private bool isExpanded = false;
-
-    public void ToggleLevels(){
+    // 这个是当前按钮对应的ScrollView (关卡列表)
+    public GameObject associatedScrollView;
+    
+    // 所有其他的FolderControl组件引用(不是GameObject)
+    public FolderControl[] otherFolders;
+    
+    // 当前文件夹是否展开
+    [SerializeField] private bool isExpanded = false;
+    
+    void Start()
+    {
+        // 确保初始状态下关卡列表是隐藏的
+        if (associatedScrollView != null)
+        {
+            associatedScrollView.SetActive(false);
+        }
+    }
+    
+    public void ToggleLevels()
+    {
+        // 切换展开状态
         isExpanded = !isExpanded;
-        levels.SetActive(isExpanded);
         
-        // 点击后显示当前文件夹的关卡，隐藏其他文件夹的关卡
-        if (isExpanded) {
-            // 显示当前文件夹的关卡
-            levels.SetActive(true);
-            
-            // 隐藏其他文件夹的关卡
-            foreach (GameObject otherLevel in otherLevels) {
-                otherLevel.SetActive(false);
+        // 更新UI显示
+        if (associatedScrollView != null)
+        {
+            associatedScrollView.SetActive(isExpanded);
+        }
+        
+        // 如果展开当前文件夹，则关闭所有其他文件夹
+        if (isExpanded)
+        {
+            CloseOtherFolders();
+        }
+    }
+    
+    // 关闭所有其他文件夹
+    private void CloseOtherFolders()
+    {
+        foreach (FolderControl otherFolder in otherFolders)
+        {
+            if (otherFolder != null && otherFolder != this)
+            {
+                otherFolder.CloseFolder();
             }
         }
+    }
+    
+    // 直接关闭当前文件夹
+    public void CloseFolder()
+    {
+        isExpanded = false;
+        
+        if (associatedScrollView != null)
+        {
+            associatedScrollView.SetActive(false);
+        }
+    }
+    
+    // 获取当前展开状态
+    public bool IsExpanded()
+    {
+        return isExpanded;
     }
 }

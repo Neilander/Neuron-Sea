@@ -20,12 +20,13 @@ public class Scroll : MonoBehaviour
     private GameObject lastClickedButton; // 记录最后点击的按钮
     private bool isExpanded = false;      // 标记当前是否处于展开状态
 
-    private void Start()
+    private void OnEnable()
     {
         // 检查ScrollRect是否设置正确
         if (scrollRect == null)
         {
             scrollRect = GetComponent<ScrollRect>();
+            print("得到了");
             if (scrollRect == null)
             {
                 Debug.LogError("Scroll组件没有找到ScrollRect! 请在Inspector中指定或添加到同一GameObject上。");
@@ -34,8 +35,8 @@ public class Scroll : MonoBehaviour
             }
         }
 
-        // 记录初始位置
-        SaveOriginalPosition();
+        // // 记录初始位置
+        // SaveOriginalPosition();
 
         // 添加按钮点击监听
         SetupButtonListeners();
@@ -60,10 +61,26 @@ public class Scroll : MonoBehaviour
     // 为所有子按钮添加点击监听
     private void SetupButtonListeners()
     {
-        // 获取content中的所有按钮
-        Button[] buttons = scrollRect.content.GetComponentsInChildren<Button>(true);
+        ClearButtonListeners();
+        // 临时存储找到的按钮
+        List<Button> buttons = new List<Button>();
 
-        if (buttons.Length == 0 && enableDebugLogs)
+        // 获取content的直接子物体
+        Transform contentTransform = scrollRect.content;
+        for (int i = 0; i < contentTransform.childCount; i++) {
+            Transform child = contentTransform.GetChild(i);
+
+            // 检查子物体是否有Button组件
+            Button button = child.GetComponent<Button>();
+            if (button != null) {
+                buttons.Add(button);
+
+                if (enableDebugLogs) {
+                    Debug.Log($"找到直接子物体按钮: {child.name}");
+                }
+            }
+        }
+        if (buttons.Count == 0 && enableDebugLogs)
         {
             Debug.LogWarning("ScrollRect的content中没有找到任何Button组件!");
         }
@@ -81,6 +98,24 @@ public class Scroll : MonoBehaviour
         }
     }
 
+    private void ClearButtonListeners(){
+        if (scrollRect == null || scrollRect.content == null) return;
+
+        // 只清除直接子物体的按钮监听
+        for (int i = 0; i < scrollRect.content.childCount; i++) {
+            Transform child = scrollRect.content.GetChild(i);
+            Button button = child.GetComponent<Button>();
+
+            if (button != null) {
+                // 移除我们可能添加的监听
+                button.onClick.RemoveAllListeners();
+
+                if (enableDebugLogs) {
+                    Debug.Log($"清除了按钮 '{button.gameObject.name}' 的所有监听");
+                }
+            }
+        }
+    }
     // 当任何子按钮被点击时调用
     public void OnButtonClicked(GameObject buttonObj)
     {
@@ -89,25 +124,25 @@ public class Scroll : MonoBehaviour
             Debug.Log($"按钮 '{buttonObj.name}' 被点击");
         }
 
-        // 判断是否是同一个按钮被再次点击
-        if (buttonObj == lastClickedButton && isExpanded)
-        {
-            // 如果是同一个按钮再次点击，收起并滚动回原位置
-            if (enableDebugLogs)
-            {
-                Debug.Log($"同一按钮再次点击，正在收起并滚动回原位置");
-            }
-
-            isExpanded = false;
-            ScrollToOriginalPosition();
-            return;
-        }
+        // // 判断是否是同一个按钮被再次点击
+        // if (buttonObj == lastClickedButton && isExpanded)
+        // {
+        //     // 如果是同一个按钮再次点击，收起并滚动回原位置
+        //     if (enableDebugLogs)
+        //     {
+        //         Debug.Log($"同一按钮再次点击，正在收起并滚动回原位置");
+        //     }
+        //
+        //     isExpanded = false;
+        //     // ScrollToOriginalPosition();
+        //     return;
+        // }
 
         // 记录当前点击的按钮，并标记为展开状态
-        lastClickedButton = buttonObj;
-        isExpanded = true;
+        // lastClickedButton = buttonObj;
+        // isExpanded = true;
 
-        // 获取按钮的RectTransform
+        // 获取按钮的RectTransform(大小)
         RectTransform buttonRect = buttonObj.GetComponent<RectTransform>();
         if (buttonRect == null) return;
 
@@ -118,10 +153,9 @@ public class Scroll : MonoBehaviour
     // 将按钮滚动到最左边/最上边
     public void ScrollButtonToEdge(RectTransform buttonRect)
     {
-        // 如果已有滚动协程在运行，先停止
-        if (currentScrollCoroutine != null)
-        {
+        if (currentScrollCoroutine != null) {
             StopCoroutine(currentScrollCoroutine);
+            currentScrollCoroutine = null; // 确保变量被重置
         }
 
         currentScrollCoroutine = StartCoroutine(ScrollToEdgeCoroutine(buttonRect));
@@ -136,6 +170,7 @@ public class Scroll : MonoBehaviour
 
         // 获取必要的引用
         RectTransform contentPanel = scrollRect.content;
+        
         RectTransform viewport = scrollRect.viewport as RectTransform;
 
         if (contentPanel == null || viewport == null)
@@ -158,7 +193,9 @@ public class Scroll : MonoBehaviour
 
             // 归一化位置计算
             float contentWidth = contentPanel.rect.width;
+            print(contentWidth);
             float viewportWidth = viewport.rect.width;
+            print(viewportWidth);
 
             // 确保内容宽度大于视口宽度
             if (contentWidth <= viewportWidth)
@@ -169,6 +206,7 @@ public class Scroll : MonoBehaviour
             {
                 // 计算归一化位置，确保按钮的左边缘在视口的左边缘
                 targetPosition = elementPosition / (contentWidth - viewportWidth);
+                print(targetPosition);
                 targetPosition = Mathf.Clamp01(targetPosition);
             }
         }
@@ -211,17 +249,19 @@ public class Scroll : MonoBehaviour
     }
 
     // 平滑滚动到指定位置
-    private IEnumerator SmoothScrollToPosition(float targetPosition)
-    {
+    private IEnumerator SmoothScrollToPosition(float targetPosition){
         // 获取当前位置
         float startPosition = horizontalScroll
             ? scrollRect.horizontalNormalizedPosition
             : scrollRect.verticalNormalizedPosition;
 
-        // 如果位置接近，直接设置
-        if (Mathf.Abs(startPosition - targetPosition) < 0.01f)
-        {
+        // 调试输出初始状态
+        Debug.Log($"开始滚动: 从 {startPosition} 到 {targetPosition}");
+
+        // 如果位置接近，直接设置并退出
+        if (Mathf.Abs(startPosition - targetPosition) < 0.01f) {
             SetScrollPosition(targetPosition);
+            Debug.Log("距离太小，直接设置位置");
             yield break;
         }
 
@@ -229,12 +269,22 @@ public class Scroll : MonoBehaviour
         float distance = Mathf.Abs(targetPosition - startPosition);
         float duration = distance / scrollSpeed;
 
-        // 开始计时
-        float elapsedTime = 0;
+        // 增加最大持续时间保护（防止无限循环）
+        float maxDuration = 5.0f; // 最多执行5秒
+        duration = Mathf.Min(duration, maxDuration);
 
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
+        Debug.Log($"滚动距离: {distance}, 计算的持续时间: {duration}秒");
+
+        // 开始计时（使用不受timeScale影响的时间）
+        float startTime = Time.realtimeSinceStartup;
+        float endTime = startTime + duration;
+        int frameCount = 0;
+        float lastLoggedPosition = startPosition;
+
+        while (Time.realtimeSinceStartup < endTime) {
+            frameCount++;
+            // 使用不受timeScale影响的计时
+            float elapsedTime = Time.realtimeSinceStartup - startTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
 
             // 使用缓动函数使移动更平滑
@@ -244,11 +294,20 @@ public class Scroll : MonoBehaviour
             // 设置滚动位置
             SetScrollPosition(newPosition);
 
+            // 如果已经非常接近目标，直接结束
+            if (Mathf.Abs(newPosition - targetPosition) < 0.001f) {
+                Debug.Log($"已足够接近目标，提前结束: {newPosition:F4} vs {targetPosition:F4}");
+                break;
+            }
+
             yield return null;
         }
 
-        // 确保精确到达目标
+        // 确保最终精确到达目标
         SetScrollPosition(targetPosition);
+        Debug.Log($"滚动结束，最终位置: {targetPosition:F4}");
+
+        currentScrollCoroutine = null;
     }
 
     // 设置滚动位置辅助方法

@@ -357,10 +357,22 @@ public class EndAndMove : MonoBehaviour
         Debug.LogError("[EndAndMove] " + message);
     }
 
-    public void ForceEnterStory3(){
-        storyTriggers[3].ForceStartStory();
+    public void ForceEnterCollectStory(){
+        //禁用移动,剧情结束后自动启用移动
+        playerController.DisableInput();
+        //在第一关
+        if (levelManager.instance.currentLevelIndex == 1) {
+            //收集成功,没播过
+            if (GridManager.Instance.SwitchTime <=3&& !StoryGlobalLoadManager.instance.IsTriggerDisabled("场景1剧情_收集剧情1")) {
+                storyTriggers[3].ForceStartStory();
+            }
+            //没成功
+            else if(!StoryGlobalLoadManager.instance.IsTriggerDisabled("场景1剧情_收集剧情2")){
+                storyTriggers[4].ForceStartStory();
+            }
+        }
     }
-    public void ForceEnterStory1_1(){
-        storyTriggers[4].ForceStartStory();
+    public void ForceEnterConsciousnessStory(){
+        storyTriggers[5].ForceStartStory();
     }
 }

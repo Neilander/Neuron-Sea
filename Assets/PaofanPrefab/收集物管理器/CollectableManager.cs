@@ -33,6 +33,8 @@ public class CollectableManager : MonoBehaviour
             Debug.Log($"Collected in {levelName}. Total: {totalCollected}");
             SaveCollectedLevels();
             LoadCollectedLevels();
+            // CollectableEvents.onCollectableAdded?.Invoke(levelName, totalCollected);
+            
             if (LevelSelectManager.Instance != null)
                 LevelSelectManager.Instance.RefreshButtons();
         }
@@ -41,7 +43,7 @@ public class CollectableManager : MonoBehaviour
     public int GetTotalCollected(){
         return totalCollected;
     }
-
+    //仅用于剧情计数,仅清空内存数据
     public void ResetLevelData(){
         collectedLevels.Clear();
     }

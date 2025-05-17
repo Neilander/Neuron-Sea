@@ -83,6 +83,9 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         AudioManager.Instance.Play(SFXClip.PickUpCollectable,gameObject.name);
         Destroy(gameObject);
         DestroyToDo.Invoke();
+        if(CollectableManager.Instance.totalCollected == 1) {
+            showDialogue(1,"*信息泡在我指尖消融，残破的图像直接浮现：我只能窥看无意义的一角。但这或许能够给我带来崭新的东西……我如此期待。");
+        }
         showDialogue(4,1,"*我能看到更多的图景了，这些东西让我觉得熟悉。或许它们并不是崭新的……但我依然抱有期待。");
         showDialogue(8,1,"*我似乎已经能够猜测这份来自于前代首席观测员的礼物是什么了。");
         showDialogue(12,1,"*我不知道她是从什么角度拍摄下了这幅场景，事实上，我从未这样观察过我工作和生活的地方……我相信她爱着这个地方，但是这样的爱能够支撑她的选择吗？");
@@ -94,17 +97,54 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         showDialogue(12,25,"你喜欢这份礼物吗？这是她的礼物，同样也是我的。");
         
     }
+    //播过一次不再播放
+    private void showDialogue(int collectNum, int levelGroup, string wordToDisplay){
+        // 生成唯一ID用于记录此对话是否已播放
+        string dialogueId = $"Collectable_Dialogue_{collectNum}_{levelGroup}";
 
-    private void showDialogue(int collectNum,int levelGroup,string wordToDisplay){
+        // 检查是否已播放过此对话
+        if (StoryGlobalLoadManager.instance.IsTriggerDisabled(dialogueId)) {
+            return; // 如果已播放过，直接返回
+        }
+
         if (CollectableManager.Instance.collectedLevels.Count == collectNum &&
             levelManager.instance.currentLevelIndex >= levelGroup &&
-            levelManager.instance.currentLevelIndex <= levelGroup+11) {
-            //玩家头上显示一个面板
+            levelManager.instance.currentLevelIndex <= levelGroup + 11) {
+
+            // 玩家头上显示一个面板
             GameObject player = GameObject.FindWithTag("Player");
             if (player != null) {
                 Head dialogue = player.GetComponentInChildren<Head>();
                 if (dialogue != null) {
                     dialogue.ShowDialogue(wordToDisplay);
+
+                    // 标记此对话已播放
+                    StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
+                }
+            }
+        }
+    }
+    
+    //播过一次不再播放，不限制关卡组
+    private void showDialogue(int collectNum, string wordToDisplay){
+        // 生成唯一ID用于记录此对话是否已播放
+        string dialogueId = $"Collectable_Dialogue_{collectNum}_NoLevelGroup";
+
+        // 检查是否已播放过此对话
+        if (StoryGlobalLoadManager.instance.IsTriggerDisabled(dialogueId)) {
+            return; // 如果已播放过，直接返回
+        }
+
+        if (CollectableManager.Instance.collectedLevels.Count == collectNum) {
+            // 玩家头上显示一个面板
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null) {
+                Head dialogue = player.GetComponentInChildren<Head>();
+                if (dialogue != null) {
+                    dialogue.ShowDialogue(wordToDisplay);
+
+                    // 标记此对话已播放
+                    StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
                 }
             }
         }
