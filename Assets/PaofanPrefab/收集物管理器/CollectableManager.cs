@@ -28,7 +28,20 @@ public class CollectableManager : MonoBehaviour
         LoadCollectedLevels();
         LoadCollectViewedLevels();
     }
-
+    public void RemoveCollection(int levelIndex)
+    {
+        if (HasCollectedLevel(levelIndex))
+        {
+            totalCollected = Mathf.Max(0, totalCollected - 1);
+            collectedLevels.Remove(levelIndex);
+            SaveCollectedLevels(); // 这里可以调用私有方法，因为是在类内部
+            Debug.Log($"已移除关卡 {levelIndex} 的收集物，当前总数：{totalCollected}");
+        }
+        else
+        {
+            Debug.LogWarning($"关卡 {levelIndex} 未被收集，无法移除");
+        }
+    }
     public void TryAddCollection(int levelName){
         if (!collectedLevels.Contains(levelName)) {
             totalCollected++;
