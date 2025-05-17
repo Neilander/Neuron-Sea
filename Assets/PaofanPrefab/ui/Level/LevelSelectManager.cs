@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections.Generic;
-
 public class LevelSelectManager : MonoBehaviour
 {
     public static LevelSelectManager Instance { get; private set; }
@@ -22,13 +21,13 @@ public class LevelSelectManager : MonoBehaviour
     public Transform scene2;
     public Transform scene3;
 
-    [Header("Lock Settings")]
-    [SerializeField] private GameObject lockImagePrefab; // 锁的图片预制体
+    //[Header("Lock Settings")]
+    //[SerializeField] private GameObject lockImagePrefab; // 锁的图片预制体
 
     [Header("Collect Settings")]
     [SerializeField] private GameObject IfCollectPrefab;
 
-    private GameObject[] lockInstances; // 用于存储每个按钮上的锁实例
+    //private GameObject[] lockInstances; // 用于存储每个按钮上的锁实例
     private GameObject[] CollectInstances; // 用于存储每个按钮上的是否收集实例
 
     #region state
@@ -41,21 +40,34 @@ public class LevelSelectManager : MonoBehaviour
 
     #region open
 
-    [SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
+    //[SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
 
-     private GameObject[] openLockInstances; // 存储每个按钮的开锁图
+    // private GameObject[] openLockInstances; // 存储每个按钮的开锁图
 
-
+    [SerializeField] private Sprite open1;
+    [SerializeField] private Sprite lock1;
+    [SerializeField] private Sprite open2;
+    [SerializeField] private Sprite lock2;
 
     #endregion
 
-     #region levelOneOrTwo
+    #region levelOneOrTwo
 
-     [SerializeField] private GameObject levelOnePrefab; // 01图片预制体
-     [SerializeField] private GameObject levelTwoPrefab; // 02图片预制体
-     
-     private GameObject[] levelOneOrTwoInstances; // 存储每个按钮的0102图
+    //[SerializeField] private GameObject levelOnePrefab; // 01图片预制体
+    //[SerializeField] private GameObject levelTwoPrefab; // 02图片预制体
 
+    //private GameObject[] levelOneOrTwoInstances; // 存储每个按钮的0102图
+
+    #endregion
+
+    #region levelIMG
+    [System.Serializable]
+    public class SpriteArrayWrapper
+    {
+        public Sprite[] row;
+    }
+    [Header("关卡图片")]
+    [SerializeField] private SpriteArrayWrapper[] levelIMGs;
     #endregion
 
 
@@ -83,10 +95,10 @@ public class LevelSelectManager : MonoBehaviour
     {
         CollectActiveButtonsFrom(scene1, scene2, scene3);
         // 初始化锁实例数组
-        lockInstances = new GameObject[levelButtons.Length];
+        //lockInstances = new GameObject[levelButtons.Length];
         CollectInstances = new GameObject[levelButtons.Length];
-        openLockInstances = new GameObject[levelButtons.Length];
-        levelOneOrTwoInstances = new GameObject[levelButtons.Length];
+        //openLockInstances = new GameObject[levelButtons.Length];
+        //levelOneOrTwoInstances = new GameObject[levelButtons.Length];
         // 为每个按钮创建锁并绑定点击事件
         for (int i = 0; i < levelButtons.Length; i++)
         {
@@ -96,21 +108,21 @@ public class LevelSelectManager : MonoBehaviour
             levelButtons[i].onClick.AddListener(() => LoadLevel(capturedIndex));
 
             // 为每个按钮创建锁的实例
-            GameObject lockInstance = Instantiate(lockImagePrefab, levelButtons[i].transform);
+            //GameObject lockInstance = Instantiate(lockImagePrefab, levelButtons[i].transform);
             GameObject CollectInstance = Instantiate(IfCollectPrefab, levelButtons[i].transform);
-            GameObject levelOneOrTwoInstance = Instantiate(i % 2 == 0 ? levelOnePrefab : levelTwoPrefab, levelButtons[i].transform);
-            lockInstance.transform.SetAsLastSibling(); // 确保锁显示在最上层
+            //GameObject levelOneOrTwoInstance = Instantiate(i % 2 == 0 ? levelOnePrefab : levelTwoPrefab, levelButtons[i].transform);
+            //lockInstance.transform.SetAsLastSibling(); // 确保锁显示在最上层
             CollectInstance.transform.SetAsLastSibling();
-            levelOneOrTwoInstance.transform.SetAsLastSibling();
-            lockInstances[i] = lockInstance;
+            //levelOneOrTwoInstance.transform.SetAsLastSibling();
+            //lockInstances[i] = lockInstance;
             CollectInstances[i] = CollectInstance;
-            levelOneOrTwoInstances[i] = levelOneOrTwoInstance;
+            //levelOneOrTwoInstances[i] = levelOneOrTwoInstance;
             CollectInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(75, -75);
 
-            GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
-            openLockInstance.transform.SetAsLastSibling(); // 确保显示在最上层
-            openLockInstance.SetActive(false); // 默认隐藏
-            openLockInstances[i] = openLockInstance;
+            //GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
+            //openLockInstance.transform.SetAsLastSibling(); // 确保显示在最上层
+            //openLockInstance.SetActive(false); // 默认隐藏
+            //openLockInstances[i] = openLockInstance;
         }
         InitializeSpecialButtons();
         // 更新所有关卡的锁定状态
@@ -134,14 +146,20 @@ public class LevelSelectManager : MonoBehaviour
         AddActiveButtons(t1, allButtons);
         AddActiveButtons(t2, allButtons);
         AddActiveButtons(t3, allButtons);
-        if (t1.GetComponent<LevelNameSetter>() != null)
+        if (t1.GetComponent<LevelNameSetter>() != null){
             t1.GetComponent<LevelNameSetter>().ParseAndSetTexts();
+            t1.GetComponent<LevelNameSetter>().SetLevelIMG(levelIMGs[0].row);
+        }
 
-        if (t2.GetComponent<LevelNameSetter>() != null)
+        if (t2.GetComponent<LevelNameSetter>() != null){
             t2.GetComponent<LevelNameSetter>().ParseAndSetTexts();
+            t2.GetComponent<LevelNameSetter>().SetLevelIMG(levelIMGs[1].row);
+        }
 
-        if (t3.GetComponent<LevelNameSetter>() != null)
+        if (t3.GetComponent<LevelNameSetter>() != null){
             t3.GetComponent<LevelNameSetter>().ParseAndSetTexts();
+            t3.GetComponent<LevelNameSetter>().SetLevelIMG(levelIMGs[2].row);
+        }
 
         levelButtons = allButtons.ToArray();
         Debug.Log($"共收集到 {levelButtons.Length} 个按钮");
@@ -294,11 +312,29 @@ public class LevelSelectManager : MonoBehaviour
             // 设置按钮是否可交互
             levelButtons[i].interactable = isUnlocked;
 
-            // 设置锁的显示状态
-            if (lockInstances != null && i < lockInstances.Length && lockInstances[i] != null)
+            Image lockImg = levelButtons[i].transform.Find("LevelIMG").GetComponent<Image>();
+            if (lockImg)
             {
-                lockInstances[i].SetActive(!isUnlocked);
+                if (isUnlocked)
+                {
+                    if (levelIndex % 2 == 0)
+                        lockImg.sprite = open2;
+                    else
+                        lockImg.sprite = open1;
+                }
+                else
+                {
+                    if (levelIndex % 2 == 0)
+                        lockImg.sprite = lock2;
+                    else
+                        lockImg.sprite = lock1;
+                }
             }
+            //// 设置锁的显示状态
+            //if (lockInstances != null && i < lockInstances.Length && lockInstances[i] != null)
+            //{
+            //    lockInstances[i].SetActive(!isUnlocked);
+            //}
 
             if (CollectInstances != null && i < CollectInstances.Length && CollectInstances[i] != null && CollectableManager.Instance != null)
             {
@@ -306,9 +342,9 @@ public class LevelSelectManager : MonoBehaviour
             }
 
 
-            if (openLockInstances != null && i < openLockInstances.Length && openLockInstances[i] != null) {
-                openLockInstances[i].SetActive(isUnlocked); // 解锁时显示开锁图标
-            }
+            //if (openLockInstances != null && i < openLockInstances.Length && openLockInstances[i] != null) {
+            //    openLockInstances[i].SetActive(isUnlocked); // 解锁时显示开锁图标
+            //}
         }
     }
 

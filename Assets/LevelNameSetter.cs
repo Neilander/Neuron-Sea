@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
+using UnityEngine.UI;
 
 public class LevelNameSetter : MonoBehaviour
 {
@@ -19,17 +21,44 @@ public class LevelNameSetter : MonoBehaviour
 
         foreach (var tmp in tmps)
         {
-            if (index < parts.Length)
+            if (tmp.gameObject.name == "LevelName")
             {
-                tmp.text = parts[index].Trim();
-                index++;
-            }
-            else
-            {
-                break; // 超出文本数量
+                if (index < parts.Length)
+                {
+                    tmp.text = parts[index].Trim();
+                    index++;
+                }
+                else
+                {
+                    break; // 超出文本数量
+                }
             }
         }
 
         Debug.Log($"已设置 {index} 个文本");
+    }
+
+    public void SetLevelIMG(Sprite[] sprites)
+    {
+        var imgs = GetComponentsInChildren<Image>(includeInactive: false);
+        int index = 0;
+
+        foreach (var img in imgs)
+        {
+            if (img.gameObject.name.StartsWith("Button"))
+            {
+                if (index < sprites.Length)
+                {
+                    img.sprite = sprites[index];
+                    index++;
+                }
+                else
+                {
+                    break; // 超出数量
+                }
+            }
+        }
+
+        Debug.Log($"已设置 {index} 个图片");
     }
 }

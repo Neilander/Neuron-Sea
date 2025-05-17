@@ -75,6 +75,9 @@ public class levelManager : MonoBehaviour
     [Header("收集物相关变量")]
     [HideInInspector] public bool isCurrentLevelViewed = false;
 
+    [Header("进入关卡展示标题")]
+    public GameObject levelTitlePrefab;
+
 
     bool ifDirectToPos = true;
     void Awake()
@@ -733,6 +736,8 @@ public class levelManager : MonoBehaviour
             isCurrentLevelViewed = false;
             SwitchLimitInUi.instance.ShutDown();
         }
+
+        GameObject.Instantiate(levelTitlePrefab);
 
         return data.levelBound;
     }

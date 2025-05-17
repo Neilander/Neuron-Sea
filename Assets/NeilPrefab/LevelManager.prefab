@@ -44,9 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469bc541eff2743bf8045df53bb77da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curState: 0
   respawnTarget: {fileID: 0}
   currentLevelIndex: 1
   backGround: {fileID: 0}
   minLevel: 1
   maxLevel: 12
-  ifStartStory: 0
+  sceneIndex: 1
+  hasCollectedNum: 0
+  isStartStory: 1
+  yAdjust: 10
+  enableLevel13SpecialSpawn: 1
+  walkInDistance: 5
+  specialStartTime: 1
+  enablePositionMonitoring: 1
+  isCurrentLevelViewed: 0
+  levelTitlePrefab: {fileID: 7132940643652116026, guid: ea6c5a4bcc929e34ea4f161fa8dd33e4,
+    type: 3}
