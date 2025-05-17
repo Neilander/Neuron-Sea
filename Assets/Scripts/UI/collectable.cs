@@ -43,6 +43,11 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
     void Update()
     {
         if (GridManager.Instance != null) UpdateState(GridManager.Instance.SwitchTime);
+
+        if (!levelManager.instance.isCurrentLevelViewed && IsSpriteVisibleOnScreen())
+        {
+            CollectableManager.Instance.TryAddCollectedViewed(levelManager.instance.currentLevelIndex);
+        }
     }
 
     void UpdateState(int curSTime)
@@ -66,7 +71,12 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
             unlocked = false;
         }
 
-        DisplayText.text = string.Format("{0}/{1}", curSTime, restrictedTime);
+        DisplayText.text = curSTime <= restrictedTime ? string.Format("{0}/{1}", curSTime, restrictedTime) : string.Format("<color=#E73CA6>{0}</color>/{1}", curSTime, restrictedTime);
+    }
+
+    public int GetTime()
+    {
+        return restrictedTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -75,6 +85,8 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         {
             GetCollected();
         }
+
+        
     }
 
     void GetCollected()
@@ -160,5 +172,48 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
             floatingTarget.localPosition = initialLocalPos + offset;
             yield return null;
         }
+    }
+
+    public bool IsSpriteVisibleOnScreen()
+    {
+        Camera cam = Camera.main;
+
+        // 自动选择使用的碰撞器源（优先 SpecialEdgeChecker）
+        GameObject source =  gameObject;
+
+        // 尝试获取 BoxCollider2D 或 CircleCollider2D
+        Collider2D col = source.GetComponent<Collider2D>();
+
+        if (col == null)
+        {
+            Debug.LogWarning("No Collider2D found on the source object.");
+            return false;
+        }
+
+
+        Bounds bounds = col.bounds;
+
+        // 获取四个角点（世界坐标）
+        Vector3[] worldCorners = new Vector3[4];
+        worldCorners[0] = new Vector3(bounds.min.x, bounds.min.y); // 左下
+        worldCorners[1] = new Vector3(bounds.min.x, bounds.max.y); // 左上
+        worldCorners[2] = new Vector3(bounds.max.x, bounds.min.y); // 右下
+        worldCorners[3] = new Vector3(bounds.max.x, bounds.max.y); // 右上
+
+        foreach (Vector3 corner in worldCorners)
+        {
+            Vector3 screenPos = cam.WorldToScreenPoint(corner);
+
+            // 只判断摄像机前方
+            if (screenPos.z < 0) continue;
+
+            if (screenPos.x >= 0 && screenPos.x <= Screen.width &&
+                screenPos.y >= 0 && screenPos.y <= Screen.height)
+            {
+                return true; // 有一个角点在屏幕上
+            }
+        }
+
+        return false; // 全部角点都不在屏幕范围
     }
 }

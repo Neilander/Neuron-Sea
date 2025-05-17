@@ -11,9 +11,9 @@ public class LevelSelectManager : MonoBehaviour
 
     [Header("特殊按钮设置")]
     [SerializeField] private Button[] specialButtons;      // 特殊按钮数组
-    [SerializeField] private Sprite normalSprite;          // 普通激活状态图片
-    [SerializeField] private Sprite graySprite;           // 灰色状态图片
-    [SerializeField] private Sprite finishSprite;         // 完成状态图片
+    //[SerializeField] private Sprite normalSprite;          // 普通激活状态图片
+    //[SerializeField] private Sprite graySprite;           // 灰色状态图片
+    //[SerializeField] private Sprite finishSprite;         // 完成状态图片
     [SerializeField] private int[] checkpoints = { 1, 2, 3 };  // 检查点关卡
 
     [Header("Button List")] public Button[] levelButtons; // 按钮数组
@@ -36,16 +36,25 @@ public class LevelSelectManager : MonoBehaviour
 
     [SerializeField] private Sprite[] graySprites; // 每个按钮的 gray 状态图
 
-    [SerializeField] private Sprite[] finishSprites; // 每个按钮的 finish 状态图
-     #endregion
+    //[SerializeField] private Sprite[] finishSprites; // 每个按钮的 finish 状态图
+    #endregion
 
-     #region open
+    #region open
 
-     [SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
+    [SerializeField] private GameObject openLockPrefab; // 开锁的图片预制体
 
      private GameObject[] openLockInstances; // 存储每个按钮的开锁图
 
 
+
+    #endregion
+
+     #region levelOneOrTwo
+
+     [SerializeField] private GameObject levelOnePrefab; // 01图片预制体
+     [SerializeField] private GameObject levelTwoPrefab; // 02图片预制体
+     
+     private GameObject[] levelOneOrTwoInstances; // 存储每个按钮的0102图
 
     #endregion
 
@@ -77,6 +86,7 @@ public class LevelSelectManager : MonoBehaviour
         lockInstances = new GameObject[levelButtons.Length];
         CollectInstances = new GameObject[levelButtons.Length];
         openLockInstances = new GameObject[levelButtons.Length];
+        levelOneOrTwoInstances = new GameObject[levelButtons.Length];
         // 为每个按钮创建锁并绑定点击事件
         for (int i = 0; i < levelButtons.Length; i++)
         {
@@ -88,10 +98,13 @@ public class LevelSelectManager : MonoBehaviour
             // 为每个按钮创建锁的实例
             GameObject lockInstance = Instantiate(lockImagePrefab, levelButtons[i].transform);
             GameObject CollectInstance = Instantiate(IfCollectPrefab, levelButtons[i].transform);
+            GameObject levelOneOrTwoInstance = Instantiate(i % 2 == 0 ? levelOnePrefab : levelTwoPrefab, levelButtons[i].transform);
             lockInstance.transform.SetAsLastSibling(); // 确保锁显示在最上层
             CollectInstance.transform.SetAsLastSibling();
+            levelOneOrTwoInstance.transform.SetAsLastSibling();
             lockInstances[i] = lockInstance;
             CollectInstances[i] = CollectInstance;
+            levelOneOrTwoInstances[i] = levelOneOrTwoInstance;
             CollectInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(75, -75);
 
             GameObject openLockInstance = Instantiate(openLockPrefab, levelButtons[i].transform);
@@ -227,12 +240,21 @@ public class LevelSelectManager : MonoBehaviour
         if (buttonImage != null)
         {
             if (isActive) {
-                buttonImage.sprite = isFinished ? finishSprites[index] : normalSprites[index];
+                buttonImage.sprite = normalSprites[index];
                 specialButtons[index].interactable = true;
+                if (isFinished)
+                {
+                    buttonImage.transform.GetChild(0).gameObject.SetActive(true);
+                }
+                else
+                {
+                    buttonImage.transform.GetChild(0).gameObject.SetActive(false);
+                }
             }
             else {
                 buttonImage.sprite = graySprites[index];
                 specialButtons[index].interactable = false;
+                buttonImage.transform.GetChild(0).gameObject.SetActive(false);
             }
         }
     }

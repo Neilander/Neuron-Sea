@@ -42,7 +42,7 @@ public class SetPanel : MonoBehaviour
         btn3.onClick.AddListener(() => ShowPanel(panel3));
         // 默认显示第一个面板
         ShowPanel(panel1);
-        backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        if(backgroundAnimator) backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
     }
 
     // Update is called once per frame
