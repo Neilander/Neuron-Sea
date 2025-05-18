@@ -24,7 +24,10 @@ public class SetPanel : MonoBehaviour
 
     public GameObject conceptArt;
 
-    
+    private const string SELECTOUTBULLET_KEY = "SelectableOutBulletTime";
+    private const string DESELECT_KEY = "Deselectable";
+    public GameObject SelectableOutBulletTimeMark;
+    public GameObject DeselectableMark;
 
     private void Awake(){
         if (Instance != null && Instance != this) {
@@ -45,6 +48,7 @@ public class SetPanel : MonoBehaviour
         ShowPanel(panel1);
         if(backgroundAnimator) backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
         if(backgroundAnimator2) backgroundAnimator2.updateMode = AnimatorUpdateMode.UnscaledTime;
+        RefreshSign();
     }
 
     // Update is called once per frame
@@ -92,5 +96,27 @@ public class SetPanel : MonoBehaviour
             beginPanel.ifStartVid = true;
             Debug.Log("可以播放开场剧情了！");
         }
+    }
+
+    public void SwitchSelectableOutBulletTime()
+    {
+        PlayerPrefs.SetInt(SELECTOUTBULLET_KEY, PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) == 0 ? 1 : 0);
+        PlayerPrefs.Save();
+        GridManager.Instance?.LoadSettings();
+        RefreshSign();
+    }
+
+    public void SwitchDeselectable()
+    {
+        PlayerPrefs.SetInt(DESELECT_KEY, PlayerPrefs.GetInt(DESELECT_KEY, 0) == 0 ? 1 : 0);
+        PlayerPrefs.Save();
+        GridManager.Instance?.LoadSettings();
+        RefreshSign();
+    }
+
+    private void RefreshSign()
+    {
+        SelectableOutBulletTimeMark.SetActive(PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) != 0);
+        DeselectableMark.SetActive(PlayerPrefs.GetInt(DESELECT_KEY, 0) != 0);
     }
 }

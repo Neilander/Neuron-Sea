@@ -10,4 +10,9 @@ public class SoundTrigger : MonoBehaviour
     {
         AudioManager.Instance.Play((SFXClip)(soundID + 27),"System");
     }
+
+    public void ScanSound()
+    {
+        AudioManager.Instance.Play(SFXClip.Scan, "System");
+    }
 }

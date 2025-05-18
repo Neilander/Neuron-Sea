@@ -35,6 +35,8 @@ public class GridManager : MonoBehaviour
 
     public SwitchLogic curSwitchLogic;
     public SelectionLogic curSelectionLogic;
+    private const string SELECTOUTBULLET_KEY = "SelectableOutBulletTime";
+    private const string DESELECT_KEY = "Deselectable";
 
     [Header("格子数据调整")] public int gridWidth = 1;
 
@@ -141,9 +143,15 @@ public class GridManager : MonoBehaviour
         {
             DestroyImmediate(gameObject);
         }
+
+        LoadSettings();
     }
 
-
+    public void LoadSettings()
+    {
+        curSwitchLogic = PlayerPrefs.GetInt(DESELECT_KEY, 0) != 0 ? SwitchLogic.CancelWhenClickAgain : SwitchLogic.OrderBasedAndNoCancel;
+        curSelectionLogic = PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) != 0 ? SelectionLogic.allTime : SelectionLogic.onlyBulletTime;
+    }
 
     public void LockStates(bool lockState)
     {
