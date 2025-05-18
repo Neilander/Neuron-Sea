@@ -474,8 +474,11 @@ public class GridManager : MonoBehaviour
 
                                 if (temp1.IsSpriteVisibleOnScreen() ^ temp2.IsSpriteVisibleOnScreen())
                                 {
+                                    switchInfoRecorder.Take(tryGet);
                                     if (temp1.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp1, out temp1, out temp2);
                                     else if (temp2.IsSpriteVisibleOnScreen()) switchInfoRecorder.Record(temp2, out temp1, out temp2);
+
+                                    switchInfoRecorder.Record(tryGet, out temp1, out temp2);
                                 }
                                 else if (temp1.IsSpriteVisibleOnScreen() && temp2.IsSpriteVisibleOnScreen())
                                 {
