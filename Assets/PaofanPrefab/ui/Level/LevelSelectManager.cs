@@ -370,7 +370,7 @@ public class LevelSelectManager : MonoBehaviour
         if (companion == null)
             companion = FindAnyObjectByType<CompanionController>();
         if (companion != null) companion.DirectTo();
-        GetComponentInParent<PauseMenu>().ForceResume();
+        GetComponentInParent<PauseMenu>()?.ForceResume();
     }
 
     // 特殊按钮点击事件处理
