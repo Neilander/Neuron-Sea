@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2566695617128101688}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8, y: -0.5, z: 0}
+  m_LocalPosition: {x: -0.9, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -90,16 +90,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79672e74ae95c9e408a3fba92809197b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueText: "\u201C\u6211\u62D2\u7EDD\u9000\u51FA\u89C2\u6D4B\u5C0F\u961F\uFF0C\u5B9E\u5730\u8003\u5BDF\u7684\u4F5C\u7528\u8FDC\u6BD4\u7406\u4E8B\u4EEC\u6240\u7406\u89E3\u7684\u66F4\u52A0\u91CD\u8981\u2026\u2026\u5BF9\uFF0C\u6CA1\u6709\u4EFB\u4F55\u7406\u7531\u53EF\u4EE5\u963B\u6B62\u6211\uFF0C\u65E0\u8BBA\u662F\u6211\u7684\u5BB6\u5EAD\u3001\u6211\u7684\u672A\u6765\u2026\u2026\u4E43\u81F3\u6211\u7684\u751F\u547D\u3002\u201D"
+  dialogueText: "\u201C\u6211\u6C38\u8FDC\u90FD\u4E0D\u4F1A\u5FD8\u8BB0\u6211\u521D\u6B21\u8E0F\u5165\u8FD9\u7247\u6DF1\u6D77\u65F6\u7684\u611F\u53D7\u2026\u2026\u8FD9\u662F\u5168\u65B0\u7684\u4E16\u754C\uFF0C\u4E00\u4E2A\u5C1A\u672A\u88AB\u4EBA\u7C7B\u8E0F\u8DB3\u7684\u9886\u57DF\uFF0C\u8FD9\u91CC\u7684\u4E00\u5207\u90FD\u662F\u5D2D\u65B0\u7684\uFF0C\u8DB3\u4EE5\u6FC0\u8D77\u4EFB\u4F55\u4E00\u4E2A\u4EBA\u7684\u65E0\u9650\u7684\u597D\u5947\u3002\u201D"
   dialoguePrefab: {fileID: 5598918138618353476, guid: 440eab5305a1c7842a55b83bde824774,
     type: 3}
   companionAnimation: robot_scan
+  CanvasOff: {fileID: 1235105835063573335}
   exitConsciousness:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EndAndMove, Assembly-CSharp
-        m_MethodName: ForceEnterConsciousnessStory
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

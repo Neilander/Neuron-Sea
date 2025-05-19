@@ -12,6 +12,8 @@ public class CompanionEventTrigger : MonoBehaviour
 
     private bool triggered = false;
 
+    public Transform CanvasOff;
+
     public UnityEvent exitConsciousness;
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -88,7 +90,7 @@ public class CompanionEventTrigger : MonoBehaviour
         GameObject dialogueObj = null;
         if (dialoguePrefab != null)
         {
-            dialogueObj = Instantiate(dialoguePrefab, this.transform.position + new Vector3(1.5f, 1.5f, 0), Quaternion.identity, GameObject.Find("CanvasOff").transform);
+            dialogueObj = Instantiate(dialoguePrefab, this.transform.position + new Vector3(1.5f, 1.5f, 0), Quaternion.identity, CanvasOff);
             TMP_Text tmpText = dialogueObj.GetComponentInChildren<TMP_Text>();
             StartCoroutine(TypeText(tmpText, dialogueText));
         }

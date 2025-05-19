@@ -23,8 +23,9 @@ public class VisualButton
     private float minEffectiveTime;//生效后最短持续时间
     private float minEffectiveTimer;
     private bool blockedDuringPause;//是否在暂停时被阻止，一般UI类输入为False，游戏内输入为True
+    private bool canBeBlockedByBlockingInput;//是否可被【屏蔽全局输入】影响
 
-    public VisualButton(KeyCode key, float preInputTime = 0f, float minEffectiveTime = 0f, bool blockedDuringPause = false)
+    public VisualButton(KeyCode key, float preInputTime = 0f, float minEffectiveTime = 0f, bool blockedDuringPause = false, bool canBeBlockedByBlockingInput = true)
     {
         this.key = key;
         this.preInputTime = preInputTime;
@@ -33,11 +34,13 @@ public class VisualButton
         this.minEffectiveTimer = 0f;
         GameInput.Buttons.Add(this);
         this.blockedDuringPause = blockedDuringPause;
+        this.canBeBlockedByBlockingInput = canBeBlockedByBlockingInput;
     }
 
     public bool Pressed(bool fixed_check = true)
     {
         if (blockedDuringPause && Time.timeScale == 0) return false;
+        if (canBeBlockedByBlockingInput && GameInput.isBlockingInput) return false;
         if (fixed_check)
         {
             return fixedGetKeyDown || this.preInputTimer > 0f;
@@ -51,6 +54,7 @@ public class VisualButton
     public bool Checked(bool fixed_check = true)
     {
         if (blockedDuringPause && Time.timeScale == 0) return false;
+        if (canBeBlockedByBlockingInput && GameInput.isBlockingInput) return false;
         if (fixed_check)
         {
             return fixedGetKey || this.minEffectiveTimer > 0f;
@@ -128,6 +132,7 @@ public static class GameInput
     public static VisualButton SwitchableSelection = new VisualButton(KeyCode.Mouse0, blockedDuringPause: true);
     public static VisualButton SwitchObjects = new VisualButton(KeyCode.E, blockedDuringPause: true);
     public static VirtualJoystick Aim = new VirtualJoystick();
+    public static bool isBlockingInput = false;
 
     public static void Update(float deltaTime)
     {
