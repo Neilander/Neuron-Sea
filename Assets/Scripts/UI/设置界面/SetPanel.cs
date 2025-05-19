@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,12 @@ public class SetPanel : MonoBehaviour
     private const string DESELECT_KEY = "Deselectable";
     public GameObject SelectableOutBulletTimeMark;
     public GameObject DeselectableMark;
+
+    public TextMeshProUGUI CompanionDialogueText;
+    public string[] CompanionDialogueDefault;
+    public string[] CompanionDialogueSettings;
+    public string[] CompanionDialogueAbout;
+    public string[] CompanionDialogueArt;
 
     private void Awake(){
         if (Instance != null && Instance != this) {
@@ -71,7 +78,8 @@ public class SetPanel : MonoBehaviour
         panel1.SetActive(true);
     }
 
-    private void ShowPanel(GameObject targetPanel){
+    private void ShowPanel(GameObject targetPanel)
+    {
         // 隐藏所有面板
         panel1.SetActive(false);
         panel2.SetActive(false);
@@ -79,6 +87,44 @@ public class SetPanel : MonoBehaviour
 
         // 显示目标面板
         targetPanel.SetActive(true);
+        string newText;
+
+        if (targetPanel == panel1)
+        {
+            do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueSettings }); }
+            while (CompanionDialogueText.text == newText);
+            CompanionDialogueText.text = newText;
+        }
+        else if (targetPanel == panel2)
+        {
+            do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueAbout }); }
+            while (CompanionDialogueText.text == newText);
+            CompanionDialogueText.text = newText;
+        }
+        else if (targetPanel == panel3)
+        {
+            do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueArt }); }
+            while (CompanionDialogueText.text == newText);
+            CompanionDialogueText.text = newText;
+        }
+    }
+
+    public T GetRandomElementFromRows<T>(List<T[]> array)
+    {
+        List<T> elements = new List<T>();
+
+        foreach (T[] row in array)
+        {
+            for (int col = 0; col < row.Length; col++)
+            {
+                elements.Add(row[col]);
+            }
+        }
+
+        if (elements.Count == 0)
+            throw new System.ArgumentException("没有有效的元素可供选择");
+
+        return elements[Random.Range(0, elements.Count)];
     }
 
     public void ResetStory()

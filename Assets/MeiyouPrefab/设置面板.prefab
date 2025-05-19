@@ -399,7 +399,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 21e3baf7d32c65948a6461358b184841, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 50571aa3e1112d74884ae02fca2e18c5, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5913,7 +5913,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 126.97, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4516299333978295338
@@ -7120,6 +7120,28 @@ MonoBehaviour:
   conceptArt: {fileID: 7092024411274611260}
   SelectableOutBulletTimeMark: {fileID: 3312646801219769285}
   DeselectableMark: {fileID: 4421295610179114767}
+  CompanionDialogueText: {fileID: 8765491934691879916}
+  CompanionDialogueDefault:
+  - "\u201C\u6545\u969C\u2026\u2026\u6545\u969C\u2026\u2026\u9700\u8981\u4FEE\u7406\u2026\u2026\u5F00\u73A9\u7B11\u7684\u3002\u201D"
+  - "\u201C\u574F\u6D88\u606F\u662F\uFF0C\u60A8\u5168\u5E74\u65E0\u4F11\u3002\u597D\u6D88\u606F\u662F\uFF0C\u60A8\u53EF\u4EE5\u9009\u62E9\u4F55\u65F6\u5F00\u59CB\u3002\u201D"
+  - "\u201C\u5373\u4F7F\u662F\u6C34\u4E0B\u4F5C\u4E1A\uFF0C\u6211\u4E5F\u4E0D\u4F1A\u8111\u888B\u8FDB\u6C34\u7684\uFF0C\u89C2\u6D4B\u5458\u3002\u201D"
+  - "\u201C\u795D\u60A8\u4ECA\u65E5\u7684\u63A2\u7D22\u4E00\u5207\u987A\u5229\u3002\u201D"
+  - "\u201C\u771F\u96BE\u4EE5\u76F8\u4FE1\uFF0C\u60A8\u5C45\u7136\u4F1A\u8BE2\u95EE\u6211\u6709\u6CA1\u6709\u52A0\u8F7D\u5A31\u4E50\u6A21\u5757\u3002\u201D"
+  CompanionDialogueSettings:
+  - "\u201C\u60A8\u53EF\u4EE5\u968F\u610F\u8F93\u5165\u6307\u4EE4\u3002\u201D"
+  - "\u201C\u9700\u8981\u6211\u8C03\u6574\u5934\u9CCD\u7684\u654F\u611F\u5EA6\u5417\uFF1F\u201D"
+  - "\u201C\u5728\u60A8\u611F\u77E5\u4E16\u754C\u7684\u8FC7\u7A0B\u4E2D\uFF0C\u6211\u6C38\u8FDC\u90FD\u613F\u610F\u63D0\u4F9B\u5E2E\u52A9\u3002\u201D"
+  - "\u201C\u4E0D\u5408\u9002\u7684\u89C2\u6D4B\u53C2\u6570\u4F1A\u63A9\u76D6\u4E16\u754C\u7684\u7F8E\u4E3D\u3002\u201D"
+  CompanionDialogueAbout:
+  - "\u201C\u60A8\u559C\u6B22\u8FD9\u4E2A\u4E16\u754C\u5417\uFF1F\u60F3\u8981\u542C\u5230\u56DE\u7B54\u7684\u5E76\u4E0D\u662F\u6211\uFF0C\u6216\u8005\u8BF4\uFF0C\u4E0D\u4EC5\u662F\u6211\u3002\u201D"
+  - "\u201C\u5F88\u9AD8\u5174\u60A8\u628A\u76EE\u5149\u6295\u5411\u4ED6\u4EEC\u2014\u2014\u6211\u7684\u6A21\u4EFF\u5BF9\u8C61\u4EEC\u3002\u201D"
+  - "\u201C\u4E5F\u8BB8\u60A8\u4F1A\u611F\u5174\u8DA3\uFF0C\u8FD9\u662F\u6211\u5BF9\u4E16\u754C\u7684\u6700\u521D\u5370\u8C61\u3002\u201D"
+  CompanionDialogueArt:
+  - "\u201C\u4E00\u822C\u6765\u8BF4\uFF0C\u9001\u793C\u7269\u8981\u770B\u6536\u793C\u7684\u4EBA\u559C\u6B22\u4EC0\u4E48\uFF0C\u60A8\u89C9\u5F97\u600E\u4E48\u6837\uFF1F\u201D"
+  - "\u201C\u8FD9\u4E8E\u6211\u4EEC\u800C\u8A00\u90FD\u662F\u5D2D\u65B0\u7684\u4E16\u754C\uFF0C\u4E5F\u662F\u5D2D\u65B0\u7684\u89C6\u91CE\u3002\u201D"
+  - "\u201C\u8FD9\u91CC\u662F\u65E0\u6570\u4EBA\u7684\u8FC7\u53BB\u548C\u672A\u6765\u3002\u201D"
+  - "\u201C\u4E5F\u8BB8\u4E0B\u4E00\u4F4D\u89C2\u6D4B\u5458\u6536\u5230\u7684\u793C\u7269\u4F1A\u662F\u60A8\u7684\u601D\u60F3\uFF0C\u6CA1\u4EC0\u4E48\u6BD4\u8FD9\u66F4\u73CD\u8D35\u3002\u201D"
+  - "\u201C\u539F\u672C\u8FD9\u4E9B\u610F\u8BC6\u50CF\u662F\u6C34\u4E00\u6837\u4ECE\u6307\u5C16\u6D41\u8FC7\uFF0C\u662F\u60A8\u7684\u667A\u6167\u4F7F\u5F97\u5B83\u4EEC\u51DD\u4E3A\u51B0\u6676\u3002\u201D"
 --- !u!114 &7378220687090807128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7149,7 +7171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &719494871978118149
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7166,8 +7188,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -800.0001, y: -472.79}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -504.7996, y: -492.98}
+  m_SizeDelta: {x: 845.201, y: 37.5283}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6140347143022966921
 CanvasRenderer:
@@ -7197,18 +7219,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "v\u621150\u3002"
+  m_text: "\u201Cv\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150v\u621150\u3002\u201D"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c71df5ffddb94d74c80f5e816d5f589d, type: 2}
-  m_sharedMaterial: {fileID: -3705856956722116362, guid: c71df5ffddb94d74c80f5e816d5f589d,
+  m_fontAsset: {fileID: 11400000, guid: df326703515b612419def377f7be064b, type: 2}
+  m_sharedMaterial: {fileID: -5176992320924962934, guid: df326703515b612419def377f7be064b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4292467161
+  m_fontColor: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7225,23 +7247,23 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -4
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
