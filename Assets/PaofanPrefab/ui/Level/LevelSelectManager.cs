@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -74,6 +73,10 @@ public class LevelSelectManager : MonoBehaviour
     public Animator backgroundAnimator;
     public Animator backgroundAnimator2;
 
+    public TextMeshProUGUI CompanionDialogueText;
+    public string[] CompanionDialogueDefault;
+    public string[] CompanionDialogueLevelSelect;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -131,6 +134,7 @@ public class LevelSelectManager : MonoBehaviour
         UpdateSpecialButtons();
         backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
         backgroundAnimator2.updateMode = AnimatorUpdateMode.UnscaledTime;
+        RefreshCompanionDialogue();
     }
 
     private void Update()
@@ -378,5 +382,33 @@ public class LevelSelectManager : MonoBehaviour
     {
         Debug.Log($"Special button {buttonIndex} clicked!");
         // 在这里添加特殊按钮的具体逻辑
+    }
+
+    // 刷新小芙文案
+    public void RefreshCompanionDialogue()
+    {
+        string newText;
+
+        do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueLevelSelect }); }
+        while (CompanionDialogueText.text == newText);
+        CompanionDialogueText.text = newText;
+    }
+
+    public T GetRandomElementFromRows<T>(List<T[]> array)
+    {
+        List<T> elements = new List<T>();
+
+        foreach (T[] row in array)
+        {
+            for (int col = 0; col < row.Length; col++)
+            {
+                elements.Add(row[col]);
+            }
+        }
+
+        if (elements.Count == 0)
+            throw new System.ArgumentException("没有有效的元素可供选择");
+
+        return elements[Random.Range(0, elements.Count)];
     }
 }
