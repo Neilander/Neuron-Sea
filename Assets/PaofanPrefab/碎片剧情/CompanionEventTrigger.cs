@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CompanionEventTrigger : MonoBehaviour
@@ -46,7 +47,7 @@ public class CompanionEventTrigger : MonoBehaviour
         }
 
         // 3. 播放动画
-        if (companion.GetComponent<Animator>() != null)
+        if (companion.GetComponent<Animator>() != null && SceneManager.GetActiveScene().buildIndex == 1)
         {
             Debug.Log("准备播放动画");
             companion.GetComponent<Animator>().Play("robot_scan");
@@ -71,7 +72,7 @@ public class CompanionEventTrigger : MonoBehaviour
         // yield return new WaitForSeconds(1f);
 
 
-        if (anim != null) {
+        if (anim != null && SceneManager.GetActiveScene().buildIndex == 1) {
             float timer = 0f;
 
             while (timer < 3f) {
@@ -81,8 +82,10 @@ public class CompanionEventTrigger : MonoBehaviour
                 timer += anim.GetCurrentAnimatorStateInfo(0).length;
             }
         }
-        else {
-            yield return new WaitForSeconds(3f);
+        else
+        {
+            AudioManager.Instance.Play(SFXClip.Scan, gameObject.name);
+            yield return new WaitForSeconds(1f);
         }
         
         
@@ -102,7 +105,7 @@ public class CompanionEventTrigger : MonoBehaviour
                 yield return new WaitForSeconds(0.05f);
             }
         }
-        anim.Play("robot_idle");
+        if (SceneManager.GetActiveScene().buildIndex == 1) anim.Play("robot_idle");
         // // 6. 返回原位置（带着对话框）
         // while (Vector3.Distance(companion.transform.position, originalPos+new Vector3(3f, 0, 0)) > 0.05f)
         // {
