@@ -59,10 +59,11 @@ public class ProcessLevelLoader : MonoBehaviour
         describeTMP.text = describeStrings[Random.Range(0, describeStrings.Length)];
 
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
-        op.allowSceneActivation = true;
+        op.allowSceneActivation = false; // 手动控制场景切换
 
         float fakeProgress = 0f;
-
+        bool isLoadingComplete = false;
+        
         while (!op.isDone)
         {
             // 匀速推进 fakeProgress 到 1f（速度可调）
@@ -73,11 +74,49 @@ public class ProcessLevelLoader : MonoBehaviour
 
             // 最终展示进度：取两者中的最大值（总能看到前进）
             float displayProgress = Mathf.Min(fakeProgress, realProgress);
+            
             Debug.Log(displayProgress);
+            
             if (loadingFillImage != null)
                 loadingFillImage.fillAmount = displayProgress;
 
+            if (!isLoadingComplete && Input.GetMouseButtonDown(0) && describeStrings.Length > 0) {
+                if (describeStrings.Length == 1) {
+                    // 只有一个元素，就直接用它
+                    describeTMP.text = describeStrings[0];
+                }
+                else {
+                    int currentIndex = System.Array.IndexOf(describeStrings, describeTMP.text);
+                    int newIndex = currentIndex;
+
+                    while (newIndex == currentIndex) {
+                        newIndex = Random.Range(0, describeStrings.Length);
+                    }
+
+                    describeTMP.text = describeStrings[newIndex];
+                }
+            }
+            
+            if (!isLoadingComplete && fakeProgress >= 1f && op.progress >= 0.9f) {
+                isLoadingComplete = true;
+                StartCoroutine(WaitForClickThenActivate(op));
+            }
+            
             yield return null;
         }
+    }
+
+    private IEnumerator WaitForClickThenActivate(AsyncOperation op){
+        yield return null; // 等待 1 帧，确保状态更新完成
+
+        // 可选：显示提示
+        // clickToContinueText.SetActive(true);
+
+        // 等待点击
+        while (!Input.GetMouseButtonDown(0)) {
+            yield return null;
+        }
+
+        op.allowSceneActivation = true;
     }
 }
