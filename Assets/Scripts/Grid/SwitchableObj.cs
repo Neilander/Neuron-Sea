@@ -224,7 +224,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             tempR.material.SetVector("_MaoDianWangGeZuoBiao", ExpectedAnchorPos);
             tempR.material.SetVector("_MaoDianShiJieZuoBiao", recordPos);
             tempR.material.SetVector("_MuBiaoMaoDianShiJieZuoBiao", anchor.transform.position);
-            EffectAnimator.GetComponent<SpriteRenderer>().enabled = false;
+            if(EffectAnimator != null)
+                EffectAnimator.GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 
@@ -235,7 +236,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         yield return new WaitForSecondsRealtime(r.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
         r.material = originMaterial;
 
-        EffectAnimator.GetComponent<SpriteRenderer>().enabled = true;
+        if (EffectAnimator != null)
+            EffectAnimator.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public void SetToClosestGridPoint(){
