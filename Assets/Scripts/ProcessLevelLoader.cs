@@ -24,6 +24,7 @@ public class ProcessLevelLoader : MonoBehaviour
     public Image loadingFillImage;
 
     [SerializeField] private GameObject GroupToOpen;
+    [SerializeField] private GameObject clickToContinueText;
     [SerializeField] private Animator backgroundAnimator;
     [SerializeField] private Animator signAnimator;
     [SerializeField] private Image titleIMG;
@@ -109,8 +110,9 @@ public class ProcessLevelLoader : MonoBehaviour
     private IEnumerator WaitForClickThenActivate(AsyncOperation op){
         yield return null; // 等待 1 帧，确保状态更新完成
 
-        // 可选：显示提示
-        // clickToContinueText.SetActive(true);
+        // 显示提示
+        signAnimator.gameObject.SetActive(false);
+        clickToContinueText.SetActive(true);
 
         // 等待点击
         while (!Input.GetMouseButtonDown(0)) {
