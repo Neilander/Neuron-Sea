@@ -36,6 +36,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
 
     [Header("动画器")]
     [SerializeField] private Animator selfAnimator;
+    [SerializeField] private Animator EffectAnimator;
 
     [Header("Y调整")]
     [SerializeField] private bool ifAdjustY = true;
@@ -185,6 +186,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         {
             selfAnimator.SetInteger("Size", (int)ExpectedSize.x);
         }
+        if (EffectAnimator != null)
+        {
+            EffectAnimator.SetInteger("Size", (int)ExpectedSize.x);
+        }
     }
 
     public void MoveToGridPos(Vector3 gridPos){
@@ -219,6 +224,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             tempR.material.SetVector("_MaoDianWangGeZuoBiao", ExpectedAnchorPos);
             tempR.material.SetVector("_MaoDianShiJieZuoBiao", recordPos);
             tempR.material.SetVector("_MuBiaoMaoDianShiJieZuoBiao", anchor.transform.position);
+            EffectAnimator.GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 
@@ -229,6 +235,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         yield return new WaitForSecondsRealtime(r.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
         r.material = originMaterial;
 
+        EffectAnimator.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public void SetToClosestGridPoint(){
@@ -506,6 +513,10 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if (selfAnimator != null)
         {
             selfAnimator.SetInteger("Size", (int)ExpectedSize.x);
+        }
+        if (EffectAnimator != null)
+        {
+            EffectAnimator.SetInteger("Size", (int)ExpectedSize.x);
         }
 
         SetAnchorToAnchorPos();

@@ -273,13 +273,13 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
             animator.speed = 1f; // 保险起见，fallback
         }*/
 
-        AudioManager.Instance.Play(SFXClip.BoomExplosion,gameObject.name);
         float timer = 0f;
         while (timer < explodeDuration)
         {
-            //if (timer < 0.75f && timer + Time.deltaTime >= 0.75f)
-            //{
-            //}
+            if (timer < explodeDuration * 0.75f && timer + Time.deltaTime >= explodeDuration * 0.75f)
+            {
+                PlayExplodeSound();
+            }
             timer += Time.deltaTime;
 
             float t = Mathf.Clamp01(timer / explodeDuration);
@@ -330,11 +330,14 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         animator.Play(state.fullPathHash, 0, 0.5f); // 从中间开始
 
-        AudioManager.Instance.Play(SFXClip.BoomExplosion, gameObject.name);
         animator.speed = 0.2f /realDuration;
         float timer = 0f;
         while (timer <realDuration)
         {
+            if (timer < realDuration * 0.5f && timer + Time.deltaTime >= realDuration * 0.5f)
+            {
+                PlayExplodeSound();
+            }
             timer += Time.deltaTime;
 
             float t = Mathf.Clamp01(timer / realDuration);
@@ -390,6 +393,13 @@ public class ExplosiveBox : MonoBehaviour, ILDtkImportedFields, IDeathActionOver
     {
         InAndOutSwitchEvent.OnInSwitchTriggered -= ShowRange;
         InAndOutSwitchEvent.OnOutSwitchTriggered -= HideRange;
+    }
+
+    private void PlayExplodeSound() 
+    {
+        PlayerController playerController =  FindObjectOfType<PlayerController>();
+        float dist = 1.5f - (transform.position - playerController.transform.position).magnitude / (2.5f * explosionRadius);
+        AudioManager.Instance.Play(SFXClip.BoomExplosion, gameObject.name, Mathf.Clamp01(dist) * 0.6f + 0.4f);
     }
 }
 
