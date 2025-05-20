@@ -8641,6 +8641,74 @@ TilemapCollider2D:
     type: 3}
   m_PrefabInstance: {fileID: 1342955109}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1152462509
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 645037692846068049, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_Name
+      value: storyGlobalManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 862.9674
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 744.4838
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.6172223
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1303531603596104055, guid: 476d626d2b0be427e90d2925e156f62f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 476d626d2b0be427e90d2925e156f62f, type: 3}
 --- !u!19719996 &1154576286 stripped
 TilemapCollider2D:
   m_CorrespondingSourceObject: {fileID: 7564499579522726176, guid: 620938535306db34d9825f9582b0dfc2,
@@ -20133,6 +20201,7 @@ SceneRoots:
   - {fileID: 970977068}
   - {fileID: 348019882}
   - {fileID: 107376123}
+  - {fileID: 1152462509}
   - {fileID: 1185668766}
   - {fileID: 212825821}
   - {fileID: 8272416999106074304}
