@@ -61,7 +61,7 @@ public class SetPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!conceptArt.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+        if (!conceptArt.activeSelf && GameInput.Back.Pressed(false))
         {
             GetComponentInChildren<ClickAndExit>().Exit();
         }
@@ -89,44 +89,46 @@ public class SetPanel : MonoBehaviour
         targetPanel.SetActive(true);
         string newText;
 
-        if (targetPanel == panel1)
-        {
-            do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueSettings }); }
+        if (targetPanel == panel1) {
+            do { newText = new List<string[]>() { CompanionDialogueDefault, CompanionDialogueSettings }.GetRandomElementFromMultipleArrays();
+            }
             while (CompanionDialogueText.text == newText);
             CompanionDialogueText.text = newText;
         }
         else if (targetPanel == panel2)
         {
-            do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueAbout }); }
+            do { newText = new List<string[]>() { CompanionDialogueDefault, CompanionDialogueAbout }.GetRandomElementFromMultipleArrays();
+            }
             while (CompanionDialogueText.text == newText);
             CompanionDialogueText.text = newText;
         }
         else if (targetPanel == panel3)
         {
-            do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueArt }); }
+            do { newText = new List<string[]>() { CompanionDialogueDefault, CompanionDialogueArt }.GetRandomElementFromMultipleArrays();
+            }
             while (CompanionDialogueText.text == newText);
             CompanionDialogueText.text = newText;
         }
     }
 
-    public T GetRandomElementFromRows<T>(List<T[]> array)
-    {
-        List<T> elements = new List<T>();
-
-        foreach (T[] row in array)
-        {
-            for (int col = 0; col < row.Length; col++)
-            {
-                elements.Add(row[col]);
-            }
-        }
-
-        if (elements.Count == 0)
-            throw new System.ArgumentException("没有有效的元素可供选择");
-
-        return elements[Random.Range(0, elements.Count)];
-    }
-
+    // public T GetRandomElementFromRows<T>(List<T[]> array)
+    // {
+    //     List<T> elements = new List<T>();
+    //
+    //     foreach (T[] row in array)
+    //     {
+    //         for (int col = 0; col < row.Length; col++)
+    //         {
+    //             elements.Add(row[col]);
+    //         }
+    //     }
+    //
+    //     if (elements.Count == 0)
+    //         throw new System.ArgumentException("没有有效的元素可供选择");
+    //
+    //     return elements[Random.Range(0, elements.Count)];
+    // }
+    //只重置了开场剧情
     public void ResetStory()
     {
         Debug.Log("清除剧情加载记录");
@@ -164,5 +166,21 @@ public class SetPanel : MonoBehaviour
     {
         SelectableOutBulletTimeMark.SetActive(PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) != 0);
         DeselectableMark.SetActive(PlayerPrefs.GetInt(DESELECT_KEY, 0) != 0);
+    }
+}
+
+public static class ArrayExtensions
+{
+    public static T GetRandomElementFromMultipleArrays<T>(this List<T[]> arrays){
+        List<T> elements = new List<T>();
+
+        foreach (T[] array in arrays) {
+            elements.AddRange(array);
+        }
+
+        if (elements.Count == 0)
+            throw new System.ArgumentException("没有有效的元素可供选择");
+
+        return elements[Random.Range(0, elements.Count)];
     }
 }

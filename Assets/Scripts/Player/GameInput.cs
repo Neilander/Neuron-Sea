@@ -126,8 +126,9 @@ public static class GameInput
     public static VisualButton MoveDown = new VisualButton(KeyCode.S, blockedDuringPause: true);
     public static VisualButton MoveLeft = new VisualButton(KeyCode.A, blockedDuringPause: true);
     public static VisualButton MoveRight = new VisualButton(KeyCode.D, blockedDuringPause: true);
+    public static VisualButton Restart = new VisualButton(KeyCode.R, blockedDuringPause: true);
     public static VisualButton Confirm = new VisualButton(KeyCode.Space);
-    public static VisualButton Menu = new VisualButton(KeyCode.Escape);
+    public static VisualButton Back = new VisualButton(KeyCode.Escape);
     public static VisualButton TimeStopsHere = new VisualButton(KeyCode.Mouse1);
     public static VisualButton SwitchableSelection = new VisualButton(KeyCode.Mouse0, blockedDuringPause: true);
     public static VisualButton SwitchObjects = new VisualButton(KeyCode.E, blockedDuringPause: true);

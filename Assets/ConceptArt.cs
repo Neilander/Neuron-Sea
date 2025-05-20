@@ -29,7 +29,7 @@ public class ConceptArt : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (GameInput.Back.Pressed(false))
         {
             GetComponent<ClickAndExit>().Exit();
         }

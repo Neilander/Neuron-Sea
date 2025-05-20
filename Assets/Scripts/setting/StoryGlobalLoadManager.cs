@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class StoryGlobalLoadManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class StoryGlobalLoadManager : MonoBehaviour
     public GameMode curMode;
 
     private HashSet<string> disabledTriggers = new HashSet<string>();
+
+    private const string TriggerListKey = "AllStoryTriggerIds";
+    
     private bool ifLoadedScene1Story;
     private bool ifLoadedScene2Story;
     private bool ifLoadedScene3Story;
@@ -36,18 +40,39 @@ public class StoryGlobalLoadManager : MonoBehaviour
     }
 
     #region 是否已经触发过了？
+    
+
+    
 
     public void DisableTrigger(string id){
-        if (disabledTriggers.Add(id)) // 如果是第一次添加
-        {
+        if (disabledTriggers.Add(id)) {
             PlayerPrefs.SetInt("StoryTrigger_" + id, 1);
-            PlayerPrefs.Save(); // 保存到磁盘
+            SaveTriggerId(id);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private void SaveTriggerId(string id){
+        // 获取已有列表
+        string idsStr = PlayerPrefs.GetString(TriggerListKey, "");
+        var ids = new HashSet<string>(idsStr.Split('|').Where(s => !string.IsNullOrEmpty(s)));
+        if (ids.Add(id)) {
+            PlayerPrefs.SetString(TriggerListKey, string.Join("|", ids));
         }
     }
 
     public void ResetAll(){
+        string idsStr = PlayerPrefs.GetString(TriggerListKey, "");
+        var ids = idsStr.Split('|');
+
+        foreach (string id in ids) {
+            if (!string.IsNullOrEmpty(id))
+                PlayerPrefs.DeleteKey("StoryTrigger_" + id);
+        }
+
+        PlayerPrefs.DeleteKey(TriggerListKey); // 删除记录用的列表
         disabledTriggers.Clear();
-        //没有真正删除playerpref里的内容,已经保存过的就没用了
+        PlayerPrefs.Save();
     }
     public bool IsTriggerDisabled(string id){
         // if (disabledTriggers.Contains(id))

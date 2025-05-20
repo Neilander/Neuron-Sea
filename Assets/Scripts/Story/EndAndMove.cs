@@ -76,9 +76,16 @@ public class EndAndMove : MonoBehaviour
     public void EnablePicture(){
         // FindAnyObjectByType<CompanionController>().transform.GetComponent<Animator>().Play("robot_idle");
         UIphoto.gameObject.SetActive(true);
-        StartCoroutine(DisablePictureAfterDelay(3f,sprite1));
+        StartCoroutine(WaitForInputAndDisablePicture());
         StoryManager.Instance._currentState = GameState.ActionMode;
         print("我还不能点，为什么");
+    }
+
+    private IEnumerator WaitForInputAndDisablePicture(){
+        while(GameInput.Aim.Value == Vector2.zero){
+            yield return null;
+        }
+        StartCoroutine(DisablePictureAfterDelay(1f, sprite1));
     }
     
     private IEnumerator DisablePictureAfterDelay(float disableTime,Sprite sprite){

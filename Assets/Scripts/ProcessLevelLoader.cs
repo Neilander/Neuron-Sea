@@ -27,6 +27,7 @@ public class ProcessLevelLoader : MonoBehaviour
     [SerializeField] private GameObject clickToContinueText;
     [SerializeField] private Animator backgroundAnimator;
     [SerializeField] private Animator signAnimator;
+    [SerializeField] private Animator continueAnimator;
     [SerializeField] private Image titleIMG;
     [SerializeField] private Sprite[] titleSprites;
     [SerializeField] private TextMeshProUGUI describeTMP;
@@ -40,9 +41,14 @@ public class ProcessLevelLoader : MonoBehaviour
 
     private IEnumerator LoadSceneRoutine(string sceneName)
     {
+        ActivityGateCenter.EnterState(ActivityState.Pause);
+        GameInput.isBlockingInput = true; // 屏蔽全局输入
+        Time.timeScale = 0; // 暂停游戏时间
+
         GroupToOpen.SetActive(true);
         backgroundAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
         signAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        continueAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
         switch (sceneName)
         {
             case "场景1剧情":
@@ -68,7 +74,7 @@ public class ProcessLevelLoader : MonoBehaviour
         while (!op.isDone)
         {
             // 匀速推进 fakeProgress 到 1f（速度可调）
-            fakeProgress = Mathf.MoveTowards(fakeProgress, 1f, Time.deltaTime * 0.5f);
+            fakeProgress = Mathf.MoveTowards(fakeProgress, 1f, Time.unscaledDeltaTime * 0.5f);
 
             // 实际加载进度：Unity 最大只到 0.9，这里映射到 1.0
             float realProgress = Mathf.Clamp01(op.progress / 1f);
@@ -119,6 +125,9 @@ public class ProcessLevelLoader : MonoBehaviour
             yield return null;
         }
 
+        ActivityGateCenter.ExitState(ActivityState.Pause);
+        GameInput.isBlockingInput = false; // 取消屏蔽全局输入
+        Time.timeScale = 1;
         op.allowSceneActivation = true;
     }
 }

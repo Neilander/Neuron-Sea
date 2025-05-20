@@ -139,7 +139,7 @@ public partial class PlayerController : MonoBehaviour, IMovementController
         //只有在可以输入时才处理输入
         if (canInput)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (GameInput.Restart.Pressed(false))
                 levelManager.instance.RestartLevel();
             //这个要注释掉
 #if UNITY_EDITOR
