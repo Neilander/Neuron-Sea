@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class StoryGlobalLoadManager : MonoBehaviour
 {
@@ -98,7 +99,7 @@ public class StoryGlobalLoadManager : MonoBehaviour
     public bool ShouldLoadSceneStory()
     {
         Debug.Log($"在场景{currentScene}关卡{currentLevel}检查是否该触发剧情");
-        return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene);
+        return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene) && levelManager.instance.currentLevelIndex == 1 + 12 * (SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public bool ShouldLoadSpecificSceneStory(int scene)

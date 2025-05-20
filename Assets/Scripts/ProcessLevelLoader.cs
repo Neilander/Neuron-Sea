@@ -83,6 +83,7 @@ public class ProcessLevelLoader : MonoBehaviour
             float displayProgress = Mathf.Min(fakeProgress, realProgress);
             
             Debug.Log(displayProgress);
+            Debug.Log(op.progress);
             
             if (loadingFillImage != null)
                 loadingFillImage.fillAmount = displayProgress;
