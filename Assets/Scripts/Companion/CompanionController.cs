@@ -115,7 +115,11 @@ public class CompanionController : MonoBehaviour
                 Debug.LogWarning("未找到Animator组件！");
             }
         }
-        if (levelManager.instance.sceneIndex == 2 && StoryGlobalLoadManager.instance.IsTriggerDisabled("场景2剧情_Story6")) {
+        bool inScene2 = levelManager.instance.sceneIndex == 2;
+        bool triggerDisabled = StoryGlobalLoadManager.instance.IsTriggerDisabled("场景2剧情_Story6");
+        bool notLevel13 = levelManager.instance.currentLevelIndex != 13;
+
+        if (inScene2 && (triggerDisabled || notLevel13)) {
             animator.Play("robot2");
         }
         if (levelManager.instance.sceneIndex == 3)
