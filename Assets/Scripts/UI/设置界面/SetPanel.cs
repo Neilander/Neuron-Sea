@@ -126,7 +126,7 @@ public class SetPanel : MonoBehaviour
 
         return elements[Random.Range(0, elements.Count)];
     }
-
+    //只重置了开场剧情
     public void ResetStory()
     {
         Debug.Log("清除剧情加载记录");
