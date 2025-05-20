@@ -28,15 +28,18 @@ public class TriggerJUmp : MonoBehaviour
                 }
                 JumpImage.sprite = sprite2;
                 istriggered = true;
-                StartCoroutine(Delay());
+                StartCoroutine(WaitForSpaceAndDelay());
             }
         }
     }
 
-    
-
-    private IEnumerator Delay(){
-        yield return new WaitForSecondsRealtime(5f);
+    private IEnumerator WaitForSpaceAndDelay(){
+        // 等待玩家按下空格键
+        while(!Input.GetKeyDown(KeyCode.Space)){
+            yield return null;
+        }
+        // 等待1秒
+        yield return new WaitForSecondsRealtime(1f);
         if (JumpImage.sprite == sprite2) {
             JumpImage.transform.gameObject.SetActive(false);
         }
