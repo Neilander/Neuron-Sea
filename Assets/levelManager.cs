@@ -534,24 +534,6 @@ public class levelManager : MonoBehaviour
                         else {
                             Debug.LogError("未找到DeathController，无法设置重生点！");
                         }
-
-                        /*
-                        switch (sceneIndex)
-                        {
-                            case 1:
-                                // PlayerPrefs.SetInt("hasLoadOnce",1);
-                                //在结束播放的时候保存了
-                                break;
-
-                            case 2:
-                                PlayerPrefs.SetInt("hasScene2LoadOnce", 1);
-                                break;
-
-                            case 3:
-                                PlayerPrefs.SetInt("hasScene3LoadOnce", 1);
-                                break;
-                        }
-                        */
                         break;
                     }
                 }
@@ -566,34 +548,6 @@ public class levelManager : MonoBehaviour
                         effectController.transform.position = respawnTarget.position;
 
                     // 检查是否是第13关，并且是首次加载（不是死亡重生或重新加载）
-                    /*
-                    if (!ifSetPlayerToAndNoMovement||(newLevelIndex == 13 && !isRestarting && enableLevel13SpecialSpawn && !cameraControl.hasLoadOnce)|| (newLevelIndex == 25 && !isRestarting&& !cameraControl.hasLoadOnce))
-                    {
-                        // // 禁用玩家输入
-                        // controller.DisableInput();
-                        //
-                        // 计算出生点的实际位置（带偏移）
-                        Vector3 actualSpawnPosition = respawnTarget.position + Vector3.down * 0.49f;
-                        //Debug.Log(FindObjectOfType<PlayerController>().transform.position);
-
-                        // 设置玩家初始位置（在重生点左边）
-                        Vector3 startPos = actualSpawnPosition + Vector3.left * walkInDistance;
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
-
-                        // 移动玩家到左侧位置
-                        controller.MovePosition(startPos);
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
-
-                        // // 开始走路动画 - 走向原始出生点
-                        // StartCoroutine(WalkToRespawnPoint(controller, actualSpawnPosition));
-                        effectController.TriggerStartEffect(true, specialStartTime);
-                        Debug.Log(FindObjectOfType<PlayerController>().transform.position);
-                        
-                    }
-                    else
-                    {
-                        controller.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
-                    }*/
                     Debug.Log("错误检测0");
                     if (ifSetPlayerToAndNoMovement)
                     {

@@ -389,26 +389,27 @@ public class LevelSelectManager : MonoBehaviour
     {
         string newText;
 
-        do { newText = GetRandomElementFromRows<string>(new() { CompanionDialogueDefault, CompanionDialogueLevelSelect }); }
-        while (CompanionDialogueText.text == newText);
+        do {
+            newText = new List<string[]>() { CompanionDialogueDefault, CompanionDialogueLevelSelect }.GetRandomElementFromMultipleArrays();
+        } while (CompanionDialogueText.text == newText);
         CompanionDialogueText.text = newText;
     }
 
-    public T GetRandomElementFromRows<T>(List<T[]> array)
-    {
-        List<T> elements = new List<T>();
-
-        foreach (T[] row in array)
-        {
-            for (int col = 0; col < row.Length; col++)
-            {
-                elements.Add(row[col]);
-            }
-        }
-
-        if (elements.Count == 0)
-            throw new System.ArgumentException("没有有效的元素可供选择");
-
-        return elements[Random.Range(0, elements.Count)];
-    }
+    // public T GetRandomElementFromRows<T>(List<T[]> array)
+    // {
+    //     List<T> elements = new List<T>();
+    //
+    //     foreach (T[] row in array)
+    //     {
+    //         for (int col = 0; col < row.Length; col++)
+    //         {
+    //             elements.Add(row[col]);
+    //         }
+    //     }
+    //
+    //     if (elements.Count == 0)
+    //         throw new System.ArgumentException("没有有效的元素可供选择");
+    //
+    //     return elements[Random.Range(0, elements.Count)];
+    // }
 }
