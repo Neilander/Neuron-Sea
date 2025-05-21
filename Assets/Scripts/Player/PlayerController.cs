@@ -337,9 +337,13 @@ public partial class PlayerController : MonoBehaviour, IMovementController
                 }
                 else
                 {
-                    //跳跃响应期间内松开跳跃键，则速度归零
+                    //跳跃允许中断期间内松开跳跃键，则速度归零
+                    if (jumpResponseTimer > Constants.JumpResponseTime - Constants.JumpAllowCancelTime)
+                    {
+                        Speed = new Vector2(Speed.x, 0);
+                    }
+                    //跳跃结束
                     jumpResponseTimer = 0;
-                    Speed = new Vector2(Speed.x, 0);
                 }
             }
         }

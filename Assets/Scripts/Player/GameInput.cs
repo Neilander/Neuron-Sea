@@ -132,6 +132,7 @@ public static class GameInput
     public static VisualButton TimeStopsHere = new VisualButton(KeyCode.Mouse1);
     public static VisualButton SwitchableSelection = new VisualButton(KeyCode.Mouse0, blockedDuringPause: true);
     public static VisualButton SwitchObjects = new VisualButton(KeyCode.E, blockedDuringPause: true);
+    public static VisualButton SwitchObjects2 = new VisualButton(KeyCode.Q, blockedDuringPause: true);
     public static VirtualJoystick Aim = new VirtualJoystick();
     public static bool isBlockingInput = false;
 
