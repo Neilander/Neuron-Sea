@@ -25,6 +25,12 @@ public enum SelectionLogic
     allTime
 }
 
+public enum ExtraButtonLogic
+{
+    One,
+    Two
+}
+
 [ExecuteInEditMode] // 在编辑器中执行
 public class GridManager : MonoBehaviour
 {
@@ -35,8 +41,10 @@ public class GridManager : MonoBehaviour
 
     public SwitchLogic curSwitchLogic;
     public SelectionLogic curSelectionLogic;
+    public ExtraButtonLogic curExtraButtonLogic;
     private const string SELECTOUTBULLET_KEY = "SelectableOutBulletTime";
     private const string DESELECT_KEY = "Deselectable";
+    private const string EXTRASWITCHBUTTON_KEY = "ExtraSwitchButton";
 
     [Header("格子数据调整")] public int gridWidth = 1;
 
@@ -151,6 +159,7 @@ public class GridManager : MonoBehaviour
     {
         curSwitchLogic = PlayerPrefs.GetInt(DESELECT_KEY, 0) != 0 ? SwitchLogic.CancelWhenClickAgain : SwitchLogic.OrderBasedAndNoCancel;
         curSelectionLogic = PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) != 0 ? SelectionLogic.allTime : SelectionLogic.onlyBulletTime;
+        curExtraButtonLogic = PlayerPrefs.GetInt(EXTRASWITCHBUTTON_KEY, 0) != 0 ? ExtraButtonLogic.Two : ExtraButtonLogic.One;
     }
 
     public void LockStates(bool lockState)
@@ -575,7 +584,7 @@ public class GridManager : MonoBehaviour
 
             if (ifLegalMove&& canViewBothSelection&& switchCoolDownFinished)
             {
-                if (GameInput.SwitchObjects.Pressed())
+                if (GameInput.SwitchObjects.Pressed() || (curExtraButtonLogic == ExtraButtonLogic.Two && GameInput.SwitchObjects2.Pressed()))
                     ShiftSwitch();
             }
         }

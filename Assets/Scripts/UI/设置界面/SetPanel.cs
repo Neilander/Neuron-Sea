@@ -27,8 +27,10 @@ public class SetPanel : MonoBehaviour
 
     private const string SELECTOUTBULLET_KEY = "SelectableOutBulletTime";
     private const string DESELECT_KEY = "Deselectable";
+    private const string EXTRASWITCHBUTTON_KEY = "ExtraSwitchButton";
     public GameObject SelectableOutBulletTimeMark;
     public GameObject DeselectableMark;
+    public GameObject ExtraSwitchButtonMark;
 
     public TextMeshProUGUI CompanionDialogueText;
     public string[] CompanionDialogueDefault;
@@ -162,10 +164,19 @@ public class SetPanel : MonoBehaviour
         RefreshSign();
     }
 
+    public void SwitchExtraSwitchButton()
+    {
+        PlayerPrefs.SetInt(EXTRASWITCHBUTTON_KEY, PlayerPrefs.GetInt(EXTRASWITCHBUTTON_KEY, 0) == 0 ? 1 : 0);
+        PlayerPrefs.Save();
+        GridManager.Instance?.LoadSettings();
+        RefreshSign();
+    }
+
     private void RefreshSign()
     {
         SelectableOutBulletTimeMark.SetActive(PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) != 0);
         DeselectableMark.SetActive(PlayerPrefs.GetInt(DESELECT_KEY, 0) != 0);
+        ExtraSwitchButtonMark.SetActive(PlayerPrefs.GetInt(EXTRASWITCHBUTTON_KEY, 0) != 0);
     }
 }
 
