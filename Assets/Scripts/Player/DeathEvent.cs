@@ -11,6 +11,8 @@ public static class PlayerDeathEvent
         Debug.Log("Trigger death event : " + deathType);
         OnDeathTriggered?.Invoke(damageSource);
     }
+
+    
 }
 
 public enum DeathType

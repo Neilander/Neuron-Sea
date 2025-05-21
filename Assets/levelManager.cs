@@ -899,6 +899,7 @@ public class levelManager : MonoBehaviour
         if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
+            // FindObjectOfType<DeathController>().StopDeathEffect();
             recordRect = LoadLevel(currentLevelIndex, true);
             isRestarting = false;
         }
