@@ -284,7 +284,7 @@ public class DeathController : MonoBehaviour
                 if (playerRigidbody != null)
                 {
                     playerController.Speed = Vector2.zero;
-                    }
+                }
 
                 // 这里保存原始材质
                 originalMaterial = playerSpriteRenderer.material;
@@ -302,21 +302,21 @@ public class DeathController : MonoBehaviour
         }
     }
 
-    // public void StopDeathEffect(){
-    //     // 如果有正在进行的死亡特效协程，立即停止
-    //     if (deathEffectA != null) {
-    //         StopCoroutine(deathEffectA);
-    //         deathEffectA = null;
-    //         
-    //
-    //         // 解冻玩家
-    //         UnfreezePlayer();
-    //     }
-    //     if (deathEffectB != null) {
-    //         StopCoroutine(deathEffectB);
-    //         deathEffectB = null;
-    //     }
-    // }
+    public void StopDeathEffect(){
+        // 如果有正在进行的死亡特效协程，立即停止
+        if (deathEffectA != null) {
+            StopCoroutine(deathEffectA);
+            deathEffectA = null;
+            
+    
+            // 解冻玩家
+            UnfreezePlayer();
+        }
+        if (deathEffectB != null) {
+            StopCoroutine(deathEffectB);
+            deathEffectB = null;
+        }
+    }
 
     #region Backup
 
@@ -418,7 +418,7 @@ public class DeathController : MonoBehaviour
 
         // 获取当前玩家（可能是重生后的新玩家）
         playerController = FindObjectOfType<PlayerController>();
-
+        
         if (playerController != null)
         {
             GameObject playerObject = playerController.gameObject;
@@ -582,21 +582,22 @@ public class DeathController : MonoBehaviour
     {
         //Debug.Log("开始应用死亡特效...");
 
-        // 先启用ScanLineJitterFeature特性
-        controlEffects.EnableScanLineJitterFeature();
-        // 设置所有开关
-        controlEffects.enableScanLineJitter = true;
-        controlEffects.enableColorShift = true;
-        controlEffects.enableNoise = true;
-        controlEffects.enableGlitch = true;
-        controlEffects.enableWaveEffect = true;
-        controlEffects.enableBlackAndWhite = true;
-        controlEffects.jitterIntensity = 0.3f;
-        controlEffects.jitterFrequency = 55f;
-        controlEffects.scanLineThickness = 1.1f;
-        controlEffects.scanLineSpeed = 1.9f;
+        #region 没用了
 
-        // glitchProbability直接恢复为原始值，不进行平滑过渡
+        // 先启用ScanLineJitterFeature特性
+                controlEffects.EnableScanLineJitterFeature();
+                // 设置所有开关
+                controlEffects.enableScanLineJitter = true;
+                controlEffects.enableColorShift = true;
+                controlEffects.enableNoise = true;
+                controlEffects.enableGlitch = true;
+                controlEffects.enableWaveEffect = true;
+                controlEffects.enableBlackAndWhite = true;
+                controlEffects.jitterIntensity = 0.3f;
+                controlEffects.jitterFrequency = 55f;
+                controlEffects.scanLineThickness = 1.1f;
+                controlEffects.scanLineSpeed = 1.9f;
+// glitchProbability直接恢复为原始值，不进行平滑过渡
         controlEffects.glitchProbability = 0.01f;
         // 强制立即更新一次特效参数
         controlEffects.ForceUpdateEffects();
@@ -604,15 +605,20 @@ public class DeathController : MonoBehaviour
         controlEffects.jitterFrequency = 55f;
         controlEffects.scanLineThickness = 1.1f;
         controlEffects.scanLineSpeed = 1.9f;
-
         // glitchProbability直接恢复为原始值，不进行平滑过渡
         controlEffects.glitchProbability = 0.01f;
+        #endregion
+
+
+        #region 有用
+
         // 第一步：改变材质和开始颜色校正
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
 
             // 设置初始GlitchFade值
-            playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
+            playerSpriteRenderer.material.SetFloat("_GlitchFade", 0.8f);
+            Debug.Log("材质改了");
             // Debug.Log($"初始化 GlitchFade 值: 0");
             controlEffects.jitterIntensity = 0.3f;
             controlEffects.jitterFrequency = 55f;
@@ -622,6 +628,9 @@ public class DeathController : MonoBehaviour
             // glitchProbability直接恢复为原始值，不进行平滑过渡
             controlEffects.glitchProbability = 0.01f;
         }
+
+        #endregion
+        
 
         float elapsedTime = 0;
         float initialColorCorrection = controlEffects.colorCorrection;
@@ -635,12 +644,7 @@ public class DeathController : MonoBehaviour
 
             controlEffects.colorCorrection = Mathf.Lerp(initialColorCorrection, targetValues.colorCorrection, smoothT);
             controlEffects.saturation = Mathf.Lerp(initialSaturation, targetValues.saturation, smoothT);
-
-            // if (playerSpriteRenderer != null && deathEffectMaterial != null)
-            // {
-            //     float currentFade = Mathf.Lerp(0f, 1f, smoothT);
-            //     playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
-            // }
+            
 
             controlEffects.jitterIntensity = 0.3f;
             controlEffects.jitterFrequency = 55f;
@@ -700,7 +704,7 @@ public class DeathController : MonoBehaviour
         #region transition
 
         
-// 开始其他效果的过渡
+        // 开始其他效果的过渡
         while (elapsedTime < effectTransitionDuration)
         {
             float t = elapsedTime / effectTransitionDuration; // 归一化时间，从0到1
@@ -748,34 +752,23 @@ public class DeathController : MonoBehaviour
         // Debug.Log($"效果将保持 {effectDuration} 秒");
         float effectElapsedTime = 0;
         hasMovedPlayer = false;
+        //重新加载场景上的物体
         levelManager.instance.ReloadLevel();
         Debug.Log("应该开始移动" + (respawnTarget == null));
+        
         while (effectElapsedTime < effectDuration)
         {
             // 在效果保持阶段立即移动玩家到 respawnTarget
-            if (!hasMovedPlayer && respawnTarget != null)
-            {
-                playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
-                //Debug.Log("移动完成");
-                // 恢复材质（如果有设置）
-                if (playerSpriteRenderer != null)
-                {
-                    if (originalMaterial2 != null)
-                    {
-                        playerSpriteRenderer.material = originalMaterial2;
-                    }
-                    else if (originalMaterial != null)
-                    {
-                        playerSpriteRenderer.material = originalMaterial;
-                    }
-                }
-
+            if (!hasMovedPlayer && respawnTarget != null) {
+                ResetMat();
+                
                 hasMovedPlayer = true;
             }
-
+        
             effectElapsedTime += Time.deltaTime;
             yield return null;
         }
+        
         UnfreezePlayer();
 
         #region recover
@@ -865,7 +858,7 @@ Debug.Log("开始恢复参数");
         #endregion
 
         
-        yield return new WaitForSeconds(FLASHdelay);
+        // yield return new WaitForSeconds(FLASHdelay);
         controlEffects.jitterIntensity = 0f;
         controlEffects.jitterFrequency = 0f;
         controlEffects.scanLineThickness = 0f;
@@ -881,5 +874,31 @@ Debug.Log("开始恢复参数");
         yield return new WaitForEndOfFrame();
 
         isEffectActive = false;
+    }
+
+    public void ResetPosAndMat(){
+        //立即移动玩家
+        // playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+        Debug.Log("我是在这移动回出生点以及恢复材质的");
+        // 恢复材质（如果有设置）
+        if (playerSpriteRenderer != null) {
+            if (originalMaterial2 != null) {
+                playerSpriteRenderer.material = originalMaterial2;
+            }
+            else if (originalMaterial != null) {
+                playerSpriteRenderer.material = originalMaterial;
+            }
+        }
+    }
+
+    public void ResetMat(){
+        if (playerSpriteRenderer != null) {
+            if (originalMaterial2 != null) {
+                playerSpriteRenderer.material = originalMaterial2;
+            }
+            else if (originalMaterial != null) {
+                playerSpriteRenderer.material = originalMaterial;
+            }
+        }
     }
 }

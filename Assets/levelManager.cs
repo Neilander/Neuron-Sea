@@ -899,8 +899,10 @@ public class levelManager : MonoBehaviour
         if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove)) {
             isRestarting = true;
             GridManager.Instance.RenewSwitch();
-            // FindObjectOfType<DeathController>().StopDeathEffect();
+            //TODO:加载场景后还能播放死亡特效
             recordRect = LoadLevel(currentLevelIndex, true);
+            // StopAllCoroutines();
+            print("111");
             isRestarting = false;
         }
     }
@@ -945,6 +947,6 @@ public class levelManager : MonoBehaviour
     public void ReloadLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(currentLevelIndex, false);
+        recordRect = LoadLevel(currentLevelIndex, true);
     }
 }
