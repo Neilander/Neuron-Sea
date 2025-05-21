@@ -88,7 +88,12 @@ public class ProcessLevelLoader : MonoBehaviour
             if (loadingFillImage != null)
                 loadingFillImage.fillAmount = displayProgress;
 
-            if (Input.GetMouseButtonDown(0) && describeStrings.Length > 0) {
+            if ((!op.allowSceneActivation)&&Input.GetMouseButtonDown(0) && describeStrings.Length > 0) {
+                if (describeStrings.Length == 1) {
+                    // 只有一个元素，就直接用它
+                    describeTMP.text = describeStrings[0];
+                }
+                else {
                     int currentIndex = System.Array.IndexOf(describeStrings, describeTMP.text);
                     int newIndex = currentIndex;
             
@@ -97,6 +102,7 @@ public class ProcessLevelLoader : MonoBehaviour
                     }
             
                     describeTMP.text = describeStrings[newIndex];
+                }
             }
             
             if (!isLoadingComplete && fakeProgress >= 1f && op.progress >= 0.9f) {
