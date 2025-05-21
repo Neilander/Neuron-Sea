@@ -68,6 +68,8 @@ public class DeathController : MonoBehaviour
     private Animator playerAnimator; // 玩家动画器引用
     private Rigidbody2D playerRigidbody; // 玩家刚体引用
 
+    private Coroutine deathSequence;
+
     [System.Serializable]
     public class EffectParameters
     {
@@ -221,6 +223,10 @@ public class DeathController : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.I))
+            SkipHandleDeath();
+#endif
         // 持续检查和更新玩家引用
         if (playerController == null)
         {
@@ -320,13 +326,118 @@ public class DeathController : MonoBehaviour
 
                 // 开始死亡序列
                 StartCoroutine(DeathSequence());
-                StartCoroutine(ScreenDissolve());
+                //StartCoroutine(ScreenDissolve());
             }
             else
             {
                 // Debug.LogError("玩家对象缺少必要的组件！请确保玩家有SpriteRenderer组件。");
             }
         }
+    }
+
+    public void SkipHandleDeath()
+    {
+        if (deathSequence != null)
+            StopCoroutine(deathSequence);
+        else
+            return;
+        if (playerSpriteRenderer != null && deathEffectMaterial != null)
+        {
+            playerSpriteRenderer.material.SetFloat("_GlitchFade", 1f);
+            // Debug.Log("GlitchFade 达到最大值: 1");
+        }
+        levelManager.instance.ReloadLevel();
+        playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+        //Debug.Log("移动完成");
+        // 恢复材质（如果有设置）
+        if (playerSpriteRenderer != null)
+        {
+            if (originalMaterial2 != null)
+            {
+                playerSpriteRenderer.material = originalMaterial2;
+            }
+            else if (originalMaterial != null)
+            {
+                playerSpriteRenderer.material = originalMaterial;
+            }
+        }
+
+        //unfreeze
+        playerController = FindObjectOfType<PlayerController>();
+
+        if (playerController != null)
+        {
+            GameObject playerObject = playerController.gameObject;
+            playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
+            playerAnimator = playerObject.GetComponent<Animator>();
+            //Debug.Log($"解冻序列: 已获取玩家组件 - 位置: {playerObject.transform.position}");
+
+            // 为玩家添加碰撞监听组件
+            CollisionListener collisionListener = playerObject.GetComponent<CollisionListener>();
+            if (collisionListener == null)
+            {
+                collisionListener = playerObject.AddComponent<CollisionListener>();
+                // Debug.Log("为玩家添加了碰撞监听组件");
+            }
+
+            // 获取所有碰撞体并启用
+            Collider2D[] colliders = playerObject.GetComponents<Collider2D>();
+            foreach (Collider2D col in colliders)
+            {
+                col.enabled = true;
+                col.isTrigger = false; // 恢复为非触发器模式
+                // Debug.Log($"启用玩家碰撞体: {col.GetType().Name}, 触发器状态: {col.isTrigger}");
+            }
+
+            // 检查玩家是否有BoxCollider2D
+            BoxCollider2D boxCollider = playerObject.GetComponent<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                boxCollider.enabled = true;
+                boxCollider.isTrigger = false;
+                // Debug.Log($"确认BoxCollider2D已启用，大小: {boxCollider.size}, 偏移: {boxCollider.offset}, 触发器状态: {boxCollider.isTrigger}");
+            }
+
+            // Debug.Log($"在解冻序列中重新获取了玩家引用，位置: {playerObject.transform.position}");
+        }
+
+        playerRigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = true;
+            // 检查跳跃相关的动画参数
+            try
+            {
+                playerAnimator.GetParameter(0); // 尝试获取任意参数来判断是否有参数
+                //Debug.Log("解冻序列: 动画器已启用，准备接收跳跃动画");
+            }
+            catch (System.Exception)
+            {
+                //Debug.LogWarning("解冻序列: 动画器参数获取失败");
+            }
+
+            //Debug.Log("已恢复玩家动画");
+        }
+
+        // 最后恢复玩家移动和输入控制，同时解锁位置
+        if (playerController != null)
+        {
+            // 获取玩家的地面状态，确保跳跃检测正常
+            bool isGrounded = playerController.IsGrounded();
+            //Debug.Log($"解冻序列: 玩家地面状态检查 - isGrounded: {isGrounded}");
+
+            playerController.EnableMovement();
+            //Debug.Log("已恢复玩家移动和输入控制，并解锁位置");
+
+            // 测试是否可以接收跳跃输入
+            //Debug.Log("解冻序列: 玩家现在应该可以跳跃了，请尝试按空格键");
+
+
+        }
+        //开启input
+
+        //复原为原本材质
     }
 
     // 备份原始值
@@ -572,7 +683,9 @@ public class DeathController : MonoBehaviour
     private IEnumerator DeathSequence()
     {
         // 应用死亡效果
-        yield return StartCoroutine(ApplyDeathEffectWithTransition());
+        deathSequence = StartCoroutine(ApplyDeathEffectWithTransition());
+
+        yield return deathSequence;
 
 
 
@@ -586,6 +699,8 @@ public class DeathController : MonoBehaviour
         // 先启用ScanLineJitterFeature特性
         controlEffects.EnableScanLineJitterFeature();
         // 设置所有开关
+
+        /*
         controlEffects.enableScanLineJitter = true;
         controlEffects.enableColorShift = true;
         controlEffects.enableNoise = true;
@@ -608,6 +723,7 @@ public class DeathController : MonoBehaviour
 
         // glitchProbability直接恢复为原始值，不进行平滑过渡
         controlEffects.glitchProbability = 0.01f;
+        */
         // 第一步：改变材质和开始颜色校正
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
@@ -627,10 +743,11 @@ public class DeathController : MonoBehaviour
         float elapsedTime = 0;
         float initialColorCorrection = controlEffects.colorCorrection;
         float initialSaturation = controlEffects.saturation;
-
+        
         // 同时变化颜色校正、饱和度和GlitchFade
         while (elapsedTime < colorCorrectionPreDelay)
         {
+            /*
             float t = elapsedTime / colorCorrectionPreDelay;
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
@@ -650,13 +767,16 @@ public class DeathController : MonoBehaviour
 
             // glitchProbability直接恢复为原始值，不进行平滑过渡
             controlEffects.glitchProbability = 0.01f;
+            */
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         // 确保颜色校正和饱和度达到目标值，GlitchFade达到1
+        /*
         controlEffects.colorCorrection = targetValues.colorCorrection;
         controlEffects.saturation = targetValues.saturation;
+        */
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
             playerSpriteRenderer.material.SetFloat("_GlitchFade", 1f);
@@ -671,6 +791,7 @@ public class DeathController : MonoBehaviour
         // 记录当前参数(目标效果值)
         EffectParameters endValues = new EffectParameters();
 
+        /*
         controlEffects.jitterIntensity = 0.3f;
         controlEffects.jitterFrequency = 55f;
         controlEffects.scanLineThickness = 1.1f;
@@ -695,12 +816,14 @@ public class DeathController : MonoBehaviour
         endValues.redOffset = controlEffects.redOffset;
         endValues.greenOffset = controlEffects.greenOffset;
         endValues.blueOffset = controlEffects.blueOffset;
-
+        */
         bool hasMovedPlayer = false; // 标记是否已经移动了玩家
 
         // 开始其他效果的过渡
+        
         while (elapsedTime < effectTransitionDuration)
         {
+            /*
             float t = elapsedTime / effectTransitionDuration; // 归一化时间，从0到1
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
@@ -730,7 +853,7 @@ public class DeathController : MonoBehaviour
             controlEffects.redOffset = Mathf.Lerp(endValues.redOffset, targetValues.redOffset, smoothT);
             controlEffects.greenOffset = Mathf.Lerp(endValues.greenOffset, targetValues.greenOffset, smoothT);
             controlEffects.blueOffset = Mathf.Lerp(endValues.blueOffset, targetValues.blueOffset, smoothT);
-
+            */
             elapsedTime += Time.deltaTime;
             yield return null;
         }
