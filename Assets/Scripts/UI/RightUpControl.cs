@@ -16,6 +16,7 @@ public class RightUpControl : MonoBehaviour
     void Update()
     {
         bool current = !ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove);
+        print("现在应该显示"+current);
         if (current != previousState)
         {
             SetAllChildrenActive(current);

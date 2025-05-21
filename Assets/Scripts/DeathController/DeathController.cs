@@ -256,9 +256,11 @@ public class DeathController : MonoBehaviour
         Texture2D screenShot = ScreenCapture.CaptureScreenshotAsTexture();
         screenDissolve.SetTexture("_Capture", screenShot);
         screenDissolve.SetFloat("_KaiShiShiJian", Time.unscaledTime);
+        
+        
     }
 
-
+    
     public void HandleDeath(GameObject obj)
     {
         AudioManager.Instance.Play(SFXClip.PlayerDeath,gameObject.name);
@@ -288,6 +290,7 @@ public class DeathController : MonoBehaviour
 
                 // 这里保存原始材质
                 originalMaterial = playerSpriteRenderer.material;
+                // ActivityGateCenter.EnterState(ActivityState.Death);
                 // 完全冻结玩家
                 FreezePlayer();
 
@@ -753,7 +756,12 @@ public class DeathController : MonoBehaviour
         float effectElapsedTime = 0;
         hasMovedPlayer = false;
         //重新加载场景上的物体
+        // print("死亡回复了吗"+ActivityGateCenter.IsStateActive(ActivityState.Death));
+        // ActivityGateCenter.ExitState(ActivityState.Death);
+        // print("死亡回复了吗"+ActivityGateCenter.IsStateActive(ActivityState.Death));
         levelManager.instance.ReloadLevel();
+        ActivityGateCenter.EnterState(ActivityState.Story);
+
         Debug.Log("应该开始移动" + (respawnTarget == null));
         
         while (effectElapsedTime < effectDuration)
@@ -770,6 +778,7 @@ public class DeathController : MonoBehaviour
         }
         
         UnfreezePlayer();
+        
 
         #region recover
 Debug.Log("开始恢复参数");
