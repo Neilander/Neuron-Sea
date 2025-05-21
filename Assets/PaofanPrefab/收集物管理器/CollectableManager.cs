@@ -12,7 +12,8 @@ public class CollectableManager : MonoBehaviour
 
     public HashSet<int> collectedLevels = new HashSet<int>();
     public HashSet<int> collectedViewedLevels = new HashSet<int>();
-
+    //分出一个专门处理剧情的表
+    public int storyCollected = 0;
     private const string CollectedKey = "CollectedLevels";
     private const string CollectedViewedKey = "CollectViewedLevels";
 
@@ -46,6 +47,7 @@ public class CollectableManager : MonoBehaviour
         if (!collectedLevels.Contains(levelName)) {
             totalCollected++;
             collectedLevels.Add(levelName);
+            storyCollected=collectedLevels.Count%12;
             Debug.Log($"Collected in {levelName}. Total: {totalCollected}");
             SaveCollectedLevels();
             LoadCollectedLevels();
@@ -77,9 +79,9 @@ public class CollectableManager : MonoBehaviour
     public int GetTotalCollected(){
         return totalCollected;
     }
-    //仅用于剧情计数,仅清空内存数据
-    public void ResetLevelData(){
-        collectedLevels.Clear();
+    //仅用于剧情计数
+    public void ResetStoryCollectData(){
+        storyCollected = 0;
     }
 
     public bool HasCollectedLevel(int levelIndex)

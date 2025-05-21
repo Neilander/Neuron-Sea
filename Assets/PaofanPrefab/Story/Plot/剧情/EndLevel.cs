@@ -34,7 +34,7 @@ public class EndLevel : MonoBehaviour
         }
 
         // 确保完全黑了之后再切换场景
-        CollectableManager.Instance.ResetLevelData();
+        CollectableManager.Instance.ResetStoryCollectData();
         if (ProcessLevelLoader.instance != null)
             ProcessLevelLoader.instance.LoadSceneWithTransition(sceneName);
         else
