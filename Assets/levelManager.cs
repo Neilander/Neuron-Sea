@@ -405,6 +405,7 @@ public class levelManager : MonoBehaviour
         {
             AudioManager.Instance.Play(SFXClip.EnterLevel,gameObject.name);
         }
+        if(GridManager.Instance!=null)GridManager.Instance.RenewSwitch();
         PlayerController player = FindAnyObjectByType<PlayerController>();
         if(player!=null)
             player.PrepareForTransport();
