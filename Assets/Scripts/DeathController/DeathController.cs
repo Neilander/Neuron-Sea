@@ -285,6 +285,7 @@ public class DeathController : MonoBehaviour
             playerSpriteRenderer = playerController.GetComponent<SpriteRenderer>();
             playerAnimator = playerController.GetComponent<Animator>();
             playerRigidbody = playerController.GetComponent<Rigidbody2D>();
+            //这句是改变死亡材质的
             playerSpriteRenderer.material = deathEffectMaterial;
 
             if (playerController != null && playerSpriteRenderer != null)
@@ -303,18 +304,8 @@ public class DeathController : MonoBehaviour
                     //Debug.Log($"死亡处理: 已设置玩家刚体 - 运动学: {playerRigidbody.isKinematic}, 模拟: {playerRigidbody.simulated}, 速度: {playerRigidbody.velocity}");
                 }
 
-                // 保存原始材质
+                // 这里保存原始材质
                 originalMaterial = playerSpriteRenderer.material;
-
-                // 检查材质是否有GlitchFade属性
-                if (deathEffectMaterial != null && !deathEffectMaterial.HasProperty("_GlitchFade"))
-                {
-                    // Debug.LogError("死亡特效材质缺少_GlitchFade属性！");
-                }
-
-                // 记录玩家当前位置
-                // Debug.Log($"死亡时玩家位置: {obj.transform.position}");
-
                 // 完全冻结玩家
                 FreezePlayer();
 
