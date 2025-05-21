@@ -50,9 +50,14 @@ public class CollectableManager : MonoBehaviour
             SaveCollectedLevels();
             LoadCollectedLevels();
             // CollectableEvents.onCollectableAdded?.Invoke(levelName, totalCollected);
-            
-            if (LevelSelectManager.Instance != null)
+
+            if (LevelSelectManager.Instance != null && ConceptArtUnlockManagerNew.Instance != null)
+            {
+                ConceptArtUnlockManagerNew.Instance.UpdateArtLockStatus();
                 LevelSelectManager.Instance.RefreshButtons();
+            }
+            else
+                Debug.LogWarning("收集刷新失败");
         }
     }
 
