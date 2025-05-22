@@ -119,7 +119,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
             return; // 如果已播放过，直接返回
         }
 
-        if (CollectableManager.Instance.collectedLevels.Count == collectNum &&
+        if (CollectableManager.Instance.storyCollected == collectNum &&
             levelManager.instance.currentLevelIndex >= levelGroup &&
             levelManager.instance.currentLevelIndex <= levelGroup + 11) {
 
@@ -147,7 +147,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
             return; // 如果已播放过，直接返回
         }
 
-        if (CollectableManager.Instance.collectedLevels.Count == collectNum) {
+        if (CollectableManager.Instance.storyCollected == collectNum) {
             // 玩家头上显示一个面板
             GameObject player = GameObject.FindWithTag("Player");
             if (player != null) {

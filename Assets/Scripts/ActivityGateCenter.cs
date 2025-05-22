@@ -54,5 +54,6 @@ public enum ActivityState
     StartEffectMove,
     Story,
     Pause,
-    BulletTime
+    BulletTime,
+    // Death,
 }
