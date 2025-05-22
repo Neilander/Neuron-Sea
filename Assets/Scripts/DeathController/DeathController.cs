@@ -3,8 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-#region collision
-
 /// <summary>
 /// 用于检测和记录碰撞事件的组件
 /// </summary>
@@ -35,141 +33,133 @@ public class CollisionListener : MonoBehaviour
 //     }
 // }
 
-#endregion
-
-
 public class DeathController : MonoBehaviour
 {
-    #region parameter
-
     [SerializeField] private float FLASHdelay = 0f;
-        [Header("死亡动画设置")]
-        public Image deathImg;
-        public float cameraRotateAngle = 20f;      // 相机Z轴旋转目标角度
-        public float cameraZoomAmount = 2f;        // 相机向前移动的距离
-        public float transitionDuration = 0.5f;    // 旋转 + 拉近的时间
-        public float fadeDuration = 1.0f;
-        public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    
-        [Header("花屏效果设置")]
-        [SerializeField] private float colorCorrectionPreDelay = 0.3f; // 颜色校正先变化的时间
-        [SerializeField] private float colorCorrectionLateDelay = 0.2f; // 颜色校正先变化的时间
-        [SerializeField] private float effectTransitionDuration = 0.5f; // 过渡时间
-        [SerializeField] private float effectDuration = 1.0f; // 效果持续时间
-        [SerializeField] private float colorCorrectionRecoveryDelay = 0f; // 颜色校正和饱和度恢复前的等待时间
-        [SerializeField] private Material deathEffectMaterial; // 死亡特效材质
-    
-        [Header("重生设置")]
-        [SerializeField] private Vector3 respawnPosition = Vector3.zero; // 玩家重生位置
-        [SerializeField] private bool useCustomRespawnPosition = false; // 是否使用自定义重生位置
-        [SerializeField] public Transform respawnTarget; // 目标物体的Transform组件
-        [SerializeField] private bool useTargetPosition = false; // 是否使用目标物体的位置
-        [SerializeField] private Material originalMaterial2;
-        private PlayerController playerController;
-        private leveldata currentLevelData;
-        private float deathLineY;
-        private ControlEffects controlEffects;
-        private bool isEffectActive = false;
-        [SerializeField] private Material originalMaterial; // 保存原始材质
-        private SpriteRenderer playerSpriteRenderer; // 玩家的SpriteRenderer
-        private Animator playerAnimator; // 玩家动画器引用
-        private Rigidbody2D playerRigidbody; // 玩家刚体引用
-    
-        [System.Serializable]
-        public class EffectParameters
-        {
-            [Header("扫描线参数")]
-            public float jitterIntensity = 0f;
-            public float jitterFrequency = 0f;
-            public float scanLineThickness = 0f;
-            public float scanLineSpeed = 0f;
-    
-            [Header("颜色和噪点参数")]
-            public float colorShiftIntensity = 0f;
-            public float noiseIntensity = 0f;
-            public float glitchProbability = 0f;
-    
-            [Header("波浪效果参数")]
-            public float waveIntensity = 0f;
-            public float waveFrequency = 0f;
-            public float waveSpeed = 0f;
-    
-            [Header("黑白效果参数")]
-            public float bwEffect = 0f;
-            public float bwNoiseScale = 0f;
-            public float bwNoiseIntensity = 0f;
-            public float bwFlickerSpeed = 0f;
-    
-            [Header("颜色校正参数")]
-            public float colorCorrection = 0f;
-            public float hueShift = 0f;
-            public float saturation = 1f; // 默认值为1，避免变绿
-            public float brightness = 1f;
-            public float contrast = 1f;
-            public float redOffset = 0f;
-            public float greenOffset = 0f;
-            public float blueOffset = 0f;
-    
-            [Header("效果开关")]
-            public bool enableScanLineJitter = false;
-            public bool enableColorShift = false;
-            public bool enableNoise = false;
-            public bool enableGlitch = false;
-            public bool enableWaveEffect = false;
-            public bool enableBlackAndWhite = false;
-        }
-    
-        // 保存原始值的备份
-        private EffectParameters originalValues;
-    
-        [Header("初始效果参数")]
-        [SerializeField]
-        private EffectParameters initialValues = new EffectParameters
-        {
-            // 确保默认饱和度为1
-            saturation = 1f,
-            brightness = 1f,
-            contrast = 0f
-        };
-    
-        [Header("结束效果参数")]
-        [SerializeField]
-        private EffectParameters targetValues = new EffectParameters
-        {
-            jitterIntensity = 0.195f,
-            jitterFrequency = 64.5f,
-            scanLineThickness = 0f,
-            scanLineSpeed = 4.2f,
-            colorShiftIntensity = 0f,
-            noiseIntensity = 0.172f,
-            glitchProbability = 1f,
-            waveIntensity = 0f,
-            waveFrequency = 27f,
-            waveSpeed = 10f,
-            bwEffect = 0f,
-            bwNoiseScale = 15f,
-            bwNoiseIntensity = 0.2f,
-            bwFlickerSpeed = 8f,
-            colorCorrection = 1f,
-            hueShift = 0f,
-            saturation = 0f,
-            brightness = 1f,
-            contrast = 1f,
-            redOffset = 0f,
-            greenOffset = 0f,
-            blueOffset = 0f,
-            enableScanLineJitter = true,
-            enableColorShift = true,
-            enableNoise = true,
-            enableGlitch = true,
-            enableWaveEffect = true,
-            enableBlackAndWhite = true
-        };
+    [Header("死亡动画设置")]
+    public Image deathImg;
+    public float cameraRotateAngle = 20f;      // 相机Z轴旋转目标角度
+    public float cameraZoomAmount = 2f;        // 相机向前移动的距离
+    public float transitionDuration = 0.5f;    // 旋转 + 拉近的时间
+    public float fadeDuration = 1.0f;
+    public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    #endregion
+    [Header("花屏效果设置")]
+    [SerializeField] private float colorCorrectionPreDelay = 0.3f; // 颜色校正先变化的时间
+    [SerializeField] private float colorCorrectionLateDelay = 0.2f; // 颜色校正先变化的时间
+    [SerializeField] private float effectTransitionDuration = 0.5f; // 过渡时间
+    [SerializeField] private float effectDuration = 1.0f; // 效果持续时间
+    [SerializeField] private float colorCorrectionRecoveryDelay = 0f; // 颜色校正和饱和度恢复前的等待时间
+    [SerializeField] private Material deathEffectMaterial; // 死亡特效材质
 
-    private Coroutine deathEffectA;
-    private Coroutine deathEffectB;
+    [Header("重生设置")]
+    [SerializeField] private Vector3 respawnPosition = Vector3.zero; // 玩家重生位置
+    [SerializeField] private bool useCustomRespawnPosition = false; // 是否使用自定义重生位置
+    [SerializeField] public Transform respawnTarget; // 目标物体的Transform组件
+    [SerializeField] private bool useTargetPosition = false; // 是否使用目标物体的位置
+    [SerializeField] private Material originalMaterial2;
+    private PlayerController playerController;
+    private leveldata currentLevelData;
+    private float deathLineY;
+    private ControlEffects controlEffects;
+    private bool isEffectActive = false;
+    [SerializeField] private Material originalMaterial; // 保存原始材质
+    private SpriteRenderer playerSpriteRenderer; // 玩家的SpriteRenderer
+    private Animator playerAnimator; // 玩家动画器引用
+    private Rigidbody2D playerRigidbody; // 玩家刚体引用
+
+    private Coroutine deathSequence;
+
+    [System.Serializable]
+    public class EffectParameters
+    {
+        [Header("扫描线参数")]
+        public float jitterIntensity = 0f;
+        public float jitterFrequency = 0f;
+        public float scanLineThickness = 0f;
+        public float scanLineSpeed = 0f;
+
+        [Header("颜色和噪点参数")]
+        public float colorShiftIntensity = 0f;
+        public float noiseIntensity = 0f;
+        public float glitchProbability = 0f;
+
+        [Header("波浪效果参数")]
+        public float waveIntensity = 0f;
+        public float waveFrequency = 0f;
+        public float waveSpeed = 0f;
+
+        [Header("黑白效果参数")]
+        public float bwEffect = 0f;
+        public float bwNoiseScale = 0f;
+        public float bwNoiseIntensity = 0f;
+        public float bwFlickerSpeed = 0f;
+
+        [Header("颜色校正参数")]
+        public float colorCorrection = 0f;
+        public float hueShift = 0f;
+        public float saturation = 1f; // 默认值为1，避免变绿
+        public float brightness = 1f;
+        public float contrast = 1f;
+        public float redOffset = 0f;
+        public float greenOffset = 0f;
+        public float blueOffset = 0f;
+
+        [Header("效果开关")]
+        public bool enableScanLineJitter = false;
+        public bool enableColorShift = false;
+        public bool enableNoise = false;
+        public bool enableGlitch = false;
+        public bool enableWaveEffect = false;
+        public bool enableBlackAndWhite = false;
+    }
+
+    // 保存原始值的备份
+    private EffectParameters originalValues;
+
+    [Header("初始效果参数")]
+    [SerializeField]
+    private EffectParameters initialValues = new EffectParameters
+    {
+        // 确保默认饱和度为1
+        saturation = 1f,
+        brightness = 1f,
+        contrast = 0f
+    };
+
+    [Header("结束效果参数")]
+    [SerializeField]
+    private EffectParameters targetValues = new EffectParameters
+    {
+        jitterIntensity = 0.195f,
+        jitterFrequency = 64.5f,
+        scanLineThickness = 0f,
+        scanLineSpeed = 4.2f,
+        colorShiftIntensity = 0f,
+        noiseIntensity = 0.172f,
+        glitchProbability = 1f,
+        waveIntensity = 0f,
+        waveFrequency = 27f,
+        waveSpeed = 10f,
+        bwEffect = 0f,
+        bwNoiseScale = 15f,
+        bwNoiseIntensity = 0.2f,
+        bwFlickerSpeed = 8f,
+        colorCorrection = 1f,
+        hueShift = 0f,
+        saturation = 0f,
+        brightness = 1f,
+        contrast = 1f,
+        redOffset = 0f,
+        greenOffset = 0f,
+        blueOffset = 0f,
+        enableScanLineJitter = true,
+        enableColorShift = true,
+        enableNoise = true,
+        enableGlitch = true,
+        enableWaveEffect = true,
+        enableBlackAndWhite = true
+    };
 
     public Material screenDissolve;
 
@@ -233,6 +223,10 @@ public class DeathController : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.I))
+            SkipHandleDeath();
+#endif
         // 持续检查和更新玩家引用
         if (playerController == null)
         {
@@ -246,7 +240,33 @@ public class DeathController : MonoBehaviour
                 // Debug.Log("已在Update中重新获取玩家引用");
             }
         }
-        
+
+        // // 每5秒输出一次玩家状态和位置，用于调试
+        // if (playerController != null && Time.frameCount % 300 == 0)
+        // {
+        //     // 获取和打印碰撞体信息
+        //     Collider2D[] colliders = playerController.GetComponents<Collider2D>();
+        //     string colliderInfo = "";
+        //     foreach (Collider2D col in colliders)
+        //     {
+        //         colliderInfo += $"{col.GetType().Name}(启用:{col.enabled},触发器:{col.isTrigger}) ";
+        //     }
+
+        //     // 获取和打印刚体信息
+        //     string rbInfo = playerRigidbody != null ?
+        //         $"刚体:(运动学:{playerRigidbody.isKinematic},模拟:{playerRigidbody.simulated},速度:{playerRigidbody.velocity})" :
+        //         "无刚体";
+
+        //     // Debug.Log($"[状态检查] 玩家位置:{playerController.transform.position}, {colliderInfo}, {rbInfo}");
+        // }
+
+
+        // 检测玩家是否低于死亡线
+        if (playerController != null && playerController.transform.position.y < deathLineY)
+        {
+            // Debug.Log($"检测到玩家({playerController.name})低于死亡线! 当前位置Y: {playerController.transform.position.y}, 死亡线Y: {deathLineY}");
+            //HandleDeath(playerController.gameObject);
+        }
 
     }
 
@@ -256,11 +276,9 @@ public class DeathController : MonoBehaviour
         Texture2D screenShot = ScreenCapture.CaptureScreenshotAsTexture();
         screenDissolve.SetTexture("_Capture", screenShot);
         screenDissolve.SetFloat("_KaiShiShiJian", Time.unscaledTime);
-        
-        
     }
 
-    
+
     public void HandleDeath(GameObject obj)
     {
         AudioManager.Instance.Play(SFXClip.PlayerDeath,gameObject.name);
@@ -273,7 +291,6 @@ public class DeathController : MonoBehaviour
             playerSpriteRenderer = playerController.GetComponent<SpriteRenderer>();
             playerAnimator = playerController.GetComponent<Animator>();
             playerRigidbody = playerController.GetComponent<Rigidbody2D>();
-            //这句是改变死亡材质的
             playerSpriteRenderer.material = deathEffectMaterial;
 
             if (playerController != null && playerSpriteRenderer != null)
@@ -286,17 +303,30 @@ public class DeathController : MonoBehaviour
                 if (playerRigidbody != null)
                 {
                     playerController.Speed = Vector2.zero;
+                    //playerRigidbody.isKinematic = true;
+                    // 保持碰撞体检测，但防止物理响应
+                    //playerRigidbody.simulated = true;  // 仍然模拟碰撞
+                    //Debug.Log($"死亡处理: 已设置玩家刚体 - 运动学: {playerRigidbody.isKinematic}, 模拟: {playerRigidbody.simulated}, 速度: {playerRigidbody.velocity}");
                 }
 
-                // 这里保存原始材质
+                // 保存原始材质
                 originalMaterial = playerSpriteRenderer.material;
-                // ActivityGateCenter.EnterState(ActivityState.Death);
+
+                // 检查材质是否有GlitchFade属性
+                if (deathEffectMaterial != null && !deathEffectMaterial.HasProperty("_GlitchFade"))
+                {
+                    // Debug.LogError("死亡特效材质缺少_GlitchFade属性！");
+                }
+
+                // 记录玩家当前位置
+                // Debug.Log($"死亡时玩家位置: {obj.transform.position}");
+
                 // 完全冻结玩家
                 FreezePlayer();
 
                 // 开始死亡序列
-                deathEffectA=StartCoroutine(DeathSequence());
-                deathEffectB=StartCoroutine(ScreenDissolve());
+                StartCoroutine(DeathSequence());
+                //StartCoroutine(ScreenDissolve());
             }
             else
             {
@@ -305,67 +335,151 @@ public class DeathController : MonoBehaviour
         }
     }
 
-    public void StopDeathEffect(){
-        // 如果有正在进行的死亡特效协程，立即停止
-        if (deathEffectA != null) {
-            StopCoroutine(deathEffectA);
-            deathEffectA = null;
-            
-    
-            // 解冻玩家
-            UnfreezePlayer();
+    public void SkipHandleDeath()
+    {
+        if (deathSequence != null)
+            StopCoroutine(deathSequence);
+        else
+            return;
+        if (playerSpriteRenderer != null && deathEffectMaterial != null)
+        {
+            playerSpriteRenderer.material.SetFloat("_GlitchFade", 1f);
+            // Debug.Log("GlitchFade 达到最大值: 1");
         }
-        if (deathEffectB != null) {
-            StopCoroutine(deathEffectB);
-            deathEffectB = null;
+        levelManager.instance.ReloadLevel();
+        playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+        //Debug.Log("移动完成");
+        // 恢复材质（如果有设置）
+        if (playerSpriteRenderer != null)
+        {
+            if (originalMaterial2 != null)
+            {
+                playerSpriteRenderer.material = originalMaterial2;
+            }
+            else if (originalMaterial != null)
+            {
+                playerSpriteRenderer.material = originalMaterial;
+            }
         }
+
+        //unfreeze
+        playerController = FindObjectOfType<PlayerController>();
+
+        if (playerController != null)
+        {
+            GameObject playerObject = playerController.gameObject;
+            playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
+            playerAnimator = playerObject.GetComponent<Animator>();
+            //Debug.Log($"解冻序列: 已获取玩家组件 - 位置: {playerObject.transform.position}");
+
+            // 为玩家添加碰撞监听组件
+            CollisionListener collisionListener = playerObject.GetComponent<CollisionListener>();
+            if (collisionListener == null)
+            {
+                collisionListener = playerObject.AddComponent<CollisionListener>();
+                // Debug.Log("为玩家添加了碰撞监听组件");
+            }
+
+            // 获取所有碰撞体并启用
+            Collider2D[] colliders = playerObject.GetComponents<Collider2D>();
+            foreach (Collider2D col in colliders)
+            {
+                col.enabled = true;
+                col.isTrigger = false; // 恢复为非触发器模式
+                // Debug.Log($"启用玩家碰撞体: {col.GetType().Name}, 触发器状态: {col.isTrigger}");
+            }
+
+            // 检查玩家是否有BoxCollider2D
+            BoxCollider2D boxCollider = playerObject.GetComponent<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                boxCollider.enabled = true;
+                boxCollider.isTrigger = false;
+                // Debug.Log($"确认BoxCollider2D已启用，大小: {boxCollider.size}, 偏移: {boxCollider.offset}, 触发器状态: {boxCollider.isTrigger}");
+            }
+
+            // Debug.Log($"在解冻序列中重新获取了玩家引用，位置: {playerObject.transform.position}");
+        }
+
+        playerRigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = true;
+            // 检查跳跃相关的动画参数
+            try
+            {
+                playerAnimator.GetParameter(0); // 尝试获取任意参数来判断是否有参数
+                //Debug.Log("解冻序列: 动画器已启用，准备接收跳跃动画");
+            }
+            catch (System.Exception)
+            {
+                //Debug.LogWarning("解冻序列: 动画器参数获取失败");
+            }
+
+            //Debug.Log("已恢复玩家动画");
+        }
+
+        // 最后恢复玩家移动和输入控制，同时解锁位置
+        if (playerController != null)
+        {
+            // 获取玩家的地面状态，确保跳跃检测正常
+            bool isGrounded = playerController.IsGrounded();
+            //Debug.Log($"解冻序列: 玩家地面状态检查 - isGrounded: {isGrounded}");
+
+            playerController.EnableMovement();
+            //Debug.Log("已恢复玩家移动和输入控制，并解锁位置");
+
+            // 测试是否可以接收跳跃输入
+            //Debug.Log("解冻序列: 玩家现在应该可以跳跃了，请尝试按空格键");
+
+
+        }
+        //开启input
+
+        //复原为原本材质
     }
 
-    #region Backup
-
     // 备份原始值
-        private void BackupOriginalValues()
-        {
-            if (controlEffects == null) return;
-    
-            originalValues.jitterIntensity = controlEffects.jitterIntensity;
-            originalValues.jitterFrequency = controlEffects.jitterFrequency;
-            originalValues.scanLineThickness = controlEffects.scanLineThickness;
-            originalValues.scanLineSpeed = controlEffects.scanLineSpeed;
-            originalValues.colorShiftIntensity = controlEffects.colorShiftIntensity;
-            originalValues.noiseIntensity = controlEffects.noiseIntensity;
-            originalValues.glitchProbability = controlEffects.glitchProbability;
-            originalValues.waveIntensity = controlEffects.waveIntensity;
-            originalValues.waveFrequency = controlEffects.waveFrequency;
-            originalValues.waveSpeed = controlEffects.waveSpeed;
-            originalValues.bwEffect = controlEffects.bwEffect;
-            originalValues.bwNoiseScale = controlEffects.bwNoiseScale;
-            originalValues.bwNoiseIntensity = controlEffects.bwNoiseIntensity;
-            originalValues.bwFlickerSpeed = controlEffects.bwFlickerSpeed;
-            originalValues.colorCorrection = controlEffects.colorCorrection;
-            originalValues.hueShift = controlEffects.hueShift;
-            originalValues.saturation = controlEffects.saturation;
-            originalValues.brightness = controlEffects.brightness;
-            originalValues.contrast = controlEffects.contrast;
-            originalValues.redOffset = controlEffects.redOffset;
-            originalValues.greenOffset = controlEffects.greenOffset;
-            originalValues.blueOffset = controlEffects.blueOffset;
-            originalValues.enableScanLineJitter = controlEffects.enableScanLineJitter;
-            originalValues.enableColorShift = controlEffects.enableColorShift;
-            originalValues.enableNoise = controlEffects.enableNoise;
-            originalValues.enableGlitch = controlEffects.enableGlitch;
-            originalValues.enableWaveEffect = controlEffects.enableWaveEffect;
-            originalValues.enableBlackAndWhite = controlEffects.enableBlackAndWhite;
-    
-            // 确保饱和度不会变成0(这会导致图像变绿)
-            if (originalValues.saturation <= 0.01f)
-                originalValues.saturation = 1.0f;
-    
-            // Debug.Log($"备份的原始饱和度值: {originalValues.saturation}");
-        }
+    private void BackupOriginalValues()
+    {
+        if (controlEffects == null) return;
 
-    #endregion
-    
+        originalValues.jitterIntensity = controlEffects.jitterIntensity;
+        originalValues.jitterFrequency = controlEffects.jitterFrequency;
+        originalValues.scanLineThickness = controlEffects.scanLineThickness;
+        originalValues.scanLineSpeed = controlEffects.scanLineSpeed;
+        originalValues.colorShiftIntensity = controlEffects.colorShiftIntensity;
+        originalValues.noiseIntensity = controlEffects.noiseIntensity;
+        originalValues.glitchProbability = controlEffects.glitchProbability;
+        originalValues.waveIntensity = controlEffects.waveIntensity;
+        originalValues.waveFrequency = controlEffects.waveFrequency;
+        originalValues.waveSpeed = controlEffects.waveSpeed;
+        originalValues.bwEffect = controlEffects.bwEffect;
+        originalValues.bwNoiseScale = controlEffects.bwNoiseScale;
+        originalValues.bwNoiseIntensity = controlEffects.bwNoiseIntensity;
+        originalValues.bwFlickerSpeed = controlEffects.bwFlickerSpeed;
+        originalValues.colorCorrection = controlEffects.colorCorrection;
+        originalValues.hueShift = controlEffects.hueShift;
+        originalValues.saturation = controlEffects.saturation;
+        originalValues.brightness = controlEffects.brightness;
+        originalValues.contrast = controlEffects.contrast;
+        originalValues.redOffset = controlEffects.redOffset;
+        originalValues.greenOffset = controlEffects.greenOffset;
+        originalValues.blueOffset = controlEffects.blueOffset;
+        originalValues.enableScanLineJitter = controlEffects.enableScanLineJitter;
+        originalValues.enableColorShift = controlEffects.enableColorShift;
+        originalValues.enableNoise = controlEffects.enableNoise;
+        originalValues.enableGlitch = controlEffects.enableGlitch;
+        originalValues.enableWaveEffect = controlEffects.enableWaveEffect;
+        originalValues.enableBlackAndWhite = controlEffects.enableBlackAndWhite;
+
+        // 确保饱和度不会变成0(这会导致图像变绿)
+        if (originalValues.saturation <= 0.01f)
+            originalValues.saturation = 1.0f;
+
+        // Debug.Log($"备份的原始饱和度值: {originalValues.saturation}");
+    }
 
     // 冻结玩家的所有移动和动画
     private void FreezePlayer()
@@ -421,7 +535,7 @@ public class DeathController : MonoBehaviour
 
         // 获取当前玩家（可能是重生后的新玩家）
         playerController = FindObjectOfType<PlayerController>();
-        
+
         if (playerController != null)
         {
             GameObject playerObject = playerController.gameObject;
@@ -526,55 +640,52 @@ public class DeathController : MonoBehaviour
 
     }
 
-    #region Apply
+    private void ApplyParameters(EffectParameters parameters)
+    {
+        if (controlEffects == null) return;
 
-     private void ApplyParameters(EffectParameters parameters)
-        {
-            if (controlEffects == null) return;
-    
-            // 设置所有参数
-            controlEffects.jitterIntensity = parameters.jitterIntensity;
-            controlEffects.jitterFrequency = parameters.jitterFrequency;
-            controlEffects.scanLineThickness = parameters.scanLineThickness;
-            controlEffects.scanLineSpeed = parameters.scanLineSpeed;
-            controlEffects.colorShiftIntensity = parameters.colorShiftIntensity;
-            controlEffects.noiseIntensity = parameters.noiseIntensity;
-            controlEffects.glitchProbability = parameters.glitchProbability;
-    
-            controlEffects.waveIntensity = parameters.waveIntensity;
-            controlEffects.waveFrequency = parameters.waveFrequency;
-            controlEffects.waveSpeed = parameters.waveSpeed;
-    
-            controlEffects.bwEffect = parameters.bwEffect;
-            controlEffects.bwNoiseScale = parameters.bwNoiseScale;
-            controlEffects.bwNoiseIntensity = parameters.bwNoiseIntensity;
-            controlEffects.bwFlickerSpeed = parameters.bwFlickerSpeed;
-    
-            controlEffects.colorCorrection = parameters.colorCorrection;
-            controlEffects.hueShift = parameters.hueShift;
-            controlEffects.saturation = parameters.saturation;
-            controlEffects.brightness = parameters.brightness;
-            controlEffects.contrast = parameters.contrast;
-            controlEffects.redOffset = parameters.redOffset;
-            controlEffects.greenOffset = parameters.greenOffset;
-            controlEffects.blueOffset = parameters.blueOffset;
-    
-            // 设置所有开关
-            controlEffects.enableScanLineJitter = parameters.enableScanLineJitter;
-            controlEffects.enableColorShift = parameters.enableColorShift;
-            controlEffects.enableNoise = parameters.enableNoise;
-            controlEffects.enableGlitch = parameters.enableGlitch;
-            controlEffects.enableWaveEffect = parameters.enableWaveEffect;
-            controlEffects.enableBlackAndWhite = parameters.enableBlackAndWhite;
-        }
+        // 设置所有参数
+        controlEffects.jitterIntensity = parameters.jitterIntensity;
+        controlEffects.jitterFrequency = parameters.jitterFrequency;
+        controlEffects.scanLineThickness = parameters.scanLineThickness;
+        controlEffects.scanLineSpeed = parameters.scanLineSpeed;
+        controlEffects.colorShiftIntensity = parameters.colorShiftIntensity;
+        controlEffects.noiseIntensity = parameters.noiseIntensity;
+        controlEffects.glitchProbability = parameters.glitchProbability;
 
-    #endregion
-   
+        controlEffects.waveIntensity = parameters.waveIntensity;
+        controlEffects.waveFrequency = parameters.waveFrequency;
+        controlEffects.waveSpeed = parameters.waveSpeed;
+
+        controlEffects.bwEffect = parameters.bwEffect;
+        controlEffects.bwNoiseScale = parameters.bwNoiseScale;
+        controlEffects.bwNoiseIntensity = parameters.bwNoiseIntensity;
+        controlEffects.bwFlickerSpeed = parameters.bwFlickerSpeed;
+
+        controlEffects.colorCorrection = parameters.colorCorrection;
+        controlEffects.hueShift = parameters.hueShift;
+        controlEffects.saturation = parameters.saturation;
+        controlEffects.brightness = parameters.brightness;
+        controlEffects.contrast = parameters.contrast;
+        controlEffects.redOffset = parameters.redOffset;
+        controlEffects.greenOffset = parameters.greenOffset;
+        controlEffects.blueOffset = parameters.blueOffset;
+
+        // 设置所有开关
+        controlEffects.enableScanLineJitter = parameters.enableScanLineJitter;
+        controlEffects.enableColorShift = parameters.enableColorShift;
+        controlEffects.enableNoise = parameters.enableNoise;
+        controlEffects.enableGlitch = parameters.enableGlitch;
+        controlEffects.enableWaveEffect = parameters.enableWaveEffect;
+        controlEffects.enableBlackAndWhite = parameters.enableBlackAndWhite;
+    }
 
     private IEnumerator DeathSequence()
     {
         // 应用死亡效果
-        yield return StartCoroutine(ApplyDeathEffectWithTransition());
+        deathSequence = StartCoroutine(ApplyDeathEffectWithTransition());
+
+        yield return deathSequence;
 
 
 
@@ -585,22 +696,23 @@ public class DeathController : MonoBehaviour
     {
         //Debug.Log("开始应用死亡特效...");
 
-        #region 没用了
-
         // 先启用ScanLineJitterFeature特性
-                controlEffects.EnableScanLineJitterFeature();
-                // 设置所有开关
-                controlEffects.enableScanLineJitter = true;
-                controlEffects.enableColorShift = true;
-                controlEffects.enableNoise = true;
-                controlEffects.enableGlitch = true;
-                controlEffects.enableWaveEffect = true;
-                controlEffects.enableBlackAndWhite = true;
-                controlEffects.jitterIntensity = 0.3f;
-                controlEffects.jitterFrequency = 55f;
-                controlEffects.scanLineThickness = 1.1f;
-                controlEffects.scanLineSpeed = 1.9f;
-// glitchProbability直接恢复为原始值，不进行平滑过渡
+        controlEffects.EnableScanLineJitterFeature();
+        // 设置所有开关
+
+        /*
+        controlEffects.enableScanLineJitter = true;
+        controlEffects.enableColorShift = true;
+        controlEffects.enableNoise = true;
+        controlEffects.enableGlitch = true;
+        controlEffects.enableWaveEffect = true;
+        controlEffects.enableBlackAndWhite = true;
+        controlEffects.jitterIntensity = 0.3f;
+        controlEffects.jitterFrequency = 55f;
+        controlEffects.scanLineThickness = 1.1f;
+        controlEffects.scanLineSpeed = 1.9f;
+
+        // glitchProbability直接恢复为原始值，不进行平滑过渡
         controlEffects.glitchProbability = 0.01f;
         // 强制立即更新一次特效参数
         controlEffects.ForceUpdateEffects();
@@ -608,20 +720,16 @@ public class DeathController : MonoBehaviour
         controlEffects.jitterFrequency = 55f;
         controlEffects.scanLineThickness = 1.1f;
         controlEffects.scanLineSpeed = 1.9f;
+
         // glitchProbability直接恢复为原始值，不进行平滑过渡
         controlEffects.glitchProbability = 0.01f;
-        #endregion
-
-
-        #region 有用
-
+        */
         // 第一步：改变材质和开始颜色校正
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
 
             // 设置初始GlitchFade值
-            playerSpriteRenderer.material.SetFloat("_GlitchFade", 0.8f);
-            Debug.Log("材质改了");
+            playerSpriteRenderer.material.SetFloat("_GlitchFade", 0f);
             // Debug.Log($"初始化 GlitchFade 值: 0");
             controlEffects.jitterIntensity = 0.3f;
             controlEffects.jitterFrequency = 55f;
@@ -632,22 +740,25 @@ public class DeathController : MonoBehaviour
             controlEffects.glitchProbability = 0.01f;
         }
 
-        #endregion
-        
-
         float elapsedTime = 0;
         float initialColorCorrection = controlEffects.colorCorrection;
         float initialSaturation = controlEffects.saturation;
-
+        
         // 同时变化颜色校正、饱和度和GlitchFade
         while (elapsedTime < colorCorrectionPreDelay)
         {
+            /*
             float t = elapsedTime / colorCorrectionPreDelay;
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
             controlEffects.colorCorrection = Mathf.Lerp(initialColorCorrection, targetValues.colorCorrection, smoothT);
             controlEffects.saturation = Mathf.Lerp(initialSaturation, targetValues.saturation, smoothT);
-            
+
+            // if (playerSpriteRenderer != null && deathEffectMaterial != null)
+            // {
+            //     float currentFade = Mathf.Lerp(0f, 1f, smoothT);
+            //     playerSpriteRenderer.material.SetFloat("_GlitchFade", currentFade);
+            // }
 
             controlEffects.jitterIntensity = 0.3f;
             controlEffects.jitterFrequency = 55f;
@@ -656,13 +767,16 @@ public class DeathController : MonoBehaviour
 
             // glitchProbability直接恢复为原始值，不进行平滑过渡
             controlEffects.glitchProbability = 0.01f;
+            */
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         // 确保颜色校正和饱和度达到目标值，GlitchFade达到1
+        /*
         controlEffects.colorCorrection = targetValues.colorCorrection;
         controlEffects.saturation = targetValues.saturation;
+        */
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
             playerSpriteRenderer.material.SetFloat("_GlitchFade", 1f);
@@ -677,6 +791,7 @@ public class DeathController : MonoBehaviour
         // 记录当前参数(目标效果值)
         EffectParameters endValues = new EffectParameters();
 
+        /*
         controlEffects.jitterIntensity = 0.3f;
         controlEffects.jitterFrequency = 55f;
         controlEffects.scanLineThickness = 1.1f;
@@ -701,15 +816,14 @@ public class DeathController : MonoBehaviour
         endValues.redOffset = controlEffects.redOffset;
         endValues.greenOffset = controlEffects.greenOffset;
         endValues.blueOffset = controlEffects.blueOffset;
-
+        */
         bool hasMovedPlayer = false; // 标记是否已经移动了玩家
 
-        #region transition
-
-        
         // 开始其他效果的过渡
+        
         while (elapsedTime < effectTransitionDuration)
         {
+            /*
             float t = elapsedTime / effectTransitionDuration; // 归一化时间，从0到1
             float smoothT = Mathf.SmoothStep(0, 1, t);
 
@@ -739,12 +853,10 @@ public class DeathController : MonoBehaviour
             controlEffects.redOffset = Mathf.Lerp(endValues.redOffset, targetValues.redOffset, smoothT);
             controlEffects.greenOffset = Mathf.Lerp(endValues.greenOffset, targetValues.greenOffset, smoothT);
             controlEffects.blueOffset = Mathf.Lerp(endValues.blueOffset, targetValues.blueOffset, smoothT);
-
+            */
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        #endregion
-        
 
 
         // 确保达到精确的目标值
@@ -755,33 +867,174 @@ public class DeathController : MonoBehaviour
         // Debug.Log($"效果将保持 {effectDuration} 秒");
         float effectElapsedTime = 0;
         hasMovedPlayer = false;
-        //重新加载场景上的物体
-        // print("死亡回复了吗"+ActivityGateCenter.IsStateActive(ActivityState.Death));
-        // ActivityGateCenter.ExitState(ActivityState.Death);
-        // print("死亡回复了吗"+ActivityGateCenter.IsStateActive(ActivityState.Death));
-        levelManager.instance.ReloadLevel();
-        ActivityGateCenter.EnterState(ActivityState.Story);
 
+        //这是之前的移动玩家逻辑
+        // 在效果保持阶段移动玩家
+        /*
+        while (effectElapsedTime < effectDuration)
+        {
+            // 在效果保持阶段的一半时间点移动玩家
+            if (!hasMovedPlayer && effectElapsedTime >= effectDuration * 0f)
+            {
+                // 根据设置决定使用哪种重生位置
+                if (useTargetPosition && respawnTarget != null)
+                {
+                    playerController.transform.position = respawnTarget.position;
+                    playerSpriteRenderer.material = originalMaterial2;
+                    // Debug.Log($"已在效果保持阶段中间时间点将玩家移动到目标物体位置：{respawnTarget.position}");
+                }
+                else if (useCustomRespawnPosition)
+                {
+                    playerController.transform.position = respawnPosition;
+                    playerSpriteRenderer.material = originalMaterial2;
+                    // Debug.Log($"已在效果保持阶段中间时间点将玩家移动到自定义重生位置：{respawnPosition}");
+                }
+                hasMovedPlayer = true;
+                // 特效恢复完成后解除玩家冻结状态
+
+
+            }
+
+            effectElapsedTime += Time.deltaTime;
+            yield return null;
+        }*/
+        levelManager.instance.ReloadLevel();
         Debug.Log("应该开始移动" + (respawnTarget == null));
-        
         while (effectElapsedTime < effectDuration)
         {
             // 在效果保持阶段立即移动玩家到 respawnTarget
-            if (!hasMovedPlayer && respawnTarget != null) {
-                ResetMat();
-                
+            if (!hasMovedPlayer && respawnTarget != null)
+            {
+                playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
+                //Debug.Log("移动完成");
+                // 恢复材质（如果有设置）
+                if (playerSpriteRenderer != null)
+                {
+                    if (originalMaterial2 != null)
+                    {
+                        playerSpriteRenderer.material = originalMaterial2;
+                    }
+                    else if (originalMaterial != null)
+                    {
+                        playerSpriteRenderer.material = originalMaterial;
+                    }
+                }
+
                 hasMovedPlayer = true;
             }
-        
+
             effectElapsedTime += Time.deltaTime;
             yield return null;
         }
-        
         UnfreezePlayer();
-        
 
-        #region recover
-Debug.Log("开始恢复参数");
+        // // 销毁当前玩家并重新创建
+        // if (playerController != null)
+        // {
+        //     // 获取玩家预制体的路径
+        //     GameObject playerPrefab = Resources.Load<GameObject>("Prefabs/Player 2");
+        //     if (playerPrefab != null)
+        //     {
+        //         // 记录当前玩家位置和状态
+        //         Vector3 playerPosition = playerController.transform.position;
+        //         Transform playerParent = playerController.transform.parent;
+        //
+        //         // 销毁当前玩家
+        //         Debug.Log("正在销毁当前玩家对象...");
+        //         Destroy(playerController.gameObject);
+        //
+        //         // 等待一帧确保玩家被销毁
+        //         yield return new WaitForEndOfFrame();
+        //
+        //         // 在相同位置实例化新玩家
+        //         GameObject newPlayer = Instantiate(playerPrefab, playerPosition, Quaternion.identity, playerParent);
+        //         Debug.Log($"已在位置 {playerPosition} 创建新玩家");
+        //
+        //         // 获取新玩家的组件引用
+        //         playerController = newPlayer.GetComponent<PlayerController>();
+        //         playerSpriteRenderer = newPlayer.GetComponent<SpriteRenderer>();
+        //         playerAnimator = newPlayer.GetComponent<Animator>();
+        //         playerRigidbody = newPlayer.GetComponent<Rigidbody2D>();
+        //
+        //         // 确保新玩家有正确的材质
+        //         if (playerSpriteRenderer != null && originalMaterial2 != null)
+        //         {
+        //             playerSpriteRenderer.material = originalMaterial2;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("无法加载玩家预制体！请确保预制体位于Resources/Prefabs/Player 2路径下");
+        //     }
+        // }
+
+        //这个或许是被丢弃的移动玩家逻辑
+        /*
+        Debug.Log("应该开始移动玩家,time是"+effectElapsedTime+"还有dur"+effectDuration);
+        // 在效果保持阶段移动玩家
+        while (effectElapsedTime < effectDuration)
+        {
+            Debug.Log("正在移动玩家");
+            // 在效果保持阶段的早期就移动玩家
+            if (!hasMovedPlayer && effectElapsedTime >= effectDuration * 0f)
+            {
+                // 尝试从levelManager获取respawnTarget
+                levelManager levelMgr = FindAnyObjectByType<levelManager>();
+                Transform targetTransform = null;
+
+                if (levelMgr != null && levelMgr.respawnTarget != null)
+                {
+                    // 优先使用levelManager的respawnTarget
+                    targetTransform = levelMgr.respawnTarget;
+                    Debug.Log($"使用levelManager的重生点: {targetTransform.position}");
+                }
+                else if (respawnTarget != null)
+                {
+                    // 如果levelManager没有重生点，使用DeathController的respawnTarget
+                    targetTransform = respawnTarget;
+                    Debug.Log($"使用DeathController的重生点: {targetTransform.position}");
+                }
+
+                if (targetTransform != null)
+                {
+                    // 传送玩家到重生点
+                    playerController.transform.position = targetTransform.position;
+                    Debug.Log($"已将玩家传送到重生点: {targetTransform.position}");
+
+                    // 重置玩家状态
+                    if (playerRigidbody != null)
+                    {
+                        playerRigidbody.velocity = Vector2.zero;
+                    }
+
+                    // 恢复材质
+                    if (playerSpriteRenderer != null)
+                    {
+                        if (originalMaterial2 != null)
+                        {
+                            playerSpriteRenderer.material = originalMaterial2;
+                            Debug.Log("已恢复玩家材质");
+                        }
+                        else if (originalMaterial != null)
+                        {
+                            playerSpriteRenderer.material = originalMaterial;
+                            Debug.Log("已恢复玩家材质");
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogError("无法找到重生点！玩家无法正确重生");
+                }
+
+                hasMovedPlayer = true;
+            }
+
+            effectElapsedTime += Time.deltaTime;
+            yield return null;
+        }*/
+
+        Debug.Log("开始恢复参数");
 
         // 先恢复除颜色校正和GlitchFade之外的所有参数
         elapsedTime = 0;
@@ -862,12 +1115,7 @@ Debug.Log("开始恢复参数");
         controlEffects.enableBlackAndWhite = originalValues.enableBlackAndWhite;
 
         Debug.Log($"恢复后的饱和度值: {controlEffects.saturation}");
-        
-
-        #endregion
-
-        
-        // yield return new WaitForSeconds(FLASHdelay);
+        yield return new WaitForSeconds(FLASHdelay);
         controlEffects.jitterIntensity = 0f;
         controlEffects.jitterFrequency = 0f;
         controlEffects.scanLineThickness = 0f;
@@ -883,31 +1131,5 @@ Debug.Log("开始恢复参数");
         yield return new WaitForEndOfFrame();
 
         isEffectActive = false;
-    }
-
-    public void ResetPosAndMat(){
-        //立即移动玩家
-        // playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
-        Debug.Log("我是在这移动回出生点以及恢复材质的");
-        // 恢复材质（如果有设置）
-        if (playerSpriteRenderer != null) {
-            if (originalMaterial2 != null) {
-                playerSpriteRenderer.material = originalMaterial2;
-            }
-            else if (originalMaterial != null) {
-                playerSpriteRenderer.material = originalMaterial;
-            }
-        }
-    }
-
-    public void ResetMat(){
-        if (playerSpriteRenderer != null) {
-            if (originalMaterial2 != null) {
-                playerSpriteRenderer.material = originalMaterial2;
-            }
-            else if (originalMaterial != null) {
-                playerSpriteRenderer.material = originalMaterial;
-            }
-        }
     }
 }
