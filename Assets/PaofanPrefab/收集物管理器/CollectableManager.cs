@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class CollectableManager : MonoBehaviour
 {
@@ -47,7 +49,7 @@ public class CollectableManager : MonoBehaviour
         if (!collectedLevels.Contains(levelName)) {
             totalCollected++;
             collectedLevels.Add(levelName);
-            storyCollected=collectedLevels.Count%12;
+            storyCollected= GetCountByRangeIndex(collectedLevels, SceneManager.GetActiveScene().buildIndex);
             Debug.Log($"Collected in {levelName}. Total: {totalCollected}");
             SaveCollectedLevels();
             LoadCollectedLevels();
@@ -63,6 +65,15 @@ public class CollectableManager : MonoBehaviour
         }
     }
 
+    static int GetCountByRangeIndex(HashSet<int> numbers, int index){
+        if (index < 1 || index > 3)
+            throw new ArgumentOutOfRangeException(nameof(index), "只能输入 1 到 3 之间的数字");
+
+        int start = (index - 1) * 12 + 1;
+        int end = index * 12;
+
+        return numbers.Count(n => n >= start && n <= end);
+    }
     public void TryAddCollectedViewed(int levelName)
     {
         if (!collectedViewedLevels.Contains(levelName))
