@@ -326,7 +326,7 @@ public class DeathController : MonoBehaviour
 
                 // 开始死亡序列
                 StartCoroutine(DeathSequence());
-                //StartCoroutine(ScreenDissolve());
+                StartCoroutine(ScreenDissolve());
             }
             else
             {
