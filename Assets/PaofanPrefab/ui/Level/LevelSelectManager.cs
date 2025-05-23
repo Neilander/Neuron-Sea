@@ -371,6 +371,7 @@ public class LevelSelectManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }*/
         GetComponentInParent<PauseMenu>()?.ForceResume();
+
         levelManager.instance.LoadLevel(levelIndex, true); // 加载场景
         if (companion == null)
             companion = FindAnyObjectByType<CompanionController>();
