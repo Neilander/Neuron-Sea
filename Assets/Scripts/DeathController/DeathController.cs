@@ -700,30 +700,7 @@ public class DeathController : MonoBehaviour
         controlEffects.EnableScanLineJitterFeature();
         // 设置所有开关
 
-        /*
-        controlEffects.enableScanLineJitter = true;
-        controlEffects.enableColorShift = true;
-        controlEffects.enableNoise = true;
-        controlEffects.enableGlitch = true;
-        controlEffects.enableWaveEffect = true;
-        controlEffects.enableBlackAndWhite = true;
-        controlEffects.jitterIntensity = 0.3f;
-        controlEffects.jitterFrequency = 55f;
-        controlEffects.scanLineThickness = 1.1f;
-        controlEffects.scanLineSpeed = 1.9f;
-
-        // glitchProbability直接恢复为原始值，不进行平滑过渡
-        controlEffects.glitchProbability = 0.01f;
-        // 强制立即更新一次特效参数
-        controlEffects.ForceUpdateEffects();
-        controlEffects.jitterIntensity = 0.3f;
-        controlEffects.jitterFrequency = 55f;
-        controlEffects.scanLineThickness = 1.1f;
-        controlEffects.scanLineSpeed = 1.9f;
-
-        // glitchProbability直接恢复为原始值，不进行平滑过渡
-        controlEffects.glitchProbability = 0.01f;
-        */
+        
         // 第一步：改变材质和开始颜色校正
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
@@ -791,69 +768,14 @@ public class DeathController : MonoBehaviour
         // 记录当前参数(目标效果值)
         EffectParameters endValues = new EffectParameters();
 
-        /*
-        controlEffects.jitterIntensity = 0.3f;
-        controlEffects.jitterFrequency = 55f;
-        controlEffects.scanLineThickness = 1.1f;
-        controlEffects.scanLineSpeed = 1.9f;
-
-        // glitchProbability直接恢复为原始值，不进行平滑过渡
-        controlEffects.glitchProbability = 0.01f;
-        endValues.colorShiftIntensity = controlEffects.colorShiftIntensity;
-        endValues.noiseIntensity = controlEffects.noiseIntensity;
-        endValues.waveIntensity = controlEffects.waveIntensity;
-        endValues.waveFrequency = controlEffects.waveFrequency;
-        endValues.waveSpeed = controlEffects.waveSpeed;
-        endValues.bwEffect = controlEffects.bwEffect;
-        endValues.bwNoiseScale = controlEffects.bwNoiseScale;
-        endValues.bwNoiseIntensity = controlEffects.bwNoiseIntensity;
-        endValues.bwFlickerSpeed = controlEffects.bwFlickerSpeed;
-        endValues.colorCorrection = controlEffects.colorCorrection;
-        endValues.hueShift = controlEffects.hueShift;
-        endValues.saturation = controlEffects.saturation;
-        endValues.brightness = controlEffects.brightness;
-        endValues.contrast = controlEffects.contrast;
-        endValues.redOffset = controlEffects.redOffset;
-        endValues.greenOffset = controlEffects.greenOffset;
-        endValues.blueOffset = controlEffects.blueOffset;
-        */
+        
         bool hasMovedPlayer = false; // 标记是否已经移动了玩家
 
         // 开始其他效果的过渡
         
         while (elapsedTime < effectTransitionDuration)
         {
-            /*
-            float t = elapsedTime / effectTransitionDuration; // 归一化时间，从0到1
-            float smoothT = Mathf.SmoothStep(0, 1, t);
-
-            controlEffects.jitterIntensity = 0.3f;
-            controlEffects.jitterFrequency = 55f;
-            controlEffects.scanLineThickness = 1.1f;
-            controlEffects.scanLineSpeed = 1.9f;
-
-            // glitchProbability直接恢复为原始值，不进行平滑过渡
-            controlEffects.glitchProbability = 0.01f;
-            controlEffects.colorShiftIntensity = Mathf.Lerp(endValues.colorShiftIntensity, targetValues.colorShiftIntensity, smoothT);
-            controlEffects.noiseIntensity = Mathf.Lerp(endValues.noiseIntensity, targetValues.noiseIntensity, smoothT);
-            // glitchProbability直接设置为目标值，不进行平滑过渡
-
-            controlEffects.waveIntensity = Mathf.Lerp(endValues.waveIntensity, targetValues.waveIntensity, smoothT);
-            controlEffects.waveFrequency = Mathf.Lerp(endValues.waveFrequency, targetValues.waveFrequency, smoothT);
-            controlEffects.waveSpeed = Mathf.Lerp(endValues.waveSpeed, targetValues.waveSpeed, smoothT);
-            controlEffects.bwEffect = Mathf.Lerp(endValues.bwEffect, targetValues.bwEffect, smoothT);
-            controlEffects.bwNoiseScale = Mathf.Lerp(endValues.bwNoiseScale, targetValues.bwNoiseScale, smoothT);
-            controlEffects.bwNoiseIntensity = Mathf.Lerp(endValues.bwNoiseIntensity, targetValues.bwNoiseIntensity, smoothT);
-            controlEffects.bwFlickerSpeed = Mathf.Lerp(endValues.bwFlickerSpeed, targetValues.bwFlickerSpeed, smoothT);
-            // 颜色校正已经设置好了，不需要再变化
-            controlEffects.hueShift = Mathf.Lerp(endValues.hueShift, targetValues.hueShift, smoothT);
-            controlEffects.saturation = Mathf.Lerp(endValues.saturation, targetValues.saturation, smoothT);
-            controlEffects.brightness = Mathf.Lerp(endValues.brightness, targetValues.brightness, smoothT);
-            controlEffects.contrast = Mathf.Lerp(endValues.contrast, targetValues.contrast, smoothT);
-            controlEffects.redOffset = Mathf.Lerp(endValues.redOffset, targetValues.redOffset, smoothT);
-            controlEffects.greenOffset = Mathf.Lerp(endValues.greenOffset, targetValues.greenOffset, smoothT);
-            controlEffects.blueOffset = Mathf.Lerp(endValues.blueOffset, targetValues.blueOffset, smoothT);
-            */
+            
             elapsedTime += Time.deltaTime;
             yield return null;
         }

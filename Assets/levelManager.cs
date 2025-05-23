@@ -947,6 +947,6 @@ public class levelManager : MonoBehaviour
     public void ReloadLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(currentLevelIndex, true);
+        recordRect = LoadLevel(currentLevelIndex, false);
     }
 }
