@@ -702,7 +702,7 @@ public class levelManager : MonoBehaviour
             SwitchLimitInUi.instance.ShutDown();
         }
 
-        GameObject.Instantiate(levelTitlePrefab);
+        Instantiate(levelTitlePrefab);
 
         return data.levelBound;
     }
