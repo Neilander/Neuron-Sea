@@ -1059,7 +1059,7 @@ public class StoryManager : MonoBehaviour
         tempStoryData.storyName = System.IO.Path.GetFileNameWithoutExtension(resourcePath);
 
         // 尝试加载同目录下的角色配置文件
-        string characterCsvPath = resourcePath + "_characters";
+        string characterCsvPath = "StoryData/CSV/Dialogue/Characters";
         TextAsset characterCsvAsset = Resources.Load<TextAsset>(characterCsvPath);
 
         // 创建临时文件保存CSV内容
@@ -1090,7 +1090,7 @@ public class StoryManager : MonoBehaviour
             {
                 // 否则尝试自动加载角色配置
                 Debug.Log($"未找到角色配置文件，尝试自动加载角色立绘...");
-                StoryManagerExtension.LoadCharacterConfigurations(tempStoryData);
+                // StoryManagerExtension.LoadCharacterConfigurations(tempStoryData);
             }
 
             // 如果当前在剧情模式，先退出
