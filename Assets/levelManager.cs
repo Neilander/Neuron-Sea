@@ -703,7 +703,7 @@ public class levelManager : MonoBehaviour
         }
 
         Instantiate(levelTitlePrefab);
-
+        FindAnyObjectByType<CompanionController>().DirectTo();
         return data.levelBound;
     }
 
@@ -901,6 +901,7 @@ public class levelManager : MonoBehaviour
             GridManager.Instance.RenewSwitch();
             //TODO:加载场景后还能播放死亡特效
             recordRect = LoadLevel(currentLevelIndex, true);
+            if (companion != null) companion.DirectTo();
             // StopAllCoroutines();
             print("111");
             isRestarting = false;
