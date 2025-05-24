@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -122,18 +123,19 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         if (CollectableManager.Instance.storyCollected == collectNum &&
             levelManager.instance.currentLevelIndex >= levelGroup &&
             levelManager.instance.currentLevelIndex <= levelGroup + 11) {
-
-            // 玩家头上显示一个面板
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null) {
-                Head dialogue = player.GetComponentInChildren<Head>();
-                if (dialogue != null) {
-                    dialogue.ShowDialogue(wordToDisplay);
-
-                    // 标记此对话已播放
-                    StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
-                }
-            }
+            InstantiatePrefab("Prefabs/collectPanel");
+            StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
+            // // 玩家头上显示一个面板
+            // GameObject player = GameObject.FindWithTag("Player");
+            // if (player != null) {
+            //     Head dialogue = player.GetComponentInChildren<Head>();
+            //     if (dialogue != null) {
+            //         dialogue.ShowDialogue(wordToDisplay);
+            //
+            //         // 标记此对话已播放
+            //         StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
+            //     }
+            // }
         }
     }
     
@@ -146,20 +148,43 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         if (StoryGlobalLoadManager.instance.IsTriggerDisabled(dialogueId)) {
             return; // 如果已播放过，直接返回
         }
+        InstantiatePrefab("Prefabs/collectPanel", (collectablePanel) =>
+        {
+            CollectText ct = collectablePanel.AddComponent<CollectText>();
+            ct._rectTransform = collectablePanel.GetComponentInChildren<RectTransform>(false);
+            ct.collectText=collectablePanel.GetComponentInChildren<TextMeshProUGUI>(true);
+            ct.collectText.text = wordToDisplay;
+        });
+        StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
+        // if (CollectableManager.Instance.storyCollected == collectNum) {
+        //     // 玩家头上显示一个面板
+        //     GameObject player = GameObject.FindWithTag("Player");
+        //     if (player != null) {
+        //         Head dialogue = player.GetComponentInChildren<Head>();
+        //         if (dialogue != null) {
+        //             dialogue.ShowDialogue(wordToDisplay);
+        //
+        //             // 标记此对话已播放
+        //             StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
+        //         }
+        //     }
+        // }
+    }
 
-        if (CollectableManager.Instance.storyCollected == collectNum) {
-            // 玩家头上显示一个面板
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null) {
-                Head dialogue = player.GetComponentInChildren<Head>();
-                if (dialogue != null) {
-                    dialogue.ShowDialogue(wordToDisplay);
+    public GameObject InstantiatePrefab(string path, Action<GameObject> setupAction = null){
+        // 从 Resources 文件夹加载
+        GameObject prefab = Resources.Load<GameObject>(path);
+        if (prefab != null) {
+            // 实例化预制体
+            GameObject instance = Instantiate(prefab);
 
-                    // 标记此对话已播放
-                    StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
-                }
-            }
+            // 使用委托进行自定义设置
+            setupAction?.Invoke(instance);
+
+            return instance;
         }
+        Debug.LogError($"未找到预制体: {path}");
+        return null;
     }
     IEnumerator FloatCoroutine()
     {

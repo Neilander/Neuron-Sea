@@ -55,7 +55,8 @@ public class DialogueData
     [TextArea(3, 10)]
     public string text; // 对话内容
 
-    [Header("肖像设置")]
+    [Header("肖像设置")] 
+    public string PortPos;
     public Sprite portrait; // 立绘图像
     public Sprite avatar; // 头像图像
     public PortraitPosition portraitPosition = PortraitPosition.Left; // 立绘位置
@@ -275,6 +276,7 @@ public class StoryData : ScriptableObject
                         Sprite portraitSprite = Resources.Load<Sprite>(portraitPath);
                         if (portraitSprite != null)
                         {
+                            dialogueData.PortPos = portraitPath;
                             dialogueData.portrait = portraitSprite;
                         }
                         else

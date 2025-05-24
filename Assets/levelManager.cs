@@ -702,8 +702,8 @@ public class levelManager : MonoBehaviour
             SwitchLimitInUi.instance.ShutDown();
         }
 
-        GameObject.Instantiate(levelTitlePrefab);
-
+        Instantiate(levelTitlePrefab);
+        FindAnyObjectByType<CompanionController>().DirectTo();
         return data.levelBound;
     }
 
@@ -901,6 +901,7 @@ public class levelManager : MonoBehaviour
             GridManager.Instance.RenewSwitch();
             //TODO:加载场景后还能播放死亡特效
             recordRect = LoadLevel(currentLevelIndex, true);
+            if (companion != null) companion.DirectTo();
             // StopAllCoroutines();
             print("111");
             isRestarting = false;
@@ -947,6 +948,6 @@ public class levelManager : MonoBehaviour
     public void ReloadLevel()
     {
         GridManager.Instance.RenewSwitch();
-        recordRect = LoadLevel(currentLevelIndex, true);
+        recordRect = LoadLevel(currentLevelIndex, false);
     }
 }
