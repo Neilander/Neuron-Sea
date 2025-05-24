@@ -786,7 +786,15 @@ public class GridManager : MonoBehaviour
             if (switchInfoRecorder.hasFirst)
                 switchInfoRecorder.obj1.SetLockedToSwitch(true, true, false, Vector3.zero);
             if (switchInfoRecorder.hasSecond)
+            {
                 switchInfoRecorder.obj2.SetLockedToSwitch(true, true, false, Vector3.zero);
+                SwitchableObj secondObj = switchInfoRecorder.obj2;
+                switchInfoRecorder.Take(secondObj);
+                SwitchableObj p1;
+                SwitchableObj p2;
+                switchInfoRecorder.Record(secondObj, out p1, out p2);
+            }
+                
         }
     }
 
