@@ -123,7 +123,13 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         if (CollectableManager.Instance.storyCollected == collectNum &&
             levelManager.instance.currentLevelIndex >= levelGroup &&
             levelManager.instance.currentLevelIndex <= levelGroup + 11) {
-            InstantiatePrefab("Prefabs/collectPanel");
+            InstantiatePrefab("Prefabs/collectPanel", (collectablePanel) =>
+            {
+                CollectText ct = collectablePanel.AddComponent<CollectText>();
+                ct._rectTransform = collectablePanel.transform.GetChild(0).GetComponent<RectTransform>();
+                ct.collectText = collectablePanel.GetComponentInChildren<TextMeshProUGUI>(true);
+                ct.collectText.text = wordToDisplay;
+            });
             StoryGlobalLoadManager.instance.DisableTrigger(dialogueId);
             // // 玩家头上显示一个面板
             // GameObject player = GameObject.FindWithTag("Player");
@@ -151,7 +157,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         InstantiatePrefab("Prefabs/collectPanel", (collectablePanel) =>
         {
             CollectText ct = collectablePanel.AddComponent<CollectText>();
-            ct._rectTransform = collectablePanel.GetComponentInChildren<RectTransform>(false);
+            ct._rectTransform = collectablePanel.transform.GetChild(0).GetComponent<RectTransform>();
             ct.collectText=collectablePanel.GetComponentInChildren<TextMeshProUGUI>(true);
             ct.collectText.text = wordToDisplay;
         });
