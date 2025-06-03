@@ -278,6 +278,11 @@ public class DeathController : MonoBehaviour
         screenDissolve.SetFloat("_KaiShiShiJian", Time.unscaledTime);
     }
 
+    public void EndScreenDissolve()
+    {
+        screenDissolve.SetFloat("_KaiShiShiJian", -10f);
+    }
+
 
     public void HandleDeath(GameObject obj)
     {
