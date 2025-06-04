@@ -77,6 +77,8 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     [Header("是否对交换碰撞检测使用特殊物体")]
     public bool IfUseSpecialBoxToCheckWithSwitchable = false;
 
+    private Material initialMat;
+
     public Vector3 SelfGridPos
     {
         get { return selfGridPos; }
@@ -126,6 +128,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     private void Start(){
+        
         if (IfDoSwitchBasedOnScene)
         {
             int sceneIndex = levelManager.instance.sceneIndex;
@@ -174,6 +177,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             defaultMaterial = renderer.material;
         }
 
+        initialMat = (IfSubstituePreview ? substitueRenderer : renderer).material;
         if (IfSpecialEdgeChecker)
             Debug.Log("我用特殊检查，我是"+gameObject.name);
     }
@@ -237,7 +241,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime);
         previewObj.GetComponent<SpriteRenderer>().color = Color.white;
         yield return new WaitForSecondsRealtime(r.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
-        r.material = originMaterial;
+        r.material = GridManager.Instance.IfInSelection(this)? originMaterial:initialMat;
 
         if (EffectAnimator != null)
             EffectAnimator.GetComponent<SpriteRenderer>().enabled = true;
