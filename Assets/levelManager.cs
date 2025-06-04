@@ -896,15 +896,24 @@ public class levelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove)) {
-            isRestarting = true;
-            GridManager.Instance.RenewSwitch();
-            //TODO:加载场景后还能播放死亡特效
-            recordRect = LoadLevel(currentLevelIndex, true);
-            if (companion != null) companion.DirectTo();
-            // StopAllCoroutines();
-            print("111");
-            isRestarting = false;
+        if (DeathController.Instance.IfInDeathSequence())
+        {
+            Debug.Log("死亡快速跳过");
+            DeathController.Instance.SkipHandleDeath();
+        }
+        else
+        {
+            if (!ActivityGateCenter.IsStateActiveAny(ActivityState.Story, ActivityState.StartEffectMove))
+            {
+                isRestarting = true;
+                GridManager.Instance.RenewSwitch();
+                //TODO:加载场景后还能播放死亡特效
+                recordRect = LoadLevel(currentLevelIndex, true);
+                if (companion != null) companion.DirectTo();
+                // StopAllCoroutines();
+                print("111");
+                isRestarting = false;
+            }
         }
     }
 
