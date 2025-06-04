@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\u573A\u666F2-\u524D\u666F\u51493"
-  m_Shader: {fileID: -6465566751694194690, guid: 0bcfbfc63a21c4d5eb6203fc2ad766f3,
+  m_Name: "\u573A\u666F1-\u65B0\u524D\u666F\u51491"
+  m_Shader: {fileID: -6465566751694194690, guid: 472e494c4d6f942ebb2fea68330b9192,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,23 +24,11 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BlendTex:
-        m_Texture: {fileID: 2800000, guid: b5bb2c62a9aaa437b9c74b1cf3b3e029, type: 3}
+        m_Texture: {fileID: 2800000, guid: b6facaa1d70c14d26b00aceff19541b4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -58,12 +46,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EnableExternalAlpha: 0
-    - _FlipY: 0
     - _FlipYZP: 0
-    - _Percent: 1
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Percent: 0.55
+    m_Colors: []
   m_BuildTextureStacks: []
