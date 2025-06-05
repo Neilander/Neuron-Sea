@@ -26,6 +26,8 @@ public class Portal : MonoBehaviour
     // 添加静态变量跟踪传送状态，防止无限传送循环
     private static bool isPlayerBeingTeleported = false;
 
+    private bool inSetInvoke = false;
+
     private void Start()
     {
         if (portalEffect != null)
@@ -90,6 +92,7 @@ public class Portal : MonoBehaviour
     {
         // 防止传送循环
         isPlayerBeingTeleported = true;
+        inSetInvoke = true;
 
         // 设置冷却
         isOnCooldown = true;
@@ -195,6 +198,7 @@ public class Portal : MonoBehaviour
 
     private void ResetTeleportationState()
     {
+        inSetInvoke = false;
         isPlayerBeingTeleported = false;
     }
 
@@ -214,4 +218,11 @@ public class Portal : MonoBehaviour
             portalEffect.SetActive(active);
         }
     }
+
+    private void OnDestroy()
+    {
+        if(inSetInvoke)
+            isPlayerBeingTeleported = false;
+    }
+
 }

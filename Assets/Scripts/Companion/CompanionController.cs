@@ -352,8 +352,12 @@ public class CompanionController : MonoBehaviour
         if (panelToShow != null) {
             panelToShow.SetActive(true);
         }
+        //AudioManager.Instance.Stop(BGMClip.Scene3);
+        //AudioManager.Instance.Play(BGMClip.EndScene);
         VideoPlayer videoPlayer = panelToShow.transform.GetComponent<VideoPlayer>();
-        
+        //panelToShow.GetComponent<Animator>().speed = 0.5f;
+
+
         if (videoPlayer != null) {
             videoPlayer.loopPointReached += OnVideoEnd;
         }

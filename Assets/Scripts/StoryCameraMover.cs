@@ -59,4 +59,10 @@ public class StoryCameraMover : MonoBehaviour
         }
        
     }
+
+    public void PlayBGMForSceneThree()
+    {
+        AudioManager.Instance.Stop(BGMClip.Scene3);
+        AudioManager.Instance.Play(BGMClip.EndScene);
+    }
 }

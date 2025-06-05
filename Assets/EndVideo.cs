@@ -7,6 +7,7 @@ public class EndVideo : MonoBehaviour
 {
     public void OnEnd() 
     {
+        AudioManager.Instance.Stop(BGMClip.EndScene);
         SceneManager.LoadScene(0);
     }
 }
