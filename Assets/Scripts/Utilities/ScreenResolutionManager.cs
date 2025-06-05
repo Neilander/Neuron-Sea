@@ -48,7 +48,7 @@ public class ScreenResolutionManager : MonoBehaviour
         //{
         //    SetWindowedMode();
         //}
-        Screen.fullScreen = PlayerPrefs.GetInt(FULLSCREEN_KEY, 0) != 0;
+        Screen.fullScreen = PlayerPrefs.GetInt(FULLSCREEN_KEY, 1) != 0;
     }
 
    

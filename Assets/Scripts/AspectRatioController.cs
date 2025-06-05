@@ -10,31 +10,57 @@ public class AspectRatioController : MonoBehaviour
 
     private Camera mainCamera;
     private UniversalAdditionalCameraData cameraData;
-    private float currentAspect;
-    private Rect originalRect;
+    private int lastWidth;
+    private int lastHeight;
 
     void Start()
     {
         mainCamera = GetComponent<Camera>();
         cameraData = mainCamera.GetUniversalAdditionalCameraData();
 
-        // 保存原始视口设置
-        originalRect = mainCamera.rect;
-
-        UpdateAspectRatio();
+        // 初始设置
+        UpdateResolution(true);
     }
 
     void Update()
     {
-        // 当窗口大小改变时更新宽高比
-        if (Screen.width != Screen.currentResolution.width ||
-            Screen.height != Screen.currentResolution.height)
-        {
-            UpdateAspectRatio();
-        }
         ResetAllOverlayCanvas();
+        // 仅当分辨率变化时更新
+        int currentWidth = Display.main.renderingWidth;
+        int currentHeight = Display.main.renderingHeight;
+
+        if (currentWidth != lastWidth || currentHeight != lastHeight)
+        {
+            UpdateResolution();
+            lastWidth = currentWidth;
+            lastHeight = currentHeight;
+        }
     }
 
+    void UpdateResolution(bool forceUpdate = false)
+    {
+        // 使用实际渲染分辨率
+        float currentAspect = (float)Display.main.renderingWidth / Display.main.renderingHeight;
+
+        // 计算视口比例
+        float scaleHeight = currentAspect / targetAspect;
+        Rect rect = new Rect(0, 0, 1, 1);
+
+        if (scaleHeight < 1f)
+        {
+            rect.height = scaleHeight;
+            rect.y = (1f - scaleHeight) / 2f;
+        }
+        else
+        {
+            float scaleWidth = 1f / scaleHeight;
+            rect.width = scaleWidth;
+            rect.x = (1f - scaleWidth) / 2f;
+        }
+
+        // 应用主相机视口
+        mainCamera.rect = rect;
+    }
     void ResetAllOverlayCanvas()
     {
         // 获取所有Overlay Canvas
@@ -51,47 +77,15 @@ public class AspectRatioController : MonoBehaviour
         }
     }
 
-    void UpdateAspectRatio()
-    {
-        // 计算当前屏幕宽高比
-        currentAspect = (float)Screen.width / Screen.height;
-
-        // 计算目标宽高比与当前宽高比的比例
-        float scaleHeight = currentAspect / targetAspect;
-        float scaleWidth = 1f / scaleHeight;
-
-        // 创建视口矩形
-        Rect rect = new Rect(0, 0, 1, 1);
-
-        if (scaleHeight < 1f)
-        {
-            // 当前屏幕比目标更宽（上下黑边）
-            rect.width = 1f;
-            rect.height = scaleHeight;
-            rect.x = 0;
-            rect.y = (1f - scaleHeight) / 2f;
-        }
-        else
-        {
-            // 当前屏幕比目标更高（左右黑边）
-            rect.width = scaleWidth;
-            rect.height = 1f;
-            rect.x = (1f - scaleWidth) / 2f;
-            rect.y = 0;
-        }
-
-        // 应用调整后的视口
-        mainCamera.rect = rect;
-    }
-
-    // 可选：在编辑器中实时更新
+    // 编辑器中实时预览
 #if UNITY_EDITOR
     void OnValidate()
     {
         if (mainCamera != null)
         {
-            UpdateAspectRatio();
+            UpdateResolution(true);
         }
     }
 #endif
 }
+
