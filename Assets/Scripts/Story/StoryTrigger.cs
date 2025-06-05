@@ -64,6 +64,8 @@ public class StoryTrigger : MonoBehaviour
     [SerializeField] private KeyCode triggerKey = KeyCode.E;
     [Tooltip("是否需要玩家在地面上才能触发")]
     [SerializeField] private bool requireGrounded = true;
+    [Tooltip("是否不记忆")]
+    [SerializeField] private bool noMemory = false;
 
     [Header("提示UI")]
     [Tooltip("触发提示文本")]
@@ -225,7 +227,8 @@ public class StoryTrigger : MonoBehaviour
         onExitSpecificStory?.Invoke();
         if(transform.GetComponent<BoxCollider2D>() != null)
             transform.GetComponent<BoxCollider2D>().enabled = false;
-        StoryGlobalLoadManager.instance.DisableTrigger(triggerID);
+        if(!noMemory)
+            StoryGlobalLoadManager.instance.DisableTrigger(triggerID);
         // 如果需要自动触发下一段剧情
         if (autoTriggerNextStory && nextStoryTrigger != null)
         {
@@ -297,6 +300,7 @@ public class StoryTrigger : MonoBehaviour
     {
         if (triggerOnce && hasTriggered)
         {
+            Debug.Log("阻止了！");
             return;
         }
 

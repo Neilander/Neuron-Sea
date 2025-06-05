@@ -375,6 +375,7 @@ public enum BGMClip
     Scene1,
     Scene2,
     Scene3,
+    EndScene
 }
 
 public enum WhiteNoiseClip
