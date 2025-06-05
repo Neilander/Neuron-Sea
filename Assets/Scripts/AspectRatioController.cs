@@ -19,7 +19,7 @@ public class AspectRatioController : MonoBehaviour
         cameraData = mainCamera.GetUniversalAdditionalCameraData();
 
         // 初始设置
-        UpdateResolution(true);
+        UpdateResolution();
     }
 
     void Update()
@@ -37,7 +37,7 @@ public class AspectRatioController : MonoBehaviour
         }
     }
 
-    void UpdateResolution(bool forceUpdate = false)
+    void UpdateResolution()
     {
         // 使用实际渲染分辨率
         float currentAspect = (float)Display.main.renderingWidth / Display.main.renderingHeight;
@@ -83,7 +83,7 @@ public class AspectRatioController : MonoBehaviour
     {
         if (mainCamera != null)
         {
-            UpdateResolution(true);
+            UpdateResolution();
         }
     }
 #endif
