@@ -11,6 +11,8 @@ public class ScreenResolutionManager : MonoBehaviour
     public int windowedHeight = 1080;
 
 
+    private const string FULLSCREEN_KEY = "FullScreenButton";
+
     public bool isFullscreen { get; private set; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -36,16 +38,17 @@ public class ScreenResolutionManager : MonoBehaviour
     
     public void AutoSetResolution()
     {
-        int screenWidth = Display.main.systemWidth;
-        
-        if (screenWidth == fullscreenWidth)
-        {
-            SetFullscreenMode();
-        }
-        else
-        {
-            SetWindowedMode();
-        }
+        //int screenWidth = Display.main.systemWidth;
+
+        //if (screenWidth == fullscreenWidth)
+        //{
+        //    SetFullscreenMode();
+        //}
+        //else
+        //{
+        //    SetWindowedMode();
+        //}
+        Screen.fullScreen = PlayerPrefs.GetInt(FULLSCREEN_KEY, 0) != 0;
     }
 
    

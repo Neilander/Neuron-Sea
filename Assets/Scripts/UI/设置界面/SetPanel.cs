@@ -28,9 +28,11 @@ public class SetPanel : MonoBehaviour
     private const string SELECTOUTBULLET_KEY = "SelectableOutBulletTime";
     private const string DESELECT_KEY = "Deselectable";
     private const string EXTRASWITCHBUTTON_KEY = "ExtraSwitchButton";
+    private const string FULLSCREEN_KEY = "FullScreenButton";
     public GameObject SelectableOutBulletTimeMark;
     public GameObject DeselectableMark;
     public GameObject ExtraSwitchButtonMark;
+    public GameObject FullScreenMark;
 
     public TextMeshProUGUI CompanionDialogueText;
     public string[] CompanionDialogueDefault;
@@ -177,6 +179,15 @@ public class SetPanel : MonoBehaviour
         SelectableOutBulletTimeMark.SetActive(PlayerPrefs.GetInt(SELECTOUTBULLET_KEY, 0) != 0);
         DeselectableMark.SetActive(PlayerPrefs.GetInt(DESELECT_KEY, 0) != 0);
         ExtraSwitchButtonMark.SetActive(PlayerPrefs.GetInt(EXTRASWITCHBUTTON_KEY, 0) != 0);
+        FullScreenMark.SetActive(PlayerPrefs.GetInt(FULLSCREEN_KEY, 0) != 0);
+    }
+
+    public void SwitchFullscreen()
+    {
+        PlayerPrefs.SetInt(FULLSCREEN_KEY, PlayerPrefs.GetInt(FULLSCREEN_KEY, 0) == 0 ? 1 : 0);
+        PlayerPrefs.Save();
+        ScreenResolutionManager.Instance?.AutoSetResolution();
+        RefreshSign();
     }
 }
 
