@@ -663,7 +663,10 @@ public class GridManager : MonoBehaviour
 
     #region 交换物体
 
-
+    public bool IfInSelection(SwitchableObj obj)
+    {
+        return switchInfoRecorder.obj1.Equals(obj) || switchInfoRecorder.obj2.Equals(obj);
+    }
 
     private bool CanEnterSwitchState()
     {

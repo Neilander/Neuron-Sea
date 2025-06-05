@@ -69,10 +69,15 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     public bool IfDoSwitchBasedOnScene = false;
     public List<GameObject> switchPrefabs;
 
-    [Header("是否替换preview参考物体")]
+    [Header("是否替换preview参考物体，用于跟玩家检测")]
     public bool IfSubstituePreview = false;
     public SpriteRenderer substitueRenderer;
     public Collider2D substitueCollider;
+
+    [Header("是否对交换碰撞检测使用特殊物体")]
+    public bool IfUseSpecialBoxToCheckWithSwitchable = false;
+
+    private Material initialMat;
 
     public Vector3 SelfGridPos
     {
@@ -123,6 +128,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
     }
 
     private void Start(){
+        
         if (IfDoSwitchBasedOnScene)
         {
             int sceneIndex = levelManager.instance.sceneIndex;
@@ -171,6 +177,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             defaultMaterial = renderer.material;
         }
 
+        initialMat = (IfSubstituePreview ? substitueRenderer : renderer).material;
         if (IfSpecialEdgeChecker)
             Debug.Log("我用特殊检查，我是"+gameObject.name);
     }
@@ -234,7 +241,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         yield return new WaitForSecondsRealtime(GridManager.Instance.waitTime);
         previewObj.GetComponent<SpriteRenderer>().color = Color.white;
         yield return new WaitForSecondsRealtime(r.material.GetFloat("_ZongShiJian") - GridManager.Instance.waitTime);
-        r.material = originMaterial;
+        r.material = GridManager.Instance.IfInSelection(this)? originMaterial:initialMat;
 
         if (EffectAnimator != null)
             EffectAnimator.GetComponent<SpriteRenderer>().enabled = true;
@@ -266,7 +273,7 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         if (col is BoxCollider2D box) {
             Vector2 center = (Vector2)checkPosition + box.offset;
             Vector2 size = box.size;
-            lastCheckBounds = new Bounds(center, size);
+            //lastCheckBounds = new Bounds(center, size);
             hitCount = Physics2D.OverlapBox(
                 (Vector2)checkPosition + box.offset,
                 box.size,
@@ -297,11 +304,42 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
             Debug.LogWarning("不支持的 Collider2D 类型：" + col.GetType().Name);
             return false;
         }
+        
+        if (IfUseSpecialBoxToCheckWithSwitchable)
+        {
+            BoxCollider2D anotherCol = GetComponent<BoxCollider2D>();
+            if (anotherCol == null)
+                Debug.LogError("使用特殊检测的物体没有方块碰撞体");
 
-        for (int i = 0; i < hitCount; i++) {
+            checkPosition = gridPos - anchor.transform.localPosition;
+            Vector2 center = checkPosition + anotherCol.offset;
+            Vector2 size = anotherCol.size;
+            lastCheckBounds = new Bounds(center, size);
+            Collider2D[] ExtraResults = new Collider2D[20];
+            hitCount = Physics2D.OverlapBox(
+                (Vector2)checkPosition + anotherCol.offset,
+                anotherCol.size,
+                anotherCol.transform.eulerAngles.z,
+                filter,
+                ExtraResults
+            );
+
+            List<Collider2D> temp = new List<Collider2D>(results);
+            foreach (Collider2D sw in ExtraResults)
+            {
+                if (sw!=null && !sw.gameObject.CompareTag("Player") && !ArrayUtils.Contains(results, sw))
+                {
+                    //Debug.Log($"ExtraResult探到了{1}个{sw.gameObject.name}");
+                    temp.Add(sw);
+                }
+            }
+            results = temp.ToArray();
+        }
+
+        for (int i = 0; i < results.Length; i++) {
             //Debug.Log("第"+i+"个是"+results[i].gameObject.name);
             if (results[i] != null && results[i].gameObject != ignoreObject && results[i].gameObject != gameObject&& !results[i].transform.IsChildOf(ignoreObject.transform)) {
-                Debug.Log("阻止我们的是" + results[i].gameObject.name);
+                //Debug.Log("阻止我们的是" + results[i].gameObject.name);
                 return false; // 有碰撞，且不是要忽略的物体
             }
         }
@@ -702,4 +740,19 @@ public class SwitchableObj : MonoBehaviour, ILDtkImportedFields
         return false; // 全部角点都不在屏幕范围
     }
     #endregion
+}
+
+public static class ArrayUtils
+{
+    public static bool Contains<T>(T[] array, T value)
+    {
+        foreach (T item in array)
+        {
+            if (EqualityComparer<T>.Default.Equals(item, value))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

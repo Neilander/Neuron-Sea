@@ -91,6 +91,10 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
     private bool CheckEdgeSetted = false;
 
+    private Timer RPressTimer = new Timer();
+    [Header("按R等待时间")]
+    [SerializeField] private float RWaitTime;
+
     private void Awake()
     {
         CheckEdgeSetted = false;
@@ -105,7 +109,8 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
     private void Start()
     {
-        
+        RPressTimer = new Timer();
+        RPressTimer.SetWaitTime(RWaitTime);
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         ifJustGround = new BoolRefresher(extraJumpAllowTime, watchExtraJumpAllowTime);
@@ -135,12 +140,17 @@ public partial class PlayerController : MonoBehaviour, IMovementController
     private void Update()
     {
         GameInput.Update(Time.unscaledDeltaTime);
+        RPressTimer.UpdateTimer(Time.unscaledDeltaTime);
         // dropped = false;
         //只有在可以输入时才处理输入
         if (canInput)
         {
-            if (GameInput.Restart.Pressed(false))
+            if (RPressTimer.IsReady()&& GameInput.Restart.Pressed(false))
+            {
+                RPressTimer.Trigger();
                 levelManager.instance.RestartLevel();
+            }
+                
             //这个要注释掉
 #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.J))
@@ -155,6 +165,18 @@ public partial class PlayerController : MonoBehaviour, IMovementController
 
             }
 #endif
+        }
+        else
+        {
+            if (DeathController.Instance.IfInDeathSequence())
+            {
+                if (RPressTimer.IsReady() && GameInput.Restart.Pressed(false))
+                {
+                    RPressTimer.Trigger();
+                    levelManager.instance.RestartLevel();
+                }
+                    
+            }
         }
 
 

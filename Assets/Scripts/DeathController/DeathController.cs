@@ -35,6 +35,7 @@ public class CollisionListener : MonoBehaviour
 
 public class DeathController : MonoBehaviour
 {
+    public static DeathController Instance;
     [SerializeField] private float FLASHdelay = 0f;
     [Header("死亡动画设置")]
     public Image deathImg;
@@ -126,7 +127,7 @@ public class DeathController : MonoBehaviour
         brightness = 1f,
         contrast = 0f
     };
-
+    private bool inDeath = false;
     [Header("结束效果参数")]
     [SerializeField]
     private EffectParameters targetValues = new EffectParameters
@@ -162,6 +163,12 @@ public class DeathController : MonoBehaviour
     };
 
     public Material screenDissolve;
+
+    private void Awake()
+    {
+        if(Instance == null)
+            Instance = this;
+    }
 
     private void Start()
     {
@@ -214,18 +221,21 @@ public class DeathController : MonoBehaviour
     private void OnEnable()
     {
         PlayerDeathEvent.OnDeathTriggered += HandleDeath;
+        PlayerDeathEvent.OnCheckInDeath += IfInDeathSequence;
     }
 
     private void OnDisable()
     {
         PlayerDeathEvent.OnDeathTriggered -= HandleDeath;
+        PlayerDeathEvent.OnCheckInDeath -= IfInDeathSequence;
     }
 
     private void Update()
     {
+        //Debug.Log("现在死亡状态是"+inDeath);
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.I))
-            SkipHandleDeath();
+        //if (Input.GetKeyDown(KeyCode.I))
+            //SkipHandleDeath();
 #endif
         // 持续检查和更新玩家引用
         if (playerController == null)
@@ -288,7 +298,7 @@ public class DeathController : MonoBehaviour
     {
         AudioManager.Instance.Play(SFXClip.PlayerDeath,gameObject.name);
         print("我死了"+ obj.name);
-
+        inDeath = true;
         // 获取玩家组件
         if (obj != null)
         {
@@ -340,17 +350,26 @@ public class DeathController : MonoBehaviour
         }
     }
 
+    public bool IfInDeathSequence()
+    {
+        return inDeath;
+    }
+
     public void SkipHandleDeath()
     {
         if (deathSequence != null)
             StopCoroutine(deathSequence);
         else
             return;
+
+        inDeath = false;
         if (playerSpriteRenderer != null && deathEffectMaterial != null)
         {
             playerSpriteRenderer.material.SetFloat("_GlitchFade", 1f);
             // Debug.Log("GlitchFade 达到最大值: 1");
         }
+
+        EndScreenDissolve();
         levelManager.instance.ReloadLevel();
         playerController.MovePosition(respawnTarget.position + Vector3.down * 0.49f);
         //Debug.Log("移动完成");
@@ -639,7 +658,7 @@ public class DeathController : MonoBehaviour
             // 测试是否可以接收跳跃输入
             //Debug.Log("解冻序列: 玩家现在应该可以跳跃了，请尝试按空格键");
 
-
+            inDeath = false;
         }
 
 
