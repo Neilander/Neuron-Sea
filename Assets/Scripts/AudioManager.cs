@@ -262,9 +262,10 @@ public class AudioManager : MonoBehaviour
         {
             if (bgmSourceDict.TryGetValue(key, out var source))
             {
-                source.Stop();
-                Destroy(source);
-                bgmSourceDict.Remove(key);
+                //source.Stop();
+                //Destroy(source);
+                //bgmSourceDict.Remove(key);
+                StartCoroutine(FadeOut(source, key, 1f));
             }
         }
         else
@@ -460,6 +461,25 @@ public class AudioManager : MonoBehaviour
     public float GetMasterVolume() => masterVolume;
     public float GetMusicVolume() => musicVolume;
     public float GetSFXVolume() => sfxVolume;
+
+    public IEnumerator FadeOut(AudioSource audioSource,BGMClip key, float fadeDuration)
+    {
+        float startVolume = audioSource.volume;
+        bgmSourceDict.Remove(key);
+        // 循环逐渐降低音量
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / fadeDuration;
+            yield return null; // 等待下一帧
+        }
+
+        // 确保音量为0
+        audioSource.volume = 0;
+        audioSource.Stop(); // 可选择停止音频播放
+        
+        Destroy(audioSource);
+       
+    }
 }
 
 public enum BGMClip

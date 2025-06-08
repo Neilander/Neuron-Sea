@@ -47,6 +47,7 @@ public class ConceptArt : MonoBehaviour
     {
         if (GameInput.Back.Pressed(false))
         {
+            inPlaying = false;
             GetComponent<ClickAndExit>().Exit();
         }
     }
@@ -65,5 +66,10 @@ public class ConceptArt : MonoBehaviour
             inPlaying = true;
         }
         
+    }
+
+    public void ResetPlaying()
+    {
+        inPlaying = false; 
     }
 }

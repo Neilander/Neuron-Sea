@@ -20,6 +20,8 @@ public class ClickAndExit : MonoBehaviour
         {
             AudioManager.Instance.Play(SFXClip.Cilck3, gameObject.name);
         }
+        if(Panel.GetComponent<ConceptArt>()!=null)
+            Panel.GetComponent<ConceptArt>().ResetPlaying();
         Panel.SetActive(false);
     }
 }
