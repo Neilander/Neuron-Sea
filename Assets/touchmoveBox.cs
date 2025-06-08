@@ -178,10 +178,12 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
 
         atA = !atA;
-        boxAnim.SetTrigger("TurnBack");
+        if(!ifUpDown)
+            boxAnim.SetTrigger("TurnBack");
         //previewAnim.SetTrigger("TurnBack");
         yield return StartCoroutine(FlipTracksFade(cooldownDuration));
-        boxAnim.SetTrigger("TurnBack");
+        if(!ifUpDown)
+            boxAnim.SetTrigger("TurnBack");
         //previewAnim.SetTrigger("TurnBack");
         if (reverse == atA)
         {
