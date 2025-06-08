@@ -118,11 +118,15 @@ public class AudioManager : MonoBehaviour
         }
         hasPaused = true;
         Play(toPlay, true);
+        if (PlayGallaryMusicButton.instance != null)
+            PlayGallaryMusicButton.instance.SetSprite(true);
     }
 
     public void StopGallaryMusic(BGMClip toPlay)
     {
         Stop(toPlay,true);
+        if (PlayGallaryMusicButton.instance != null)
+            PlayGallaryMusicButton.instance.SetSprite(false);
     }
 
     public void StopGallaryMusic()
@@ -131,6 +135,8 @@ public class AudioManager : MonoBehaviour
         {
             Stop(c,true);
         }
+        if (PlayGallaryMusicButton.instance != null)
+            PlayGallaryMusicButton.instance.SetSprite(false);
         if (!hasPaused)
             return;
         foreach (BGMClip c in bgmSourceDict.Keys)
