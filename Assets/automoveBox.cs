@@ -51,8 +51,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             father.SpecialEdgeChecker.transform.localScale = new Vector3(3, Mathf.RoundToInt(yLength * 3), 1);
             GenerateTrack(yLength*3,false);
             ifUpDown = true;
-            boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
-            previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+            //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
         }
         else
         {
@@ -71,6 +71,15 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         father.IfSpecialEdgeChecker = true;
         
 
+    }
+
+    private void Awake()
+    {
+        if (ifUpDown)
+        {
+            boxSprite.localEulerAngles = new Vector3(0, 0, 0);
+            previewTrans.localEulerAngles = new Vector3(0, 0, 0);
+        }
     }
 
     private void Start()
@@ -121,8 +130,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             //previewAnim.SetTrigger("TurnBack");
             if (ifUpDown)
             {
-                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0,0) : new Vector3(0, 0, 180);
-                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+                //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0,0) : new Vector3(0, 0, 180);
+                //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
             }
             else
             {
@@ -137,8 +146,8 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
             //previewAnim.SetTrigger("TurnBack");
             if (ifUpDown)
             {
-                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
-                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
             }
             else
             {

@@ -78,7 +78,16 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         father.IfSpecialEdgeChecker = true;
     }
 
-    
+
+    private void Awake()
+    {
+        if (ifUpDown)
+        {
+            boxSprite.localEulerAngles =new Vector3(0, 0, 0);
+            previewTrans.localEulerAngles =  new Vector3(0, 0, 0);
+        }
+    }
+
     private void Start()
     {
         if (target == null)
@@ -178,8 +187,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         {
             if (ifUpDown)
             {
-                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
-                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+                //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+                //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
             }
             else
             {
@@ -191,8 +200,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         {
             if (ifUpDown)
             {
-                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
-                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
             }
             else
             {
