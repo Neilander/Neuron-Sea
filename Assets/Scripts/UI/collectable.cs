@@ -18,12 +18,15 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
 
     [SerializeField] private float floatAmplitude = 0.1f; // 上下移动的幅度
     [SerializeField] private float floatSpeed = 1.5f;     // 上下移动的速度
-
+    [SerializeField] private GameObject DestroyEffect;
+    [SerializeField] private GameObject ReferenceObj;
     private Vector3 initialLocalPos;
 
     [SerializeField] private TextMeshPro DisplayText;
 
     public UnityEvent DestroyToDo;
+
+    private bool collected = false;
     //自动导入关卡设定数据
     public void OnLDtkImportFields(LDtkFields fields)
     {
@@ -82,7 +85,7 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (unlocked && collision.GetComponent<PlayerController>())
+        if (!collected && unlocked && collision.GetComponent<PlayerController>())
         {
             GetCollected();
         }
@@ -92,10 +95,14 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
 
     void GetCollected()
     {
+        collected = true;
         CollectableManager.Instance.TryAddCollection(levelManager.instance.currentLevelIndex);
         AudioManager.Instance.Play(SFXClip.PickUpCollectable,gameObject.name);
         Destroy(gameObject);
         DestroyToDo.Invoke();
+        //DestroyEffect.SetActive(true);
+        //renderer.enabled = false;
+
         if(CollectableManager.Instance.totalCollected == 1) {
             showDialogue(1,"信息泡在我指尖消融，残破的图像直接浮现：我只能窥看无意义的一角。但这或许能够给我带来崭新的东西……我如此期待。");
         }
@@ -246,5 +253,10 @@ public class collectable : MonoBehaviour, ILDtkImportedFields
         }
 
         return false; // 全部角点都不在屏幕范围
+    }
+
+    public void InstantiateDestroyEffect()
+    {
+        Instantiate(DestroyEffect, ReferenceObj.transform.position, Quaternion.identity);
     }
 }
