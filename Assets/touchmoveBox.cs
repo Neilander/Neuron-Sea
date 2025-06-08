@@ -83,8 +83,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
     {
         if (ifUpDown)
         {
-            boxSprite.localEulerAngles =new Vector3(0, 0, 0);
-            previewTrans.localEulerAngles =  new Vector3(0, 0, 0);
+            //boxSprite.localEulerAngles =new Vector3(0, 0, 0);
+            //previewTrans.localEulerAngles =  new Vector3(0, 0, 0);
         }
     }
 
@@ -178,19 +178,19 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
 
         atA = !atA;
-        if(!ifUpDown)
+        //if(!ifUpDown)
             boxAnim.SetTrigger("TurnBack");
         //previewAnim.SetTrigger("TurnBack");
         yield return StartCoroutine(FlipTracksFade(cooldownDuration));
-        if(!ifUpDown)
+        //if(!ifUpDown)
             boxAnim.SetTrigger("TurnBack");
         //previewAnim.SetTrigger("TurnBack");
         if (reverse == atA)
         {
             if (ifUpDown)
             {
-                //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
-                //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 0) : new Vector3(0, 0, 180);
             }
             else
             {
@@ -202,8 +202,8 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         {
             if (ifUpDown)
             {
-                //boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
-                //previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                boxSprite.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
+                previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, 180) : new Vector3(0, 0, 0);
             }
             else
             {
