@@ -98,13 +98,19 @@ public class StoryGlobalLoadManager : MonoBehaviour
 
     public bool ShouldLoadSceneStory()
     {
+#if UNITY_EDITOR
         Debug.Log($"在场景{currentScene}关卡{currentLevel}检查是否该触发剧情");
         return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene) && levelManager.instance.currentLevelIndex == 1 + 12 * (SceneManager.GetActiveScene().buildIndex - 1);
+#endif
+        return !HasLoadedSceneStory(currentScene) && levelManager.instance.currentLevelIndex == 1 + 12 * (SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public bool ShouldLoadSpecificSceneStory(int scene)
     {
+#if UNITY_EDITOR
         return (curMode == GameMode.Story) && !HasLoadedSceneStory(currentScene) && (currentScene == scene);
+#endif
+        return !HasLoadedSceneStory(currentScene) && (currentScene == scene);
     }
 
     public bool IfThisStartHasLevel()

@@ -15,6 +15,7 @@ public class ClickAndExit : MonoBehaviour
 
     public void Exit()
     {
+        AudioManager.Instance.StopGallaryMusic();
         if (!DontPlaySound)
         {
             AudioManager.Instance.Play(SFXClip.Cilck3, gameObject.name);
