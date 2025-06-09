@@ -705,7 +705,26 @@ public class GridManager : MonoBehaviour
         Vector3 tempPos = switchInfoRecorder.obj1.SelfGridPos;
         switchInfoRecorder.obj1.SetToGridPos(switchInfoRecorder.obj2.SelfGridPos);
         switchInfoRecorder.obj2.SetToGridPos(tempPos);
-        AudioManager.Instance.Play(SFXClip.Switch, Time.unscaledTime.ToString());
+        SFXClip toplay;
+        switch (levelManager.instance.sceneIndex)
+        {
+            case 1:
+                toplay = SFXClip.Switch;
+                break;
+
+            case 2:
+                toplay = SFXClip.SwitchScene2;
+                break;
+
+            case 3:
+                toplay = SFXClip.SwitchScene3;
+                break;
+
+            default:
+                toplay = SFXClip.Switch;
+                break;
+        }
+        AudioManager.Instance.Play(toplay, Time.unscaledTime.ToString());
         switchCoolDownFinished = false;
         Invoke("ResetCoolDownFinish", switchCoolDown);
         StartState(SwitchState.Move);

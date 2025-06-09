@@ -124,7 +124,7 @@ public static class Constants
     //��Ծ��ز���
     public static float JumpSpeed = 11.6f;  //�����Ծ�ٶ�
     public static float JumpResponseTime = 0.2f; //��Ծ��Ӧʱ��(����ʱ,�������Ӧ��Ծ����[JumpResponseTime]��,Ӱ����Ծ����߸߶�);
-    public static float JumpAllowCancelTime = 0.16f; //在跳跃开始的一小段时间内松开跳跃键，则速度归零;
+    public static float JumpAllowCancelTime = 0.14f; //在跳跃开始的一小段时间内松开跳跃键，则速度归零;
     public static float JumpXBoost = 2f; //�����������
     public static float JumpGraceTime = 0.12f;//����ʱ��
     public static float JumpCooldown = .15f;//��Ծ��ȴʱ��

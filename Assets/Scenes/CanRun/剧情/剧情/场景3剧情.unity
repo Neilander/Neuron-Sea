@@ -4383,6 +4383,11 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5209604333379045748, guid: 868be65b67e260d42ba80959088f235d,
+        type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5938814184166905583, guid: 868be65b67e260d42ba80959088f235d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4653,6 +4658,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_UiScaleMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5259446235529085789, guid: 5894b6f145f77cc4d92393f30e21cb79,
+        type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5259446235529085789, guid: 5894b6f145f77cc4d92393f30e21cb79,
         type: 3}
@@ -5445,7 +5455,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -12027,7 +12037,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -18253,6 +18263,26 @@ PrefabInstance:
       propertyPath: m_CullingMask.m_Bits
       value: 2039
       objectReference: {fileID: 0}
+    - target: {fileID: 6578276186346745801, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6578276186346745801, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6578276186346745801, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.width
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6578276186346745801, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7249246078599021019, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
         type: 3}
       propertyPath: m_Sprite
@@ -18266,7 +18296,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1637775511}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1586439704276278458, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 925891442}
   m_SourcePrefab: {fileID: 100100000, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab, type: 3}
 --- !u!114 &925891438 stripped
 MonoBehaviour:
@@ -18274,7 +18308,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 925891437}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 925891441}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fb1e3ef8f610e9459d4bcb308e44aab, type: 3}
@@ -18292,6 +18326,25 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 925891437}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &925891441 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1586439704276278458, guid: 6b04a729a4ffb4d0cb6e1da56f8d09ab,
+    type: 3}
+  m_PrefabInstance: {fileID: 925891437}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &925891442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925891441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d159d6eb2c85141925fb9d01fc4612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
 --- !u!1 &948970724
 GameObject:
   m_ObjectHideFlags: 0
@@ -32705,7 +32758,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -57064,6 +57117,7 @@ GameObject:
   - component: {fileID: 1637775508}
   - component: {fileID: 1637775510}
   - component: {fileID: 1637775509}
+  - component: {fileID: 1637775512}
   m_Layer: 11
   m_Name: UICamera
   m_TagString: Untagged
@@ -57106,11 +57160,11 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.5
+  orthographic size: 274.72974
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 2080
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -57189,6 +57243,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 925891439}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1637775512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637775507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d159d6eb2c85141925fb9d01fc4612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
 --- !u!1001 &1682752601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80372,7 +80439,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

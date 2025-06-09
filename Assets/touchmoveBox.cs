@@ -78,7 +78,16 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         father.IfSpecialEdgeChecker = true;
     }
 
-    
+
+    private void Awake()
+    {
+        if (ifUpDown)
+        {
+            //boxSprite.localEulerAngles =new Vector3(0, 0, 0);
+            //previewTrans.localEulerAngles =  new Vector3(0, 0, 0);
+        }
+    }
+
     private void Start()
     {
         if (target == null)
@@ -169,10 +178,12 @@ public class touchmoveBox : MonoBehaviour, INeilLDTkImportCompanion
         }
 
         atA = !atA;
-        boxAnim.SetTrigger("TurnBack");
+        //if(!ifUpDown)
+            boxAnim.SetTrigger("TurnBack");
         //previewAnim.SetTrigger("TurnBack");
         yield return StartCoroutine(FlipTracksFade(cooldownDuration));
-        boxAnim.SetTrigger("TurnBack");
+        //if(!ifUpDown)
+            boxAnim.SetTrigger("TurnBack");
         //previewAnim.SetTrigger("TurnBack");
         if (reverse == atA)
         {

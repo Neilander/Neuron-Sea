@@ -47,6 +47,7 @@ public class AudioManager : MonoBehaviour
     }
 
     private Dictionary<BGMClip, AudioSource> bgmSourceDict = new();
+    private Dictionary<BGMClip, AudioSource> bgmGallaryDict = new();
     private Dictionary<WhiteNoiseClip, AudioSource> whiteNoiseSourceDict = new();
     //private Dictionary<SFXClip, AudioSource> sfxSourceDict = new();
     private Dictionary<SFXClip, Dictionary<string, AudioSource>> sfxSourceDict = new();
@@ -103,32 +104,106 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private bool hasPaused = false;
+    public void EnterGallary()
+    {
+        hasPaused = false;
+    }
+    public void PlayBGMForGallary(BGMClip toPlay)
+    {
+        //暂停所有的bgm
+        foreach (BGMClip c in System.Enum.GetValues(typeof(BGMClip)))
+        {
+            Pause(c);
+        }
+        hasPaused = true;
+        Play(toPlay, true);
+        if (PlayGallaryMusicButton.instance != null)
+            PlayGallaryMusicButton.instance.SetSprite(true);
+    }
+
+    public void StopGallaryMusic(BGMClip toPlay)
+    {
+        Stop(toPlay,true);
+        if (PlayGallaryMusicButton.instance != null)
+            PlayGallaryMusicButton.instance.SetSprite(false);
+    }
+
+    public void StopGallaryMusic()
+    {
+        foreach (BGMClip c in System.Enum.GetValues(typeof(BGMClip)))
+        {
+            Stop(c,true);
+        }
+        if (PlayGallaryMusicButton.instance != null)
+            PlayGallaryMusicButton.instance.SetSprite(false);
+        if (!hasPaused)
+            return;
+        foreach (BGMClip c in bgmSourceDict.Keys)
+        {
+            Play(c);
+        }
+        hasPaused = false;
+    }
+
+    public void LeaveGallary()
+    {
+        if (!hasPaused)
+            return;
+        foreach (BGMClip c in bgmSourceDict.Keys)
+        {
+            Play(c);
+        }
+    }
+
     public void ClickSound(int soundID)
     {
         AudioManager.Instance.Play((SFXClip)(soundID + 27),"System");
     }
 
     private BGMClip curClip;
-    public void Play(BGMClip clipKey)
+    public void Play(BGMClip clipKey, bool isGallary = false)
     {
         if (!bgmDict.TryGetValue(clipKey, out var entry) || entry.clip == null)
             return;
 
-        if (bgmSourceDict.TryGetValue(clipKey, out var oldSource))
-        { 
-            oldSource.UnPause();
+        if (!isGallary)
+        {
+            if (bgmSourceDict.TryGetValue(clipKey, out var oldSource))
+            {
+                oldSource.UnPause();
+            }
+            else
+            {
+                curClip = clipKey;
+                AudioSource newSource = gameObject.AddComponent<AudioSource>();
+                newSource.clip = entry.clip;
+                newSource.loop = true;
+                newSource.volume = entry.volume * GetBGMVolumeMultiplier();
+                newSource.Play();
+
+                bgmSourceDict[clipKey] = newSource;
+            }
         }
         else
         {
-            curClip = clipKey;
-            AudioSource newSource = gameObject.AddComponent<AudioSource>();
-            newSource.clip = entry.clip;
-            newSource.loop = true;
-            newSource.volume = entry.volume * GetBGMVolumeMultiplier();
-            newSource.Play();
+            if (bgmGallaryDict.TryGetValue(clipKey, out var oldSource))
+            {
+                oldSource.UnPause();
+            }
+            else
+            {
+                curClip = clipKey;
+                AudioSource newSource = gameObject.AddComponent<AudioSource>();
+                newSource.clip = entry.clip;
+                newSource.loop = true;
+                newSource.volume = entry.volume * GetBGMVolumeMultiplier();
+                newSource.Play();
 
-            bgmSourceDict[clipKey] = newSource;
+                bgmGallaryDict[clipKey] = newSource;
+            }
         }
+        
     }
 
     public void Play(WhiteNoiseClip clipKey)
@@ -187,22 +262,47 @@ public class AudioManager : MonoBehaviour
             StartCoroutine(DestroyWhenDone(newSource, id,clipKey));
     }
 
-    public void Stop(BGMClip key)
+    public void Stop(BGMClip key, bool isGallary = false)
     {
-        if (bgmSourceDict.TryGetValue(key, out var source))
+        if (!isGallary)
         {
-            source.Stop();
-            Destroy(source);
-            bgmSourceDict.Remove(key);
+            if (bgmSourceDict.TryGetValue(key, out var source))
+            {
+                //source.Stop();
+                //Destroy(source);
+                //bgmSourceDict.Remove(key);
+                StartCoroutine(FadeOut(source, key, 1f));
+            }
         }
+        else
+        {
+            if (bgmGallaryDict.TryGetValue(key, out var source))
+            {
+                source.Stop();
+                Destroy(source);
+                bgmGallaryDict.Remove(key);
+            }
+        }
+        
     }
 
-    public void Pause(BGMClip key)
+    public void Pause(BGMClip key, bool isGallary = false)
     {
-        if (bgmSourceDict.TryGetValue(key, out var source))
+        if (!isGallary)
         {
-            source.Pause();
+            if (bgmSourceDict.TryGetValue(key, out var source))
+            {
+                source.Pause();
+            }
         }
+        else
+        {
+            if (bgmGallaryDict.TryGetValue(key, out var source))
+            {
+                source.Pause();
+            }
+        }
+        
     }
 
     public void Stop(WhiteNoiseClip key)
@@ -367,6 +467,25 @@ public class AudioManager : MonoBehaviour
     public float GetMasterVolume() => masterVolume;
     public float GetMusicVolume() => musicVolume;
     public float GetSFXVolume() => sfxVolume;
+
+    public IEnumerator FadeOut(AudioSource audioSource,BGMClip key, float fadeDuration)
+    {
+        float startVolume = audioSource.volume;
+        bgmSourceDict.Remove(key);
+        // 循环逐渐降低音量
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / fadeDuration;
+            yield return null; // 等待下一帧
+        }
+
+        // 确保音量为0
+        audioSource.volume = 0;
+        audioSource.Stop(); // 可选择停止音频播放
+        
+        Destroy(audioSource);
+       
+    }
 }
 
 public enum BGMClip
@@ -425,4 +544,6 @@ public enum SFXClip
     Cilck7,
     StartVideo,
     EnterLevel,
+    SwitchScene2,
+    SwitchScene3
 }

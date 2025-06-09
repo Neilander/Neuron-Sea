@@ -1,19 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ConceptArt : MonoBehaviour
 {
-    [SerializeField] private Transform imgParent; // ¸¸ÎïÌå
-    [SerializeField] private Animator anim; // ±³¾°¶¯Ð§
-
+    [SerializeField] private Transform imgParent; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private Animator anim; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§
+    private int recordIndex;
     private void Start()
     {
-        anim.updateMode = AnimatorUpdateMode.UnscaledTime; // ÉèÖÃ¶¯»­¸üÐÂÄ£Ê½Îª²»ÊÜÊ±¼äËõ·ÅÓ°Ïì
+        anim.updateMode = AnimatorUpdateMode.UnscaledTime; // ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Îªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½
     }
     public void ShowPic(int index)
     {
         Debug.Log("ShowPic called with index: " + index);
+        recordIndex = index;
         gameObject.SetActive(true);
         // Hide all images
         foreach (Transform child in imgParent)
@@ -25,13 +27,49 @@ public class ConceptArt : MonoBehaviour
         {
             imgParent.GetChild(index).gameObject.SetActive(true);
         }
+        
+        //AudioManager.Instance.PlayBGMForGallary(Factory(index));
+    }
+
+    private BGMClip Factory(int index)
+    {
+        return index switch
+        {
+            0=>BGMClip.Scene1,
+            1=>BGMClip.Scene1,
+            2=>BGMClip.Scene2,
+            3=>BGMClip.Scene3,
+            _ =>BGMClip.Scene1
+        };
     }
 
     void Update()
     {
         if (GameInput.Back.Pressed(false))
         {
+            inPlaying = false;
             GetComponent<ClickAndExit>().Exit();
         }
+    }
+
+    private bool inPlaying = false;
+    public void PlayMusic()
+    {
+        if (inPlaying)
+        {
+            AudioManager.Instance.StopGallaryMusic(Factory(recordIndex));
+            inPlaying = false;
+        }
+        else
+        {
+            AudioManager.Instance.PlayBGMForGallary(Factory(recordIndex));
+            inPlaying = true;
+        }
+        
+    }
+
+    public void ResetPlaying()
+    {
+        inPlaying = false; 
     }
 }

@@ -234,6 +234,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  endTeach: 0
+  ifReverTutorialTrigger: 0
   startTarget: {fileID: 0}
   companionController: {fileID: 0}
   isTransitioning: 0
@@ -242,6 +244,7 @@ MonoBehaviour:
   defaultWidth: 10
   defaultHeight: 5
   yOffset: 3.5
+  specialStartForScene1: 0
 --- !u!114 &4909346530645875688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,7 +305,7 @@ MonoBehaviour:
   m_AssetsPPU: 36
   m_RefResolutionX: 960
   m_RefResolutionY: 540
-  m_CropFrame: 0
+  m_CropFrame: 4
   m_GridSnapping: 1
   m_FilterMode: 0
   m_UpscaleRT: 0

@@ -11,20 +11,33 @@ public class CustomButton : MonoBehaviour
     public Color normalColor = Color.white;
     private RectTransform rectTransform;
     private bool isMouseOver = false;
+    private Canvas parentCanvas; // 新增：获取父级Canvas
+    private Camera eventCamera;  // 新增：存储事件相机
 
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+        // 新增：获取父Canvas及其渲染相机
+        parentCanvas = GetComponentInParent<Canvas>();
+        eventCamera = parentCanvas.worldCamera; // 关键修改：获取Canvas使用的相机
     }
 
     void Update()
     {
-        // 将鼠标屏幕坐标转换为 UI 本地坐标
+        // 检查相机是否存在（Camera模式需要）
+        if (eventCamera == null)
+        {
+            // 尝试重新获取相机
+            eventCamera = parentCanvas.worldCamera;
+            if (eventCamera == null) return; // 仍然获取不到则跳过
+        }
+
+        // 将鼠标屏幕坐标转换为UI本地坐标
         Vector2 localMousePosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             rectTransform,
             Input.mousePosition,
-            null, // 如果 Canvas 是 Screen Space - Overlay 模式，此处为 null
+            eventCamera, // 关键修改：传入Canvas的渲染相机
             out localMousePosition
         );
 

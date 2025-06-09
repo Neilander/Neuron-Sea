@@ -73,6 +73,15 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
 
     }
 
+    private void Awake()
+    {
+        if (ifUpDown)
+        {
+            //boxSprite.localEulerAngles = new Vector3(0, 0, 0);
+            //previewTrans.localEulerAngles = new Vector3(0, 0, 0);
+        }
+    }
+
     private void Start()
     {
         
@@ -114,10 +123,12 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
         while (move)
         {
             yield return StartCoroutine(MoveFromTo(!reverse ? pointA : pointB, reverse ? pointA : pointB));
-            boxAnim.SetTrigger("TurnBack");
+            //if(!ifUpDown)
+                boxAnim.SetTrigger("TurnBack");
             //previewAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
-            boxAnim.SetTrigger("TurnBack");
+            //if(!ifUpDown)
+                boxAnim.SetTrigger("TurnBack");
             //previewAnim.SetTrigger("TurnBack");
             if (ifUpDown)
             {
@@ -130,10 +141,12 @@ public class automoveBox : MonoBehaviour, INeilLDTkImportCompanion
                 previewTrans.localEulerAngles = reverse ? new Vector3(0, 0, -90) : new Vector3(0, 0, 90);
             }
             yield return StartCoroutine(MoveFromTo(reverse ? pointA : pointB, !reverse ? pointA : pointB));
-            boxAnim.SetTrigger("TurnBack");
+            //if(!ifUpDown)
+                boxAnim.SetTrigger("TurnBack");
             //previewAnim.SetTrigger("TurnBack");
             yield return StartCoroutine(FlipTracksFade(waitDuration));
-            boxAnim.SetTrigger("TurnBack");
+            //if (!ifUpDown)
+                boxAnim.SetTrigger("TurnBack");
             //previewAnim.SetTrigger("TurnBack");
             if (ifUpDown)
             {

@@ -7,11 +7,11 @@ using UnityEngine.UI;
 public class ConceptArtUnlockManagerNew : MonoBehaviour
 {
     public static ConceptArtUnlockManagerNew Instance { get; private set; }
-    [Header("Button List")] public Button[] artButtons; // °´Å¥Êý×é
+    [Header("Button List")] public Button[] artButtons; // ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½
 
     [Header("Lock Settings")]
-    [SerializeField] private GameObject bubblePrefab; // ÅÝÅÝÔ¤ÖÆÌå
-    private GameObject[] bubbleInstances; // ÓÃÓÚ´æ´¢Ã¿¸ö°´Å¥ÉÏµÄÅÝÅÝÊµÀý
+    [SerializeField] private GameObject bubblePrefab; // ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½
+    private GameObject[] bubbleInstances; // ï¿½ï¿½ï¿½Ú´æ´¢Ã¿ï¿½ï¿½ï¿½ï¿½Å¥ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
     [SerializeField] private Sprite[] lockedImgs;
     [SerializeField] private Sprite[] unlockImgs;
 
@@ -38,25 +38,38 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
 
     void Start()
     {
-        // ³õÊ¼»¯ÅÝÅÝÊµÀýÊý×é
+        // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         bubbleInstances = new GameObject[artButtons.Length];
-        // ÎªÃ¿¸ö°´Å¥´´½¨ÅÝÅÝ²¢°ó¶¨µã»÷ÊÂ¼þ
+        // ÎªÃ¿ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ó¶¨µï¿½ï¿½ï¿½Â¼ï¿½
         for (int i = 0; i < artButtons.Length; i++)
         {
             int temp = i;
             artButtons[i].onClick.AddListener(() => conceptArt.ShowPic(temp));
 
-            // ÎªÃ¿¸ö°´Å¥´´½¨ÅÝÅÝµÄÊµÀý
+            // ÎªÃ¿ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½Êµï¿½ï¿½
             GameObject bubbleInstance = Instantiate(bubblePrefab, artButtons[i].transform);
-            bubbleInstance.transform.SetAsLastSibling(); // È·±£ÅÝÅÝÏÔÊ¾ÔÚ×îÉÏ²ã
-            bubbleInstance.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime; // ÉèÖÃ¶¯»­¸üÐÂÄ£Ê½Îª²»ÊÜÊ±¼äËõ·ÅÓ°Ïì
+            bubbleInstance.transform.SetAsLastSibling(); // È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ï²ï¿½
+            bubbleInstance.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime; // ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Îªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½
             bubbleInstances[i] = bubbleInstance;
         }
-        // ¸üÐÂËùÓÐÉè¶¨Í¼µÄËø¶¨×´Ì¬
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
         UpdateArtLockStatus();
     }
 
-    // ¸üÐÂËùÓÐÉè¶¨Í¼µÄËø¶¨×´Ì¬
+    private void OnEnable()
+    {
+        //è§¦å‘è¿›å…¥ç›¸å…³
+        print("è¿›å…¥äº†æ”¶é›†ç‰©é¢æ¿");
+        AudioManager.Instance.EnterGallary();
+    }
+
+    private void OnDisable()
+    {
+        print("ç¦»å¼€äº†æ”¶é›†ç‰©é¢æ¿");
+        AudioManager.Instance.LeaveGallary();
+    }
+
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
     public void UpdateArtLockStatus()
     {
         if (artButtons == null || artButtons.Length == 0)
@@ -75,14 +88,14 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
 
             bool isUnlocked = CollectableManager.Instance.totalCollected >= (i + 1) * 9;
 
-            // ÉèÖÃ°´Å¥ÊÇ·ñ¿É½»»¥
+            // ï¿½ï¿½ï¿½Ã°ï¿½Å¥ï¿½Ç·ï¿½É½ï¿½ï¿½ï¿½
             artButtons[i].interactable = isUnlocked;
 
-            // ÉèÖÃËøµÄÊý×Ö
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             TextMeshProUGUI lockNumberText = bubbleInstances[i].GetComponentInChildren<TextMeshProUGUI>();
-            lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 9}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 9}"; // ÉèÖÃËøµÄÊý×Ö
+            lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 9}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 9}"; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-            artButtons[i].GetComponent<Image>().sprite = isUnlocked ? unlockImgs[i] : lockedImgs[i]; // ÉèÖÃËøµÄÏÔÊ¾×´Ì¬
+            artButtons[i].GetComponent<Image>().sprite = isUnlocked ? unlockImgs[i] : lockedImgs[i]; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾×´Ì¬
         }
     }
 }
