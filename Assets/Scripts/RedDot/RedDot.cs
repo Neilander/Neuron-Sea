@@ -14,10 +14,7 @@ public class Reddot : MonoBehaviour
     #region 属性
     public string Path 
     {
-        get 
-        { 
-            return _path;
-        }
+        get => _path;
         set 
         {
             _path = value;
