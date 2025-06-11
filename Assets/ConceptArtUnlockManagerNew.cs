@@ -20,12 +20,20 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
 
     void Awake()
     {
+        // if (ReddotManager.ReddotPath != null) {
+        //     foreach (var path in ReddotManager.ReddotPath) {
+        //         // bool hasRead = PlayerPrefs.GetInt(path, 0) == 1;
+        //         ReddotManager.AddPath(path);
+        //     }
+        // }
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
+        ReddotManager.onReddotPathChange -= PersistPaths;
+        ReddotManager.onReddotPathChange += PersistPaths;
     }
 
     void OnDestroy()
@@ -34,6 +42,7 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
         {
             Instance = null;
         }
+        ReddotManager.onReddotPathChange -= PersistPaths;
     }
 
     void Start()
@@ -90,12 +99,27 @@ public class ConceptArtUnlockManagerNew : MonoBehaviour
 
             // ���ð�ť�Ƿ�ɽ���
             artButtons[i].interactable = isUnlocked;
-
             // ������������
             TextMeshProUGUI lockNumberText = bubbleInstances[i].GetComponentInChildren<TextMeshProUGUI>();
             lockNumberText.text = isUnlocked ? $"{CollectableManager.Instance.totalCollected}/{(i + 1) * 9}" : $"<color=#E73CA6>{CollectableManager.Instance.totalCollected}</color>/{(i + 1) * 9}"; // ������������
 
             artButtons[i].GetComponent<Image>().sprite = isUnlocked ? unlockImgs[i] : lockedImgs[i]; // ����������ʾ״̬
+            string pathAll = $"escBtn/Options/Collect/Collection{i + 1}";
+            // 解锁，则添加对应图片路径
+            if (artButtons[i].interactable) {
+                if (PlayerPrefs.GetInt(pathAll + "/", 0) == 0) {
+                    ReddotManager.AddPath(pathAll);
+                }
+            }
         }
+    }
+
+    private void PersistPaths(){
+        var snapshot = ReddotManager.ReddotPath.ToArray();
+        foreach (var p in snapshot) // p 是单个 path
+        {
+            PlayerPrefs.SetInt(p, 1); // 1 == 已触发
+        }
+        PlayerPrefs.Save(); // 立即落盘
     }
 }
