@@ -35,7 +35,7 @@ public class ConceptArt : MonoBehaviour
     {
         return index switch
         {
-            0=>BGMClip.Scene1,
+            0=>BGMClip.SceneBegin,
             1=>BGMClip.Scene1,
             2=>BGMClip.Scene2,
             3=>BGMClip.Scene3,
