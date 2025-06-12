@@ -107,6 +107,7 @@ public class ProcessLevelLoader : MonoBehaviour
             
             if (!isLoadingComplete && fakeProgress >= 1f && op.progress >= 0.9f) {
                 isLoadingComplete = true;
+                
                 StartCoroutine(WaitForClickThenActivate(op));
             }
             
